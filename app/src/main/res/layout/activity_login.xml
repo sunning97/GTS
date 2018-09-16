@@ -68,6 +68,7 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
@@ -110,15 +111,28 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <Button
+            <!--<Button-->
+            <!--android:layout_width="250dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/input"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="50dp"-->
+            <!--android:background="@drawable/button_bg"-->
+            <!--android:text="Đăng nhập"-->
+            <!--android:textColor="@color/white" />-->
+            <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+                android:id="@+id/btn_login"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/input"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/button_bg"
                 android:text="Đăng nhập"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                app:spinning_bar_color="#FFF"
+                app:spinning_bar_padding="6dp"
+                app:spinning_bar_width="4dp" />
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>
