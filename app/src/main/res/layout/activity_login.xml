@@ -4,23 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@drawable/gradient_bg"
     android:orientation="vertical"
-    android:animateLayoutChanges="true"
     tools:context=".views.login.LoginActivity">
 
     <RelativeLayout
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:animateLayoutChanges="true">
 
         <ImageView
             android:id="@+id/app_logo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="40dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_logo_gts" />
@@ -37,9 +38,11 @@
                 android:id="@+id/tv_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Login"
+                android:text="Đăng nhập"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/input"
@@ -55,47 +58,67 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:textAllCaps="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mã số sinh viên"
+                        android:textAllCaps="true"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-                    <EditText
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/input_text_bg" />
+                        android:layout_height="match_parent">
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/input_text_bg"
+                            android:inputType="number"
+                            android:padding="5dp"
+                            android:textColor="@color/white" />
+                    </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
+
                 <LinearLayout
-                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:textAllCaps="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mật khẩu"
+                        android:textAllCaps="true"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-                    <EditText
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/input_text_bg" />
+                        android:layout_height="match_parent"
+                        app:passwordToggleEnabled="true">
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/input_text_bg"
+                            android:inputType="textPassword"
+                            android:padding="5dp"
+                            android:textColor="@color/white" />
+                    </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
             </LinearLayout>
+
             <Button
-                android:layout_below="@id/input"
-                android:layout_marginTop="50dp"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/input"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/button_bg"
                 android:text="Đăng nhập"
-                android:textColor="@color/white"
-                android:background="@drawable/button_bg"/>
+                android:textColor="@color/white" />
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

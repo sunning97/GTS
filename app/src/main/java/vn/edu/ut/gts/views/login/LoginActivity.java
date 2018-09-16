@@ -26,6 +26,6 @@ public class LoginActivity extends AppCompatActivity {
 
         relay_1 = findViewById(R.id.relay_1);
 
-        handler.postDelayed(runnable,2000);
+        handler.postDelayed(runnable,3000);
     }
 }
