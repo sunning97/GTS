@@ -1,6 +1,8 @@
 package vn.edu.ut.gts.views.login;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -10,14 +12,20 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.actions.Login;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,6 +33,9 @@ public class LoginActivity extends AppCompatActivity {
     private Handler handler;
     private Runnable runnable;
     private CircularProgressButton btnLogin;
+    private EditText studentId;
+    private EditText password;
+    private static String Tag = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,20 +44,33 @@ public class LoginActivity extends AppCompatActivity {
 
         this.requestPermission();
 
+        this.loadDataLogin();
+
         this.init();
         
         this.addControl();
-
         handler.postDelayed(runnable, 3000);
     }
-
+    private void loadDataLogin(){
+        AsyncTask<String,Void,String> asyncTask = new AsyncTask<String, Void, String>() {
+            @Override
+            protected String doInBackground(String... strings) {
+                SharedPreferences sharedPreferences = getSharedPreferences("tmp", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                JSONObject dataLogin = Login.getDataLogin();
+                editor.putString("dataLogin", dataLogin.toString());
+                editor.commit();
+                return null;
+            }
+        };
+        asyncTask.execute();
+    }
     /**
      *
      * Initialization all needed for activity
      *
      * @return Void
      */
-
     private void init() {
         relay_1 = findViewById(R.id.relay_1);
         btnLogin = findViewById(R.id.btn_login);
@@ -55,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void run() {
                 relay_1.setVisibility(View.VISIBLE);
+
             }
         };
     }
@@ -75,11 +100,19 @@ public class LoginActivity extends AppCompatActivity {
                     protected String doInBackground(String... strings) {
                         btnLogin.startAnimation();
                         try {
+                            SharedPreferences preferences = getSharedPreferences("tmp",Context.MODE_PRIVATE);
+                            JSONObject dataLogin = new JSONObject(preferences.getString("dataLogin","{}"));
+                            studentId = (EditText) findViewById(R.id.txtStudentId);
+                            password = (EditText) findViewById(R.id.txtPassword);
+                            if(Login.doLogin(studentId.getText().toString(), password.getText().toString(), dataLogin)){
+                                Log.e(Tag, "Login success !!");
+                            }
+
                             Thread.sleep(3000);
-                        } catch (InterruptedException e) {
+                        } catch (InterruptedException | JSONException e) {
                             e.printStackTrace();
                         }
-                        return "asdasdas";
+                        return null;
                     }
 
                     @Override
