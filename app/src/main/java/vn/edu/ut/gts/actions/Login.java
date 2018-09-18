@@ -130,7 +130,7 @@ public class Login {
                     .data("txtSecurityCodeValue", Helper.md5(securityValue))
                     .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
                     .execute();
-            return (!res.parse().toString().isEmpty());
+            return (!res.parse().select("#ctl00_ucRight1_Span2").isEmpty());
         } catch (IOException | JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

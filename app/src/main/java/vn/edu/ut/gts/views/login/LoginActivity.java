@@ -2,6 +2,7 @@ package vn.edu.ut.gts.views.login;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -26,6 +27,7 @@ import java.util.List;
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Login;
+import vn.edu.ut.gts.views.homes.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -49,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         this.init();
         
         this.addControl();
+
         handler.postDelayed(runnable, 3000);
     }
     private void loadDataLogin(){
@@ -121,6 +124,9 @@ public class LoginActivity extends AppCompatActivity {
                                 Color.parseColor("#00000000"),
                                 BitmapFactory.decodeResource(getResources(),R.drawable.ic_done_white_48dp)
                         );
+
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        startActivity(intent);
                     }
                 };
 
