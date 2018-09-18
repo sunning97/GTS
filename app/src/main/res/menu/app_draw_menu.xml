@@ -3,8 +3,8 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/student_info"
-            android:title="Thông tin"
+            android:id="@+id/student_profile"
+            android:title="Thông tin sinh viên"
             android:icon="@drawable/ic_info_black_48"></item>
         <item
             android:id="@+id/student_score"
