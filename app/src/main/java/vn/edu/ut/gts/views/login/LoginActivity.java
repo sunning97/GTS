@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,9 +28,10 @@ import java.util.List;
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Login;
+import vn.edu.ut.gts.presenter.login.LoginProcess;
 import vn.edu.ut.gts.views.homes.HomeActivity;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ILoginView{
 
     private RelativeLayout relay_1;
     private Handler handler;
@@ -38,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText studentId;
     private EditText password;
     private static String Tag = "LoginActivity";
+    private LoginProcess loginProcess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,29 +48,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         this.requestPermission();
-
-        this.loadDataLogin();
-
         this.init();
-        
         this.addControl();
-
         handler.postDelayed(runnable, 3000);
+
+        this.loginProcess.loadDataLogin();
     }
-    private void loadDataLogin(){
-        AsyncTask<String,Void,String> asyncTask = new AsyncTask<String, Void, String>() {
-            @Override
-            protected String doInBackground(String... strings) {
-                SharedPreferences sharedPreferences = getSharedPreferences("tmp", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                JSONObject dataLogin = Login.getDataLogin();
-                editor.putString("dataLogin", dataLogin.toString());
-                editor.commit();
-                return null;
-            }
-        };
-        asyncTask.execute();
-    }
+
     /**
      *
      * Initialization all needed for activity
@@ -77,6 +64,8 @@ public class LoginActivity extends AppCompatActivity {
     private void init() {
         relay_1 = findViewById(R.id.relay_1);
         btnLogin = findViewById(R.id.btn_login);
+        studentId = findViewById(R.id.txtStudentId);
+        password = findViewById(R.id.txtPassword);
         this.handler = new Handler();
         this.runnable = new Runnable() {
             @Override
@@ -85,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         };
+        this.loginProcess = new LoginProcess(this,this);
     }
 
     /**
@@ -97,40 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         this.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btnLogin.startAnimation();
-                AsyncTask<String,Void,String> asyncTask =  new AsyncTask<String, Void, String>() {
-                    @Override
-                    protected String doInBackground(String... strings) {
-                        btnLogin.startAnimation();
-                        try {
-                            SharedPreferences preferences = getSharedPreferences("tmp",Context.MODE_PRIVATE);
-                            JSONObject dataLogin = new JSONObject(preferences.getString("dataLogin","{}"));
-                            studentId = (EditText) findViewById(R.id.txtStudentId);
-                            password = (EditText) findViewById(R.id.txtPassword);
-                            if(Login.doLogin(studentId.getText().toString(), password.getText().toString(), dataLogin)){
-                                Log.e(Tag, "Login success !!");
-                            }
-
-                            Thread.sleep(3000);
-                        } catch (InterruptedException | JSONException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(String s) {
-                        btnLogin.doneLoadingAnimation(
-                                Color.parseColor("#00000000"),
-                                BitmapFactory.decodeResource(getResources(),R.drawable.ic_done_white_48dp)
-                        );
-
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                    }
-                };
-
-                asyncTask.execute("aa");
+                loginProcess.doLogin(studentId.getText().toString(),password.getText().toString());
             }
         });
     }
@@ -158,5 +115,36 @@ public class LoginActivity extends AppCompatActivity {
         if (!listPermissionNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionNeeded.toArray(new String[listPermissionNeeded.size()]), 1);
         }
+    }
+
+    @Override
+    public void startLoadingButton() {
+        this.btnLogin.startAnimation();
+    }
+
+    @Override
+    public void doneLoadingButton() {
+        this.btnLogin.doneLoadingAnimation(
+                Color.parseColor("#00000000"),
+                BitmapFactory.decodeResource(getResources(),R.drawable.ic_done_white_48dp)
+        );
+    }
+
+    @Override
+    public void revertLoadingButton() {
+        this.btnLogin.revertAnimation();
+    }
+
+    @Override
+    public void loginSuccess() {
+        Toast.makeText(this,"Login Success",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void loginFailed() {
+        Toast.makeText(this,"Login Failed",Toast.LENGTH_SHORT).show();
+        Log.d("AAA","login failed");
     }
 }
