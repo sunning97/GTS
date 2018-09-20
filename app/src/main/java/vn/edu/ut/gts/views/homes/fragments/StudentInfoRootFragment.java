@@ -23,6 +23,11 @@ import vn.edu.ut.gts.views.homes.fragments.student_info.StudentPersonalInfoFragm
  */
 public class StudentInfoRootFragment extends Fragment {
 
+    private List<Fragment> fragments;
+    private List<String> fragmentTitle;
+    private StudentInfoViewPagerAdapter studentInfoViewPagerAdapter;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     public StudentInfoRootFragment() {
 
@@ -33,26 +38,32 @@ public class StudentInfoRootFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_info_root,container,false);
 
-        List<Fragment> fragments = new ArrayList<>();
+        this.init(view);
+        return view;
+    }
+
+    private void init(View view){
+        tabLayout = view.findViewById(R.id.student_info_tablayout);
+        viewPager = view.findViewById(R.id.student_info_view_pager);
+
+        this.fragments = new ArrayList<>();
         fragments.add(new StudentInfoFragment());
         fragments.add(new StudentPersonalInfoFragment());
         fragments.add(new StudentFamilyInfoFragment());
 
-        List<String> fragmentTitle = new ArrayList<>();
+        this.fragmentTitle = new ArrayList<>();
         fragmentTitle.add("Thông tin sinh viên");
         fragmentTitle.add("Thông tin cá nhân");
         fragmentTitle.add("Quan hệ gia đình");
 
-        StudentInfoViewPagerAdapter studentInfoViewPagerAdapter = new StudentInfoViewPagerAdapter(
-          getChildFragmentManager(),
-          fragments,
-          fragmentTitle
+        this.studentInfoViewPagerAdapter = new StudentInfoViewPagerAdapter(
+                getChildFragmentManager(),
+                fragments,
+                fragmentTitle
         );
-        TabLayout tabLayout = view.findViewById(R.id.student_info_tablayout);
-        ViewPager viewPager = view.findViewById(R.id.student_info_view_pager);
+
         viewPager.setAdapter(studentInfoViewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-        return view;
     }
 
 }

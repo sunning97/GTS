@@ -11,4 +11,12 @@
     <style name="capfale" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
     </style>
+
+    <style name="AppActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="drawerArrowStyle">@style/changeDrawerlayoutIconColor</item>
+    </style>
+    <style name="changeDrawerlayoutIconColor" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/white</item>
+    </style>
 </resources>

@@ -1,13 +1,16 @@
 package vn.edu.ut.gts.views.homes;
 
+import android.content.DialogInterface;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.views.homes.fragments.StudentInfoRootFragment;
@@ -25,7 +28,32 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        this.init();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Xác nhận thoát");
+        builder.setMessage("Bạn có muốn thoát không?");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Ứ chịu", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(HomeActivity.this, "Không thoát được", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Đăng xuất", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void init(){
         appDrawLayout = findViewById(R.id.app_draw_layout);
         toolbar = findViewById(R.id.app_toolbar);
         setSupportActionBar(toolbar);
@@ -42,35 +70,32 @@ public class HomeActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Thông tin sinh viên");
 
-
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
-            new NavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(MenuItem menuItem) {
-                    menuItem.setChecked(true);
-                    switch (menuItem.getItemId()){
-                        case R.id.student_profile:{
-                            fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction.replace(R.id.content_frame,new StudentInfoRootFragment());
-                            fragmentTransaction.commit();
-                            getSupportActionBar().setTitle("");
-                            break;
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        switch (menuItem.getItemId()){
+                            case R.id.student_profile:{
+                                fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.content_frame,new StudentInfoRootFragment());
+                                fragmentTransaction.commit();
+                                getSupportActionBar().setTitle("");
+                                break;
+                            }
+                            case R.id.student_study_result:{
+                                fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.content_frame,new StudentStudyResultFragment());
+                                fragmentTransaction.commit();
+                                getSupportActionBar().setTitle("Kết quả học tập");
+                                break;
+                            }
                         }
-                        case R.id.student_study_result:{
-                            fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction.replace(R.id.content_frame,new StudentStudyResultFragment());
-                            fragmentTransaction.commit();
-                            getSupportActionBar().setTitle("Kết quả học tập");
-                            break;
-                        }
+                        appDrawLayout.closeDrawers();
+
+                        return true;
                     }
-                    appDrawLayout.closeDrawers();
-
-                    return true;
-                }
-            });
-
+                });
     }
 }
