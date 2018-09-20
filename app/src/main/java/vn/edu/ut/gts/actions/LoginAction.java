@@ -47,16 +47,6 @@ public class LoginAction {
         return this.dataLogin;
     }
 
-    private String secutity(){
-        AsyncTask<String, Void, String> asyncTask  = new AsyncTask<String, Void, String>() {
-            @Override
-            protected String doInBackground(String... strings) {
-
-                return null;
-            }
-        }
-        return null;
-    }
     private String getPrivateKey(String studentId) {
         String res = Curl.connect(DataStatic.getBaseUrl()+"ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx")
                 .method("POST")
