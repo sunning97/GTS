@@ -19,11 +19,15 @@ public class Storage {
      * return Boolean
      *
      */
-    public boolean putString(String sharePreferencesName, String key, String value){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(sharePreferencesName, Context.MODE_PRIVATE);
+    public boolean putString(String sharedPreferencesName, String key, String value){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
         return editor.commit();
+    }
+    public String getString(String sharedPreferencesName, String key, String defaultValue){
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key,defaultValue);
     }
     public Boolean putData(String sharePreferencesName, HashMap<String,String> data) {
         SharedPreferences sharedPreferences = this.context.getSharedPreferences(sharePreferencesName,Context.MODE_PRIVATE);

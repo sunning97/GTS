@@ -39,7 +39,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     private CircularProgressButton btnLogin;
     private EditText studentId;
     private EditText password;
-    private static String Tag = "LoginActivity";
     private LoginProcess loginProcess;
 
     @Override

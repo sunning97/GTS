@@ -1,5 +1,7 @@
 package vn.edu.ut.gts.actions;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,14 +17,17 @@ import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.storage.DataStatic;
 
 public class Login {
-    private static String getPrivateKey(String studentId) {
+    private static String getPrivateKey(String studentId, String cookie) {
         String res = Curl.connect(DataStatic.getBaseUrl()+"ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx")
                 .method("POST")
                 .userAgent(DataStatic.getUserAgent())
                 .header("X-AjaxPro-Method","GetPrivateKey")
+                .setCookie("ASP.NET_SessionId", cookie)
                 .dataString("{\"salt\":\""+ studentId +"\"}")
                 .execute();
-        if(res != null) return res.substring(1,33);
+        Log.e("Private Key", res.replace("\";/*",""));
+        Log.e("Private Key", res);
+        if(res != null) return res.replace("\";/*","");
         return null;
     }
     private static String getSecurityValue(String md5) {
@@ -37,11 +42,12 @@ public class Login {
         }
         return null;
     }
-    private static String createConfirmImage() {
+    private static String createConfirmImage(String cookie) {
         String result = null;
         try {
             Connection.Response res = Jsoup.connect(DataStatic.getBaseUrl() + "ajaxpro/AjaxConfirmImage,PMT.Web.PhongDaoTao.ashx")
                     .method(Connection.Method.POST)
+                    .cookie("ASP.NET_SessionId",cookie)
                     .userAgent(DataStatic.getUserAgent())
                     .header("X-AjaxPro-Method", "CreateConfirmImage")
                     .execute();
@@ -63,7 +69,7 @@ public class Login {
                     .method(Connection.Method.GET)
                     .execute();
             Document doc = res.parse();
-            data.put("cookie", res.cookies());
+            data.put("cookie", res.cookie("ASP.NET_SessionId"));
             data.put("eventTarget", doc.select("input[name=\"__EVENTTARGET\"]").val());
             data.put("eventArgument", doc.select("input[name=\"__EVENTARGUMENT\"]").val());
             data.put("lastFocus", doc.select("input[name=\"__LASTFOCUS\"]").val());
@@ -78,13 +84,17 @@ public class Login {
         return data;
     }
     public static boolean doLogin(String studentId, String password, JSONObject dataLogin){
-        String hashPassword = AES.encrypt(getPrivateKey(studentId), password).toBase64();
-        String securityValue = createConfirmImage();
+        boolean status  = false;
         try {
+            String cookie = dataLogin.getString("cookie");
+            String hashPassword = AES.encrypt(getPrivateKey(studentId, cookie), password).toBase64();
+            Log.e("Password hash", hashPassword);
+            String securityValue = createConfirmImage(cookie);
+            Log.e("Cookie", cookie);
             Connection.Response res = Jsoup.connect(DataStatic.getBaseUrl())
                     .method(Connection.Method.POST)
                     .userAgent(DataStatic.getUserAgent())
-                    .header("Cookie",dataLogin.getString("cookie"))
+                    .cookie("ASP.NET_SessionId", cookie)
                     .data("__EVENTTARGET", dataLogin.getString("eventTarget"))
                     .data("__EVENTARGUMENT", dataLogin.getString("eventArgument"))
                     .data("__LASTFOCUS", dataLogin.getString("lastFocus"))
@@ -102,11 +112,13 @@ public class Login {
                     .data("txtSecurityCodeValue", Helper.md5(securityValue))
                     .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
                     .execute();
-            return (!res.parse().select("#ctl00_ucRight1_Span2").isEmpty());
+            status = !res.parse().select("#ctl00_ucRight1_Span2").isEmpty();
+
+            Log.e("LOGIN", String.valueOf(status));
         } catch (IOException | JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return false;
+        return status;
     }
 }

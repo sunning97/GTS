@@ -34,9 +34,12 @@ public class Curl {
         urlConnection.setRequestProperty("User-Agent",userAgent);
         return this;
     }
-
-    public Curl setCookie(String cookie){
-        urlConnection.setRequestProperty("Cookie", cookie);
+    public Curl setStringCookie(String cookie){
+        urlConnection.setRequestProperty("Cookie",cookie);
+        return this;
+    }
+    public Curl setCookie(String key, String value){
+        urlConnection.setRequestProperty("Cookie", key+"="+value);
         return this;
     }
 
