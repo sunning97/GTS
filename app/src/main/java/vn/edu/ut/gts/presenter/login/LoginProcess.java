@@ -27,7 +27,13 @@ public class LoginProcess implements ILoginProcess{
             @Override
             protected String doInBackground(Void... voids) {
                 loginAction = new LoginAction();
-                storage.putString("tmp","dataLogin",loginAction.getDataLogin().toString());
+                JSONObject dataLogin = loginAction.getDataLogin();
+                storage.putString("tmp","dataLogin",dataLogin.toString());
+                try {
+                    storage.putString("tmp","cookie",dataLogin.getString("cookie"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 return null;
             }
         };
