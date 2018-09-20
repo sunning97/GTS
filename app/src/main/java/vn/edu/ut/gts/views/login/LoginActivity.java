@@ -1,10 +1,22 @@
 package vn.edu.ut.gts.views.login;
 
 import android.Manifest;
+<<<<<<< HEAD
+=======
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+>>>>>>> 2a94292f1e08873148393d4af33b2c4a401778e3
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+<<<<<<< HEAD
+=======
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+>>>>>>> 2a94292f1e08873148393d4af33b2c4a401778e3
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -15,12 +27,25 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+<<<<<<< HEAD
+=======
+import android.widget.TextView;
+import android.widget.Toast;
+>>>>>>> 2a94292f1e08873148393d4af33b2c4a401778e3
 
+import org.w3c.dom.Text;
+
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import vn.edu.ut.gts.R;
+<<<<<<< HEAD
+=======
+import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.helpers.TextInputValidator;
+>>>>>>> 2a94292f1e08873148393d4af33b2c4a401778e3
 import vn.edu.ut.gts.presenter.login.LoginProcess;
 import vn.edu.ut.gts.views.homes.HomeActivity;
 
@@ -35,7 +60,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private LoginProcess loginProcess;
     private TextInputLayout studentIdInputLayout;
     private TextInputLayout passwordInputLayout;
+    private TextView studentIdInputErrorShow,passwordInputErrorShow;
     private Boolean isValidateNoError;
+    private BroadcastReceiver listenToInteret;
+    private EpicDialog epicDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +71,26 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         setContentView(R.layout.activity_login);
 
         this.requestPermission();
-        this.init();
+        this.init(this);
         this.validate();
         this.addControl();
         handler.postDelayed(runnable, 3000);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(listenToInteret,intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(listenToInteret!= null){
+            unregisterReceiver(listenToInteret);
+        }
     }
 
     @Override
@@ -76,7 +119,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void loginFailed() {
-        
+        epicDialog.showPopup(
+            "Đăng nhập thất bại",
+            "Mã số sinh viên / mật khẩu không đúng",
+            EpicDialog.NEGATIVE
+        );
     }
 
 
@@ -85,15 +132,18 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
      *
      * @return Void
      */
-    private void init() {
+    private void init(Context context) {
         this.relay_1 = findViewById(R.id.relay_1);
         this.btnLogin = findViewById(R.id.btn_login);
         this.inputStudentId = findViewById(R.id.txtStudentId);
         this.inputPassword = findViewById(R.id.txtPassword);
         this.passwordInputLayout = findViewById(R.id.password_input_layout);
         this.studentIdInputLayout = findViewById(R.id.student_id_input_layout);
+        this.studentIdInputErrorShow = findViewById(R.id.input_student_id_error);
+        this.passwordInputErrorShow = findViewById(R.id.input_password_error);
         this.isValidateNoError = false;
         this.handler = new Handler();
+        this.epicDialog = new EpicDialog(context);
         this.runnable = new Runnable() {
             @Override
             public void run() {
@@ -101,6 +151,25 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             }
         };
         this.loginProcess = new LoginProcess(this, this);
+
+        listenToInteret = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ConnectivityManager connectivityManager =
+                        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                if(connectivityManager.getActiveNetworkInfo() != null){
+                    inputStudentId.setEnabled(true);
+                    inputPassword.setEnabled(true);
+                    btnLogin.setEnabled(true);
+                    epicDialog.dismisPopup();
+                } else {
+                    inputStudentId.setEnabled(false);
+                    inputPassword.setEnabled(false);
+                    btnLogin.setEnabled(false);
+                    epicDialog.showPopup("Không có Internet","Thiết bị của bạn đang không kết nối mạng, vui lòng mở kết nối trước khi sử dụng",EpicDialog.NEGATIVE);
+                }
+            }
+        };
     }
 
     /**
@@ -112,11 +181,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validateStudentId();
                 validatePassword();
+                validateStudentId();
                 if(isValidateNoError) {
-                    unsetInputError(passwordInputLayout);
-                    unsetInputError(studentIdInputLayout);
+                    unsetInputError(passwordInputErrorShow);
+                    unsetInputError(studentIdInputErrorShow);
                     loginProcess.doLogin(inputStudentId.getText().toString(), inputPassword.getText().toString());
                 }
             }
@@ -148,57 +217,52 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     }
 
     private void validate() {
-        this.inputStudentId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        this.inputStudentId.addTextChangedListener(new TextInputValidator(inputStudentId) {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
-                    validateStudentId();
-                }
+            public void validate(TextView textView, String text) {
+                validateStudentId();
             }
         });
 
-        this.inputPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        this.inputPassword.addTextChangedListener(new TextInputValidator(inputPassword) {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
-                    validatePassword();
-                }
+            public void validate(TextView textView, String text) {
+                validatePassword();
             }
         });
     }
 
     private void validateStudentId() {
-        if (this.inputStudentId.getText().toString().trim().isEmpty()) {
-            this.setInputError(studentIdInputLayout,"Mã số sinh viên không được để trống");
+        if (TextUtils.isEmpty(this.inputStudentId.getText().toString().trim())) {
+            this.setInputError(studentIdInputErrorShow,"Mã số sinh viên không được để trống");
             this.isValidateNoError = false;
         } else if (this.inputStudentId.getText().toString().trim().length() < 10) {
-            this.setInputError(studentIdInputLayout,"Mã số sinh viên không đúng định dạng");
+            this.setInputError(studentIdInputErrorShow,"Mã số sinh viên không đúng định dạng");
             this.isValidateNoError= false;
         } else {
-            this.unsetInputError(studentIdInputLayout);
+            this.unsetInputError(studentIdInputErrorShow);
             this.isValidateNoError = true;
         }
     }
 
     private void validatePassword(){
         if (TextUtils.isEmpty(this.inputPassword.getText().toString().trim())) {
-            this.setInputError(passwordInputLayout,"Mật khẩu không được để trống");
+            this.setInputError(passwordInputErrorShow,"Mật khẩu không được để trống");
             this.isValidateNoError = false;
         } else if (this.inputPassword.getText().toString().trim().length() < 5) {
-            this.setInputError(passwordInputLayout,"Mật khẩu phải lớn hơn 5 kí tự");
+            this.setInputError(passwordInputErrorShow,"Mật khẩu phải lớn hơn 5 kí tự");
             this.isValidateNoError= false;
         } else {
-            this.unsetInputError(passwordInputLayout);
+            this.unsetInputError(passwordInputErrorShow);
             this.isValidateNoError = true;
         }
     }
 
-    private void setInputError(TextInputLayout layout,String message){
-        layout.setErrorEnabled(true);
-        layout.setError(message);
+    private void setInputError(TextView textView,String message){
+        textView.setText(message);
     }
-    private void unsetInputError(TextInputLayout layout){
-        layout.setError("");
-        layout.setErrorEnabled(false);
+    private void unsetInputError(TextView textView){
+        textView.setText("");
     }
+
 }

@@ -24,8 +24,8 @@ public class EpicDialog {
         this.epicDialog = new Dialog(this.context);
     }
 
-    public void showDialog(String title,String content,int type){
-        if(type == EpicDialog.POSITIVE){
+    public void showPopup(String title,String content,int type){
+        if(type == EpicDialog.NEGATIVE){
             this.epicDialog.setContentView(R.layout.custom_popup_negative);
         } else {
             this.epicDialog.setContentView(R.layout.custom_popup_positive);
@@ -43,6 +43,12 @@ public class EpicDialog {
         });
         this.epicDialog.show();
     }
+
+    public void dismisPopup(){
+        this.epicDialog.dismiss();
+    }
+
+
     private void popupInit(){
         //topClosePopup = this.epicDialog.findViewById(R.id.close_popup);
         popupClose = this.epicDialog.findViewById(R.id.close_popup_bottom);

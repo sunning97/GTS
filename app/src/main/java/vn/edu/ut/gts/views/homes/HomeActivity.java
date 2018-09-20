@@ -24,7 +24,7 @@ public class HomeActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private StudentInfoProcess studentInfoProcess;
-
+    AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,21 +36,23 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Xác nhận thoát");
         builder.setMessage("Bạn có muốn thoát không?");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Ứ chịu", new DialogInterface.OnClickListener() {
+        builder.setCancelable(true);
+        builder.setPositiveButton("Thoát", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(HomeActivity.this, "Không thoát được", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
-        builder.setNegativeButton("Đăng xuất", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
             }
         });
+
+
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
