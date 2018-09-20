@@ -1,5 +1,7 @@
 package vn.edu.ut.gts.actions;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,7 +93,6 @@ public class Login {
                     .data("__VIEWSTATE", dataLogin.getString("viewState"))
                     .data("__VIEWSTATEGENERATOR", dataLogin.getString("viewStartGenerator"))
 
-
                     .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataLogin.getString("radioBtnList"))
                     .data("ctl00$DdListMenu",dataLogin.getString("listMenu"))
                     .data("ctl00$ucRight1$btnLogin", dataLogin.getString("btnLogin"))
@@ -102,6 +103,7 @@ public class Login {
                     .data("txtSecurityCodeValue", Helper.md5(securityValue))
                     .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
                     .execute();
+            Log.d("CCC",res.parse().toString());
             return (!res.parse().select("#ctl00_ucRight1_Span2").isEmpty());
         } catch (IOException | JSONException e) {
             // TODO Auto-generated catch block

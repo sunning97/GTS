@@ -7,12 +7,8 @@
             android:title="Thông tin sinh viên"
             android:icon="@drawable/ic_info_black_48"></item>
         <item
-            android:id="@+id/student_score"
+            android:id="@+id/student_study_result"
             android:title="Kết quả học tập"
-            android:icon="@drawable/ic_info_black_48"></item>
-        <item
-            android:id="@+id/sdad"
-            android:title="Thông tin nội bộ"
             android:icon="@drawable/ic_info_black_48"></item>
     </group>
 

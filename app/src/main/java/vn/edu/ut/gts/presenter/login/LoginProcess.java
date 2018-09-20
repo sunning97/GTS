@@ -44,34 +44,32 @@ public class LoginProcess implements ILoginProcess{
     }
 
     @Override
-    public void doLogin(String studentId,String password) {
-//        AsyncTask<String,Void,String> asyncTask =  new AsyncTask<String, Void, String>() {
-//            @Override
-//            protected String doInBackground(String... strings) {
-//                try {
-//                    SharedPreferences preferences = context.getSharedPreferences("tmp",Context.MODE_PRIVATE);
-//                    JSONObject dataLogin = new JSONObject(preferences.getString("dataLogin","{}"));
-//
-//                    if(Login.doLogin(studentId,password, dataLogin)){
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(String s) {
-//                iLoginView.doneLoadingButton();
-//            }
-//        };
-//
-//        asyncTask.execute("aa");
+    public void doLogin(final String studentId, final String password) {
+        AsyncTask<String,Void,String> asyncTask =  new AsyncTask<String, Void, String>() {
+            @Override
+            protected String doInBackground(String... strings) {
+                try {
+                    SharedPreferences preferences = context.getSharedPreferences("tmp",Context.MODE_PRIVATE);
+                    JSONObject dataLogin = new JSONObject(preferences.getString("dataLogin","{}"));
 
-        // coi nhu login thanh cong, may cai asyntask o tren thi tach ra class rieng luon, de trong model -> goi vao
-        this.iLoginView.doneLoadingButton();
-        this.iLoginView.loginSuccess();
+                    if(Login.doLogin(studentId,password, dataLogin)){
+                        Log.d("AAA","ok");
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                iLoginView.doneLoadingButton();
+            }
+        };
+
+        asyncTask.execute("aa");
+        iLoginView.loginSuccess();
     }
 
 
