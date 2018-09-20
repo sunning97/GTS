@@ -25,7 +25,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.security.PrivateKey;
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ import java.util.List;
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.helpers.TextInputValidator;
 import vn.edu.ut.gts.presenter.login.LoginProcess;
 import vn.edu.ut.gts.views.homes.HomeActivity;
 
@@ -48,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private LoginProcess loginProcess;
     private TextInputLayout studentIdInputLayout;
     private TextInputLayout passwordInputLayout;
+    private TextView studentIdInputErrorShow,passwordInputErrorShow;
     private Boolean isValidateNoError;
     private BroadcastReceiver listenToInteret;
     private EpicDialog epicDialog;
@@ -106,7 +111,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void loginFailed() {
-        
+        epicDialog.showPopup(
+            "Đăng nhập thất bại",
+            "Mã số sinh viên / mật khẩu không đúng",
+            EpicDialog.NEGATIVE
+        );
     }
 
 
@@ -122,6 +131,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.inputPassword = findViewById(R.id.txtPassword);
         this.passwordInputLayout = findViewById(R.id.password_input_layout);
         this.studentIdInputLayout = findViewById(R.id.student_id_input_layout);
+        this.studentIdInputErrorShow = findViewById(R.id.input_student_id_error);
+        this.passwordInputErrorShow = findViewById(R.id.input_password_error);
         this.isValidateNoError = false;
         this.handler = new Handler();
         this.epicDialog = new EpicDialog(context);
@@ -163,11 +174,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validateStudentId();
                 validatePassword();
+                validateStudentId();
                 if(isValidateNoError) {
-                    unsetInputError(passwordInputLayout);
-                    unsetInputError(studentIdInputLayout);
+                    unsetInputError(passwordInputErrorShow);
+                    unsetInputError(studentIdInputErrorShow);
                     loginProcess.doLogin(inputStudentId.getText().toString(), inputPassword.getText().toString());
                 }
             }
@@ -199,58 +210,52 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     }
 
     private void validate() {
-        this.inputStudentId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        this.inputStudentId.addTextChangedListener(new TextInputValidator(inputStudentId) {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
-                    validateStudentId();
-                }
+            public void validate(TextView textView, String text) {
+                validateStudentId();
             }
         });
 
-        this.inputPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        this.inputPassword.addTextChangedListener(new TextInputValidator(inputPassword) {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
-                    validatePassword();
-                }
+            public void validate(TextView textView, String text) {
+                validatePassword();
             }
         });
     }
 
     private void validateStudentId() {
-        if (this.inputStudentId.getText().toString().trim().isEmpty()) {
-            this.setInputError(studentIdInputLayout,"Mã số sinh viên không được để trống");
+        if (TextUtils.isEmpty(this.inputStudentId.getText().toString().trim())) {
+            this.setInputError(studentIdInputErrorShow,"Mã số sinh viên không được để trống");
             this.isValidateNoError = false;
         } else if (this.inputStudentId.getText().toString().trim().length() < 10) {
-            this.setInputError(studentIdInputLayout,"Mã số sinh viên không đúng định dạng");
+            this.setInputError(studentIdInputErrorShow,"Mã số sinh viên không đúng định dạng");
             this.isValidateNoError= false;
         } else {
-            this.unsetInputError(studentIdInputLayout);
+            this.unsetInputError(studentIdInputErrorShow);
             this.isValidateNoError = true;
         }
     }
 
     private void validatePassword(){
         if (TextUtils.isEmpty(this.inputPassword.getText().toString().trim())) {
-            this.setInputError(passwordInputLayout,"Mật khẩu không được để trống");
+            this.setInputError(passwordInputErrorShow,"Mật khẩu không được để trống");
             this.isValidateNoError = false;
         } else if (this.inputPassword.getText().toString().trim().length() < 5) {
-            this.setInputError(passwordInputLayout,"Mật khẩu phải lớn hơn 5 kí tự");
+            this.setInputError(passwordInputErrorShow,"Mật khẩu phải lớn hơn 5 kí tự");
             this.isValidateNoError= false;
         } else {
-            this.unsetInputError(passwordInputLayout);
+            this.unsetInputError(passwordInputErrorShow);
             this.isValidateNoError = true;
         }
     }
 
-    private void setInputError(TextInputLayout layout,String message){
-        layout.setErrorEnabled(true);
-        layout.setError(message);
+    private void setInputError(TextView textView,String message){
+        textView.setText(message);
     }
-    private void unsetInputError(TextInputLayout layout){
-        layout.setError("");
-        layout.setErrorEnabled(false);
+    private void unsetInputError(TextView textView){
+        textView.setText("");
     }
 
 }
