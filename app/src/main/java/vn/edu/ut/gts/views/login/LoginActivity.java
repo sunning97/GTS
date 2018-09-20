@@ -1,13 +1,10 @@
 package vn.edu.ut.gts.views.login;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -19,15 +16,11 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.Login;
 import vn.edu.ut.gts.presenter.login.LoginProcess;
 import vn.edu.ut.gts.views.homes.HomeActivity;
 
@@ -50,8 +43,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
         this.init();
         this.addControl();
         handler.postDelayed(runnable, 3000);
-
-        this.loginProcess.loadDataLogin();
     }
 
     /**
