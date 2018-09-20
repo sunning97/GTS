@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import vn.edu.ut.gts.actions.StudentInfoAction;
 import vn.edu.ut.gts.storage.Storage;
-import vn.edu.ut.gts.views.homes.fragments.StudentInfoRootFragment;
 
 public class StudentInfoProcess {
     private Context context;
