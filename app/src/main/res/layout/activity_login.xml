@@ -67,7 +67,8 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:id="@+id/student_id_input_layout">
 
                         <EditText
                             android:id="@+id/txtStudentId"
@@ -101,7 +102,8 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:passwordToggleEnabled="true">
+                        app:passwordToggleEnabled="true"
+                        android:id="@+id/password_input_layout">
 
                         <EditText
                             android:id="@+id/txtPassword"
@@ -131,7 +133,9 @@
                 android:textColor="@color/white"
                 app:spinning_bar_color="#FFF"
                 app:spinning_bar_padding="6dp"
-                app:spinning_bar_width="4dp" />
+                app:spinning_bar_width="4dp"
+                app:finalCornerAngle="25dp"
+                app:initialCornerAngle="20dp"/>
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

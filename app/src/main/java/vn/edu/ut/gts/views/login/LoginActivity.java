@@ -6,10 +6,14 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -24,15 +28,18 @@ import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.presenter.login.LoginProcess;
 import vn.edu.ut.gts.views.homes.HomeActivity;
 
-public class LoginActivity extends AppCompatActivity implements ILoginView{
+public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     private RelativeLayout relay_1;
     private Handler handler;
     private Runnable runnable;
     private CircularProgressButton btnLogin;
-    private EditText studentId;
-    private EditText password;
+    private EditText inputStudentId;
+    private EditText inputPassword;
     private LoginProcess loginProcess;
+    private TextInputLayout studentIdInputLayout;
+    private TextInputLayout passwordInputLayout;
+    private Boolean isValidateNoError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +48,54 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
         this.requestPermission();
         this.init();
+        this.validate();
         this.addControl();
         handler.postDelayed(runnable, 3000);
     }
 
+    @Override
+    public void startLoadingButton() {
+        this.btnLogin.startAnimation();
+    }
+
+    @Override
+    public void doneLoadingButton() {
+        this.btnLogin.doneLoadingAnimation(
+                Color.parseColor("#00000000"),
+                BitmapFactory.decodeResource(getResources(), R.drawable.ic_done_white_48dp)
+        );
+    }
+
+    @Override
+    public void revertLoadingButton() {
+        this.btnLogin.revertAnimation();
+    }
+
+    @Override
+    public void loginSuccess() {
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void loginFailed() {
+        
+    }
+
+
     /**
-     *
      * Initialization all needed for activity
      *
      * @return Void
      */
     private void init() {
-        relay_1 = findViewById(R.id.relay_1);
-        btnLogin = findViewById(R.id.btn_login);
-        studentId = findViewById(R.id.txtStudentId);
-        password = findViewById(R.id.txtPassword);
+        this.relay_1 = findViewById(R.id.relay_1);
+        this.btnLogin = findViewById(R.id.btn_login);
+        this.inputStudentId = findViewById(R.id.txtStudentId);
+        this.inputPassword = findViewById(R.id.txtPassword);
+        this.passwordInputLayout = findViewById(R.id.password_input_layout);
+        this.studentIdInputLayout = findViewById(R.id.student_id_input_layout);
+        this.isValidateNoError = false;
         this.handler = new Handler();
         this.runnable = new Runnable() {
             @Override
@@ -64,11 +104,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
             }
         };
-        this.loginProcess = new LoginProcess(this,this);
+        this.loginProcess = new LoginProcess(this, this);
     }
 
     /**
-     *
      * Handle all event on activity
      *
      * @return Void
@@ -77,11 +116,16 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
         this.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginProcess.doLogin(studentId.getText().toString(),password.getText().toString());
+                validateStudentId();
+                validatePassword();
+                if(isValidateNoError) {
+                    unsetInputError(passwordInputLayout);
+                    unsetInputError(studentIdInputLayout);
+                    loginProcess.doLogin(inputStudentId.getText().toString(), inputPassword.getText().toString());
+                }
             }
         });
     }
-
 
     /**
      * Request permission need for app on first launch
@@ -107,34 +151,58 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
         }
     }
 
-    @Override
-    public void startLoadingButton() {
-        this.btnLogin.startAnimation();
+    private void validate() {
+        this.inputStudentId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    validateStudentId();
+                }
+            }
+        });
+
+        this.inputPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    validatePassword();
+                }
+            }
+        });
     }
 
-    @Override
-    public void doneLoadingButton() {
-        this.btnLogin.doneLoadingAnimation(
-                Color.parseColor("#00000000"),
-                BitmapFactory.decodeResource(getResources(),R.drawable.ic_done_white_48dp)
-        );
+    private void validateStudentId() {
+        if (this.inputStudentId.getText().toString().trim().isEmpty()) {
+            this.setInputError(studentIdInputLayout,"Mã số sinh viên không được để trống");
+            this.isValidateNoError = false;
+        } else if (this.inputStudentId.getText().toString().trim().length() < 10) {
+            this.setInputError(studentIdInputLayout,"Mã số sinh viên không đúng định dạng");
+            this.isValidateNoError= false;
+        } else {
+            this.unsetInputError(studentIdInputLayout);
+            this.isValidateNoError = true;
+        }
     }
 
-    @Override
-    public void revertLoadingButton() {
-        this.btnLogin.revertAnimation();
+    private void validatePassword(){
+        if (TextUtils.isEmpty(this.inputPassword.getText().toString().trim())) {
+            this.setInputError(passwordInputLayout,"Mật khẩu không được để trống");
+            this.isValidateNoError = false;
+        } else if (this.inputPassword.getText().toString().trim().length() < 5) {
+            this.setInputError(passwordInputLayout,"Mật khẩu phải lớn hơn 5 kí tự");
+            this.isValidateNoError= false;
+        } else {
+            this.unsetInputError(passwordInputLayout);
+            this.isValidateNoError = true;
+        }
     }
 
-    @Override
-    public void loginSuccess() {
-        Toast.makeText(this,"Login Success",Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-        startActivity(intent);
+    private void setInputError(TextInputLayout layout,String message){
+        layout.setErrorEnabled(true);
+        layout.setError(message);
     }
-
-    @Override
-    public void loginFailed() {
-        Toast.makeText(this,"Login Failed",Toast.LENGTH_SHORT).show();
-        Log.d("AAA","login failed");
+    private void unsetInputError(TextInputLayout layout){
+        layout.setError("");
+        layout.setErrorEnabled(false);
     }
 }
