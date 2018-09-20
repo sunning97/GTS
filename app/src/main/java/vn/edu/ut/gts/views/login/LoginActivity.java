@@ -2,11 +2,15 @@ package vn.edu.ut.gts.views.login;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +27,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +49,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private TextInputLayout studentIdInputLayout;
     private TextInputLayout passwordInputLayout;
     private Boolean isValidateNoError;
+    private BroadcastReceiver listenToInteret;
+    private EpicDialog epicDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +58,26 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         setContentView(R.layout.activity_login);
 
         this.requestPermission();
-        this.init();
+        this.init(this);
         this.validate();
         this.addControl();
         handler.postDelayed(runnable, 3000);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(listenToInteret,intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(listenToInteret!= null){
+            unregisterReceiver(listenToInteret);
+        }
     }
 
     @Override
@@ -93,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
      *
      * @return Void
      */
-    private void init() {
+    private void init(Context context) {
         this.relay_1 = findViewById(R.id.relay_1);
         this.btnLogin = findViewById(R.id.btn_login);
         this.inputStudentId = findViewById(R.id.txtStudentId);
@@ -102,6 +124,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.studentIdInputLayout = findViewById(R.id.student_id_input_layout);
         this.isValidateNoError = false;
         this.handler = new Handler();
+        this.epicDialog = new EpicDialog(context);
         this.runnable = new Runnable() {
             @Override
             public void run() {
@@ -110,6 +133,25 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             }
         };
         this.loginProcess = new LoginProcess(this, this);
+
+        listenToInteret = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ConnectivityManager connectivityManager =
+                        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                if(connectivityManager.getActiveNetworkInfo() != null){
+                    inputStudentId.setEnabled(true);
+                    inputPassword.setEnabled(true);
+                    btnLogin.setEnabled(true);
+                    epicDialog.dismisPopup();
+                } else {
+                    inputStudentId.setEnabled(false);
+                    inputPassword.setEnabled(false);
+                    btnLogin.setEnabled(false);
+                    epicDialog.showPopup("Không có Internet","Thiết bị của bạn đang không kết nối mạng, vui lòng mở kết nối trước khi sử dụng",EpicDialog.NEGATIVE);
+                }
+            }
+        };
     }
 
     /**
@@ -210,4 +252,5 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         layout.setError("");
         layout.setErrorEnabled(false);
     }
+
 }

@@ -42,7 +42,8 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="28sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"/>
 
             <LinearLayout
                 android:id="@+id/input"

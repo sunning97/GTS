@@ -72,7 +72,7 @@
                     android:id="@+id/close_popup_bottom"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:text="Ahihi"
+                    android:text="Đồng ý"
                     android:textColor="@color/white"
                     android:background="@drawable/button_bg"
                     android:layout_gravity="center"/>
