@@ -21,7 +21,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".views.homes.HomeActivity" />
-        <activity android:name=".StudentProfileActivity"></activity>
     </application>
 
 </manifest>

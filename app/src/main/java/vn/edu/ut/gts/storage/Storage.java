@@ -19,7 +19,12 @@ public class Storage {
      * return Boolean
      *
      */
-
+    public boolean putString(String sharePreferencesName, String key, String value){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(sharePreferencesName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        return editor.commit();
+    }
     public Boolean putData(String sharePreferencesName, HashMap<String,String> data) {
         SharedPreferences sharedPreferences = this.context.getSharedPreferences(sharePreferencesName,Context.MODE_PRIVATE);
 

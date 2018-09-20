@@ -1,7 +1,5 @@
 package vn.edu.ut.gts.actions;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,49 +7,23 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import vn.edu.ut.gts.helpers.AES;
+import vn.edu.ut.gts.helpers.Curl;
 import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.storage.DataStatic;
 
 public class Login {
     private static String getPrivateKey(String studentId) {
-        String result = null;
-        try {
-            URL url = new URL(DataStatic.getBaseUrl() + "ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx");
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("User-Agent", DataStatic.getUserAgent());
-            conn.setRequestProperty("X-AjaxPro-Method", "CheckChoPhepDKHP");
-            String params = "{\"salt\":\""+ studentId +"\"}";
-
-            conn.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-            wr.writeBytes(params);
-            wr.flush();
-            wr.close();
-            if(conn.getResponseCode() == 200) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String tmp;
-                StringBuffer res = new StringBuffer();
-                while((tmp = br.readLine()) != null) {
-                    res.append(tmp);
-                }
-                br.close();
-                result = res.toString().substring(1,33);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
+        String res = Curl.connect(DataStatic.getBaseUrl()+"ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx")
+                .method("POST")
+                .userAgent(DataStatic.getUserAgent())
+                .header("X-AjaxPro-Method","GetPrivateKey")
+                .dataString("{\"salt\":\""+ studentId +"\"}")
+                .execute();
+        if(res != null) return res.substring(1,33);
+        return null;
     }
     private static String getSecurityValue(String md5) {
         try {
