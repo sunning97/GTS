@@ -60,6 +60,11 @@ public class LoginProcess implements ILoginProcess{
             protected void onPostExecute(Boolean status) {
                 if(status){
                     iLoginView.doneLoadingButton();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     iLoginView.loginSuccess();
                 }else{
                     iLoginView.revertLoadingButton();

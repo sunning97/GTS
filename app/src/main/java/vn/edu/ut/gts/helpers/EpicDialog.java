@@ -44,7 +44,6 @@ public class EpicDialog {
         this.epicDialog.show();
     }
     private void popupInit(){
-        topClosePopup = this.epicDialog.findViewById(R.id.close_popup);
         popupClose = this.epicDialog.findViewById(R.id.close_popup_bottom);
         popupTitle = this.epicDialog.findViewById(R.id.popup_title);
         popupText = this.epicDialog.findViewById(R.id.popup_text);
