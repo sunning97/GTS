@@ -66,7 +66,6 @@ public class HomeActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
 
         studentInfoProcess = new StudentInfoProcess(this);
-        studentInfoProcess.loadStudentData();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.content_frame,new StudentInfoRootFragment());
@@ -86,6 +85,7 @@ public class HomeActivity extends AppCompatActivity {
                         fragmentTransaction.replace(R.id.content_frame,new StudentInfoRootFragment());
                         fragmentTransaction.commit();
                         getSupportActionBar().setTitle("");
+                        studentInfoProcess.loadStudentData();
                         break;
                     }
                     case R.id.student_study_result:{

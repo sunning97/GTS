@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class Storage {
     private Context context;
+    private String fileName = "storage";
 
     public Storage(Context context){
         this.context = context;
@@ -19,18 +20,30 @@ public class Storage {
      * return Boolean
      *
      */
-    public boolean putString(String sharedPreferencesName, String key, String value){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE);
+
+
+    public String getCookie(){
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences(this.fileName, Context.MODE_PRIVATE);
+        return sharedPreferences.getString("cookie","");
+    }
+    public boolean setCookie(String cookie){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(this.fileName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("cookie", cookie);
+        return editor.commit();
+    }
+    public boolean putString(String key, String value){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(this.fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
         return editor.commit();
     }
-    public String getString(String sharedPreferencesName, String key, String defaultValue){
-        SharedPreferences sharedPreferences = this.context.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE);
+    public String getString(String key, String defaultValue){
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences(this.fileName, Context.MODE_PRIVATE);
         return sharedPreferences.getString(key,defaultValue);
     }
-    public Boolean putData(String sharePreferencesName, HashMap<String,String> data) {
-        SharedPreferences sharedPreferences = this.context.getSharedPreferences(sharePreferencesName,Context.MODE_PRIVATE);
+    public Boolean putData(HashMap<String,String> data) {
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences(this.fileName,Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for(Map.Entry<String, String> entry : data.entrySet()) {
@@ -48,10 +61,10 @@ public class Storage {
      *
      */
 
-    public HashMap<String,String> getData(String sharePreferencesName, List<String> keys) {
+    public HashMap<String,String> getData(List<String> keys) {
         if(keys.isEmpty() || keys == null) return null;
 
-        SharedPreferences sharedPreferences = this.context.getSharedPreferences(sharePreferencesName, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences(this.fileName, Context.MODE_PRIVATE);
         HashMap<String,String> result = new HashMap<>();
 
         for (String key: keys) {
@@ -69,8 +82,8 @@ public class Storage {
      *
      */
 
-    public Boolean removeByKey(String sharePreferencesName,String key) {
-        SharedPreferences sharedPreferences = this.context.getSharedPreferences(sharePreferencesName, Context.MODE_PRIVATE);
+    public Boolean removeByKey(String key) {
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences(this.fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.remove(key);
@@ -84,8 +97,8 @@ public class Storage {
      * return Boolean
      *
      */
-    public Boolean removeAll(String sharePreferencesName) {
-        SharedPreferences sharedPreferences = this.context.getSharedPreferences(sharePreferencesName, Context.MODE_PRIVATE);
+    public Boolean removeAll() {
+        SharedPreferences sharedPreferences = this.context.getSharedPreferences(this.fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         return editor.commit();

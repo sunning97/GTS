@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import vn.edu.ut.gts.actions.LoginAction;
+import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.storage.Storage;
 import vn.edu.ut.gts.views.login.ILoginView;
 
@@ -16,21 +17,37 @@ public class LoginProcess implements ILoginProcess{
     private Context context;
     private Storage  storage;
     private LoginAction loginAction;
-    public LoginProcess(ILoginView iLoginView,Context context){
+    public LoginProcess(ILoginView iLoginView,Context ct) {
         this.iLoginView = iLoginView;
-        this.context = context;
+        this.context = ct;
         this.storage = new Storage(context);
+        loginAction = new LoginAction();
+        this.checkLogin();
         this.loginInit();
+    }
+    private void checkLogin(){
+        AsyncTask<Void,Void,Boolean> asyncTask = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                String cookie = storage.getCookie();
+                return loginAction.checkLogin(cookie);
+            }
+
+            @Override
+            protected void onPostExecute(Boolean status) {
+                if(status) iLoginView.loginSuccess();
+            }
+        };
+        asyncTask.execute();
     }
     private void loginInit(){
         AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
-                loginAction = new LoginAction();
                 JSONObject dataLogin = loginAction.getDataLogin();
-                storage.putString("tmp","dataLogin",dataLogin.toString());
+                storage.putString("dataLogin",dataLogin.toString());
                 try {
-                    storage.putString("tmp","cookie",dataLogin.getString("cookie"));
+                    storage.setCookie(dataLogin.getString("cookie"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -40,6 +57,8 @@ public class LoginProcess implements ILoginProcess{
         asyncTask.execute();
     }
 
+
+
     @Override
     public void doLogin(final String studentId, final String password) {
         iLoginView.startLoadingButton();
@@ -47,7 +66,7 @@ public class LoginProcess implements ILoginProcess{
             @Override
             protected Boolean doInBackground(Boolean... booleans) {
                 try {
-                    JSONObject dataLogin = new JSONObject(storage.getString("tmp","dataLogin","{}"));
+                    JSONObject dataLogin = new JSONObject(storage.getString("dataLogin","{}"));
                     boolean status = loginAction.doLogin(studentId, password, dataLogin).checkLogin();
                     return status;
                 } catch (JSONException e) {
