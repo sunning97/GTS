@@ -1,6 +1,9 @@
 package vn.edu.ut.gts.views.homes.fragments;
 
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -9,11 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.actions.StudentInfoAction;
 import vn.edu.ut.gts.adapters.StudentInfoViewPagerAdapter;
+import vn.edu.ut.gts.presenter.home.StudentInfoProcess;
+import vn.edu.ut.gts.storage.Storage;
 import vn.edu.ut.gts.views.homes.fragments.student_info.StudentFamilyInfoFragment;
 import vn.edu.ut.gts.views.homes.fragments.student_info.StudentInfoFragment;
 import vn.edu.ut.gts.views.homes.fragments.student_info.StudentPersonalInfoFragment;
@@ -28,20 +36,15 @@ public class StudentInfoRootFragment extends Fragment {
     private StudentInfoViewPagerAdapter studentInfoViewPagerAdapter;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-
     public StudentInfoRootFragment() {
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_info_root,container,false);
-
         this.init(view);
         return view;
     }
-
     private void init(View view){
         tabLayout = view.findViewById(R.id.student_info_tablayout);
         viewPager = view.findViewById(R.id.student_info_view_pager);
@@ -55,13 +58,11 @@ public class StudentInfoRootFragment extends Fragment {
         fragmentTitle.add("Thông tin sinh viên");
         fragmentTitle.add("Thông tin cá nhân");
         fragmentTitle.add("Quan hệ gia đình");
-
         this.studentInfoViewPagerAdapter = new StudentInfoViewPagerAdapter(
                 getChildFragmentManager(),
                 fragments,
                 fragmentTitle
         );
-
         viewPager.setAdapter(studentInfoViewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }

@@ -1,5 +1,8 @@
 package vn.edu.ut.gts.actions;
 
+import android.os.AsyncTask;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +46,17 @@ public class LoginAction {
     public JSONObject getDataLogin(){
         return this.dataLogin;
     }
+
+    private String secutity(){
+        AsyncTask<String, Void, String> asyncTask  = new AsyncTask<String, Void, String>() {
+            @Override
+            protected String doInBackground(String... strings) {
+
+                return null;
+            }
+        }
+        return null;
+    }
     private String getPrivateKey(String studentId) {
         String res = Curl.connect(DataStatic.getBaseUrl()+"ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx")
                 .method("POST")
@@ -55,7 +69,21 @@ public class LoginAction {
         return null;
     }
 
+    private String getSecurity(String md5){
 
+        try {
+            String res = Curl.connect("https://uts.ntuongst.ga/api/getMD5dec/"+md5)
+                    .method("GET")
+                    .header("Content-Type","application/json")
+                    .execute();
+            Log.e("Security", res);
+            return new JSONObject(res).getString("value");
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
     private String getSecurityValue(String md5) {
         try {
             Document doc = Jsoup.connect("https://md5.gromweb.com/?md5=" + md5)
@@ -81,7 +109,7 @@ public class LoginAction {
                     .execute();
             res = res.replace(";/*", "");
             JSONArray ar = new JSONArray(res);
-            return getSecurityValue(ar.getString(1));
+            return getSecurity(ar.getString(1));
         } catch (JSONException e) {
             e.printStackTrace();
         }

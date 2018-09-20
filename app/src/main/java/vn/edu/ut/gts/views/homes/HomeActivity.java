@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.presenter.home.StudentInfoProcess;
 import vn.edu.ut.gts.views.homes.fragments.StudentInfoRootFragment;
 import vn.edu.ut.gts.views.homes.fragments.StudentStudyResultFragment;
 
@@ -22,6 +23,7 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentTransaction fragmentTransaction;
     private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+    private StudentInfoProcess studentInfoProcess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,8 @@ public class HomeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         actionBarDrawerToggle.syncState();
 
+        studentInfoProcess = new StudentInfoProcess(this);
+        studentInfoProcess.loadStudentData();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.content_frame,new StudentInfoRootFragment());
@@ -72,30 +76,30 @@ public class HomeActivity extends AppCompatActivity {
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        menuItem.setChecked(true);
-                        switch (menuItem.getItemId()){
-                            case R.id.student_profile:{
-                                fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                                fragmentTransaction.replace(R.id.content_frame,new StudentInfoRootFragment());
-                                fragmentTransaction.commit();
-                                getSupportActionBar().setTitle("");
-                                break;
-                            }
-                            case R.id.student_study_result:{
-                                fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                                fragmentTransaction.replace(R.id.content_frame,new StudentStudyResultFragment());
-                                fragmentTransaction.commit();
-                                getSupportActionBar().setTitle("Kết quả học tập");
-                                break;
-                            }
-                        }
-                        appDrawLayout.closeDrawers();
-
-                        return true;
+        new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                menuItem.setChecked(true);
+                switch (menuItem.getItemId()){
+                    case R.id.student_profile:{
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.content_frame,new StudentInfoRootFragment());
+                        fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("");
+                        break;
                     }
-                });
+                    case R.id.student_study_result:{
+                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.content_frame,new StudentStudyResultFragment());
+                        fragmentTransaction.commit();
+                        getSupportActionBar().setTitle("Kết quả học tập");
+                        break;
+                    }
+                }
+                appDrawLayout.closeDrawers();
+
+                return true;
+            }
+        });
     }
 }
