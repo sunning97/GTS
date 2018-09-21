@@ -2,7 +2,6 @@ package vn.edu.ut.gts.views.login;
 
 import android.Manifest;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
@@ -25,11 +23,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +32,7 @@ import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.TextInputValidator;
 import vn.edu.ut.gts.presenter.login.LoginProcess;
-import vn.edu.ut.gts.views.homes.HomeActivity;
+import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 
 public class LoginActivity extends AppCompatActivity implements ILoginView {
 
@@ -60,7 +54,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         this.requestPermission();
         this.init(this);
         this.validate();
@@ -104,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void loginSuccess() {
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
         startActivity(intent);
     }
 
@@ -146,8 +139,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         listenToInteret = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                ConnectivityManager connectivityManager =
-                        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                 if (connectivityManager.getActiveNetworkInfo() != null) {
                     inputStudentId.setEnabled(true);
                     inputPassword.setEnabled(true);

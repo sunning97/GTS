@@ -1,4 +1,4 @@
-package vn.edu.ut.gts.views.homes.fragments.student_info;
+package vn.edu.ut.gts.views.home.fragments.student_info;
 
 
 import android.os.Bundle;

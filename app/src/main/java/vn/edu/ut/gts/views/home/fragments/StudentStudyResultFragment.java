@@ -1,4 +1,4 @@
-package vn.edu.ut.gts.views.homes.fragments;
+package vn.edu.ut.gts.views.home.fragments;
 
 
 import android.os.Bundle;

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/grayLight"
     android:orientation="vertical"
-    tools:context=".views.homes.fragments.StudentInfoRootFragment">
+    tools:context=".views.home.fragments.StudentInfoRootFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

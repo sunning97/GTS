@@ -1,9 +1,6 @@
-package vn.edu.ut.gts.views.homes.fragments;
+package vn.edu.ut.gts.views.home.fragments;
 
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,19 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.StudentInfoAction;
 import vn.edu.ut.gts.adapters.StudentInfoViewPagerAdapter;
-import vn.edu.ut.gts.presenter.home.StudentInfoProcess;
-import vn.edu.ut.gts.storage.Storage;
-import vn.edu.ut.gts.views.homes.fragments.student_info.StudentFamilyInfoFragment;
-import vn.edu.ut.gts.views.homes.fragments.student_info.StudentInfoFragment;
-import vn.edu.ut.gts.views.homes.fragments.student_info.StudentPersonalInfoFragment;
+import vn.edu.ut.gts.views.home.fragments.student_info.StudentFamilyInfoFragment;
+import vn.edu.ut.gts.views.home.fragments.student_info.StudentInfoFragment;
+import vn.edu.ut.gts.views.home.fragments.student_info.StudentPersonalInfoFragment;
 
 /**
  * A simple {@link Fragment} subclass.
