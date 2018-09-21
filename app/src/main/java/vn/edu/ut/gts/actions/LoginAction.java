@@ -1,6 +1,5 @@
 package vn.edu.ut.gts.actions;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -22,6 +21,9 @@ public class LoginAction {
     private JSONObject dataLogin;
     public LoginAction(){
         this.dataLogin = new JSONObject();
+    }
+
+    public JSONObject getDataLogin(){
         try {
             Connection.Response res = Jsoup.connect(DataStatic.getBaseUrl())
                     .userAgent(DataStatic.getUserAgent())
@@ -41,9 +43,6 @@ public class LoginAction {
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public JSONObject getDataLogin(){
         return this.dataLogin;
     }
 
@@ -138,10 +137,23 @@ public class LoginAction {
         return this;
     }
 
+
+
     public boolean checkLogin() {
+
         String res = Curl.connect(DataStatic.getBaseUrl() + "ajaxpro/DangKy,PMT.Web.PhongDaoTao.ashx")
                 .method("POST")
                 .setCookie("ASP.NET_SessionId", this.cookie)
+                .userAgent(DataStatic.getUserAgent())
+                .header("X-AjaxPro-Method", "CheckLogin")
+                .dataString("{}").execute();
+        return Boolean.parseBoolean(res.replace(";/*", ""));
+    }
+    public boolean checkLogin(String cookie) {
+
+        String res = Curl.connect(DataStatic.getBaseUrl() + "ajaxpro/DangKy,PMT.Web.PhongDaoTao.ashx")
+                .method("POST")
+                .setCookie("ASP.NET_SessionId", cookie)
                 .userAgent(DataStatic.getUserAgent())
                 .header("X-AjaxPro-Method", "CheckLogin")
                 .dataString("{}").execute();

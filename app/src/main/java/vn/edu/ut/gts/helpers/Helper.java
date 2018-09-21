@@ -8,8 +8,10 @@ import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.Normalizer;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class Helper {
     public static String md5(String str) {
@@ -28,5 +30,12 @@ public class Helper {
     public static String base64Encode(String str) {
         byte[] base = Base64.decodeBase64(str);
         return new String(base);
+    }
+
+    public static String toSlug(String str){
+        str = str.trim();
+        String tmp = Normalizer.normalize(str, Normalizer.Form.NFD);
+        Pattern p = Pattern.compile("\\p{InCOMBINING_DIACRITICAL_MARKS}+");
+        return p.matcher(tmp).replaceAll("").toLowerCase().replace("đ","d").replaceAll("\\s","_");
     }
 }
