@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private LoginProcess loginProcess;
     private TextInputLayout studentIdInputLayout;
     private TextInputLayout passwordInputLayout;
-    private TextView studentIdInputErrorShow,passwordInputErrorShow;
+    private TextView studentIdInputErrorShow, passwordInputErrorShow;
     private Boolean isValidateNoError;
     private BroadcastReceiver listenToInteret;
     private EpicDialog epicDialog;
@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.init(this);
         this.validate();
         this.addControl();
-        handler.postDelayed(runnable, 3000);
+        handler.postDelayed(runnable, 1500);
 
     }
 
@@ -74,13 +74,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(listenToInteret,intentFilter);
+        registerReceiver(listenToInteret, intentFilter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(listenToInteret!= null){
+        if (listenToInteret != null) {
             unregisterReceiver(listenToInteret);
         }
     }
@@ -112,9 +112,9 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     @Override
     public void loginFailed() {
         epicDialog.showPopup(
-            "Đăng nhập thất bại",
-            "Mã số sinh viên / mật khẩu không đúng",
-            EpicDialog.NEGATIVE
+                "Đăng nhập thất bại",
+                "Mã số sinh viên / mật khẩu không đúng",
+                EpicDialog.NEGATIVE
         );
     }
 
@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             public void onReceive(Context context, Intent intent) {
                 ConnectivityManager connectivityManager =
                         (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                if(connectivityManager.getActiveNetworkInfo() != null){
+                if (connectivityManager.getActiveNetworkInfo() != null) {
                     inputStudentId.setEnabled(true);
                     inputPassword.setEnabled(true);
                     btnLogin.setEnabled(true);
@@ -159,7 +159,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                     inputStudentId.setEnabled(false);
                     inputPassword.setEnabled(false);
                     btnLogin.setEnabled(false);
-                    epicDialog.showPopup("Không có Internet","Thiết bị của bạn đang không kết nối mạng, vui lòng mở kết nối trước khi sử dụng",EpicDialog.NEGATIVE);
+                    epicDialog.showPopup("Không có Internet", "Thiết bị của bạn đang không kết nối mạng, vui lòng mở kết nối trước khi sử dụng", EpicDialog.NEGATIVE);
                 }
             }
         };
@@ -174,9 +174,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validatePassword();
-                validateStudentId();
-                if(isValidateNoError) {
+                if (validateStudentId() || validatePassword()) {
                     unsetInputError(passwordInputErrorShow);
                     unsetInputError(studentIdInputErrorShow);
                     loginProcess.doLogin(inputStudentId.getText().toString(), inputPassword.getText().toString());
@@ -225,36 +223,39 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         });
     }
 
-    private void validateStudentId() {
+    private boolean validateStudentId() {
         if (TextUtils.isEmpty(this.inputStudentId.getText().toString().trim())) {
-            this.setInputError(studentIdInputErrorShow,"Mã số sinh viên không được để trống");
+            this.setInputError(studentIdInputErrorShow, "Mã số sinh viên không được để trống");
             this.isValidateNoError = false;
         } else if (this.inputStudentId.getText().toString().trim().length() < 10) {
-            this.setInputError(studentIdInputErrorShow,"Mã số sinh viên không đúng định dạng");
-            this.isValidateNoError= false;
+            this.setInputError(studentIdInputErrorShow, "Mã số sinh viên không đúng định dạng");
+            this.isValidateNoError = false;
         } else {
             this.unsetInputError(studentIdInputErrorShow);
             this.isValidateNoError = true;
         }
+        return this.isValidateNoError;
     }
 
-    private void validatePassword(){
+    private boolean validatePassword() {
         if (TextUtils.isEmpty(this.inputPassword.getText().toString().trim())) {
-            this.setInputError(passwordInputErrorShow,"Mật khẩu không được để trống");
+            this.setInputError(passwordInputErrorShow, "Mật khẩu không được để trống");
             this.isValidateNoError = false;
         } else if (this.inputPassword.getText().toString().trim().length() < 5) {
-            this.setInputError(passwordInputErrorShow,"Mật khẩu phải lớn hơn 5 kí tự");
-            this.isValidateNoError= false;
+            this.setInputError(passwordInputErrorShow, "Mật khẩu phải lớn hơn 5 kí tự");
+            this.isValidateNoError = false;
         } else {
             this.unsetInputError(passwordInputErrorShow);
             this.isValidateNoError = true;
         }
+        return this.isValidateNoError;
     }
 
-    private void setInputError(TextView textView,String message){
+    private void setInputError(TextView textView, String message) {
         textView.setText(message);
     }
-    private void unsetInputError(TextView textView){
+
+    private void unsetInputError(TextView textView) {
         textView.setText("");
     }
 

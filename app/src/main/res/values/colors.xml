@@ -15,4 +15,8 @@
     <color name="greenLight">#ABFFC0</color>
     <color name="greenDark">#247B37</color>
     <color name="green">#3EB959</color>
+    <color name="pinkLight">#ff2d81</color>
+    <color name="amethyst">#9b59b6</color>
+    <color name="wetasphalt">#34495e</color>
+    <color name="pumpkin">#d35400</color>
 </resources>

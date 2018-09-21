@@ -43,6 +43,7 @@ public class LoginProcess implements ILoginProcess{
     @Override
     public void doLogin(final String studentId, final String password) {
         iLoginView.startLoadingButton();
+        iLoginView.loginSuccess();
         AsyncTask<Boolean, Void, Boolean> asyncTask = new AsyncTask<Boolean, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Boolean... booleans) {
