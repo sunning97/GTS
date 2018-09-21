@@ -18,11 +18,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-<<<<<<< HEAD
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_toolbar_menu,menu);
         return true;
-=======
+        
     public void onBackPressed() {
         builder.setTitle("Xác nhận thoát");
         builder.setMessage("Bạn có muốn thoát không?");
@@ -91,6 +90,5 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         });
->>>>>>> 1762120c5ecbfb36698ed5e6bcbd9079e655224f
     }
 }
