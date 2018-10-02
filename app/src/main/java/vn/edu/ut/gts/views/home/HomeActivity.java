@@ -17,6 +17,7 @@ import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 import vn.edu.ut.gts.views.home.fragments.StudentInfoRootFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentStudyResultFragment;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.views.home.fragments.WeekSchedule;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     public static final int STUDENT_INFO = 1;
@@ -76,6 +77,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 ).commit();
                 setTitle(item.getTitle());
                 break;
+            case R.id.schedule_by_week:
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new WeekSchedule()
+                ).commit();
+                setTitle(item.getTitle());
+                break;
             case R.id.home_dashboard:
                 Intent dashboardIntent = new Intent(HomeActivity.this, DashboardActivity.class);
                 startActivity(dashboardIntent);
@@ -103,6 +111,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         new StudentStudyResultFragment()
                 ).commit();
                 setTitle("Kết quả học tập");
+                break;
+            case HomeActivity.SCHEDULE_BY_WEEK:
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new WeekSchedule()
+                ).commit();
+                setTitle("Xem lịch theo tuần");
                 break;
         }
     }

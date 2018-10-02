@@ -4,14 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.home.fragments.StudentStudyResultFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Student Study Result"
-        android:textSize="35sp"
-        android:gravity="center"
-        android:textColor="@color/black"/>
-
 </FrameLayout>
