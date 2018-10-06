@@ -3,17 +3,17 @@ package vn.edu.ut.gts.views.home;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
+import vn.edu.ut.gts.views.home.fragments.FrameProgramFragment;
+import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentInfoRootFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentStudyResultFragment;
 import vn.edu.ut.gts.R;
@@ -88,6 +88,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Intent dashboardIntent = new Intent(HomeActivity.this, DashboardActivity.class);
                 startActivity(dashboardIntent);
                 break;
+            case  R.id.frame_program:
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new FrameProgramFragment()
+                ).commit();
+                setTitle(item.getTitle());
+            case R.id.student_debt:
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new StudentDebtFragment()
+                ).commit();
+                setTitle(item.getTitle());
         }
         return true;
     }
@@ -119,6 +131,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 ).commit();
                 setTitle("Xem lịch theo tuần");
                 break;
+            case HomeActivity.FRAME_PROGRAM:
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new FrameProgramFragment()
+                ).commit();
+                setTitle("Chương trình khung");
+            case HomeActivity.STUDENT_DEBT:
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new StudentDebtFragment()
+                ).commit();
+                setTitle("Công nợ Sinh viên");
         }
     }
 }
