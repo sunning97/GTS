@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.TextInputValidator;
@@ -36,24 +38,25 @@ import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 
 public class LoginActivity extends AppCompatActivity implements ILoginView {
 
-    private RelativeLayout relay_1;
-    private Handler handler;
-    private Runnable runnable;
-    private CircularProgressButton btnLogin;
-    private EditText inputStudentId;
-    private EditText inputPassword;
+    @BindView(R.id.relay_1) RelativeLayout relay_1;
+    @BindView(R.id.btn_login) CircularProgressButton btnLogin;
+    @BindView(R.id.txtStudentId) EditText inputStudentId;
+    @BindView(R.id.txtPassword) EditText inputPassword;
+    @BindView(R.id.input_student_id_error) TextView studentIdInputErrorShow;
+    @BindView(R.id.input_password_error) TextView passwordInputErrorShow;
+
     private LoginProcess loginProcess;
-    private TextInputLayout studentIdInputLayout;
-    private TextInputLayout passwordInputLayout;
-    private TextView studentIdInputErrorShow, passwordInputErrorShow;
     private Boolean isValidateNoError;
     private BroadcastReceiver listenToInteret;
     private EpicDialog epicDialog;
+    private Handler handler;
+    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
         this.requestPermission();
         this.init(this);
         this.validate();
@@ -117,14 +120,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
      * @return Void
      */
     private void init(Context context) {
-        this.relay_1 = findViewById(R.id.relay_1);
-        this.btnLogin = findViewById(R.id.btn_login);
-        this.inputStudentId = findViewById(R.id.txtStudentId);
-        this.inputPassword = findViewById(R.id.txtPassword);
-        this.passwordInputLayout = findViewById(R.id.password_input_layout);
-        this.studentIdInputLayout = findViewById(R.id.student_id_input_layout);
-        this.studentIdInputErrorShow = findViewById(R.id.input_student_id_error);
-        this.passwordInputErrorShow = findViewById(R.id.input_password_error);
         this.isValidateNoError = false;
         this.handler = new Handler();
         this.epicDialog = new EpicDialog(context);
