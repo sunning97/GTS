@@ -32,6 +32,7 @@ public class StudentDebtFragment extends Fragment {
 
     @BindView(R.id.student_debt_table) TableLayout studentDebtTable;
     @BindView(R.id.student_debt_spinner) MaterialSpinner studentDebtSpinner;
+    @BindView(R.id.student_total_debt) TextView studentTotalDebt;
 
     List<JSONObject> data = new ArrayList<>();
     String[] dataSnpinner = {"Học kỳ 1 năm học 2018-2019","Học kỳ hè năm học 2017-2018","Học kỳ 2 năm học 2017-2018","Học kỳ 1 năm học 2017-2018","Học kỳ hè năm học 2016-2017","Học kỳ 2 năm học 2016-2017","Học kỳ 1 năm học 2016-2017","Học kỳ hè năm học 2015-2016","Học kỳ 2 năm học 2015-2016","Học kỳ 1 năm học 2015-2016"};
