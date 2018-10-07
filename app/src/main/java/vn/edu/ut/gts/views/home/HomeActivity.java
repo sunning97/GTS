@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
+import vn.edu.ut.gts.views.home.fragments.AttendanceFragment;
 import vn.edu.ut.gts.views.home.fragments.FrameProgramFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentInfoRootFragment;
@@ -39,8 +40,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         Intent intent = getIntent();
         ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -100,6 +103,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         new StudentDebtFragment()
                 ).commit();
                 setTitle(item.getTitle());
+            case R.id.attendance:
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new AttendanceFragment()
+                ).commit();
+                setTitle(item.getTitle());
         }
         return true;
     }
@@ -143,6 +152,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         new StudentDebtFragment()
                 ).commit();
                 setTitle("Công nợ Sinh viên");
+            case HomeActivity.ATTENDACE:
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new AttendanceFragment()
+                ).commit();
+                setTitle("Thông tin điểm danh");
         }
     }
 }
