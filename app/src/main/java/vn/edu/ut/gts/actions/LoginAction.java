@@ -137,10 +137,7 @@ public class LoginAction {
         return this;
     }
 
-
-
     public boolean checkLogin() {
-
         String res = Curl.connect(DataStatic.getBaseUrl() + "ajaxpro/DangKy,PMT.Web.PhongDaoTao.ashx")
                 .method("POST")
                 .setCookie("ASP.NET_SessionId", this.cookie)
