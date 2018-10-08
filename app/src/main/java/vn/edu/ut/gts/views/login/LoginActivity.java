@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
@@ -28,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.TextInputValidator;
@@ -36,30 +40,31 @@ import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 
 public class LoginActivity extends AppCompatActivity implements ILoginView {
 
-    private RelativeLayout relay_1;
-    private Handler handler;
-    private Runnable runnable;
-    private CircularProgressButton btnLogin;
-    private EditText inputStudentId;
-    private EditText inputPassword;
+    @BindView(R.id.relay_1) RelativeLayout relay_1;
+    @BindView(R.id.btn_login) CircularProgressButton btnLogin;
+    @BindView(R.id.txtStudentId) EditText inputStudentId;
+    @BindView(R.id.txtPassword) EditText inputPassword;
+    @BindView(R.id.input_student_id_error) TextView studentIdInputErrorShow;
+    @BindView(R.id.input_password_error) TextView passwordInputErrorShow;
+
     private LoginProcess loginProcess;
-    private TextInputLayout studentIdInputLayout;
-    private TextInputLayout passwordInputLayout;
-    private TextView studentIdInputErrorShow, passwordInputErrorShow;
     private Boolean isValidateNoError;
     private BroadcastReceiver listenToInteret;
-    private EpicDialog epicDialog;
+    private Handler handler;
+    private Runnable runnable;
+    private SweetAlertDialog loginAlert;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
         this.requestPermission();
-        this.init(this);
+        this.init();
         this.validate();
         this.addControl();
         handler.postDelayed(runnable, 1500);
-
     }
 
     @Override
@@ -84,10 +89,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void doneLoadingButton() {
-        this.btnLogin.doneLoadingAnimation(
+        btnLogin.doneLoadingAnimation(
                 Color.parseColor("#00000000"),
                 BitmapFactory.decodeResource(getResources(), R.drawable.ic_done_white_48dp)
         );
+
     }
 
     @Override
@@ -97,17 +103,23 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void loginSuccess() {
-        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-        startActivity(intent);
+        this.runnable = new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                startActivity(intent);
+            }
+        };
+        handler.postDelayed(runnable, 1000);
+
     }
 
     @Override
     public void loginFailed() {
-        epicDialog.showPopup(
-                "Đăng nhập thất bại",
-                "Mã số sinh viên / mật khẩu không đúng",
-                EpicDialog.NEGATIVE
-        );
+        new SweetAlertDialog(this)
+                .setTitleText(getResources().getString(R.string.login_failed_dialog_title))
+                .setContentText(getResources().getString(R.string.login_failed_dialog_content))
+                .show();
     }
 
 
@@ -116,25 +128,16 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
      *
      * @return Void
      */
-    private void init(Context context) {
-        this.relay_1 = findViewById(R.id.relay_1);
-        this.btnLogin = findViewById(R.id.btn_login);
-        this.inputStudentId = findViewById(R.id.txtStudentId);
-        this.inputPassword = findViewById(R.id.txtPassword);
-        this.passwordInputLayout = findViewById(R.id.password_input_layout);
-        this.studentIdInputLayout = findViewById(R.id.student_id_input_layout);
-        this.studentIdInputErrorShow = findViewById(R.id.input_student_id_error);
-        this.passwordInputErrorShow = findViewById(R.id.input_password_error);
+
+    private void init() {
         this.isValidateNoError = false;
         this.handler = new Handler();
-        this.epicDialog = new EpicDialog(context);
         this.runnable = new Runnable() {
             @Override
             public void run() {
                 relay_1.setVisibility(View.VISIBLE);
             }
         };
-        this.loginProcess = new LoginProcess(this, this);
 
         listenToInteret = new BroadcastReceiver() {
             @Override
@@ -144,12 +147,16 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                     inputStudentId.setEnabled(true);
                     inputPassword.setEnabled(true);
                     btnLogin.setEnabled(true);
-                    epicDialog.dismisPopup();
+                    if(loginAlert != null) loginAlert.dismissWithAnimation();
+                    loginProcess = new LoginProcess(LoginActivity.this, context);
                 } else {
                     inputStudentId.setEnabled(false);
                     inputPassword.setEnabled(false);
                     btnLogin.setEnabled(false);
-                    epicDialog.showPopup("Không có Internet", "Thiết bị của bạn đang không kết nối mạng, vui lòng mở kết nối trước khi sử dụng", EpicDialog.NEGATIVE);
+                    loginAlert = new SweetAlertDialog(context,SweetAlertDialog.ERROR_TYPE);
+                    loginAlert.setTitleText(getResources().getString(R.string.no_internet_access_error_dialog_title))
+                            .setContentText(getResources().getString(R.string.no_internet_access_error_dialog_content))
+                            .show();
                 }
             }
         };
@@ -164,10 +171,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validateStudentId() || validatePassword()) {
+                if (validateStudentId() && validatePassword()) {
                     unsetInputError(passwordInputErrorShow);
                     unsetInputError(studentIdInputErrorShow);
-                    loginProcess.doLogin(inputStudentId.getText().toString(), inputPassword.getText().toString());
+                    loginProcess.doLogin(getStudentId(),getPassword());
                 }
             }
         });
@@ -249,4 +256,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         textView.setText("");
     }
 
+    private String getStudentId(){
+        return this.inputStudentId.getText().toString().trim();
+    }
+    private String getPassword(){
+        return this.inputPassword.getText().toString().trim();
+    }
 }

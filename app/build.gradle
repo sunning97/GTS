@@ -22,16 +22,32 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0-alpha1'
     implementation 'com.android.support:design:28.0.0-alpha1'
-    implementation 'br.com.simplepass:loading-button-android:1.14.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.android.support:support-v4:28.0.0-alpha1'
     implementation 'com.android.support:cardview-v7:28.0.0-alpha1'
+
+    // Loading Button
+    implementation 'br.com.simplepass:loading-button-android:1.14.0'
+    // Circle Image
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    // Butter Knife
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    // Floatting Button
+    implementation 'com.github.clans:fab:1.6.4'
+    // Material Spinner
+    implementation 'com.jaredrummler:material-spinner:1.2.5'
+    // Sweat alert dialog
+    implementation 'com.github.f0ris.sweetalert:library:1.5.1'
+
+    // Validate
+    implementation 'com.basgeekball:awesome-validation:4.2'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // Add .jar lib
     implementation files('sampledata/libs/commons-codec-1.11.jar')
     implementation files('sampledata/libs/json-20180813.jar')
     implementation files('sampledata/libs/jsoup-1.11.3.jar')
