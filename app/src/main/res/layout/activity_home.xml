@@ -34,6 +34,6 @@
         android:layout_gravity="start"
         app:menu="@menu/app_draw_menu"
         app:headerLayout="@layout/app_draw_menu_header">
-
+        <include layout="@layout/app_draw_menu_header"/>
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

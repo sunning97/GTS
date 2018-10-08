@@ -12,24 +12,24 @@ import android.graphics.Color;
 
 import android.net.ConnectivityManager;
 import android.os.Handler;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.TextInputValidator;
@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private EpicDialog epicDialog;
     private Handler handler;
     private Runnable runnable;
+    private SweetAlertDialog loginAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.validate();
         this.addControl();
         handler.postDelayed(runnable, 1500);
-
     }
 
     @Override
@@ -119,6 +119,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
      *
      * @return Void
      */
+
     private void init(Context context) {
         this.isValidateNoError = false;
         this.handler = new Handler();
@@ -129,7 +130,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 relay_1.setVisibility(View.VISIBLE);
             }
         };
-        this.loginProcess = new LoginProcess(this, this);
 
         listenToInteret = new BroadcastReceiver() {
             @Override
@@ -139,12 +139,17 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                     inputStudentId.setEnabled(true);
                     inputPassword.setEnabled(true);
                     btnLogin.setEnabled(true);
-                    epicDialog.dismisPopup();
+                    if(loginAlert != null) loginAlert.dismissWithAnimation();
+                    loginProcess = new LoginProcess(LoginActivity.this, context);
                 } else {
                     inputStudentId.setEnabled(false);
                     inputPassword.setEnabled(false);
                     btnLogin.setEnabled(false);
-                    epicDialog.showPopup("Không có Internet", "Thiết bị của bạn đang không kết nối mạng, vui lòng mở kết nối trước khi sử dụng", EpicDialog.NEGATIVE);
+                    loginAlert = new SweetAlertDialog(context,SweetAlertDialog.ERROR_TYPE);
+                    loginAlert.setTitleText("Oops...")
+                            .setContentText("Ứng dụng cần internet để lấy dữ liệu, vui lòng bật dữ liệu mạng hoặc Wifi")
+                            .show();
+                    //epicDialog.showPopup("Không có Internet", "Thiết bị của bạn đang không kết nối mạng, vui lòng mở kết nối trước khi sử dụng", EpicDialog.NEGATIVE);
                 }
             }
         };

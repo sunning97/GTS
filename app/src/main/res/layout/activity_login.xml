@@ -65,12 +65,13 @@
                         android:text="Mã số sinh viên"
                         android:textAllCaps="true"
                         android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/student_id_input_layout">
+                        android:id="@+id/student_id_input_layout"
+                        app:errorEnabled="false">
 
                         <EditText
                             android:id="@+id/txtStudentId"
@@ -82,7 +83,7 @@
                             android:paddingBottom="5dp"
                             android:paddingLeft="15dp"
                             android:paddingRight="15dp"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white" />
                         <TextView
                             android:id="@+id/input_student_id_error"
                             android:layout_width="match_parent"
