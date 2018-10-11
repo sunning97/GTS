@@ -1,5 +1,6 @@
 package vn.edu.ut.gts.views.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -29,6 +30,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static final int STUDENT_DEBT = 4;
     public static final int SCHEDULE_BY_WEEK = 5;
     public static final int ATTENDACE = 6;
+    private Context context;
 
     @BindView(R.id.home_toolbar)
     Toolbar toolbar;
@@ -42,6 +44,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getApplicationContext();
         setContentView(R.layout.activity_home);
 
         Intent intent = getIntent();

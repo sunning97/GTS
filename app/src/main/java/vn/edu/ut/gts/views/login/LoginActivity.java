@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 if (validateStudentId() && validatePassword()) {
                     unsetInputError(passwordInputErrorShow);
                     unsetInputError(studentIdInputErrorShow);
-                    loginProcess.doLogin(getStudentId(),getPassword());
+                    loginProcess.execute(getStudentId(),getPassword());
                 }
             }
         });
@@ -239,7 +239,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             this.setInputError(passwordInputErrorShow, "Mật khẩu không được để trống");
             this.isValidateNoError = false;
         } else if (this.inputPassword.getText().toString().trim().length() < 5) {
-            this.setInputError(passwordInputErrorShow, "Mật khẩu phải lớn hơn 5 kí tự");
+            this.setInputError(passwordInputErrorShow, "Mật khẩu phải có ít nhất 6 ký tự");
             this.isValidateNoError = false;
         } else {
             this.unsetInputError(passwordInputErrorShow);
