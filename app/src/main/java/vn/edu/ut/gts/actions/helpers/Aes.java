@@ -1,4 +1,4 @@
-package vn.edu.ut.gts.helpers;
+package vn.edu.ut.gts.actions.helpers;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
@@ -19,7 +19,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AES {
+public class Aes {
     private static final String KEY = "e84ad660c4721ae0e84ad660c4721ae0";
     private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
     private static final String AES_ALGORITHM = "AES/CBC/PKCS5Padding";
@@ -46,7 +46,7 @@ public class AES {
         }
         return null;
     }
-    public static AES encrypt(String privateKey, String password) {
+    public static Aes encrypt(String privateKey, String password) {
         try {
             Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, generateKey(privateKey), new IvParameterSpec(hexToBytes(KEY)));
@@ -55,7 +55,7 @@ public class AES {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return new AES();
+        return new Aes();
     }
     public String toBase64() {
         return new String(Base64.encodeBase64(HASHED));

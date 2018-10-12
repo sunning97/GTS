@@ -2,55 +2,28 @@ package vn.edu.ut.gts.presenter.login;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import vn.edu.ut.gts.actions.LoginAction;
-import vn.edu.ut.gts.helpers.Helper;
-import vn.edu.ut.gts.storage.Storage;
+import vn.edu.ut.gts.actions.Login;
+import vn.edu.ut.gts.actions.helpers.Helper;
+import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.login.ILoginView;
 
 public class LoginProcess implements ILoginProcess{
     private ILoginView iLoginView;
     private Context context;
-    private Storage  storage;
-    private LoginAction loginAction;
-    public LoginProcess(ILoginView iLoginView,Context ct) {
+    private Storage storage;
+    private Login actionLogin;
+    public LoginProcess(ILoginView iLoginView, Context context) {
         this.iLoginView = iLoginView;
-        this.context = ct;
+        this.context = context;
         this.storage = new Storage(context);
-        loginAction = new LoginAction();
-        this.checkLogin();
-        this.loginInit();
+        this.init();
     }
-    private void checkLogin(){
-        AsyncTask<Void,Void,Boolean> asyncTask = new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                String cookie = storage.getCookie();
-                return loginAction.checkLogin(cookie);
-            }
-
-            @Override
-            protected void onPostExecute(Boolean status) {
-                if(status) iLoginView.loginSuccess();
-            }
-        };
-        asyncTask.execute();
-    }
-    private void loginInit(){
+    private void init(){
         AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
-                JSONObject dataLogin = loginAction.getDataLogin();
-                storage.putString("dataLogin",dataLogin.toString());
-                try {
-                    storage.setCookie(dataLogin.getString("cookie"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                actionLogin = new Login(context);
                 return null;
             }
         };
@@ -60,8 +33,9 @@ public class LoginProcess implements ILoginProcess{
 
 
     @Override
-    public void doLogin(final String studentId, final String password) {
+    public void execute(final String studentId, final String password) {
         iLoginView.startLoadingButton();
+<<<<<<< HEAD
         iLoginView.loginSuccess();
         iLoginView.doneLoadingButton();
 //        AsyncTask<Boolean, Void, Boolean> asyncTask = new AsyncTask<Boolean, Void, Boolean>() {
@@ -94,6 +68,35 @@ public class LoginProcess implements ILoginProcess{
 //            }
 //        };
 //        asyncTask.execute();
+=======
+        //iLoginView.loginSuccess();
+        //iLoginView.doneLoadingButton();
+        //iLoginView.revertLoadingButton();
+        AsyncTask<Boolean, Void, Boolean> asyncTask = new AsyncTask<Boolean, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Boolean... booleans) {
+                actionLogin.login(studentId, password);
+                return Helper.checkLogin(storage.getCookie());
+            }
+
+            @Override
+            protected void onPostExecute(Boolean status) {
+                if(status){
+                    iLoginView.loginSuccess();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    iLoginView.doneLoadingButton();
+                }else{
+                    iLoginView.revertLoadingButton();
+                    iLoginView.loginFailed();
+                }
+            }
+        };
+        asyncTask.execute();
+>>>>>>> 00643535d6310e8d13d1bfb3f71a3d5ae283700e
     }
 
 

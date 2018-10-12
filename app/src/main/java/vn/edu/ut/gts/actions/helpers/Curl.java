@@ -1,5 +1,4 @@
-package vn.edu.ut.gts.helpers;
-
+package vn.edu.ut.gts.actions.helpers;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
