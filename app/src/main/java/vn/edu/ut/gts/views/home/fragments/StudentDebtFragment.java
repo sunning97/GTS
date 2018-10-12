@@ -65,19 +65,19 @@ public class StudentDebtFragment extends Fragment {
             TableRow tableRow = new TableRow(getContext());
             tableRow.setGravity(Gravity.CENTER);
             tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-            tableRow.setMinimumHeight(200);
+            tableRow.setMinimumHeight(120);
             if(index % 2 == 0){
                 tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
             }
             try {
-                tableRow.addView(generateTableCell(jsonObject.getString("subject_id")));
-                tableRow.addView(generateTableCell(jsonObject.getString("content")));
-                tableRow.addView(generateTableCell(jsonObject.getString("credits")));
-                tableRow.addView(generateTableCell(jsonObject.getString("deposit")));
-                tableRow.addView(generateTableCell(jsonObject.getString("submitted")));
-                tableRow.addView(generateTableCell(jsonObject.getString("deduct")));
-                tableRow.addView(generateTableCell(jsonObject.getString("debt")));
-                tableRow.addView(generateTableCell(jsonObject.getString("state")));
+                tableRow.addView(generateTableCell(jsonObject.getString("subject_id"),false));
+                tableRow.addView(generateTableCell(jsonObject.getString("content"),false));
+                tableRow.addView(generateTableCell(jsonObject.getString("credits"),true));
+                tableRow.addView(generateTableCell(jsonObject.getString("deposit"),true));
+                tableRow.addView(generateTableCell(jsonObject.getString("submitted"),true));
+                tableRow.addView(generateTableCell(jsonObject.getString("deduct"),true));
+                tableRow.addView(generateTableCell(jsonObject.getString("debt"),true));
+                tableRow.addView(generateTableCell(jsonObject.getString("state"),true));
             } catch (Exception e){
 
             }
@@ -86,19 +86,19 @@ public class StudentDebtFragment extends Fragment {
         }
     }
 
-    private LinearLayout generateTableCell(String content){
+    private LinearLayout generateTableCell(String content,Boolean isGravityCenter){
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setGravity(Gravity.CENTER);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(5,5,5,0);
+        if(isGravityCenter) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         // generate cell's text view
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        a.setMargins(10,10,10,10);
+        a.setMargins(10,0,10,0);
         textView.setLayoutParams(a);
         textView.setTextColor(getResources().getColor(R.color.black));
         textView.setText(content);

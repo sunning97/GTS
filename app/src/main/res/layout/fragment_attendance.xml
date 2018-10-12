@@ -24,17 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Học kỳ 1 năm học 2018-2019 - Năm học 2018-2019"/>
-    </LinearLayout>
-    <LinearLayout
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -139,7 +128,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Nghi có phép"
+                            android:text="Có phép"
                             android:textColor="@color/white"/>
                     </LinearLayout>
                     <LinearLayout
@@ -156,7 +145,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Nghỉ ko phép"
+                            android:text="Ko phép"
                             android:textColor="@color/white"/>
                     </LinearLayout>
                 </TableRow>

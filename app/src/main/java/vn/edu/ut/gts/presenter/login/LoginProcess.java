@@ -64,7 +64,6 @@ public class LoginProcess implements ILoginProcess{
         iLoginView.startLoadingButton();
         iLoginView.loginSuccess();
         iLoginView.doneLoadingButton();
-//        iLoginView.revertLoadingButton();
 //        AsyncTask<Boolean, Void, Boolean> asyncTask = new AsyncTask<Boolean, Void, Boolean>() {
 //            @Override
 //            protected Boolean doInBackground(Boolean... booleans) {

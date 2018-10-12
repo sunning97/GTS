@@ -9,10 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 import vn.edu.ut.gts.views.home.fragments.AttendanceFragment;
 import vn.edu.ut.gts.views.home.fragments.FrameProgramFragment;
@@ -36,6 +38,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     @BindView(R.id.home_navigation_view)
     NavigationView navigationView;
+    @BindView(R.id.student_name)
+    TextView studentFullName;
+    @BindView(R.id.year)
+    TextView studentYear;
+    @BindView(R.id.profile_image)
+    CircleImageView profileImage;
 
     ActionBarDrawerToggle actionBarDrawerToggle;
 
@@ -52,10 +60,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         setHomeFragment(intent);
-
         navigationView.setNavigationItemSelectedListener(this);
+        studentFullName.setText("Nguyễn Ngọc Giang");
+
     }
 
     @Override

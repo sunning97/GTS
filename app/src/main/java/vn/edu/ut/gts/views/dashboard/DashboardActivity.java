@@ -12,17 +12,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.views.home.HomeActivity;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.dashboard_toolbar)
     Toolbar dashboardToolbar;
-    @BindView(R.id.dashboard_student_id)
-    TextView dashboardStudentID;
     @BindView(R.id.dashboard_appbar_layout)
     AppBarLayout dashboardAppbarLayout;
     @BindView(R.id.dashboard_collapsing_toolbar_alyout)
@@ -39,7 +40,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     CardView scheduleByWeekCard;
     @BindView(R.id.attendance_card)
     CardView attendanceCard;
-    private String title = "";
+    @BindView(R.id.profile_image)
+    CircleImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,21 +98,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void init() {
-        title = collapsingToolbarLayout.getTitle().toString();
-
-        dashboardAppbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
-                    dashboardStudentID.setVisibility(View.INVISIBLE);
-                    collapsingToolbarLayout.setTitle(collapsingToolbarLayout.getTitle() + " - " + dashboardStudentID.getText());
-                } else {
-                    dashboardStudentID.setVisibility(View.VISIBLE);
-                    collapsingToolbarLayout.setTitle(title);
-                }
-            }
-        });
-
+        collapsingToolbarLayout.setTitle("Nguyễn Ngọc Giang - 1551150027");
         setSupportActionBar(dashboardToolbar);
     }
 
@@ -119,24 +107,20 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         showExitConfirm();
     }
 
-    private void showExitConfirm(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
-        builder.setTitle("Xác nhận thoát");
-        builder.setMessage("Bạn có muốn thoát ứng dụng?");
-        builder.setCancelable(true);
-        builder.setPositiveButton("Hủy bỏ", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        builder.setNegativeButton("Đồng ý", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    private void showExitConfirm() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Xác nhận thoát?")
+                .setCancelText("Ok")
+                .setConfirmText("Hủy")
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        moveTaskToBack(true);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                    }
+                })
+                .show();
     }
 }

@@ -37,8 +37,8 @@ public class AttendanceFragment extends Fragment {
 
     List<JSONObject> data = new ArrayList<>();
     String[] dataSnpinner = {"Học kỳ 1 năm học 2018-2019","Học kỳ hè năm học 2017-2018","Học kỳ 2 năm học 2017-2018","Học kỳ 1 năm học 2017-2018","Học kỳ hè năm học 2016-2017","Học kỳ 2 năm học 2016-2017","Học kỳ 1 năm học 2016-2017","Học kỳ hè năm học 2015-2016","Học kỳ 2 năm học 2015-2016","Học kỳ 1 năm học 2015-2016"};
+
     public AttendanceFragment() {
-        // Required empty public constructor
     }
 
 
@@ -65,16 +65,16 @@ public class AttendanceFragment extends Fragment {
             TableRow tableRow = new TableRow(getContext());
             tableRow.setGravity(Gravity.CENTER);
             tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-            tableRow.setMinimumHeight(200);
+            tableRow.setMinimumHeight(120);
             if(index % 2 == 0){
                 tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
             }
             try {
-                tableRow.addView(generateTableCell(jsonObject.getString("subject_id")));
-                tableRow.addView(generateTableCell(jsonObject.getString("subject_name")));
-                tableRow.addView(generateTableCell(jsonObject.getString("dhtv")));
-                tableRow.addView(generateTableCell(jsonObject.getString("halt_permit")));
-                tableRow.addView(generateTableCell(jsonObject.getString("halt_no_permit")));
+                tableRow.addView(generateTableCell(jsonObject.getString("subject_id"),false));
+                tableRow.addView(generateTableCell(jsonObject.getString("subject_name"),false));
+                tableRow.addView(generateTableCell(jsonObject.getString("dhtv"),true));
+                tableRow.addView(generateTableCell(jsonObject.getString("halt_permit"),true));
+                tableRow.addView(generateTableCell(jsonObject.getString("halt_no_permit"),true));
             } catch (Exception e){
 
             }
@@ -83,19 +83,20 @@ public class AttendanceFragment extends Fragment {
         }
     }
 
-    private LinearLayout generateTableCell(String content){
+    private LinearLayout generateTableCell(String content,Boolean isMarginCenter){
+
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setGravity(Gravity.CENTER);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(5,5,5,0);
+        if(isMarginCenter) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         // generate cell's text view
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        a.setMargins(10,10,10,10);
+        a.setMargins(10,0,10,0);
         textView.setLayoutParams(a);
         textView.setTextColor(getResources().getColor(R.color.black));
         textView.setText(content);
