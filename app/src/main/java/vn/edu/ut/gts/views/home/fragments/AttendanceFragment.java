@@ -70,16 +70,6 @@ public class AttendanceFragment extends Fragment {
         this.initLoadingDialog();
         this.initAttendance();
 
-        try {
-            JSONObject dataDiemDanh = new JSONObject(storage.getString("dataAttendance"));
-            semesters = new JSONArray(dataDiemDanh.getString("semesters"));
-            for (int i = 0; i < semesters.length(); i++) {
-                JSONObject jsonObject = (JSONObject) semesters.get(i);
-                dataSnpinner.add(jsonObject.getString("text"));
-            }
-        } catch (Exception e){}
-        studentAttendanceSpinner.setItems(dataSnpinner);
-
         this.dataInit(0);
         studentAttendanceSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
@@ -96,6 +86,19 @@ public class AttendanceFragment extends Fragment {
             protected String doInBackground(Void... voids) {
                 student.getDataTTDiemDanh();
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                try {
+                    JSONObject dataDiemDanh = new JSONObject(storage.getString("dataAttendance"));
+                    semesters = new JSONArray(dataDiemDanh.getString("semesters"));
+                    for (int i = 0; i < semesters.length(); i++) {
+                        JSONObject jsonObject = (JSONObject) semesters.get(i);
+                        dataSnpinner.add(jsonObject.getString("text"));
+                    }
+                } catch (Exception e){}
+                studentAttendanceSpinner.setItems(dataSnpinner);
             }
         };
         asyncTask.execute();

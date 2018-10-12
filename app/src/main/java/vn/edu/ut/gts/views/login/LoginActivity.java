@@ -7,13 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
 import android.net.ConnectivityManager;
 import android.os.Handler;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -34,9 +32,8 @@ import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.helpers.Storage;
-import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.TextInputValidator;
-import vn.edu.ut.gts.presenter.login.LoginProcess;
+import vn.edu.ut.gts.presenters.login.LoginProcess;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 
 public class LoginActivity extends AppCompatActivity implements ILoginView {
