@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,10 +25,11 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/trang_thai"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đang học"
+                android:text=""
                 android:textColor="@color/red"
                 android:textSize="16sp"/>
             <View
@@ -50,10 +52,11 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/gioi_tinh"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nam"
+                android:text=""
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -76,10 +79,11 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/ngay_vao_truong"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="09/09/2015"
+                android:text=""
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -102,10 +106,11 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/ma_ho_so"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1551150027"
+                android:text=""
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -128,10 +133,11 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/khoa_hoc"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="09/09/2015"
+                android:text=""
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -154,10 +160,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/co_so"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ĐH GTVT HCM"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -173,17 +179,17 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp">
             <TextView
+                android:text="Bậc đào tạo"
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bậc đào tạo"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/bac_dao_tao"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đại học - chính quy - tín chỉ"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -206,10 +212,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/loai_hinh_dao_tao"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chính quy"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -232,10 +238,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/nganh"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Truyền thông và mạng máy tính"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -258,10 +264,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/chuyen_nganh"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Truyền thông và mạng máy tính"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -284,10 +290,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/khoa"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Công nghệ thông tin"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -310,10 +316,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/lop"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="KM15"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -336,10 +342,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/chuc_vu"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Không"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -362,14 +368,13 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/cong_tac_doan"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Không"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
         </LinearLayout>
-
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

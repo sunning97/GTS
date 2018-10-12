@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.views.home.fragments;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.actions.Student;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +47,7 @@ public class StudentDebtFragment extends Fragment {
         this.dataInit();
         View view = inflater.inflate(R.layout.fragment_student_debt, container, false);
         ButterKnife.bind(this,view);
-
+        final Student student = new Student(getContext());
         // spinner
         studentDebtSpinner.setItems(dataSnpinner);
         studentDebtSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
@@ -55,7 +57,6 @@ public class StudentDebtFragment extends Fragment {
         });
 
         this.generateTableContent(studentDebtTable,data);
-
         return view;
     }
 

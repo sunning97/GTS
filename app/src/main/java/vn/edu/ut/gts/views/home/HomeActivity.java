@@ -49,15 +49,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     TextView studentYear;
     @BindView(R.id.profile_image)
     CircleImageView profileImage;
+    @BindView(R.id.student_id)
+    TextView studentID;
+
+    private Storage storage;
 
     ActionBarDrawerToggle actionBarDrawerToggle;
-    private Storage storage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
         setContentView(R.layout.activity_home);
         this.storage = new Storage(this);
+
         Intent intent = getIntent();
         ButterKnife.bind(this);
 
@@ -68,8 +72,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHomeFragment(intent);
         navigationView.setNavigationItemSelectedListener(this);
-        studentFullName.setText("Nguyễn Ngọc Giang");
-
+        studentFullName.setText(storage.getString("student_name"));
+        studentID.setText(storage.getString("last_student_login"));
     }
 
     @Override

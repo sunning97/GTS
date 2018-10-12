@@ -24,10 +24,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/ngay_sinh"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đang học"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -50,10 +50,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/noi_sinh"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nam"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -76,10 +76,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/dan_toc"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="09/09/2015"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -102,10 +102,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/ton_giao"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1551150027"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -128,10 +128,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/khu_vuc"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="09/09/2015"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -154,10 +154,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/cmnd"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ĐH GTVT HCM"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -180,10 +180,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/doi_tuong"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đại học - chính quy - tín chỉ"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -206,10 +206,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/ngay_cap"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ngày cấp"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -232,10 +232,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/dien_chinh_sach"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Truyền thông và mạng máy tính"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -258,10 +258,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/noi_cap"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Truyền thông và mạng máy tính"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -284,10 +284,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/ngay_vao_doan"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Công nghệ thông tin"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -310,10 +310,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/ngay_vao_dang"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="KM15"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -336,10 +336,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/dien_thoai_di_dong"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Không"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -362,10 +362,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/email"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Không"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -388,10 +388,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/ho_khau"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Không"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
             <View
@@ -414,10 +414,10 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/dia_chi_lien_he"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Không"
                 android:textColor="@color/grayDark"
                 android:textSize="16sp"/>
         </LinearLayout>

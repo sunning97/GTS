@@ -44,12 +44,12 @@ public class StudentInfoRootFragment extends Fragment {
         this.fragments = new ArrayList<>();
         fragments.add(new StudentInfoFragment());
         fragments.add(new StudentPersonalInfoFragment());
-        fragments.add(new StudentFamilyInfoFragment());
+        //fragments.add(new StudentFamilyInfoFragment());
 
         this.fragmentTitle = new ArrayList<>();
         fragmentTitle.add("Thông tin sinh viên");
         fragmentTitle.add("Thông tin cá nhân");
-        fragmentTitle.add("Quan hệ gia đình");
+        //fragmentTitle.add("Quan hệ gia đình");
         this.studentInfoViewPagerAdapter = new StudentInfoViewPagerAdapter(
                 getChildFragmentManager(),
                 fragments,

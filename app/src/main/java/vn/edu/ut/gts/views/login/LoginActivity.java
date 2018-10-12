@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.setlastLogin();
         this.validate();
         this.addControl();
+
         handler.postDelayed(runnable, 1500);
     }
 

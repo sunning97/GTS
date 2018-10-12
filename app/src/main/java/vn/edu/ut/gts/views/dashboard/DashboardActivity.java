@@ -2,6 +2,7 @@ package vn.edu.ut.gts.views.dashboard;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
@@ -13,12 +14,18 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.actions.Student;
+import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.home.HomeActivity;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
@@ -43,6 +50,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @BindView(R.id.profile_image)
     CircleImageView profileImage;
 
+    private Storage storage;
+    private Student student;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,16 +107,17 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void init() {
-        collapsingToolbarLayout.setTitle("Nguyễn Ngọc Giang - 1551150027");
+        this.storage = new Storage(this);
+        this.student = new Student(this);
+        String studentName = this.storage.getString("student_name");
+        String studentID = this.storage.getString("last_student_login");
+        collapsingToolbarLayout.setTitle(studentName+"-"+studentID);
         setSupportActionBar(dashboardToolbar);
+        getStudentData();
     }
 
     @Override
     public void onBackPressed() {
-        showExitConfirm();
-    }
-
-    private void showExitConfirm() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Xác nhận thoát?")
                 .setCancelText("Ok")
@@ -122,5 +132,21 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     }
                 })
                 .show();
+    }
+
+    private void getStudentData(){
+        AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
+            @Override
+            protected JSONObject doInBackground(Void... voids) {
+                JSONObject studentData = student.getStudentInfo();
+                return studentData;
+            }
+
+            @Override
+            protected void onPostExecute(JSONObject jsonObject) {
+                storage.putString("student_info",jsonObject.toString());
+            }
+        };
+        asyncTask.execute();
     }
 }

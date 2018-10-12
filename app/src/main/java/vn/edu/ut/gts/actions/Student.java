@@ -97,4 +97,77 @@ public class Student {
         }
         return data;
     }
+
+    public JSONObject getStudentInfo() {
+        JSONObject info = new JSONObject();
+        try {
+            Document document = Jsoup.connect(Helper.BASE_URL + "HoSoSinhVien.aspx")
+                    .method(Connection.Method.GET)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", storage.getCookie())
+                    .get();
+            Element bodyGroup = document.getElementsByClass("body-group").first();
+            Elements tds = bodyGroup.select("td");
+            JSONArray studentInfo = new JSONArray();
+            for(Element td:tds) {
+                JSONObject prop = new JSONObject();
+                String key = Helper.toSlug(td.text().split(":")[0]);
+                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim():"Không";
+                prop.put("key",key);
+                prop.put("value",value);
+                studentInfo.put(prop);
+            }
+            info.put("studentInfo", studentInfo);
+            Element bodyGroup1 = document.getElementsByClass("body-group").get(1);
+            Elements tds1 = bodyGroup1.select("td");
+            JSONArray studentDetail = new JSONArray();
+            for(Element td: tds1) {
+                JSONObject prop = new JSONObject();
+                String key = Helper.toSlug(td.text().split(":")[0]);
+                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim():"Không";
+                prop.put("key",key);
+                prop.put("value",value);
+                studentDetail.put(prop);
+            }
+            info.put("studentDetail", studentDetail);
+
+            Element bodyGroup2 = document.getElementsByClass("body-group").get(2);
+            Elements tds2 = bodyGroup2.select("td");
+            JSONArray studentFamily = new JSONArray();
+            for(Element td: tds2) {
+                JSONObject prop = new JSONObject();
+                String key = Helper.toSlug(td.text().split(":")[0]);
+                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim():"Không";
+                prop.put("key",key);
+                prop.put("value",value);
+                studentFamily.put(prop);
+            }
+            info.put("studentFamily", studentFamily);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  info;
+    }
+
+    public String getStudentName(){
+        String name = "";
+        try {
+            Document document = Jsoup.connect(Helper.BASE_URL + "HoSoSinhVien.aspx")
+                    .method(Connection.Method.GET)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", storage.getCookie())
+                    .get();
+
+            Element nameHTML = document.getElementById("ctl00_ucRight1_Span2");
+            name = nameHTML.text();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  name;
+    }
+
+
 }

@@ -77,6 +77,7 @@ public class AttendanceFragment extends Fragment {
                 dataInit(position);
             }
         });
+
         return  view;
     }
 
