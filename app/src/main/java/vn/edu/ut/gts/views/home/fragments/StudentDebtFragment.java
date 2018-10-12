@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,6 +58,27 @@ public class StudentDebtFragment extends Fragment {
         });
 
         this.generateTableContent(studentDebtTable,data);
+
+        AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                student.getDataStudentDebt();
+                return null;
+            }
+        };
+        asyncTask.execute();
+
+
+        AsyncTask<Void, Void, JSONArray> asyncTask1 = new AsyncTask<Void, Void, JSONArray>() {
+            @Override
+            protected JSONArray doInBackground(Void... voids) {
+                return student.getStudentDebt(0);
+            }
+
+        };
+        asyncTask1.execute();
+
+
         return view;
     }
 
