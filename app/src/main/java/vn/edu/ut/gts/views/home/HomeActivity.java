@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 import vn.edu.ut.gts.views.home.fragments.AttendanceFragment;
 import vn.edu.ut.gts.views.home.fragments.FrameProgramFragment;
@@ -24,6 +26,7 @@ import vn.edu.ut.gts.views.home.fragments.StudentInfoRootFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentStudyResultFragment;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.views.home.fragments.WeekSchedule;
+import vn.edu.ut.gts.views.login.LoginActivity;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final int STUDENT_INFO = 1;
@@ -48,13 +51,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     CircleImageView profileImage;
 
     ActionBarDrawerToggle actionBarDrawerToggle;
-
+    private Storage storage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
         setContentView(R.layout.activity_home);
-
+        this.storage = new Storage(this);
         Intent intent = getIntent();
         ButterKnife.bind(this);
 
@@ -131,6 +134,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         new AttendanceFragment()
                 ).commit();
                 setTitle(item.getTitle());
+                break;
+            }
+            case R.id.logout: {
+                storage.deleteString("cookie");
+                storage.deleteString("dataAttendance");
+                storage.deleteString("dataLogin");
+                startActivity(new Intent(HomeActivity.this,LoginActivity.class));
                 break;
             }
         }

@@ -46,13 +46,9 @@ public class LoginProcess implements ILoginProcess{
             @Override
             protected void onPostExecute(Boolean status) {
                 if(status){
-                    iLoginView.loginSuccess();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    saveLastLoginID(studentId);
                     iLoginView.doneLoadingButton();
+                    iLoginView.loginSuccess();
                 }else{
                     iLoginView.revertLoadingButton();
                     iLoginView.loginFailed();
@@ -60,5 +56,9 @@ public class LoginProcess implements ILoginProcess{
             }
         };
         asyncTask.execute();
+    }
+
+    private void saveLastLoginID(String ID){
+        this.storage.putString("last_student_login",ID);
     }
 }

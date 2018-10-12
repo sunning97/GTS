@@ -26,4 +26,10 @@ public class Storage {
     public String getCookie(){
         return this.sharedPreferences.getString("cookie","");
     }
+
+    public boolean deleteString(String key){
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        editor.remove(key);
+        return editor.commit();
+    }
 }

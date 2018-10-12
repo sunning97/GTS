@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.TextInputValidator;
 import vn.edu.ut.gts.presenter.login.LoginProcess;
@@ -53,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private Handler handler;
     private Runnable runnable;
     private SweetAlertDialog loginAlert;
-
+    private Storage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         ButterKnife.bind(this);
         this.requestPermission();
         this.init();
+        this.setlastLogin();
         this.validate();
         this.addControl();
         handler.postDelayed(runnable, 1500);
@@ -111,7 +113,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             }
         };
         handler.postDelayed(runnable, 1000);
-
     }
 
     @Override
@@ -122,7 +123,30 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 .show();
     }
 
+    @Override
+    public void setlastLogin() {
+        if(this.storage.getString("last_student_login") != null)
+            inputStudentId.setText(this.storage.getString("last_student_login"));
+    }
 
+
+    @Override
+    public void onBackPressed() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Xác nhận thoát?")
+                .setCancelText("Ok")
+                .setConfirmText("Hủy")
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        moveTaskToBack(true);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                    }
+                })
+                .show();
+    }
     /**
      * Initialization all needed for activity
      *
@@ -130,6 +154,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
      */
 
     private void init() {
+        storage = new Storage(this);
         this.isValidateNoError = false;
         this.handler = new Handler();
         this.runnable = new Runnable() {
