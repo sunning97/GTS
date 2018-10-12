@@ -67,26 +67,28 @@ public class AttendanceFragment extends Fragment {
         return  view;
     }
 
-<<<<<<< HEAD
-    private void generateTableContent(TableLayout tableLayout,List<JSONObject> data){
+    private void generateTableContent(TableLayout tableLayout,List<JSONObject> data) {
         int index = 1;
-        for (JSONObject jsonObject: data) {
+        for (JSONObject jsonObject : data) {
             TableRow tableRow = new TableRow(getContext());
             tableRow.setGravity(Gravity.CENTER);
             tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
             tableRow.setMinimumHeight(120);
-            if(index % 2 == 0){
+            if (index % 2 == 0) {
                 tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
             }
             try {
-                tableRow.addView(generateTableCell(jsonObject.getString("subject_id"),false));
-                tableRow.addView(generateTableCell(jsonObject.getString("subject_name"),false));
-                tableRow.addView(generateTableCell(jsonObject.getString("dhtv"),true));
-                tableRow.addView(generateTableCell(jsonObject.getString("halt_permit"),true));
-                tableRow.addView(generateTableCell(jsonObject.getString("halt_no_permit"),true));
-            } catch (Exception e){
+                tableRow.addView(generateTableCell(jsonObject.getString("subject_id"), false));
+                tableRow.addView(generateTableCell(jsonObject.getString("subject_name"), false));
+                tableRow.addView(generateTableCell(jsonObject.getString("dhtv"), true));
+                tableRow.addView(generateTableCell(jsonObject.getString("halt_permit"), true));
+                tableRow.addView(generateTableCell(jsonObject.getString("halt_no_permit"), true));
+            } catch (Exception e) {
 
-=======
+            }
+        }
+    }
+
     private void initAttendance(){
         AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
             @Override
@@ -97,6 +99,7 @@ public class AttendanceFragment extends Fragment {
         };
         asyncTask.execute();
     }
+
     private void generateTableContent(TableLayout tableLayout,JSONArray data){
         Log.e("Attendance", data.toString());
         try {
@@ -112,16 +115,15 @@ public class AttendanceFragment extends Fragment {
                     tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
                 }
                 try {
-                    tableRow.addView(generateTableCell(subject.getString("ma_mon_hoc")));
-                    tableRow.addView(generateTableCell(subject.getString("ten_mon_hoc")));
-                    tableRow.addView(generateTableCell(subject.getString("dvht")));
-                    tableRow.addView(generateTableCell(subject.getString("nghi_co_phep")));
-                    tableRow.addView(generateTableCell(subject.getString("nghi_co_phep")));
+                    tableRow.addView(generateTableCell(subject.getString("ma_mon_hoc"),false));
+                    tableRow.addView(generateTableCell(subject.getString("ten_mon_hoc"),false));
+                    tableRow.addView(generateTableCell(subject.getString("dvht"),true));
+                    tableRow.addView(generateTableCell(subject.getString("nghi_co_phep"),true));
+                    tableRow.addView(generateTableCell(subject.getString("nghi_co_phep"),true));
                 } catch (Exception e){
 
                 }
                 tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
->>>>>>> 00643535d6310e8d13d1bfb3f71a3d5ae283700e
             }
         } catch (JSONException e) {
             e.printStackTrace();

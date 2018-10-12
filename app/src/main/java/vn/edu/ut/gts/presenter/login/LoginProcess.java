@@ -35,43 +35,7 @@ public class LoginProcess implements ILoginProcess{
     @Override
     public void execute(final String studentId, final String password) {
         iLoginView.startLoadingButton();
-<<<<<<< HEAD
-        iLoginView.loginSuccess();
-        iLoginView.doneLoadingButton();
-//        AsyncTask<Boolean, Void, Boolean> asyncTask = new AsyncTask<Boolean, Void, Boolean>() {
-//            @Override
-//            protected Boolean doInBackground(Boolean... booleans) {
-//                try {
-//                    JSONObject dataLogin = new JSONObject(storage.getString("dataLogin","{}"));
-//                    boolean status = loginAction.doLogin(studentId, password, dataLogin).checkLogin();
-//                    return status;
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                return false;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Boolean status) {
-//                if(status){
-//                    iLoginView.doneLoadingButton();
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    iLoginView.loginSuccess();
-//                }else{
-//                    iLoginView.revertLoadingButton();
-//                    iLoginView.loginFailed();
-//                }
-//            }
-//        };
-//        asyncTask.execute();
-=======
-        //iLoginView.loginSuccess();
-        //iLoginView.doneLoadingButton();
-        //iLoginView.revertLoadingButton();
+
         AsyncTask<Boolean, Void, Boolean> asyncTask = new AsyncTask<Boolean, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Boolean... booleans) {
@@ -96,7 +60,6 @@ public class LoginProcess implements ILoginProcess{
             }
         };
         asyncTask.execute();
->>>>>>> 00643535d6310e8d13d1bfb3f71a3d5ae283700e
     }
 
 
