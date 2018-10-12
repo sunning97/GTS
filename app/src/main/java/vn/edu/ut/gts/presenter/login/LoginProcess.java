@@ -61,6 +61,4 @@ public class LoginProcess implements ILoginProcess{
         };
         asyncTask.execute();
     }
-
-
 }

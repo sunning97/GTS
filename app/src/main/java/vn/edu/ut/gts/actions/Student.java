@@ -38,10 +38,13 @@ public class Student {
             data.put("viewStartGenerator", document.select("input[name=\"__VIEWSTATEGENERATOR\"]").val());
             data.put("radioBtnList", document.select("input[name=\"ctl00$ucPhieuKhaoSat1$RadioButtonList1\"][checked=\"checked\"]").val());
             data.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
-            data.put("ctl00$ContentPlaceHolder$btnLoc", document.select("input[name=\"ctl00$ContentPlaceHolder$btnLoc\"][type=\"submit\"]").val());                JSONArray semesters = new JSONArray();
+            data.put("ctl00$ContentPlaceHolder$btnLoc", document.select("input[name=\"ctl00$ContentPlaceHolder$btnLoc\"][type=\"submit\"]").val());
+
+            JSONArray semesters = new JSONArray();
             Elements options = document.select("select[name=\"ctl00$ContentPlaceHolder$cboHocKy\"]>option");
             for(Element option : options) {
                 JSONObject tmp = new JSONObject();
+                if(option.val().equals("-1")) continue;
                 tmp.put("key", option.val());
                 tmp.put("text", option.text().trim());
                 semesters.put(tmp);
@@ -53,7 +56,7 @@ public class Student {
         }
         storage.putString("dataAttendance", data.toString());
     }
-    public JSONArray getTTDiemDanh() {
+    public JSONArray getTTDiemDanh(int pos) {
         JSONArray data = new JSONArray();
         try {
             JSONObject dataDiemDanh = new JSONObject(this.storage.getString("dataAttendance"));
@@ -68,7 +71,7 @@ public class Student {
                     .data("__VIEWSTATEGENERATOR",dataDiemDanh.getString("viewStartGenerator"))
                     .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1",dataDiemDanh.getString("radioBtnList"))
                     .data("ctl00$DdListMenu",dataDiemDanh.getString("eventTarget"))
-                    .data("ctl00$ContentPlaceHolder$cboHocKy",dataDiemDanh.getJSONArray("semesters").getJSONObject(3).getString("key"))
+                    .data("ctl00$ContentPlaceHolder$cboHocKy",dataDiemDanh.getJSONArray("semesters").getJSONObject(pos).getString("key"))
                     .data("ctl00$ContentPlaceHolder$btnLoc",dataDiemDanh.getString("ctl00$ContentPlaceHolder$btnLoc"))
                     .execute();
             Document document = res.parse();
