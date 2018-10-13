@@ -47,8 +47,10 @@ public class AttendanceFragment extends Fragment {
 
     Storage storage;
     Student student;
+
     private int totalHaltDate = 0;
     private JSONArray semesters;
+
     List<String> dataSnpinner = new ArrayList<>();
     List<String> headerText = new ArrayList<>();
     SweetAlertDialog loadingDialog;
@@ -67,13 +69,12 @@ public class AttendanceFragment extends Fragment {
         ButterKnife.bind(this,view);
         this.storage = new Storage(getContext());
         this.student = new Student(getContext());
-        this.initLoadingDialog();
+        this.init();
         this.initAttendance();
 
         this.dataInit(0);
         studentAttendanceSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                loadingDialog.show();
                 dataInit(position);
             }
         });
@@ -133,8 +134,9 @@ public class AttendanceFragment extends Fragment {
 
                 }
                 tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                tvStudentTotalDaltDate.setText(String.valueOf(totalHaltDate));
+
             }
+            tvStudentTotalDaltDate.setText(String.valueOf(totalHaltDate));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -194,6 +196,7 @@ public class AttendanceFragment extends Fragment {
     }
 
     private void dataInit(final int pos){
+        loadingDialog.show();
         AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected JSONArray doInBackground(Void... voids) {
@@ -210,7 +213,7 @@ public class AttendanceFragment extends Fragment {
         asyncTask.execute();
     }
 
-    private void initLoadingDialog(){
+    private void init(){
         loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         loadingDialog.setTitleText("Loading");
