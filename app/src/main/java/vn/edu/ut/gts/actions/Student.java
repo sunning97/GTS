@@ -315,4 +315,20 @@ public class Student {
         }
         return schedules;
     }
+
+
+    public void getStudentImage(){
+        String studentID = storage.getString("last_student_login");
+        try {
+            Document document = Jsoup.connect(Helper.BASE_URL + "GetImage.aspx?MSSV="+studentID)
+                    .method(Connection.Method.GET)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", storage.getCookie())
+                    .get();
+
+            Elements element = document.getElementsByTag("body");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
