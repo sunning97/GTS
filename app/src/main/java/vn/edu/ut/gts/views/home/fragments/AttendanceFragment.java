@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.views.home.fragments;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -19,6 +20,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.viethoa.DialogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,7 +49,7 @@ public class AttendanceFragment extends Fragment {
 
     Storage storage;
     Student student;
-
+    private float dp;
     private int totalHaltDate = 0;
     private JSONArray semesters;
 
@@ -56,7 +58,7 @@ public class AttendanceFragment extends Fragment {
     SweetAlertDialog loadingDialog;
 
     public AttendanceFragment() {
-        headerText.add("Mã môn học");
+        //headerText.add("Mã môn học");
         headerText.add("Tên môn học");
         headerText.add("ĐVHT");
         headerText.add("Có phép");
@@ -67,6 +69,7 @@ public class AttendanceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendance, container, false);
         ButterKnife.bind(this,view);
+        dp = getContext().getResources().getDisplayMetrics().density;
         this.storage = new Storage(getContext());
         this.student = new Student(getContext());
         this.init();
@@ -113,17 +116,23 @@ public class AttendanceFragment extends Fragment {
         try {
             for (int i = 0; i< data.length(); i++) {
 
-                JSONObject subject = data.getJSONObject(i);
+                final JSONObject subject = data.getJSONObject(i);
 
                 TableRow tableRow = new TableRow(getContext());
                 tableRow.setGravity(Gravity.CENTER);
                 tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-                tableRow.setMinimumHeight(120);
+                tableRow.setMinimumHeight((int) dp*60);
+                tableRow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        attendanceDetailShow(subject);
+                    }
+                });
                 if((i+1) % 2 == 0){
                     tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
                 }
                 try {
-                    tableRow.addView(generateTableCell(subject.getString("ma_mon_hoc"),false));
+                    //tableRow.addView(generateTableCell(subject.getString("ma_mon_hoc"),false));
                     tableRow.addView(generateTableCell(subject.getString("ten_mon_hoc"),false));
                     tableRow.addView(generateTableCell(subject.getString("dvht"),true));
                     tableRow.addView(generateTableCell(subject.getString("nghi_co_phep"),true));
@@ -155,7 +164,7 @@ public class AttendanceFragment extends Fragment {
         // generate cell's text view
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        a.setMargins(10,0,10,0);
+        a.setMargins((int) dp,0,(int) dp,0);
         textView.setLayoutParams(a);
         textView.setTextColor(getResources().getColor(R.color.black));
         textView.setText(content);
@@ -166,8 +175,8 @@ public class AttendanceFragment extends Fragment {
     private TableRow generateTableHeader(){
         TableRow header = new TableRow(getContext());
         header.setGravity(Gravity.CENTER);
-        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        header.setMinimumHeight(150);
+        header.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+        header.setMinimumHeight((int)dp*60);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
 
@@ -178,7 +187,7 @@ public class AttendanceFragment extends Fragment {
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
             layoutParams.gravity = Gravity.CENTER;
-            layoutParams.setMargins(5,0,5,0);
+            layoutParams.setMargins((int)dp*5,0,(int)dp*5,0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
@@ -196,8 +205,12 @@ public class AttendanceFragment extends Fragment {
     }
 
     private void dataInit(final int pos){
-        loadingDialog.show();
         AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
+            @Override
+            protected void onPreExecute() {
+                loadingDialog.show();
+            }
+
             @Override
             protected JSONArray doInBackground(Void... voids) {
                 return student.getTTDiemDanh(pos);
@@ -218,5 +231,28 @@ public class AttendanceFragment extends Fragment {
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         loadingDialog.setTitleText("Loading");
         loadingDialog.setCancelable(false);
+    }
+
+    protected void attendanceDetailShow(JSONObject jsonObject) {
+        LayoutInflater factory = getLayoutInflater();
+        View view = factory.inflate(R.layout.student_attendance_detail_dialog, null);
+        TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
+        TextView tenMonHoc = view.findViewById(R.id.ten_mon_hoc);
+        TextView dvht = view.findViewById(R.id.dvht);
+        TextView coPhep = view.findViewById(R.id.co_phep);
+        TextView khongPhep = view.findViewById(R.id.khong_phep);
+        try {
+            maMonHoc.setText(jsonObject.getString("ma_mon_hoc"));
+            tenMonHoc.setText(jsonObject.getString("ten_mon_hoc"));
+            dvht.setText(jsonObject.getString("dvht"));
+            coPhep.setText(jsonObject.getString("nghi_co_phep")+" buổi");
+            khongPhep.setText(jsonObject.getString("nghi_ko_phep")+" buổi");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Dialog simpleDialog = DialogUtils.createSimpleDialog(getContext(), view, true);
+        if (simpleDialog != null && !simpleDialog.isShowing()) {
+            simpleDialog.show();
+        }
     }
 }

@@ -126,8 +126,7 @@ public class StudentDebtFragment extends Fragment {
                 tableRow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dentDetailShow(subject);
-                        //Toast.makeText(getContext(),subject.toString(),Toast.LENGTH_SHORT).show();
+                        debtDetailShow(subject);
                     }
                 });
                 if((i+1) % 2 == 0){
@@ -199,7 +198,7 @@ public class StudentDebtFragment extends Fragment {
         // generate cell's text view
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        a.setMargins(10,0,10,0);
+        a.setMargins((int)d,0,(int)d,0);
         textView.setLayoutParams(a);
         textView.setTextColor(getResources().getColor(R.color.black));
         if(isRed) textView.setTextColor(getResources().getColor(R.color.red));
@@ -237,7 +236,7 @@ public class StudentDebtFragment extends Fragment {
         loadingDialog.setTitleText("Loading");
         loadingDialog.setCancelable(false);
     }
-    protected void dentDetailShow(JSONObject jsonObject) {
+    protected void debtDetailShow(JSONObject jsonObject) {
         String title = "Chi tiết công nợ";
         LayoutInflater factory = getLayoutInflater();
         View view = factory.inflate(R.layout.student_debt_detail_dialog, null);
@@ -260,6 +259,7 @@ public class StudentDebtFragment extends Fragment {
             congNo.setText(jsonObject.getString("cong_no_vnd")+" VNĐ");
             if(jsonObject.getString("trang_thai").equals("Chưa nộp"))
                 trangThai.setTextColor(getResources().getColor(R.color.red));
+            else trangThai.setTextColor(getResources().getColor(R.color.green));
             trangThai.setText(jsonObject.getString("trang_thai"));
 
         } catch (JSONException e) {
