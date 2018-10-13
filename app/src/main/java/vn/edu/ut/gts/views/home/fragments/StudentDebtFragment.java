@@ -51,12 +51,12 @@ public class StudentDebtFragment extends Fragment {
     private int totalDeb = 0;
     List<String> headerText = new ArrayList<>();
     public StudentDebtFragment() {
-        headerText.add("Mã môn học");
+        //headerText.add("Mã môn học");
         headerText.add("Nội dung thu");
         headerText.add("Tín chỉ");
-        headerText.add("Số tiền");
-        headerText.add("Đã nộp");
-        headerText.add("Khấu trừ");
+        //headerText.add("Số tiền");
+        //.add("Đã nộp");
+        //headerText.add("Khấu trừ");
         headerText.add("Công nợ");
         headerText.add("Trạng thái");
     }
@@ -130,12 +130,12 @@ public class StudentDebtFragment extends Fragment {
                     tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
                 }
                 try {
-                    tableRow.addView(generateTableCell(subject.getString("ma"),false,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    //tableRow.addView(generateTableCell(subject.getString("ma"),false,(subject.getString("trang_thai").equals("Chưa nộp"))));
                     tableRow.addView(generateTableCell(subject.getString("noi_dung_thu"),false,(subject.getString("trang_thai").equals("Chưa nộp"))));
                     tableRow.addView(generateTableCell(subject.getString("tin_chi"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
-                    tableRow.addView(generateTableCell(subject.getString("so_tien_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
-                    tableRow.addView(generateTableCell(subject.getString("da_nop_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
-                    tableRow.addView(generateTableCell(subject.getString("khau_tru_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    //tableRow.addView(generateTableCell(subject.getString("so_tien_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    //tableRow.addView(generateTableCell(subject.getString("da_nop_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    //tableRow.addView(generateTableCell(subject.getString("khau_tru_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
                     tableRow.addView(generateTableCell(subject.getString("cong_no_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
 
                     if(Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd"))) > 0)
