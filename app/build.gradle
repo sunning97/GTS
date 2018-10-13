@@ -43,6 +43,9 @@ dependencies {
     // Validate
     implementation 'com.basgeekball:awesome-validation:4.2'
 
+    // viethoa custom dialogs
+    implementation 'com.github.viethoa:customdialogs:3.0.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

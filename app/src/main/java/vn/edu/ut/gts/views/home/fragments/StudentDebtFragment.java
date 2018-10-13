@@ -2,6 +2,8 @@ package vn.edu.ut.gts.views.home.fragments;
 
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.viethoa.DialogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -123,7 +126,8 @@ public class StudentDebtFragment extends Fragment {
                 tableRow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getContext(),subject.toString(),Toast.LENGTH_SHORT).show();
+                        dentDetailShow(subject);
+                        //Toast.makeText(getContext(),subject.toString(),Toast.LENGTH_SHORT).show();
                     }
                 });
                 if((i+1) % 2 == 0){
@@ -232,5 +236,38 @@ public class StudentDebtFragment extends Fragment {
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         loadingDialog.setTitleText("Loading");
         loadingDialog.setCancelable(false);
+    }
+    protected void dentDetailShow(JSONObject jsonObject) {
+        String title = "Chi tiết công nợ";
+        LayoutInflater factory = getLayoutInflater();
+        View view = factory.inflate(R.layout.student_debt_detail_dialog, null);
+        TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
+        TextView noiDungThu = view.findViewById(R.id.noi_dung_thu);
+        TextView tinChi = view.findViewById(R.id.tin_chi);
+        TextView soTien = view.findViewById(R.id.so_tien);
+        TextView daNop = view.findViewById(R.id.da_nop);
+        TextView khauTru = view.findViewById(R.id.khau_tru);
+        TextView congNo = view.findViewById(R.id.cong_no);
+        TextView trangThai = view.findViewById(R.id.trang_thai);
+
+        try {
+            maMonHoc.setText(jsonObject.getString("ma"));
+            noiDungThu.setText(jsonObject.getString("noi_dung_thu"));
+            tinChi.setText(jsonObject.getString("tin_chi"));
+            soTien.setText(jsonObject.getString("so_tien_vnd")+" VNĐ");
+            daNop.setText(jsonObject.getString("da_nop_vnd")+" VNĐ");
+            khauTru.setText(jsonObject.getString("khau_tru_vnd"));
+            congNo.setText(jsonObject.getString("cong_no_vnd")+" VNĐ");
+            if(jsonObject.getString("trang_thai").equals("Chưa nộp"))
+                trangThai.setTextColor(getResources().getColor(R.color.red));
+            trangThai.setText(jsonObject.getString("trang_thai"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Dialog simpleDialog = DialogUtils.createSimpleDialog(getContext(), view, true);
+        if (simpleDialog != null && !simpleDialog.isShowing()) {
+            simpleDialog.show();
+        }
     }
 }
