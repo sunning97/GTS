@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.views.home.fragments;
 
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.actions.helpers.Helper;
@@ -45,6 +47,7 @@ public class StudentDebtFragment extends Fragment {
     private Storage storage;
     private JSONArray semesters;
     List<String> dataSnpinner = new ArrayList<>();
+    SweetAlertDialog loadingDialog;
     private int totalDeb = 0;
     List<String> headerText = new ArrayList<>();
     public StudentDebtFragment() {
@@ -64,7 +67,7 @@ public class StudentDebtFragment extends Fragment {
         ButterKnife.bind(this,view);
         student = new Student(getContext());
         storage = new Storage(getContext());
-
+        init();
         this.initDebt();
         this.dataInit(0);
         // spinner
@@ -81,6 +84,11 @@ public class StudentDebtFragment extends Fragment {
     private void dataInit(final int pos){
         AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
+            protected void onPreExecute() {
+                loadingDialog.show();
+            }
+
+            @Override
             protected JSONArray doInBackground(Void... voids) {
                 JSONArray jsonArray = student.getStudentDebt(pos);
                 return jsonArray;
@@ -89,6 +97,7 @@ public class StudentDebtFragment extends Fragment {
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
                 generateTableContent(studentDebtTable, jsonArray);
+                loadingDialog.dismiss();
             }
         };
         asyncTask.execute();
@@ -210,5 +219,10 @@ public class StudentDebtFragment extends Fragment {
         };
         asyncTask.execute();
     }
-
+    private void init(){
+        loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        loadingDialog.setTitleText("Loading");
+        loadingDialog.setCancelable(false);
+    }
 }
