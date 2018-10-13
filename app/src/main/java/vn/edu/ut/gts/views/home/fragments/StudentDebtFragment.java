@@ -1,13 +1,12 @@
 package vn.edu.ut.gts.views.home.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
@@ -42,7 +42,7 @@ public class StudentDebtFragment extends Fragment {
     @BindView(R.id.student_debt_table) TableLayout studentDebtTable;
     @BindView(R.id.student_debt_spinner) MaterialSpinner studentDebtSpinner;
     @BindView(R.id.student_total_debt) TextView studentTotalDebt;
-
+    private float d;
     private Student student;
     private Storage storage;
     private JSONArray semesters;
@@ -68,8 +68,11 @@ public class StudentDebtFragment extends Fragment {
         student = new Student(getContext());
         storage = new Storage(getContext());
         init();
+        d = getContext().getResources().getDisplayMetrics().density;
+
         this.initDebt();
         this.dataInit(0);
+
         // spinner
         studentDebtSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
@@ -104,19 +107,25 @@ public class StudentDebtFragment extends Fragment {
     }
 
 
-    private void generateTableContent(TableLayout tableLayout,JSONArray data){
+    private void generateTableContent(TableLayout tableLayout, JSONArray data){
         tableLayout.removeAllViews();
         totalDeb = 0;
         tableLayout.addView(this.generateTableHeader());
         try {
             for (int i = 0; i< data.length(); i++) {
 
-                JSONObject subject = data.getJSONObject(i);
+                final JSONObject subject = data.getJSONObject(i);
 
                 TableRow tableRow = new TableRow(getContext());
                 tableRow.setGravity(Gravity.CENTER);
                 tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-                tableRow.setMinimumHeight(120);
+                tableRow.setMinimumHeight((int)d*60);
+                tableRow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getContext(),subject.toString(),Toast.LENGTH_SHORT).show();
+                    }
+                });
                 if((i+1) % 2 == 0){
                     tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
                 }
@@ -147,18 +156,18 @@ public class StudentDebtFragment extends Fragment {
         TableRow header = new TableRow(getContext());
         header.setGravity(Gravity.CENTER);
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        header.setMinimumHeight(150);
+        header.setMinimumHeight((int)d*60);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-
 
         for (String text:headerText) {
 
             LinearLayout linearLayout = new LinearLayout(getContext());
             linearLayout.setGravity(Gravity.CENTER);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.MATCH_PARENT);
             layoutParams.gravity = Gravity.CENTER;
-            layoutParams.setMargins(5,0,5,0);
+            layoutParams.setMargins((int) d,0,(int) d,0);
+            linearLayout.setPadding((int)d*5,(int)d*5,(int)d*5,(int)d*5);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
@@ -168,7 +177,6 @@ public class StudentDebtFragment extends Fragment {
             textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
             textView.setText(text);
             linearLayout.addView(textView);
-
             header.addView(linearLayout);
         }
 
