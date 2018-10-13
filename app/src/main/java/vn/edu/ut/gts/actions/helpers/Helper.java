@@ -61,6 +61,6 @@ public class Helper {
         str = str.trim();
         String tmp = Normalizer.normalize(str, Normalizer.Form.NFD);
         Pattern p = Pattern.compile("\\p{InCOMBINING_DIACRITICAL_MARKS}+");
-        return p.matcher(tmp).replaceAll("").toLowerCase().replace("đ","d").replaceAll("\\s","_").replaceAll("\\(","").replaceAll("\\)","");
+        return p.matcher(tmp).replaceAll("").toLowerCase().replace("đ","d").replaceAll("\\s","_").replaceAll("\\(","").replaceAll("\\)","").replaceAll(",","");
     }
 }

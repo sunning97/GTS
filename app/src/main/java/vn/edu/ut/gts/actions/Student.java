@@ -13,6 +13,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
@@ -155,7 +157,6 @@ public class Student {
                     .execute();
             Document document = res.parse();
             Elements trs = document.select("table.grid.grid-color2>tbody>tr");
-            Log.d("SSS",trs.toString());
             Elements ths= trs.first().select("th");
             JSONArray keys = new JSONArray();
             for(int i = 2; i < ths.size(); i++) {
@@ -175,7 +176,6 @@ public class Student {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        Log.d("CCC",data.toString());
         return data;
     }
 
@@ -250,5 +250,69 @@ public class Student {
         return  name;
     }
 
+    public JSONArray getSchedules() {
+        JSONArray schedules = new JSONArray();
+        try {
+            Document document = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
+                    .method(Connection.Method.GET)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", storage.getCookie())
+                    .get();
+            Elements table = document.select(".div-ChiTietLich>table");
+            Elements trs = table.select("tr");
 
+            Elements trDate = trs.first().select("th");
+            Elements trMorning = trs.get(1).select("td");
+            Elements trAfternoon = trs.get(2).select("td");
+            Elements trEvening= trs.get(3).select("td");
+            for(int i = 0; i < trMorning.size(); i++) {
+                JSONObject schedule = new JSONObject();
+                // Get date
+                String dateRegEx="([0-9]{2})/([0-9]{2})/([0-9]{4})";
+                Pattern p = Pattern.compile(dateRegEx);
+                Matcher m = p.matcher(trDate.get(i+1).text());
+                if(m.find()) {
+                    schedule.put("date",m.group());
+                }
+                //Get morning
+                JSONObject objMorning = new JSONObject();
+                JSONObject objAfternoon = new JSONObject();
+                JSONObject objEvening = new JSONObject();
+                if(trMorning.get(i).select(".div-LichHoc").text().trim().length() > 0) {
+                    Elements spanDisplay = trMorning.get(i).children().select(".span-display");
+                    objMorning.put("subjectId", spanDisplay.get(0).text().trim().length() > 0 ? spanDisplay.get(0).text().trim():"");
+                    objMorning.put("subjectName", spanDisplay.get(1).text().trim().length() > 0 ? spanDisplay.get(1).text().trim():"");
+                    objMorning.put("subjectTime", spanDisplay.get(2).text().trim().length() > 0 ? spanDisplay.get(2).text().trim():"");
+                    objMorning.put("subjectLecturer", spanDisplay.get(3).text().trim().length() > 0 ? spanDisplay.get(3).text().trim():"");
+                    objMorning.put("subjectRoom", spanDisplay.get(4).text().trim().length() > 0 ? spanDisplay.get(4).text().trim():"");
+                }
+                if(trAfternoon.get(i).select(".div-LichHoc").text().trim().length() > 0) {
+                    Elements spanDisplay1 = trAfternoon.get(i).children().select(".span-display");
+                    objAfternoon.put("subjectId", spanDisplay1.get(0).text().trim().length() > 0 ? spanDisplay1.get(0).text().trim():"");
+                    objAfternoon.put("subjectName", spanDisplay1.get(1).text().trim().length() > 0 ? spanDisplay1.get(1).text().trim():"");
+                    objAfternoon.put("subjectTime", spanDisplay1.get(2).text().trim().length() > 0 ? spanDisplay1.get(2).text().trim():"");
+                    objAfternoon.put("subjectLecturer", spanDisplay1.get(3).text().trim().length() > 0 ? spanDisplay1.get(3).text().trim():"");
+                    objAfternoon.put("subjectRoom", spanDisplay1.get(4).text().trim().length() > 0 ? spanDisplay1.get(4).text().trim():"");
+                }
+                if(trEvening.get(i).select(".div-LichHoc").text().trim().length() > 0) {
+                    Elements spanDisplay1 = trAfternoon.get(i).children().select(".span-display");
+                    objAfternoon.put("subjectId", spanDisplay1.get(0).text().trim().length() > 0 ? spanDisplay1.get(0).text().trim():"");
+                    objAfternoon.put("subjectName", spanDisplay1.get(1).text().trim().length() > 0 ? spanDisplay1.get(1).text().trim():"");
+                    objAfternoon.put("subjectTime", spanDisplay1.get(2).text().trim().length() > 0 ? spanDisplay1.get(2).text().trim():"");
+                    objAfternoon.put("subjectLecturer", spanDisplay1.get(3).text().trim().length() > 0 ? spanDisplay1.get(3).text().trim():"");
+                    objAfternoon.put("subjectRoom", spanDisplay1.get(4).text().trim().length() > 0 ? spanDisplay1.get(4).text().trim():"");
+                }
+                schedule.put("morning", objMorning);
+                schedule.put("afternoon", objAfternoon);
+                schedule.put("evening", objEvening);
+                schedules.put(schedule);
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return schedules;
+    }
 }

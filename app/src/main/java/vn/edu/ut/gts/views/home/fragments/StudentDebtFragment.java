@@ -1,10 +1,12 @@
 package vn.edu.ut.gts.views.home.fragments;
 
 
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
+import vn.edu.ut.gts.actions.helpers.Helper;
+import vn.edu.ut.gts.actions.helpers.Storage;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,76 +41,129 @@ public class StudentDebtFragment extends Fragment {
     @BindView(R.id.student_debt_spinner) MaterialSpinner studentDebtSpinner;
     @BindView(R.id.student_total_debt) TextView studentTotalDebt;
 
-    List<JSONObject> data = new ArrayList<>();
-    String[] dataSnpinner = {"Học kỳ 1 năm học 2018-2019","Học kỳ hè năm học 2017-2018","Học kỳ 2 năm học 2017-2018","Học kỳ 1 năm học 2017-2018","Học kỳ hè năm học 2016-2017","Học kỳ 2 năm học 2016-2017","Học kỳ 1 năm học 2016-2017","Học kỳ hè năm học 2015-2016","Học kỳ 2 năm học 2015-2016","Học kỳ 1 năm học 2015-2016"};
-
+    private Student student;
+    private Storage storage;
+    private JSONArray semesters;
+    List<String> dataSnpinner = new ArrayList<>();
+    private int totalDeb = 0;
+    List<String> headerText = new ArrayList<>();
     public StudentDebtFragment() {
+        headerText.add("Mã môn học");
+        headerText.add("Nội dung thu");
+        headerText.add("Tín chỉ");
+        headerText.add("Số tiền");
+        headerText.add("Đã nộp");
+        headerText.add("Khấu trừ");
+        headerText.add("Công nợ");
+        headerText.add("Trạng thái");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.dataInit();
         View view = inflater.inflate(R.layout.fragment_student_debt, container, false);
         ButterKnife.bind(this,view);
-        final Student student = new Student(getContext());
+        student = new Student(getContext());
+        storage = new Storage(getContext());
+
+        this.initDebt();
+        this.dataInit(0);
         // spinner
-        studentDebtSpinner.setItems(dataSnpinner);
         studentDebtSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+               dataInit(position);
             }
         });
-
-        this.generateTableContent(studentDebtTable,data);
-
-        AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... voids) {
-                student.getDataStudentDebt();
-                return null;
-            }
-        };
-        asyncTask.execute();
-
-
-        AsyncTask<Void, Void, JSONArray> asyncTask1 = new AsyncTask<Void, Void, JSONArray>() {
-            @Override
-            protected JSONArray doInBackground(Void... voids) {
-                return student.getStudentDebt(0);
-            }
-
-        };
-        asyncTask1.execute();
-
 
         return view;
     }
 
-    private void generateTableContent(TableLayout tableLayout,List<JSONObject> data){
-        int index = 1;
-        for (JSONObject jsonObject: data) {
-            TableRow tableRow = new TableRow(getContext());
-            tableRow.setGravity(Gravity.CENTER);
-            tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-            tableRow.setMinimumHeight(120);
-            if(index % 2 == 0){
-                tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
-            }
-            try {
-                tableRow.addView(generateTableCell(jsonObject.getString("subject_id"),false));
-                tableRow.addView(generateTableCell(jsonObject.getString("content"),false));
-                tableRow.addView(generateTableCell(jsonObject.getString("credits"),true));
-                tableRow.addView(generateTableCell(jsonObject.getString("deposit"),true));
-                tableRow.addView(generateTableCell(jsonObject.getString("submitted"),true));
-                tableRow.addView(generateTableCell(jsonObject.getString("deduct"),true));
-                tableRow.addView(generateTableCell(jsonObject.getString("debt"),true));
-                tableRow.addView(generateTableCell(jsonObject.getString("state"),true));
-            } catch (Exception e){
 
+    private void dataInit(final int pos){
+        AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
+            @Override
+            protected JSONArray doInBackground(Void... voids) {
+                JSONArray jsonArray = student.getStudentDebt(pos);
+                return jsonArray;
             }
-            tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-            index++;
+
+            @Override
+            protected void onPostExecute(JSONArray jsonArray) {
+                generateTableContent(studentDebtTable, jsonArray);
+            }
+        };
+        asyncTask.execute();
+    }
+
+
+    private void generateTableContent(TableLayout tableLayout,JSONArray data){
+        tableLayout.removeAllViews();
+        totalDeb = 0;
+        tableLayout.addView(this.generateTableHeader());
+        try {
+            for (int i = 0; i< data.length(); i++) {
+
+                JSONObject subject = data.getJSONObject(i);
+
+                TableRow tableRow = new TableRow(getContext());
+                tableRow.setGravity(Gravity.CENTER);
+                tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
+                tableRow.setMinimumHeight(120);
+                if((i+1) % 2 == 0){
+                    tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
+                }
+                try {
+                    tableRow.addView(generateTableCell(subject.getString("ma"),false));
+                    tableRow.addView(generateTableCell(subject.getString("noi_dung_thu"),false));
+                    tableRow.addView(generateTableCell(subject.getString("tin_chi"),true));
+                    tableRow.addView(generateTableCell(subject.getString("so_tien_vnd"),true));
+                    tableRow.addView(generateTableCell(subject.getString("da_nop_vnd"),true));
+                    tableRow.addView(generateTableCell(subject.getString("khau_tru_vnd"),true));
+                    tableRow.addView(generateTableCell(subject.getString("cong_no_vnd"),true));
+
+                    if(Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd"))) > 0)
+                        totalDeb+= Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd")));
+                    tableRow.addView(generateTableCell(subject.getString("trang_thai"),true));
+                } catch (Exception e){
+
+                }
+                tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                studentTotalDebt.setText(String.valueOf(totalDeb));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+    }
+
+    private TableRow generateTableHeader(){
+        TableRow header = new TableRow(getContext());
+        header.setGravity(Gravity.CENTER);
+        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        header.setMinimumHeight(150);
+        header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+
+
+        for (String text:headerText) {
+
+            LinearLayout linearLayout = new LinearLayout(getContext());
+            linearLayout.setGravity(Gravity.CENTER);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            layoutParams.gravity = Gravity.CENTER;
+            layoutParams.setMargins(5,0,5,0);
+            linearLayout.setLayoutParams(layoutParams);
+
+            TextView textView = new TextView(getContext());
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            textView.setLayoutParams(textViewLayout);
+            textView.setTextColor(getResources().getColor(R.color.white));
+            textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
+            textView.setText(text);
+            linearLayout.addView(textView);
+
+            header.addView(linearLayout);
+        }
+
+        return  header;
     }
 
     private LinearLayout generateTableCell(String content,Boolean isGravityCenter){
@@ -129,99 +186,28 @@ public class StudentDebtFragment extends Fragment {
         return linearLayout;
     }
 
-    private void dataInit(){
-        try {
-            JSONObject obj1 = new JSONObject();
-            obj1.put("subject_id", "0101125001");
-            obj1.put("content", "Hệ điều hành");
-            obj1.put("credits", "3");
-            obj1.put("deposit", "900,000");
-            obj1.put("submitted", "0");
-            obj1.put("deduct", "0");
-            obj1.put("debt", "900,000");
-            obj1.put("state", "Chưa nộp");
-            data.add(obj1);
+    private void initDebt(){
+        AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                student.getDataStudentDebt();
+                return null;
+            }
 
-            JSONObject obj2 = new JSONObject();
-            obj2.put("subject_id", "0101125009");
-            obj2.put("content", "Hệ thống thông tin di động tích hợp");
-            obj2.put("credits", "3");
-            obj2.put("deposit", "900,000");
-            obj2.put("submitted", "0");
-            obj2.put("deduct", "0");
-            obj2.put("debt", "900,000");
-            obj2.put("state", "Chưa nộp");
-            data.add(obj2);
-
-            JSONObject obj3 = new JSONObject();
-            obj3.put("subject_id", "0101125011");
-            obj3.put("content", "Hệ thống viễn thông thế hệ mới");
-            obj3.put("credits", "3");
-            obj3.put("deposit", "900,000");
-            obj3.put("submitted", "0");
-            obj3.put("deduct", "0");
-            obj3.put("debt", "900,000");
-            obj3.put("state", "Chưa nộp");
-            data.add(obj3);
-
-            JSONObject obj4 = new JSONObject();
-            obj4.put("subject_id", "0101125010");
-            obj4.put("content", "Kỹ thuật định tuyến");
-            obj4.put("credits", "3");
-            obj4.put("deposit", "900,000");
-            obj4.put("submitted", "0");
-            obj4.put("deduct", "0");
-            obj4.put("debt", "900,000");
-            obj4.put("state", "Chưa nộp");
-            data.add(obj4);
-
-            JSONObject obj5 = new JSONObject();
-            obj5.put("subject_id", "0101123013");
-            obj5.put("content", "Lập trình mạng");
-            obj5.put("credits", "3");
-            obj5.put("deposit", "900,000");
-            obj5.put("submitted", "0");
-            obj5.put("deduct", "0");
-            obj5.put("debt", "900,000");
-            obj5.put("state", "Chưa nộp");
-            data.add(obj5);
-
-            JSONObject obj6 = new JSONObject();
-            obj6.put("subject_id", "0101122034");
-            obj6.put("content", "Lập trình thiết bị di động");
-            obj6.put("credits", "2");
-            obj6.put("deposit", "900,000");
-            obj6.put("submitted", "0");
-            obj6.put("deduct", "0");
-            obj6.put("debt", "600,000");
-            obj6.put("state", "Chưa nộp");
-            data.add(obj6);
-
-            JSONObject obj7 = new JSONObject();
-            obj7.put("subject_id", "0101125008");
-            obj7.put("content", "Mô phỏng hệ thống truyền thông");
-            obj7.put("credits", "3");
-            obj7.put("deposit", "900,000");
-            obj7.put("submitted", "0");
-            obj7.put("deduct", "0");
-            obj7.put("debt", "900,000");
-            obj7.put("state", "Chưa nộp");
-            data.add(obj7);
-
-            JSONObject obj8= new JSONObject();
-            obj8.put("subject_id", "0101123035");
-            obj8.put("content", "Thực tập chuyên môn");
-            obj8.put("credits", "2");
-            obj8.put("deposit", "600,000");
-            obj8.put("submitted", "0");
-            obj8.put("deduct", "0");
-            obj8.put("debt", "900,000");
-            obj8.put("state", "Chưa nộp");
-            data.add(obj8);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+            @Override
+            protected void onPostExecute(String s) {
+                try {
+                    JSONObject dataDebt = new JSONObject(storage.getString("dataDebt"));
+                    semesters = new JSONArray(dataDebt.getString("semesters"));
+                    for (int i = 0; i < semesters.length(); i++) {
+                        JSONObject jsonObject = (JSONObject) semesters.get(i);
+                        dataSnpinner.add(jsonObject.getString("text"));
+                    }
+                } catch (Exception e){}
+                studentDebtSpinner.setItems(dataSnpinner);
+            }
+        };
+        asyncTask.execute();
     }
 
 }
