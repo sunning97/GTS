@@ -42,7 +42,6 @@ public class WeekSchedule extends Fragment {
             @Override
             protected String doInBackground(Void... voids) {
                 JSONArray jsonArray = student.getSchedules();
-                Log.d("CCC",jsonArray.toString());
                 return null;
             }
         };

@@ -112,17 +112,17 @@ public class StudentDebtFragment extends Fragment {
                     tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
                 }
                 try {
-                    tableRow.addView(generateTableCell(subject.getString("ma"),false));
-                    tableRow.addView(generateTableCell(subject.getString("noi_dung_thu"),false));
-                    tableRow.addView(generateTableCell(subject.getString("tin_chi"),true));
-                    tableRow.addView(generateTableCell(subject.getString("so_tien_vnd"),true));
-                    tableRow.addView(generateTableCell(subject.getString("da_nop_vnd"),true));
-                    tableRow.addView(generateTableCell(subject.getString("khau_tru_vnd"),true));
-                    tableRow.addView(generateTableCell(subject.getString("cong_no_vnd"),true));
+                    tableRow.addView(generateTableCell(subject.getString("ma"),false,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    tableRow.addView(generateTableCell(subject.getString("noi_dung_thu"),false,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    tableRow.addView(generateTableCell(subject.getString("tin_chi"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    tableRow.addView(generateTableCell(subject.getString("so_tien_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    tableRow.addView(generateTableCell(subject.getString("da_nop_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    tableRow.addView(generateTableCell(subject.getString("khau_tru_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    tableRow.addView(generateTableCell(subject.getString("cong_no_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
 
                     if(Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd"))) > 0)
                         totalDeb+= Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd")));
-                    tableRow.addView(generateTableCell(subject.getString("trang_thai"),true));
+                    tableRow.addView(generateTableCell(subject.getString("trang_thai"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
                 } catch (Exception e){
 
                 }
@@ -166,7 +166,7 @@ public class StudentDebtFragment extends Fragment {
         return  header;
     }
 
-    private LinearLayout generateTableCell(String content,Boolean isGravityCenter){
+    private LinearLayout generateTableCell(String content,Boolean isGravityCenter,Boolean isRed){
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setGravity(Gravity.CENTER);
@@ -181,6 +181,7 @@ public class StudentDebtFragment extends Fragment {
         a.setMargins(10,0,10,0);
         textView.setLayoutParams(a);
         textView.setTextColor(getResources().getColor(R.color.black));
+        if(isRed) textView.setTextColor(getResources().getColor(R.color.red));
         textView.setText(content);
         linearLayout.addView(textView);
         return linearLayout;
