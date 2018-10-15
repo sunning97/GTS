@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.actions;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -13,6 +14,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +24,8 @@ import vn.edu.ut.gts.actions.helpers.Storage;
 
 public class Student {
     private Storage storage;
-    public Student(Context context){
+
+    public Student(Context context) {
         this.storage = new Storage(context);
     }
 
@@ -44,9 +48,9 @@ public class Student {
 
             JSONArray semesters = new JSONArray();
             Elements options = document.select("select[name=\"ctl00$ContentPlaceHolder$cboHocKy\"]>option");
-            for(Element option : options) {
+            for (Element option : options) {
                 JSONObject tmp = new JSONObject();
-                if(option.val().equals("-1")) continue;
+                if (option.val().equals("-1")) continue;
                 tmp.put("key", option.val());
                 tmp.put("text", option.text().trim());
                 semesters.put(tmp);
@@ -58,6 +62,7 @@ public class Student {
         }
         storage.putString("dataAttendance", data.toString());
     }
+
     public JSONArray getTTDiemDanh(int pos) {
         JSONArray data = new JSONArray();
         try {
@@ -66,30 +71,30 @@ public class Student {
                     .method(Connection.Method.POST)
                     .userAgent(Helper.USER_AGENT)
                     .cookie("ASP.NET_SessionId", this.storage.getCookie())
-                    .data("__EVENTTARGET",dataDiemDanh.getString("eventTarget"))
-                    .data("__EVENTARGUMENT",dataDiemDanh.getString("eventArgument"))
-                    .data("__LASTFOCUS",dataDiemDanh.getString("lastFocus"))
-                    .data("__VIEWSTATE",dataDiemDanh.getString("viewState"))
-                    .data("__VIEWSTATEGENERATOR",dataDiemDanh.getString("viewStartGenerator"))
-                    .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1",dataDiemDanh.getString("radioBtnList"))
-                    .data("ctl00$DdListMenu",dataDiemDanh.getString("eventTarget"))
-                    .data("ctl00$ContentPlaceHolder$cboHocKy",dataDiemDanh.getJSONArray("semesters").getJSONObject(pos).getString("key"))
-                    .data("ctl00$ContentPlaceHolder$btnLoc",dataDiemDanh.getString("ctl00$ContentPlaceHolder$btnLoc"))
+                    .data("__EVENTTARGET", dataDiemDanh.getString("eventTarget"))
+                    .data("__EVENTARGUMENT", dataDiemDanh.getString("eventArgument"))
+                    .data("__LASTFOCUS", dataDiemDanh.getString("lastFocus"))
+                    .data("__VIEWSTATE", dataDiemDanh.getString("viewState"))
+                    .data("__VIEWSTATEGENERATOR", dataDiemDanh.getString("viewStartGenerator"))
+                    .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataDiemDanh.getString("radioBtnList"))
+                    .data("ctl00$DdListMenu", dataDiemDanh.getString("eventTarget"))
+                    .data("ctl00$ContentPlaceHolder$cboHocKy", dataDiemDanh.getJSONArray("semesters").getJSONObject(pos).getString("key"))
+                    .data("ctl00$ContentPlaceHolder$btnLoc", dataDiemDanh.getString("ctl00$ContentPlaceHolder$btnLoc"))
                     .execute();
             Document document = res.parse();
             Elements trs = document.select("table.grid.grid-color2>tbody>tr");
-            Elements ths= trs.first().select("th");
+            Elements ths = trs.first().select("th");
             JSONArray keys = new JSONArray();
-            for(int i = 1; i < ths.size(); i++) {
+            for (int i = 1; i < ths.size(); i++) {
                 String keyTmp = Helper.toSlug(ths.get(i).text().trim());
                 keys.put(keyTmp);
             }
-            for(int i = 2; i < trs.size() - 2; i++) {
+            for (int i = 2; i < trs.size() - 2; i++) {
                 Elements tds = trs.get(i).select("td");
                 JSONObject subject = new JSONObject();
-                for(int j = 1; j < tds.size(); j++) {
+                for (int j = 1; j < tds.size(); j++) {
                     String tmp = tds.get(j).text().trim();
-                    subject.put(keys.getString(j-1), tmp);
+                    subject.put(keys.getString(j - 1), tmp);
                 }
                 data.put(subject);
             }
@@ -100,7 +105,7 @@ public class Student {
         return data;
     }
 
-    public void getDataStudentDebt(){
+    public void getDataStudentDebt() {
 
         JSONObject data = new JSONObject();
         try {
@@ -121,9 +126,9 @@ public class Student {
 
             JSONArray semesters = new JSONArray();
             Elements options = document.select("select[name=\"ctl00$ContentPlaceHolder$cboHocKy\"]>option");
-            for(Element option : options) {
+            for (Element option : options) {
                 JSONObject tmp = new JSONObject();
-                if(option.val().equals("-1")) continue;
+                if (option.val().equals("-1")) continue;
                 tmp.put("key", option.val());
                 tmp.put("text", option.text().trim());
                 semesters.put(tmp);
@@ -136,7 +141,7 @@ public class Student {
         storage.putString("dataDebt", data.toString());
     }
 
-    public JSONArray getStudentDebt(int pos){
+    public JSONArray getStudentDebt(int pos) {
 
         JSONArray data = new JSONArray();
         try {
@@ -145,30 +150,30 @@ public class Student {
                     .method(Connection.Method.POST)
                     .userAgent(Helper.USER_AGENT)
                     .cookie("ASP.NET_SessionId", this.storage.getCookie())
-                    .data("__EVENTTARGET",dataDiemDanh.getString("eventTarget"))
-                    .data("__EVENTARGUMENT",dataDiemDanh.getString("eventArgument"))
-                    .data("__LASTFOCUS",dataDiemDanh.getString("lastFocus"))
-                    .data("__VIEWSTATE",dataDiemDanh.getString("viewState"))
-                    .data("__VIEWSTATEGENERATOR",dataDiemDanh.getString("viewStartGenerator"))
-                    .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1",dataDiemDanh.getString("radioBtnList"))
-                    .data("ctl00$DdListMenu",dataDiemDanh.getString("eventTarget"))
-                    .data("ctl00$ContentPlaceHolder$cboHocKy",dataDiemDanh.getJSONArray("semesters").getJSONObject(pos).getString("key"))
-                    .data("ctl00$ContentPlaceHolder$btnLoc",dataDiemDanh.getString("ctl00$ContentPlaceHolder$btnLoc"))
+                    .data("__EVENTTARGET", dataDiemDanh.getString("eventTarget"))
+                    .data("__EVENTARGUMENT", dataDiemDanh.getString("eventArgument"))
+                    .data("__LASTFOCUS", dataDiemDanh.getString("lastFocus"))
+                    .data("__VIEWSTATE", dataDiemDanh.getString("viewState"))
+                    .data("__VIEWSTATEGENERATOR", dataDiemDanh.getString("viewStartGenerator"))
+                    .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataDiemDanh.getString("radioBtnList"))
+                    .data("ctl00$DdListMenu", dataDiemDanh.getString("eventTarget"))
+                    .data("ctl00$ContentPlaceHolder$cboHocKy", dataDiemDanh.getJSONArray("semesters").getJSONObject(pos).getString("key"))
+                    .data("ctl00$ContentPlaceHolder$btnLoc", dataDiemDanh.getString("ctl00$ContentPlaceHolder$btnLoc"))
                     .execute();
             Document document = res.parse();
             Elements trs = document.select("table.grid.grid-color2>tbody>tr");
-            Elements ths= trs.first().select("th");
+            Elements ths = trs.first().select("th");
             JSONArray keys = new JSONArray();
-            for(int i = 2; i < ths.size(); i++) {
+            for (int i = 2; i < ths.size(); i++) {
                 String keyTmp = Helper.toSlug(ths.get(i).text().trim());
                 keys.put(keyTmp);
             }
-            for(int i = 1; i < trs.size() - 1; i++) {
+            for (int i = 1; i < trs.size() - 1; i++) {
                 Elements tds = trs.get(i).select("td");
                 JSONObject subject = new JSONObject();
-                for(int j = 2; j < tds.size(); j++) {
+                for (int j = 2; j < tds.size(); j++) {
                     String tmp = tds.get(j).text().trim();
-                    subject.put(keys.getString(j-2), tmp);
+                    subject.put(keys.getString(j - 2), tmp);
                 }
                 data.put(subject);
             }
@@ -191,24 +196,24 @@ public class Student {
             Element bodyGroup = document.getElementsByClass("body-group").first();
             Elements tds = bodyGroup.select("td");
             JSONArray studentInfo = new JSONArray();
-            for(Element td:tds) {
+            for (Element td : tds) {
                 JSONObject prop = new JSONObject();
                 String key = Helper.toSlug(td.text().split(":")[0]);
-                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim():"Không";
-                prop.put("key",key);
-                prop.put("value",value);
+                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
+                prop.put("key", key);
+                prop.put("value", value);
                 studentInfo.put(prop);
             }
             info.put("studentInfo", studentInfo);
             Element bodyGroup1 = document.getElementsByClass("body-group").get(1);
             Elements tds1 = bodyGroup1.select("td");
             JSONArray studentDetail = new JSONArray();
-            for(Element td: tds1) {
+            for (Element td : tds1) {
                 JSONObject prop = new JSONObject();
                 String key = Helper.toSlug(td.text().split(":")[0]);
-                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim():"Không";
-                prop.put("key",key);
-                prop.put("value",value);
+                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
+                prop.put("key", key);
+                prop.put("value", value);
                 studentDetail.put(prop);
             }
             info.put("studentDetail", studentDetail);
@@ -216,12 +221,12 @@ public class Student {
             Element bodyGroup2 = document.getElementsByClass("body-group").get(2);
             Elements tds2 = bodyGroup2.select("td");
             JSONArray studentFamily = new JSONArray();
-            for(Element td: tds2) {
+            for (Element td : tds2) {
                 JSONObject prop = new JSONObject();
                 String key = Helper.toSlug(td.text().split(":")[0]);
-                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim():"Không";
-                prop.put("key",key);
-                prop.put("value",value);
+                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
+                prop.put("key", key);
+                prop.put("value", value);
                 studentFamily.put(prop);
             }
             info.put("studentFamily", studentFamily);
@@ -230,9 +235,10 @@ public class Student {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return  info;
+        return info;
     }
-    public String getStudentName(){
+
+    public String getStudentName() {
         String name = "";
         try {
             Document document = Jsoup.connect(Helper.BASE_URL + "HoSoSinhVien.aspx")
@@ -247,7 +253,7 @@ public class Student {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return  name;
+        return name;
     }
 
     public JSONArray getSchedules() {
@@ -264,43 +270,43 @@ public class Student {
             Elements trDate = trs.first().select("th");
             Elements trMorning = trs.get(1).select("td");
             Elements trAfternoon = trs.get(2).select("td");
-            Elements trEvening= trs.get(3).select("td");
-            for(int i = 0; i < trMorning.size(); i++) {
+            Elements trEvening = trs.get(3).select("td");
+            for (int i = 0; i < trMorning.size(); i++) {
                 JSONObject schedule = new JSONObject();
                 // Get date
-                String dateRegEx="([0-9]{2})/([0-9]{2})/([0-9]{4})";
+                String dateRegEx = "([0-9]{2})/([0-9]{2})/([0-9]{4})";
                 Pattern p = Pattern.compile(dateRegEx);
-                Matcher m = p.matcher(trDate.get(i+1).text());
-                if(m.find()) {
-                    schedule.put("date",m.group());
+                Matcher m = p.matcher(trDate.get(i + 1).text());
+                if (m.find()) {
+                    schedule.put("date", m.group());
                 }
                 //Get morning
                 JSONObject objMorning = new JSONObject();
                 JSONObject objAfternoon = new JSONObject();
                 JSONObject objEvening = new JSONObject();
-                if(trMorning.get(i).select(".div-LichHoc").text().trim().length() > 0) {
+                if (trMorning.get(i).select(".div-LichHoc").text().trim().length() > 0) {
                     Elements spanDisplay = trMorning.get(i).children().select(".span-display");
-                    objMorning.put("subjectId", spanDisplay.get(0).text().trim().length() > 0 ? spanDisplay.get(0).text().trim():"");
-                    objMorning.put("subjectName", spanDisplay.get(1).text().trim().length() > 0 ? spanDisplay.get(1).text().trim():"");
-                    objMorning.put("subjectTime", spanDisplay.get(2).text().trim().length() > 0 ? spanDisplay.get(2).text().trim():"");
-                    objMorning.put("subjectLecturer", spanDisplay.get(3).text().trim().length() > 0 ? spanDisplay.get(3).text().trim():"");
-                    objMorning.put("subjectRoom", spanDisplay.get(4).text().trim().length() > 0 ? spanDisplay.get(4).text().trim():"");
+                    objMorning.put("subjectId", spanDisplay.get(0).text().trim().length() > 0 ? spanDisplay.get(0).text().trim() : "");
+                    objMorning.put("subjectName", spanDisplay.get(1).text().trim().length() > 0 ? spanDisplay.get(1).text().trim() : "");
+                    objMorning.put("subjectTime", spanDisplay.get(2).text().trim().length() > 0 ? spanDisplay.get(2).text().trim() : "");
+                    objMorning.put("subjectLecturer", spanDisplay.get(3).text().trim().length() > 0 ? spanDisplay.get(3).text().trim() : "");
+                    objMorning.put("subjectRoom", spanDisplay.get(4).text().trim().length() > 0 ? spanDisplay.get(4).text().trim() : "");
                 }
-                if(trAfternoon.get(i).select(".div-LichHoc").text().trim().length() > 0) {
+                if (trAfternoon.get(i).select(".div-LichHoc").text().trim().length() > 0) {
                     Elements spanDisplay1 = trAfternoon.get(i).children().select(".span-display");
-                    objAfternoon.put("subjectId", spanDisplay1.get(0).text().trim().length() > 0 ? spanDisplay1.get(0).text().trim():"");
-                    objAfternoon.put("subjectName", spanDisplay1.get(1).text().trim().length() > 0 ? spanDisplay1.get(1).text().trim():"");
-                    objAfternoon.put("subjectTime", spanDisplay1.get(2).text().trim().length() > 0 ? spanDisplay1.get(2).text().trim():"");
-                    objAfternoon.put("subjectLecturer", spanDisplay1.get(3).text().trim().length() > 0 ? spanDisplay1.get(3).text().trim():"");
-                    objAfternoon.put("subjectRoom", spanDisplay1.get(4).text().trim().length() > 0 ? spanDisplay1.get(4).text().trim():"");
+                    objAfternoon.put("subjectId", spanDisplay1.get(0).text().trim().length() > 0 ? spanDisplay1.get(0).text().trim() : "");
+                    objAfternoon.put("subjectName", spanDisplay1.get(1).text().trim().length() > 0 ? spanDisplay1.get(1).text().trim() : "");
+                    objAfternoon.put("subjectTime", spanDisplay1.get(2).text().trim().length() > 0 ? spanDisplay1.get(2).text().trim() : "");
+                    objAfternoon.put("subjectLecturer", spanDisplay1.get(3).text().trim().length() > 0 ? spanDisplay1.get(3).text().trim() : "");
+                    objAfternoon.put("subjectRoom", spanDisplay1.get(4).text().trim().length() > 0 ? spanDisplay1.get(4).text().trim() : "");
                 }
-                if(trEvening.get(i).select(".div-LichHoc").text().trim().length() > 0) {
+                if (trEvening.get(i).select(".div-LichHoc").text().trim().length() > 0) {
                     Elements spanDisplay1 = trAfternoon.get(i).children().select(".span-display");
-                    objAfternoon.put("subjectId", spanDisplay1.get(0).text().trim().length() > 0 ? spanDisplay1.get(0).text().trim():"");
-                    objAfternoon.put("subjectName", spanDisplay1.get(1).text().trim().length() > 0 ? spanDisplay1.get(1).text().trim():"");
-                    objAfternoon.put("subjectTime", spanDisplay1.get(2).text().trim().length() > 0 ? spanDisplay1.get(2).text().trim():"");
-                    objAfternoon.put("subjectLecturer", spanDisplay1.get(3).text().trim().length() > 0 ? spanDisplay1.get(3).text().trim():"");
-                    objAfternoon.put("subjectRoom", spanDisplay1.get(4).text().trim().length() > 0 ? spanDisplay1.get(4).text().trim():"");
+                    objAfternoon.put("subjectId", spanDisplay1.get(0).text().trim().length() > 0 ? spanDisplay1.get(0).text().trim() : "");
+                    objAfternoon.put("subjectName", spanDisplay1.get(1).text().trim().length() > 0 ? spanDisplay1.get(1).text().trim() : "");
+                    objAfternoon.put("subjectTime", spanDisplay1.get(2).text().trim().length() > 0 ? spanDisplay1.get(2).text().trim() : "");
+                    objAfternoon.put("subjectLecturer", spanDisplay1.get(3).text().trim().length() > 0 ? spanDisplay1.get(3).text().trim() : "");
+                    objAfternoon.put("subjectRoom", spanDisplay1.get(4).text().trim().length() > 0 ? spanDisplay1.get(4).text().trim() : "");
                 }
                 schedule.put("morning", objMorning);
                 schedule.put("afternoon", objAfternoon);
@@ -314,5 +320,103 @@ public class Student {
             e.printStackTrace();
         }
         return schedules;
+    }
+
+
+    public void getStudentImage() {
+        String studentID = storage.getString("last_student_login");
+        try {
+            Document document = Jsoup.connect(Helper.BASE_URL + "GetImage.aspx?MSSV=" + studentID)
+                    .method(Connection.Method.GET)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", storage.getCookie())
+                    .get();
+
+            Elements element = document.getElementsByTag("body");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void Test() {
+        try {
+            Document document = Jsoup.connect(Helper.BASE_URL + "Xemdiem.aspx")
+                    .method(Connection.Method.GET)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", storage.getCookie())
+                    .get();
+
+            Elements tableResult = document.select("table.grid.grid-color2.tblKetQuaHocTap");
+            Element table1 = tableResult.first();
+
+            //header
+            Elements trs = table1.select("tr");
+
+
+            Elements headerTh = table1.select("tr").first().select("th");
+            List<String> strings = new ArrayList<>();
+            for (int i = 1; i < headerTh.size(); i++) {
+                strings.add(Helper.toSlug(headerTh.get(i).text()));
+            }
+
+            List<Integer> indexs = new ArrayList<>();
+            List<String> quaterText = new ArrayList<>();
+
+            for (int i = 0; i < trs.size(); i++) {
+                if (trs.get(i).hasClass("quater")) {
+                    indexs.add(i);
+                    quaterText.add(trs.get(i).text());
+                }
+            }
+
+            JSONArray allQuater = new JSONArray();
+
+            for (int i = 0; i < indexs.size() - 1; i++) {
+
+                JSONObject jsonObject = new JSONObject();
+
+                try {
+                    jsonObject.put("quater", quaterText.get(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JSONArray quater = new JSONArray();
+
+                for (int j = indexs.get(i) + 1; j < indexs.get((i + 1)); j++) {
+                    Element tr = trs.get(j);
+                    if (!TextUtils.isEmpty(tr.text())) {
+                        JSONArray subject = new JSONArray();
+                        Elements tds = tr.getElementsByTag("td");
+                        for (int v = 0; v < tds.size(); v++) {
+                            JSONObject prop = new JSONObject();
+                            Element td = tds.get(v);
+                            try {
+                                prop.put(String.valueOf(v), td.text());
+                                subject.put(prop);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        quater.put(subject);
+                    }
+                    try {
+                        jsonObject.put("subject",quater);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                allQuater.put(jsonObject);
+            }
+
+            try {
+                Log.d("WWW", allQuater.get(0).toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
