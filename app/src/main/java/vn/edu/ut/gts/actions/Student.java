@@ -277,6 +277,7 @@ public class Student {
                 String dateRegEx = "([0-9]{2})/([0-9]{2})/([0-9]{4})";
                 Pattern p = Pattern.compile(dateRegEx);
                 Matcher m = p.matcher(trDate.get(i + 1).text());
+                if(trDate.get(i+1).hasClass("current-date")) schedule.put("current_date","true");
                 if (m.find()) {
                     schedule.put("date", m.group());
                 }
