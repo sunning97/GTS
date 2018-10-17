@@ -20,4 +20,6 @@
     <color name="wetasphalt">#34495e</color>
     <color name="pumpkin">#d35400</color>
     <color name="primaryLight">#DDEBF7</color>
+    <color name="amber">#FF9800</color>
+    <color name="indigo">#3F51B5</color>
 </resources>
