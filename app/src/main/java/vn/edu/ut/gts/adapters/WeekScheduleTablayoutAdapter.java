@@ -1,10 +1,12 @@
 package vn.edu.ut.gts.adapters;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +22,7 @@ import vn.edu.ut.gts.views.home.fragments.weekday.ThursdayFragment;
 import vn.edu.ut.gts.views.home.fragments.weekday.TuesdayFragment;
 import vn.edu.ut.gts.views.home.fragments.weekday.WednesdayFragment;
 
-public class WeekScheduleTablayoutAdapter extends FragmentPagerAdapter {
+public class WeekScheduleTablayoutAdapter extends FragmentStatePagerAdapter {
 
     private List<String> fragmentTitle;
     private JSONArray data;
@@ -40,6 +42,11 @@ public class WeekScheduleTablayoutAdapter extends FragmentPagerAdapter {
 
     public void setData(JSONArray data) {
         this.data = data;
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
     }
 
     @Override

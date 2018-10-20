@@ -184,7 +184,6 @@ public class Student {
         return data;
     }
 
-
     public JSONObject getStudentInfo() {
         JSONObject info = new JSONObject();
         try {
@@ -256,7 +255,30 @@ public class Student {
         return name;
     }
 
-    public JSONArray getSchedules() {
+
+    private void getDataScedules(Document document){
+        JSONObject dataWeek = new JSONObject();
+        try {
+            dataWeek.put("eventTarget", document.select("input[name=\"__EVENTTARGET\"]").val());
+            dataWeek.put("eventArgument", document.select("input[name=\"__EVENTARGUMENT\"]").val());
+            dataWeek.put("lastFocus", document.select("input[name=\"__LASTFOCUS\"]").val());
+            dataWeek.put("viewState", document.select("input[name=\"__VIEWSTATE\"]").val());
+            dataWeek.put("viewStartGenerator", document.select("input[name=\"__VIEWSTATEGENERATOR\"]").val());
+            dataWeek.put("radioBtnListPhieuKhaoSat", document.select("input[name=\"ctl00$ucPhieuKhaoSat1$RadioButtonList1\"][checked=\"checked\"]").val());
+            dataWeek.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
+            dataWeek.put("loaiLich",document.select("input[name=\"ctl00$ContentPlaceHolder$rLoaiLich\"][checked=\"checked\"]").val());
+            dataWeek.put("txtDate",document.select("input[name=\"ctl00$ContentPlaceHolder$txtDate\"]").val());
+            dataWeek.put("tuanSau",document.select("input[name=\"ctl00$ContentPlaceHolder$btnSau\"]").val());
+            dataWeek.put("tuanTruoc",document.select("input[name=\"ctl00$ContentPlaceHolder$btnTruoc\"]").val());
+            dataWeek.put("hienTai",document.select("input[name=\"ctl00$ContentPlaceHolder$btnHienTai\"]").val());
+            storage.putString("data_week",dataWeek.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    public JSONArray getSchedulesGetMethod() {
         JSONArray schedules = new JSONArray();
         try {
             Document document = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
@@ -264,6 +286,116 @@ public class Student {
                     .userAgent(Helper.USER_AGENT)
                     .cookie("ASP.NET_SessionId", storage.getCookie())
                     .get();
+            getDataScedules(document);
+
+            schedules = parseWeekData(document);
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return schedules;
+    }
+    public JSONArray getNextSchedulesWeek(){
+        JSONArray data = new JSONArray();
+        try {
+            JSONObject dataWeek = new JSONObject(this.storage.getString("data_week"));
+
+            Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
+                    .method(Connection.Method.POST)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", this.storage.getCookie())
+                    .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
+                    .data("__EVENTARGUMENT", dataWeek.getString("eventArgument"))
+                    .data("__LASTFOCUS", dataWeek.getString("lastFocus"))
+                    .data("__VIEWSTATE", dataWeek.getString("viewState"))
+                    .data("__VIEWSTATEGENERATOR", dataWeek.getString("viewStartGenerator"))
+                    .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataWeek.getString("radioBtnListPhieuKhaoSat"))
+                    .data("ctl00$DdListMenu", dataWeek.getString("listMenu"))
+                    .data("ctl00$ContentPlaceHolder$rLoaiLich", dataWeek.getString("loaiLich"))
+                    .data("ctl00$ContentPlaceHolder$btnSau", dataWeek.getString("tuanSau"))
+                    .data("ctl00$ContentPlaceHolder$txtDate", dataWeek.getString("txtDate"))
+                    .execute();
+            Document document = res.parse();
+            getDataScedules(document);
+
+            data = parseWeekData(document);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  data;
+    }
+    public JSONArray getPrevSchedulesWeek(){
+        JSONArray data = new JSONArray();
+        try {
+            JSONObject dataWeek = new JSONObject(this.storage.getString("data_week"));
+
+            Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
+                    .method(Connection.Method.POST)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", this.storage.getCookie())
+                    .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
+                    .data("__EVENTARGUMENT", dataWeek.getString("eventArgument"))
+                    .data("__LASTFOCUS", dataWeek.getString("lastFocus"))
+                    .data("__VIEWSTATE", dataWeek.getString("viewState"))
+                    .data("__VIEWSTATEGENERATOR", dataWeek.getString("viewStartGenerator"))
+                    .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataWeek.getString("radioBtnListPhieuKhaoSat"))
+                    .data("ctl00$DdListMenu", dataWeek.getString("listMenu"))
+                    .data("ctl00$ContentPlaceHolder$rLoaiLich", dataWeek.getString("loaiLich"))
+                    .data("ctl00$ContentPlaceHolder$btnTruoc", dataWeek.getString("tuanTruoc"))
+                    .data("ctl00$ContentPlaceHolder$txtDate", dataWeek.getString("txtDate"))
+                    .execute();
+            Document document = res.parse();
+            getDataScedules(document);
+
+            data = parseWeekData(document);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  data;
+    }
+    public JSONArray getCurrentSchedulesWeek(){
+        JSONArray data = new JSONArray();
+        try {
+            JSONObject dataWeek = new JSONObject(this.storage.getString("data_week"));
+
+            Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
+                    .method(Connection.Method.POST)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", this.storage.getCookie())
+                    .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
+                    .data("__EVENTARGUMENT", dataWeek.getString("eventArgument"))
+                    .data("__LASTFOCUS", dataWeek.getString("lastFocus"))
+                    .data("__VIEWSTATE", dataWeek.getString("viewState"))
+                    .data("__VIEWSTATEGENERATOR", dataWeek.getString("viewStartGenerator"))
+                    .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataWeek.getString("radioBtnListPhieuKhaoSat"))
+                    .data("ctl00$DdListMenu", dataWeek.getString("listMenu"))
+                    .data("ctl00$ContentPlaceHolder$rLoaiLich", dataWeek.getString("loaiLich"))
+                    .data("ctl00$ContentPlaceHolder$btnHienTai", dataWeek.getString("hienTai"))
+                    .data("ctl00$ContentPlaceHolder$txtDate", dataWeek.getString("txtDate"))
+                    .execute();
+            Document document = res.parse();
+            getDataScedules(document);
+
+            data = parseWeekData(document);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  data;
+    }
+    private JSONArray parseWeekData(Document document){
+
+        JSONArray data = new JSONArray();
+        try {
             Elements table = document.select(".div-ChiTietLich>table");
             Elements trs = table.select("tr");
 
@@ -312,31 +444,12 @@ public class Student {
                 schedule.put("morning", objMorning);
                 schedule.put("afternoon", objAfternoon);
                 schedule.put("evening", objEvening);
-                schedules.put(schedule);
+                data.put(schedule);
             }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return schedules;
-    }
-
-
-    public void getStudentImage() {
-        String studentID = storage.getString("last_student_login");
-        try {
-            Document document = Jsoup.connect(Helper.BASE_URL + "GetImage.aspx?MSSV=" + studentID)
-                    .method(Connection.Method.GET)
-                    .userAgent(Helper.USER_AGENT)
-                    .cookie("ASP.NET_SessionId", storage.getCookie())
-                    .get();
-
-            Elements element = document.getElementsByTag("body");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return data;
     }
 
     public void Test() {

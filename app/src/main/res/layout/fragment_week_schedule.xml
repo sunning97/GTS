@@ -68,6 +68,7 @@
         app:menu_colorNormal="@color/colorPrimary"
         >
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/next_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_arrow_forward_white_24dp"
@@ -76,10 +77,20 @@
             app:fab_colorNormal="@color/colorPrimary"
             app:fab_colorPressed="@color/colorPrimaryDark"/>
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/prev_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_arrow_back_white_24dp"
             app:fab_label="Tuần trước"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/colorPrimary"
+            app:fab_colorPressed="@color/colorPrimaryDark"/>
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/current_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_my_location_white_24dp"
+            app:fab_label="Tuần hiện tại"
             app:fab_size="mini"
             app:fab_colorNormal="@color/colorPrimary"
             app:fab_colorPressed="@color/colorPrimaryDark"/>

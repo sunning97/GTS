@@ -14,23 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.adapters.WeekScheduleTablayoutAdapter;
-import vn.edu.ut.gts.views.home.fragments.weekday.MondayFragment;
-import vn.edu.ut.gts.views.home.fragments.weekday.TuesdayFragment;
-import vn.edu.ut.gts.views.home.fragments.weekday.WednesdayFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +41,12 @@ public class WeekSchedule extends Fragment {
     ViewPager viewPager;
     @BindView(R.id.date_to_date)
     TextView dateToDate;
+    @BindView(R.id.next_week)
+    FloatingActionButton nextWeek;
+    @BindView(R.id.prev_week)
+    FloatingActionButton prevWeek;
+    @BindView(R.id.current_week)
+    FloatingActionButton currentWeek;
 
     private Student student;
     private SweetAlertDialog loadingDialog;
@@ -57,7 +61,81 @@ public class WeekSchedule extends Fragment {
         ButterKnife.bind(this,view);
         init();
         getDataWeekSchedule();
+
         return view;
+    }
+
+    @OnClick(R.id.next_week)
+    public void setNextWeek(View view) {
+        AsyncTask<Void,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
+            @Override
+            protected void onPreExecute() {
+                loadingDialog.show();
+            }
+
+            @Override
+            protected JSONArray doInBackground(Void... voids) {
+                JSONArray jsonArray = student.getNextSchedulesWeek();
+                return jsonArray;
+            }
+
+            @Override
+            protected void onPostExecute(JSONArray jsonArray) {
+                setDateToDate(jsonArray);
+                weekScheduleTablayoutAdapter.setData(jsonArray);
+                weekScheduleTablayoutAdapter.notifyDataSetChanged();
+                loadingDialog.dismiss();
+            }
+        };
+        voidVoidVoidAsyncTask.execute();
+    }
+    @OnClick(R.id.prev_week)
+    public void setPrevWeek(View view) {
+        AsyncTask<Void,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
+            @Override
+            protected void onPreExecute() {
+                loadingDialog.show();
+            }
+
+            @Override
+            protected JSONArray doInBackground(Void... voids) {
+                JSONArray jsonArray = student.getPrevSchedulesWeek();
+                return jsonArray;
+            }
+
+            @Override
+            protected void onPostExecute(JSONArray jsonArray) {
+                setDateToDate(jsonArray);
+                weekScheduleTablayoutAdapter.setData(jsonArray);
+                weekScheduleTablayoutAdapter.notifyDataSetChanged();
+                loadingDialog.dismiss();
+            }
+        };
+        voidVoidVoidAsyncTask.execute();
+    }
+    @OnClick(R.id.current_week)
+    public void setCurrentWeek(View view) {
+        AsyncTask<Void,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
+            @Override
+            protected void onPreExecute() {
+                loadingDialog.show();
+            }
+
+            @Override
+            protected JSONArray doInBackground(Void... voids) {
+                JSONArray jsonArray = student.getCurrentSchedulesWeek();
+                return jsonArray;
+            }
+
+            @Override
+            protected void onPostExecute(JSONArray jsonArray) {
+                setDateToDate(jsonArray);
+                weekScheduleTablayoutAdapter.setData(jsonArray);
+                weekScheduleTablayoutAdapter.notifyDataSetChanged();
+                loadingDialog.dismiss();
+            }
+        };
+        voidVoidVoidAsyncTask.execute();
     }
 
     private void getDataWeekSchedule(){
@@ -69,7 +147,7 @@ public class WeekSchedule extends Fragment {
 
             @Override
             protected JSONArray doInBackground(Void... voids) {
-                JSONArray jsonArray = student.getSchedules();
+                JSONArray jsonArray = student.getSchedulesGetMethod();
                 return jsonArray;
             }
 
@@ -104,7 +182,7 @@ public class WeekSchedule extends Fragment {
         try {
             JSONObject firstDate = jsonArray.getJSONObject(0);
             JSONObject lastDate = jsonArray.getJSONObject(jsonArray.length()-1);
-            dateToDate.setText(firstDate.getString("date")+" - "+lastDate.getString("date"));
+            dateToDate.setText("Tuần: "+firstDate.getString("date")+" - "+lastDate.getString("date"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
