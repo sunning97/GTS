@@ -35,6 +35,14 @@
             android:icon="@drawable/ic_attendance_filled_white_96"
             android:title="Thông tin điểm danh"></item>
     </group>
+    <item android:title="Thông tin">
+        <menu>
+            <item
+                android:id="@+id/about_app"
+                android:icon="@drawable/ic_about_us_48_black"
+                android:title="Về ứng dụng"></item>
+        </menu>
+    </item>
     <item android:title="Tài khoản">
         <menu>
             <item

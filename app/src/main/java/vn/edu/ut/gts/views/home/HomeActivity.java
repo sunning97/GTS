@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 import vn.edu.ut.gts.views.home.fragments.AttendanceFragment;
 import vn.edu.ut.gts.views.home.fragments.FrameProgramFragment;
@@ -137,6 +138,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         new AttendanceFragment()
                 ).commit();
                 setTitle(item.getTitle());
+                break;
+            }
+            case R.id.about_app:{
+                EpicDialog epicDialog = new EpicDialog(HomeActivity.this);
+                epicDialog.showAboutDialog();
+                item.setChecked(false);
                 break;
             }
             case R.id.logout: {
