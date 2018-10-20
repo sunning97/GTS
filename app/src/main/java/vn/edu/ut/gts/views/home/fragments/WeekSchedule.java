@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -47,6 +48,8 @@ public class WeekSchedule extends Fragment {
     FloatingActionButton prevWeek;
     @BindView(R.id.current_week)
     FloatingActionButton currentWeek;
+    @BindView(R.id.date_picker)
+    ImageButton datePicker;
 
     private Student student;
     private SweetAlertDialog loadingDialog;
@@ -136,6 +139,10 @@ public class WeekSchedule extends Fragment {
             }
         };
         voidVoidVoidAsyncTask.execute();
+    }
+    @OnClick(R.id.date_picker)
+    public void showDatePickerDialog(View view) {
+
     }
 
     private void getDataWeekSchedule(){

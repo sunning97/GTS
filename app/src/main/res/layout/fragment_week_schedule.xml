@@ -26,6 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <ImageButton
+                    android:id="@+id/date_picker"
                     android:src="@drawable/ic_perm_contact_calendar_white_24dp"
                     android:backgroundTint="@color/transparent"
                     android:layout_width="wrap_content"
