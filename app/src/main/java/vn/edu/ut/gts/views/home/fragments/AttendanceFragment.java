@@ -9,11 +9,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.viethoa.DialogUtils;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -133,10 +136,10 @@ public class AttendanceFragment extends Fragment {
                     tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
                 }
                 try {
-                    tableRow.addView(generateTableCell(subject.getString("ten_mon_hoc"),false));
-                    tableRow.addView(generateTableCell(subject.getString("dvht"),true));
-                    tableRow.addView(generateTableCell(subject.getString("nghi_co_phep"),true));
-                    tableRow.addView(generateTableCell(subject.getString("nghi_ko_phep"),true));
+                    tableRow.addView(generateTableCell(subject.getString("ten_mon_hoc"),false, (int) (getScreenWidthInDPs(getContext())*0.4)));
+                    tableRow.addView(generateTableCell(subject.getString("dvht"),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
+                    tableRow.addView(generateTableCell(subject.getString("nghi_co_phep"),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
+                    tableRow.addView(generateTableCell(subject.getString("nghi_ko_phep"),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
                     if(Integer.parseInt(subject.getString("nghi_co_phep")) > 0) totalHaltDate+= Integer.parseInt(subject.getString("nghi_co_phep"));
                     if(Integer.parseInt(subject.getString("nghi_ko_phep")) > 0) totalHaltDate+= Integer.parseInt(subject.getString("nghi_co_phep"));
                 } catch (Exception e){
@@ -151,7 +154,7 @@ public class AttendanceFragment extends Fragment {
         }
     }
 
-    private LinearLayout generateTableCell(String content,Boolean isMarginCenter){
+    private LinearLayout generateTableCell(String content, Boolean isMarginCenter,int width){
 
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
@@ -159,6 +162,8 @@ public class AttendanceFragment extends Fragment {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         if(isMarginCenter) layoutParams.gravity = Gravity.CENTER;
+        layoutParams.width = (int) (width*dp);
+
         linearLayout.setLayoutParams(layoutParams);
 
         // generate cell's text view
@@ -254,5 +259,12 @@ public class AttendanceFragment extends Fragment {
         if (simpleDialog != null && !simpleDialog.isShowing()) {
             simpleDialog.show();
         }
+    }
+    public int getScreenWidthInDPs(Context context){
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(dm);
+        int widthInDP = Math.round(dm.widthPixels / dm.density);
+        return widthInDP;
     }
 }

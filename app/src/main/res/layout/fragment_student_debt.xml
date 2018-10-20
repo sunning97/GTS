@@ -58,10 +58,7 @@
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TableLayout
+        <TableLayout
                 android:id="@+id/student_debt_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -348,6 +345,5 @@
                     </LinearLayout>
                 </TableRow>
             </TableLayout>
-        </HorizontalScrollView>
     </ScrollView>
 </LinearLayout>

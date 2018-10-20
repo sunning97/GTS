@@ -9,10 +9,12 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -133,17 +135,13 @@ public class StudentDebtFragment extends Fragment {
                     tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
                 }
                 try {
-                    //tableRow.addView(generateTableCell(subject.getString("ma"),false,(subject.getString("trang_thai").equals("Chưa nộp"))));
-                    tableRow.addView(generateTableCell(subject.getString("noi_dung_thu"),false,(subject.getString("trang_thai").equals("Chưa nộp"))));
-                    tableRow.addView(generateTableCell(subject.getString("tin_chi"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
-                    //tableRow.addView(generateTableCell(subject.getString("so_tien_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
-                    //tableRow.addView(generateTableCell(subject.getString("da_nop_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
-                    //tableRow.addView(generateTableCell(subject.getString("khau_tru_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
-                    tableRow.addView(generateTableCell(subject.getString("cong_no_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    tableRow.addView(generateTableCell(subject.getString("noi_dung_thu"),false,(subject.getString("trang_thai").equals("Chưa nộp")), (int) (getScreenWidthInDPs(getContext())*0.4)));
+                    tableRow.addView(generateTableCell(subject.getString("tin_chi"),true,(subject.getString("trang_thai").equals("Chưa nộp")),(int) (getScreenWidthInDPs(getContext())*0.2)));
+                    tableRow.addView(generateTableCell(subject.getString("cong_no_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp")),(int) (getScreenWidthInDPs(getContext())*0.2)));
 
                     if(Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd"))) > 0)
                         totalDeb+= Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd")));
-                    tableRow.addView(generateTableCell(subject.getString("trang_thai"),true,(subject.getString("trang_thai").equals("Chưa nộp"))));
+                    tableRow.addView(generateTableCell(subject.getString("trang_thai"),true,(subject.getString("trang_thai").equals("Chưa nộp")),(int) (getScreenWidthInDPs(getContext())*0.2)));
                 } catch (Exception e){
 
                 }
@@ -186,13 +184,14 @@ public class StudentDebtFragment extends Fragment {
         return  header;
     }
 
-    private LinearLayout generateTableCell(String content,Boolean isGravityCenter,Boolean isRed){
+    private LinearLayout generateTableCell(String content,Boolean isGravityCenter,Boolean isRed,int width){
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setGravity(Gravity.CENTER);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         if(isGravityCenter) layoutParams.gravity = Gravity.CENTER;
+        layoutParams.width = (int) (width*d);
         linearLayout.setLayoutParams(layoutParams);
 
         // generate cell's text view
@@ -269,5 +268,12 @@ public class StudentDebtFragment extends Fragment {
         if (simpleDialog != null && !simpleDialog.isShowing()) {
             simpleDialog.show();
         }
+    }
+    public int getScreenWidthInDPs(Context context){
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(dm);
+        int widthInDP = Math.round(dm.widthPixels / dm.density);
+        return widthInDP;
     }
 }
