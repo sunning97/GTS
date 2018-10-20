@@ -13,6 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +256,7 @@ public class Student {
         return name;
     }
 
-
+//Schedules
     private void getDataScedules(Document document){
         JSONObject dataWeek = new JSONObject();
         try {
@@ -485,6 +486,21 @@ public class Student {
         return data;
     }
 
+    public void saveStudentImage(Context context){
+        String studentID = storage.getString("last_student_login");
+        Connection.Response resultImageResponse;
+        try {
+            resultImageResponse = Jsoup.connect(Helper.BASE_URL+"GetImage.aspx?MSSV="+studentID)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_Session_Id",storage.getCookie())
+                    .ignoreContentType(true).execute();
+
+            storage.saveImage(resultImageResponse,context);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void Test() {
         try {
             Document document = Jsoup.connect(Helper.BASE_URL + "Xemdiem.aspx")
@@ -566,4 +582,5 @@ public class Student {
             e.printStackTrace();
         }
     }
+
 }

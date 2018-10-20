@@ -12,8 +12,7 @@
         android:layout_marginTop="15dp"
         android:id="@+id/profile_image"
         android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:src="@drawable/user_example"/>
+        android:layout_height="96dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,27 +21,15 @@
             android:id="@+id/student_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nguyễn Văn A"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="20sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" - "
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-        <TextView
-            android:id="@+id/year"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="K15"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
+
     </LinearLayout>
     <TextView
         android:id="@+id/student_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="1551150011"
+        android:text=""
         android:textColor="@color/white"/>
 </LinearLayout>

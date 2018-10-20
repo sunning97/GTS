@@ -7,6 +7,7 @@ import vn.edu.ut.gts.actions.Login;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.login.ILoginView;
 
 public class LoginProcess implements ILoginProcess{
@@ -49,6 +50,7 @@ public class LoginProcess implements ILoginProcess{
                 if(status){
                     saveLastLoginID(studentId);
                     saveCurrentStudentName();
+                    HomeActivity.isLogin = true;
                     iLoginView.doneLoadingButton();
                     iLoginView.loginSuccess();
                 }else{

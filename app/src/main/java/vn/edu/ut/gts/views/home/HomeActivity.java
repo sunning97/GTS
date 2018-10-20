@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static final int STUDENT_DEBT = 4;
     public static final int SCHEDULE_BY_WEEK = 5;
     public static final int ATTENDACE = 6;
-    private Context context;
+    public static Boolean isLogin = false;
 
     @BindView(R.id.home_toolbar)
     Toolbar toolbar;
@@ -45,8 +45,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     @BindView(R.id.student_name)
     TextView studentFullName;
-    @BindView(R.id.year)
-    TextView studentYear;
     @BindView(R.id.profile_image)
     CircleImageView profileImage;
     @BindView(R.id.student_id)
@@ -55,10 +53,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private Storage storage;
 
     ActionBarDrawerToggle actionBarDrawerToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getApplicationContext();
         setContentView(R.layout.activity_home);
         this.storage = new Storage(this);
 
@@ -72,6 +70,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHomeFragment(intent);
         navigationView.setNavigationItemSelectedListener(this);
+        profileImage.setImageBitmap(storage.getImageFromStorage(HomeActivity.this));
         studentFullName.setText(storage.getString("student_name"));
         studentID.setText(storage.getString("last_student_login"));
     }

@@ -2,6 +2,9 @@ package vn.edu.ut.gts.views.dashboard;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -17,6 +20,10 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +59,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private Storage storage;
     private Student student;
+    private SweetAlertDialog loadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,13 +116,25 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void init() {
+        collapsingToolbarLayout.setTitle("loading...");
         this.storage = new Storage(this);
         this.student = new Student(this);
+
+        loadingDialog = new SweetAlertDialog(DashboardActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        loadingDialog.setTitleText("Loading");
+        loadingDialog.setCancelable(false);
+
+        if(!HomeActivity.isLogin){
+            getStudentData();
+        } else {
+            Bitmap image = storage.getImageFromStorage(DashboardActivity.this);
+            profileImage.setImageBitmap(image);
+        }
+        setSupportActionBar(dashboardToolbar);
         String studentName = this.storage.getString("student_name");
         String studentID = this.storage.getString("last_student_login");
-        collapsingToolbarLayout.setTitle(studentName+"-"+studentID);
-        setSupportActionBar(dashboardToolbar);
-        getStudentData();
+        collapsingToolbarLayout.setTitle(studentName+" - "+studentID);
     }
 
     @Override
@@ -137,16 +158,26 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private void getStudentData(){
         AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
             @Override
+            protected void onPreExecute() {
+                loadingDialog.show();
+            }
+
+            @Override
             protected JSONObject doInBackground(Void... voids) {
                 JSONObject studentData = student.getStudentInfo();
+                student.saveStudentImage(DashboardActivity.this);
                 return studentData;
             }
 
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
                 storage.putString("student_info",jsonObject.toString());
+                Bitmap image = storage.getImageFromStorage(DashboardActivity.this);
+                profileImage.setImageBitmap(image);
+                loadingDialog.dismiss();
             }
         };
         asyncTask.execute();
     }
+
 }

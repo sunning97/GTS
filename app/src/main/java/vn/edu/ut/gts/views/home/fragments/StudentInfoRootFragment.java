@@ -56,6 +56,8 @@ public class StudentInfoRootFragment extends Fragment {
                 fragmentTitle
         );
         viewPager.setAdapter(studentInfoViewPagerAdapter);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setupWithViewPager(viewPager);
     }
 
