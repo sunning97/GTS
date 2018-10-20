@@ -58,6 +58,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <TextView
+        android:layout_marginBottom="10dp"
         android:text="@string/contact_us"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

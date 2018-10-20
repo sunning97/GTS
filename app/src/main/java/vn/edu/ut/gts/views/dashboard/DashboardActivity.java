@@ -132,7 +132,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             Bitmap image = storage.getImageFromStorage(DashboardActivity.this);
             profileImage.setImageBitmap(image);
         }
-
+        HomeActivity.isLogin = true;
         setSupportActionBar(dashboardToolbar);
         String studentName = this.storage.getString("student_name");
         String studentID = this.storage.getString("last_student_login");

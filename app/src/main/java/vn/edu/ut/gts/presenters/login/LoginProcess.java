@@ -50,7 +50,6 @@ public class LoginProcess implements ILoginProcess{
                 if(status){
                     saveLastLoginID(studentId);
                     saveCurrentStudentName();
-                    HomeActivity.isLogin = true;
                     iLoginView.doneLoadingButton();
                     iLoginView.loginSuccess();
                 }else{
