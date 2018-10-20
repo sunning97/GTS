@@ -271,6 +271,7 @@ public class Student {
             dataWeek.put("tuanSau",document.select("input[name=\"ctl00$ContentPlaceHolder$btnSau\"]").val());
             dataWeek.put("tuanTruoc",document.select("input[name=\"ctl00$ContentPlaceHolder$btnTruoc\"]").val());
             dataWeek.put("hienTai",document.select("input[name=\"ctl00$ContentPlaceHolder$btnHienTai\"]").val());
+            dataWeek.put("ngayChon",document.select("input[name=\"ctl00$ContentPlaceHolder$btnNgayChon\"]").val());
             storage.putString("data_week",dataWeek.toString());
 
         } catch (Exception e) {
@@ -379,6 +380,38 @@ public class Student {
                     .data("ctl00$ContentPlaceHolder$rLoaiLich", dataWeek.getString("loaiLich"))
                     .data("ctl00$ContentPlaceHolder$btnHienTai", dataWeek.getString("hienTai"))
                     .data("ctl00$ContentPlaceHolder$txtDate", dataWeek.getString("txtDate"))
+                    .execute();
+            Document document = res.parse();
+            getDataScedules(document);
+
+            data = parseWeekData(document);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  data;
+    }
+    public JSONArray getSchedulesByDate(String date){
+        JSONArray data = new JSONArray();
+        try {
+            JSONObject dataWeek = new JSONObject(this.storage.getString("data_week"));
+
+            Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
+                    .method(Connection.Method.POST)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", this.storage.getCookie())
+                    .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
+                    .data("__EVENTARGUMENT", dataWeek.getString("eventArgument"))
+                    .data("__LASTFOCUS", dataWeek.getString("lastFocus"))
+                    .data("__VIEWSTATE", dataWeek.getString("viewState"))
+                    .data("__VIEWSTATEGENERATOR", dataWeek.getString("viewStartGenerator"))
+                    .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataWeek.getString("radioBtnListPhieuKhaoSat"))
+                    .data("ctl00$DdListMenu", dataWeek.getString("listMenu"))
+                    .data("ctl00$ContentPlaceHolder$rLoaiLich", dataWeek.getString("loaiLich"))
+                    .data("ctl00$ContentPlaceHolder$btnNgayChon", dataWeek.getString("ngayChon"))
+                    .data("ctl00$ContentPlaceHolder$txtDate", date)
                     .execute();
             Document document = res.parse();
             getDataScedules(document);

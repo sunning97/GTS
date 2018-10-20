@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.github.viethoa:customdialogs:3.0.0'
 
     //date picker
-
+    implementation 'com.code-troopers.betterpickers:library:3.1.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

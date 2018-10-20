@@ -14,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.github.clans.fab.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -22,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +37,7 @@ import vn.edu.ut.gts.adapters.WeekScheduleTablayoutAdapter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeekSchedule extends Fragment {
+public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener {
 
     @BindView(R.id.week_schedule_tablayout)
     TabLayout tabLayout;
@@ -50,6 +53,11 @@ public class WeekSchedule extends Fragment {
     FloatingActionButton currentWeek;
     @BindView(R.id.date_picker)
     ImageButton datePicker;
+
+    private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
+    private int day = 0;
+    private int month = 0;
+    private int year = 0;
 
     private Student student;
     private SweetAlertDialog loadingDialog;
@@ -142,7 +150,15 @@ public class WeekSchedule extends Fragment {
     }
     @OnClick(R.id.date_picker)
     public void showDatePickerDialog(View view) {
-
+        CalendarDatePickerDialogFragment datePicker = new CalendarDatePickerDialogFragment()
+                .setOnDateSetListener(this)
+                .setFirstDayOfWeek(Calendar.MONDAY)
+                .setCancelText("Hủy")
+                .setDoneText("Chọn");
+        if(day != 0){
+            datePicker.setPreselectedDate(year,month,day);
+        }
+        datePicker.show(getFragmentManager(), FRAG_TAG_DATE_PICKER);
     }
 
     private void getDataWeekSchedule(){
@@ -208,5 +224,39 @@ public class WeekSchedule extends Fragment {
             }
         }
         return  position;
+    }
+
+    @Override
+    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+        this.day = dayOfMonth;
+        this.month = monthOfYear;
+        this.year = year;
+
+        String day = (dayOfMonth < 10) ? "0"+String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
+        String mounth = ((monthOfYear+1) < 10) ? "0"+String.valueOf(monthOfYear+1) : String.valueOf(monthOfYear+1);
+        String time = day+"-"+mounth+"-"+String.valueOf(year);
+
+        AsyncTask<String,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<String, Void, JSONArray>() {
+            @Override
+            protected void onPreExecute() {
+                loadingDialog.show();
+            }
+
+            @Override
+            protected JSONArray doInBackground(String... strings) {
+                Log.d("AAA",strings[0]);
+                JSONArray jsonArray = student.getSchedulesByDate(strings[0]);
+                return jsonArray;
+            }
+
+            @Override
+            protected void onPostExecute(JSONArray jsonArray) {
+                setDateToDate(jsonArray);
+                weekScheduleTablayoutAdapter.setData(jsonArray);
+                weekScheduleTablayoutAdapter.notifyDataSetChanged();
+                loadingDialog.dismiss();
+            }
+        };
+        voidVoidVoidAsyncTask.execute(time);
     }
 }
