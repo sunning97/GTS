@@ -65,6 +65,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
         ButterKnife.bind(this);
         this.init();
     }
@@ -131,6 +132,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             Bitmap image = storage.getImageFromStorage(DashboardActivity.this);
             profileImage.setImageBitmap(image);
         }
+
         setSupportActionBar(dashboardToolbar);
         String studentName = this.storage.getString("student_name");
         String studentID = this.storage.getString("last_student_login");

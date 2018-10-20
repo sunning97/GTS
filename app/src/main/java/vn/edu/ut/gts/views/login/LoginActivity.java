@@ -57,10 +57,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         ButterKnife.bind(this);
         this.requestPermission();
         this.init();
-        this.setlastLogin();
+        this.setLastLogin();
         this.validate();
         this.addControl();
 
@@ -110,7 +111,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 startActivity(intent);
             }
         };
-        handler.postDelayed(runnable, 1000);
+        handler.postDelayed(runnable, 500);
     }
 
     @Override
@@ -122,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     }
 
     @Override
-    public void setlastLogin() {
+    public void setLastLogin() {
         if(this.storage.getString("last_student_login") != null)
             inputStudentId.setText(this.storage.getString("last_student_login"));
     }

@@ -6,5 +6,5 @@ public interface ILoginView {
     public void revertLoadingButton();
     public void loginSuccess();
     public void loginFailed();
-    public void setlastLogin();
+    public void setLastLogin();
 }

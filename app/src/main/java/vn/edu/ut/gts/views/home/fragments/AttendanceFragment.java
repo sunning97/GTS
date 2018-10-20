@@ -49,16 +49,17 @@ public class AttendanceFragment extends Fragment {
 
     Storage storage;
     Student student;
+
     private float dp;
     private int totalHaltDate = 0;
     private JSONArray semesters;
 
     List<String> dataSnpinner = new ArrayList<>();
     List<String> headerText = new ArrayList<>();
+
     SweetAlertDialog loadingDialog;
 
     public AttendanceFragment() {
-        //headerText.add("Mã môn học");
         headerText.add("Tên môn học");
         headerText.add("ĐVHT");
         headerText.add("Có phép");
@@ -132,7 +133,6 @@ public class AttendanceFragment extends Fragment {
                     tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
                 }
                 try {
-                    //tableRow.addView(generateTableCell(subject.getString("ma_mon_hoc"),false));
                     tableRow.addView(generateTableCell(subject.getString("ten_mon_hoc"),false));
                     tableRow.addView(generateTableCell(subject.getString("dvht"),true));
                     tableRow.addView(generateTableCell(subject.getString("nghi_co_phep"),true));
