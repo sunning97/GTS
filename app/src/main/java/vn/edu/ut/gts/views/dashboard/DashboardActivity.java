@@ -76,6 +76,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         return true;
     }
 
+
     @OnClick({
             R.id.student_info_card,
             R.id.student_study_result_card,
