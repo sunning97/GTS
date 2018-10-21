@@ -616,8 +616,9 @@ public class Student {
         }
     }
 
-    public void getFrameProgram() {
+    public JSONArray getFrameProgram() {
         getDataFrameProgram();
+        JSONArray allQuater = new JSONArray();
         try {
             JSONObject dataFrame = new JSONObject(this.storage.getString("data_frame"));
             Connection.Response res = Jsoup.connect(Helper.BASE_URL + "XemChuongTrinhKhung.aspx")
@@ -648,7 +649,7 @@ public class Student {
                 }
             }
 
-            JSONArray allQuater = new JSONArray();
+
             Pattern pattern = Pattern.compile("<span\\sonmouseover=\"tooltip\\.show\\('<div>(.*)<\\/div>'\\)\"\\sonmouseout=\"tooltip\\.hide\\(\\)\">(.*)\\s\\((.*)\\)<\\/span>");
             Matcher matcher;
             for (int i = 0; i <= quaterTrPosition.size() - 1; i++) {
@@ -659,9 +660,12 @@ public class Student {
                 int check = 0;
 
                 if (i == quaterTrPosition.size() - 1) {
+                    Element trBatBuoc = null;
+                    Element trKhongBatBuoc = null;
                     for (int j = quaterTrPosition.get(i) + 1; j < trs.size() - 1; j++) {
                         if (trs.get(j).hasAttr("style")) {
                             check++;
+                            if(check == 1) trBatBuoc = trs.get(j); else trKhongBatBuoc = trs.get(j);
                             continue;
                         }
                         Element tr = trs.get(j);
@@ -684,10 +688,17 @@ public class Student {
                             }
                         }
                     }
+                    quater.put("so_chi_bat_buoc",trBatBuoc.getElementsByTag("td").get(2).text());
+                    if(trKhongBatBuoc != null)
+                        quater.put("so_chi_khong_bat_buoc",trKhongBatBuoc.getElementsByTag("td").get(2).text());
+                    else quater.put("so_chi_khong_bat_buoc","0");
                 } else {
+                    Element trBatBuoc = null;
+                    Element trKhongBatBuoc = null;
                     for (int j = quaterTrPosition.get(i) + 1; j < quaterTrPosition.get((i + 1)); j++) {
                         if (trs.get(j).hasAttr("style")) {
                             check++;
+                            if(check == 1) trBatBuoc = trs.get(j); else trKhongBatBuoc = trs.get(j);
                             continue;
                         }
                         Element tr = trs.get(j);
@@ -708,18 +719,22 @@ public class Student {
                             hocPhanTuChon.put(subject);
                         }
                     }
+                    quater.put("so_chi_bat_buoc",trBatBuoc.getElementsByTag("td").get(2).text());
+                    if(trKhongBatBuoc != null)
+                        quater.put("so_chi_khong_bat_buoc",trKhongBatBuoc.getElementsByTag("td").get(2).text());
+                    else quater.put("so_chi_khong_bat_buoc","0");
                 }
                 quater.put("quater_name", quatersName.get(i));
                 quater.put("bat_buoc", hocPhanbatBuoc);
                 quater.put("khong_bat_buoc", hocPhanTuChon);
                 allQuater.put(quater);
             }
-            Log.d("AAA", String.valueOf(allQuater.get(allQuater.length()-1)));
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return allQuater;
     }
 }
