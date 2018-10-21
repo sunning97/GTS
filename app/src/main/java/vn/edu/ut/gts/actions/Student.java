@@ -639,9 +639,9 @@ public class Student {
             List<Integer> quaterTrPosition = new ArrayList<>();
             JSONArray quatersName = new JSONArray();
             for (int i = 0; i < trs.size(); i++) {
-                if(trs.get(i).hasAttr("style")){
+                if (trs.get(i).hasAttr("style")) {
                     Elements tds = trs.get(i).getElementsByTag("td");
-                    if(tds.size() == 4){
+                    if (tds.size() == 4) {
                         quatersName.put(tds.get(0).text());
                         quaterTrPosition.add(i);
                     }
@@ -651,43 +651,69 @@ public class Student {
             JSONArray allQuater = new JSONArray();
             Pattern pattern = Pattern.compile("<span\\sonmouseover=\"tooltip\\.show\\('<div>(.*)<\\/div>'\\)\"\\sonmouseout=\"tooltip\\.hide\\(\\)\">(.*)\\s\\((.*)\\)<\\/span>");
             Matcher matcher;
-            for (int i = 0; i < quaterTrPosition.size() - 1; i++) {
+            for (int i = 0; i <= quaterTrPosition.size() - 1; i++) {
 
                 JSONObject quater = new JSONObject();
                 JSONArray hocPhanbatBuoc = new JSONArray();
                 JSONArray hocPhanTuChon = new JSONArray();
                 int check = 0;
 
-                for (int j = quaterTrPosition.get(i) + 1; j < quaterTrPosition.get((i + 1)); j++) {
-                    if(trs.get(j).hasAttr("style")){
-                        check++;
-                        continue;
-                    }
-                    Element tr = trs.get(j);
-                    Elements tds = tr.getElementsByTag("td");
-                    JSONArray subject = new JSONArray();
-                    for(int v= 1;v< tds.size();v++){
-                        if(v== 4 && tds.get(v).getElementsByTag("span").size() > 0){
-                            matcher = pattern.matcher(tds.get(v).getElementsByTag("span").get(0).toString());
-                            if(matcher.matches()){
-                                subject.put(matcher.group(1)+ " - "+ tds.get(v).text());
+                if (i == quaterTrPosition.size() - 1) {
+                    for (int j = quaterTrPosition.get(i) + 1; j < trs.size() - 1; j++) {
+                        if (trs.get(j).hasAttr("style")) {
+                            check++;
+                            continue;
+                        }
+                        Element tr = trs.get(j);
+                        if (!tr.hasClass("thongke")) {
+                            Elements tds = tr.getElementsByTag("td");
+                            JSONArray subject = new JSONArray();
+                            for (int v = 1; v < tds.size(); v++) {
+                                if (v == 4 && tds.get(v).getElementsByTag("span").size() > 0) {
+                                    matcher = pattern.matcher(tds.get(v).getElementsByTag("span").get(0).toString());
+                                    if (matcher.matches()) {
+                                        subject.put(matcher.group(1) + " - " + tds.get(v).text());
+                                    }
+                                } else
+                                    subject.put(tds.get(v).text());
                             }
-                        } else
-                            subject.put(tds.get(v).text());
+                            if (check == 1) {
+                                hocPhanbatBuoc.put(subject);
+                            } else {
+                                hocPhanTuChon.put(subject);
+                            }
+                        }
                     }
-                    if(check == 1) {
-                        hocPhanbatBuoc.put(subject);
-                    }
-                    else {
-                        hocPhanTuChon.put(subject);
+                } else {
+                    for (int j = quaterTrPosition.get(i) + 1; j < quaterTrPosition.get((i + 1)); j++) {
+                        if (trs.get(j).hasAttr("style")) {
+                            check++;
+                            continue;
+                        }
+                        Element tr = trs.get(j);
+                        Elements tds = tr.getElementsByTag("td");
+                        JSONArray subject = new JSONArray();
+                        for (int v = 1; v < tds.size(); v++) {
+                            if (v == 4 && tds.get(v).getElementsByTag("span").size() > 0) {
+                                matcher = pattern.matcher(tds.get(v).getElementsByTag("span").get(0).toString());
+                                if (matcher.matches()) {
+                                    subject.put(matcher.group(1) + " - " + tds.get(v).text());
+                                }
+                            } else
+                                subject.put(tds.get(v).text());
+                        }
+                        if (check == 1) {
+                            hocPhanbatBuoc.put(subject);
+                        } else {
+                            hocPhanTuChon.put(subject);
+                        }
                     }
                 }
-                quater.put("quater_name",quatersName.get(i));
-                quater.put("bat_buoc",hocPhanbatBuoc);
-                quater.put("khong_bat_buoc",hocPhanTuChon);
+                quater.put("quater_name", quatersName.get(i));
+                quater.put("bat_buoc", hocPhanbatBuoc);
+                quater.put("khong_bat_buoc", hocPhanTuChon);
                 allQuater.put(quater);
             }
-
             Log.d("AAA", String.valueOf(allQuater.get(allQuater.length()-1)));
 
         } catch (IOException e) {
