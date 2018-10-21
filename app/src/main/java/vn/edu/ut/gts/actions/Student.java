@@ -624,7 +624,6 @@ public class Student {
         JSONObject returnData = new JSONObject();
         getDataFrameProgram();
 
-
         try {
             JSONObject dataFrame = new JSONObject(this.storage.getString("data_frame"));
             Connection.Response res = Jsoup.connect(Helper.BASE_URL + "XemChuongTrinhKhung.aspx")

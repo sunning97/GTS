@@ -56,12 +56,8 @@ public class StudentDebtFragment extends Fragment {
     private int totalDeb = 0;
     List<String> headerText = new ArrayList<>();
     public StudentDebtFragment() {
-        //headerText.add("Mã môn học");
         headerText.add("Nội dung thu");
         headerText.add("Tín chỉ");
-        //headerText.add("Số tiền");
-        //.add("Đã nộp");
-        //headerText.add("Khấu trừ");
         headerText.add("Công nợ");
         headerText.add("Trạng thái");
     }

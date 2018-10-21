@@ -60,7 +60,7 @@ public class EpicDialog {
             @Override
             public void onClick(View v) {
                 PackageManager pm = context.getPackageManager();
-                Uri uri = Uri.parse("https://www.facebook.com/kuro.neko.sora.ni.tobu");
+                Uri uri = Uri.parse("https://www.facebook.com/duongrom.it.305");
 
                 try {
                     ApplicationInfo applicationInfo = pm.getApplicationInfo("com.facebook.katana", 0);
