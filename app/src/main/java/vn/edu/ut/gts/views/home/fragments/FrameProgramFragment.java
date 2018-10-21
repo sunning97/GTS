@@ -27,6 +27,14 @@ public class FrameProgramFragment extends Fragment {
         student = new Student(getContext());
         View view = inflater.inflate(R.layout.fragment_frame_program, container, false);
 
+        AsyncTask<Void,Void,Void> aaa = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                student.getFrameProgram();
+                return  null;
+            }
+        };
+        aaa.execute();
         return  view;
     }
 

@@ -256,8 +256,8 @@ public class Student {
         return name;
     }
 
-//Schedules
-    private void getDataScedules(Document document){
+    //Schedules
+    private void getDataScedules(Document document) {
         JSONObject dataWeek = new JSONObject();
         try {
             dataWeek.put("eventTarget", document.select("input[name=\"__EVENTTARGET\"]").val());
@@ -267,19 +267,20 @@ public class Student {
             dataWeek.put("viewStartGenerator", document.select("input[name=\"__VIEWSTATEGENERATOR\"]").val());
             dataWeek.put("radioBtnListPhieuKhaoSat", document.select("input[name=\"ctl00$ucPhieuKhaoSat1$RadioButtonList1\"][checked=\"checked\"]").val());
             dataWeek.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
-            dataWeek.put("loaiLich",document.select("input[name=\"ctl00$ContentPlaceHolder$rLoaiLich\"][checked=\"checked\"]").val());
-            dataWeek.put("txtDate",document.select("input[name=\"ctl00$ContentPlaceHolder$txtDate\"]").val());
-            dataWeek.put("tuanSau",document.select("input[name=\"ctl00$ContentPlaceHolder$btnSau\"]").val());
-            dataWeek.put("tuanTruoc",document.select("input[name=\"ctl00$ContentPlaceHolder$btnTruoc\"]").val());
-            dataWeek.put("hienTai",document.select("input[name=\"ctl00$ContentPlaceHolder$btnHienTai\"]").val());
-            dataWeek.put("ngayChon",document.select("input[name=\"ctl00$ContentPlaceHolder$btnNgayChon\"]").val());
-            storage.putString("data_week",dataWeek.toString());
+            dataWeek.put("loaiLich", document.select("input[name=\"ctl00$ContentPlaceHolder$rLoaiLich\"][checked=\"checked\"]").val());
+            dataWeek.put("txtDate", document.select("input[name=\"ctl00$ContentPlaceHolder$txtDate\"]").val());
+            dataWeek.put("tuanSau", document.select("input[name=\"ctl00$ContentPlaceHolder$btnSau\"]").val());
+            dataWeek.put("tuanTruoc", document.select("input[name=\"ctl00$ContentPlaceHolder$btnTruoc\"]").val());
+            dataWeek.put("hienTai", document.select("input[name=\"ctl00$ContentPlaceHolder$btnHienTai\"]").val());
+            dataWeek.put("ngayChon", document.select("input[name=\"ctl00$ContentPlaceHolder$btnNgayChon\"]").val());
+            storage.putString("data_week", dataWeek.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+
     public JSONArray getSchedulesGetMethod() {
         JSONArray schedules = new JSONArray();
         try {
@@ -298,7 +299,8 @@ public class Student {
         }
         return schedules;
     }
-    public JSONArray getNextSchedulesWeek(){
+
+    public JSONArray getNextSchedulesWeek() {
         JSONArray data = new JSONArray();
         try {
             JSONObject dataWeek = new JSONObject(this.storage.getString("data_week"));
@@ -328,9 +330,10 @@ public class Student {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return  data;
+        return data;
     }
-    public JSONArray getPrevSchedulesWeek(){
+
+    public JSONArray getPrevSchedulesWeek() {
         JSONArray data = new JSONArray();
         try {
             JSONObject dataWeek = new JSONObject(this.storage.getString("data_week"));
@@ -360,9 +363,10 @@ public class Student {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return  data;
+        return data;
     }
-    public JSONArray getCurrentSchedulesWeek(){
+
+    public JSONArray getCurrentSchedulesWeek() {
         JSONArray data = new JSONArray();
         try {
             JSONObject dataWeek = new JSONObject(this.storage.getString("data_week"));
@@ -392,9 +396,10 @@ public class Student {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return  data;
+        return data;
     }
-    public JSONArray getSchedulesByDate(String date){
+
+    public JSONArray getSchedulesByDate(String date) {
         JSONArray data = new JSONArray();
         try {
             JSONObject dataWeek = new JSONObject(this.storage.getString("data_week"));
@@ -424,9 +429,10 @@ public class Student {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return  data;
+        return data;
     }
-    private JSONArray parseWeekData(Document document){
+
+    private JSONArray parseWeekData(Document document) {
 
         JSONArray data = new JSONArray();
         try {
@@ -443,7 +449,8 @@ public class Student {
                 String dateRegEx = "([0-9]{2})/([0-9]{2})/([0-9]{4})";
                 Pattern p = Pattern.compile(dateRegEx);
                 Matcher m = p.matcher(trDate.get(i + 1).text());
-                if(trDate.get(i+1).hasClass("current-date")) schedule.put("current_date","true");
+                if (trDate.get(i + 1).hasClass("current-date"))
+                    schedule.put("current_date", "true");
                 if (m.find()) {
                     schedule.put("date", m.group());
                 }
@@ -486,21 +493,22 @@ public class Student {
         return data;
     }
 
-    public void saveStudentImage(Context context){
+    public void saveStudentImage(Context context) {
         String studentID = storage.getString("last_student_login");
         Connection.Response resultImageResponse;
         try {
-            resultImageResponse = Jsoup.connect(Helper.BASE_URL+"GetImage.aspx?MSSV="+studentID)
+            resultImageResponse = Jsoup.connect(Helper.BASE_URL + "GetImage.aspx?MSSV=" + studentID)
                     .userAgent(Helper.USER_AGENT)
-                    .cookie("ASP.NET_Session_Id",storage.getCookie())
+                    .cookie("ASP.NET_Session_Id", storage.getCookie())
                     .ignoreContentType(true).execute();
 
-            storage.saveImage(resultImageResponse,context);
+            storage.saveImage(resultImageResponse, context);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public void Test() {
         try {
             Document document = Jsoup.connect(Helper.BASE_URL + "Xemdiem.aspx")
@@ -564,7 +572,7 @@ public class Student {
                         quater.put(subject);
                     }
                     try {
-                        jsonObject.put("subject",quater);
+                        jsonObject.put("subject", quater);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -583,4 +591,109 @@ public class Student {
         }
     }
 
+    public void getDataFrameProgram() {
+        JSONObject dataFrame = new JSONObject();
+        try {
+            Document document = Jsoup.connect(Helper.BASE_URL + "XemChuongTrinhKhung.aspx")
+                    .method(Connection.Method.GET)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", storage.getCookie())
+                    .get();
+
+            dataFrame.put("eventTarget", document.select("input[name=\"__EVENTTARGET\"]").val());
+            dataFrame.put("eventArgument", document.select("input[name=\"__EVENTARGUMENT\"]").val());
+            dataFrame.put("lastFocus", document.select("input[name=\"__LASTFOCUS\"]").val());
+            dataFrame.put("viewState", document.select("input[name=\"__VIEWSTATE\"]").val());
+            dataFrame.put("viewStartGenerator", document.select("input[name=\"__VIEWSTATEGENERATOR\"]").val());
+            dataFrame.put("radioBtnListPhieuKhaoSat", document.select("input[name=\"ctl00$ucPhieuKhaoSat1$RadioButtonList1\"][checked=\"checked\"]").val());
+            dataFrame.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
+            dataFrame.put("btnXem", document.select("input[name=\"ctl00$ContentPlaceHolder$btnXem\"]").val());
+            storage.putString("data_frame", dataFrame.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getFrameProgram() {
+        getDataFrameProgram();
+        try {
+            JSONObject dataFrame = new JSONObject(this.storage.getString("data_frame"));
+            Connection.Response res = Jsoup.connect(Helper.BASE_URL + "XemChuongTrinhKhung.aspx")
+                    .method(Connection.Method.POST)
+                    .userAgent(Helper.USER_AGENT)
+                    .cookie("ASP.NET_SessionId", this.storage.getCookie())
+                    .data("__EVENTTARGET", dataFrame.getString("eventTarget"))
+                    .data("__EVENTARGUMENT", dataFrame.getString("eventArgument"))
+                    .data("__LASTFOCUS", dataFrame.getString("lastFocus"))
+                    .data("__VIEWSTATE", dataFrame.getString("viewState"))
+                    .data("__VIEWSTATEGENERATOR", dataFrame.getString("viewStartGenerator"))
+                    .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataFrame.getString("radioBtnListPhieuKhaoSat"))
+                    .data("ctl00$DdListMenu", dataFrame.getString("listMenu"))
+                    .data("ctl00$ContentPlaceHolder$btnXem", dataFrame.getString("btnXem"))
+                    .execute();
+            Document document = res.parse();
+            Elements trs = document.select("table.grid.grid-color2>tbody>tr");
+
+            List<Integer> quaterTrPosition = new ArrayList<>();
+            JSONArray quatersName = new JSONArray();
+            for (int i = 0; i < trs.size(); i++) {
+                if(trs.get(i).hasAttr("style")){
+                    Elements tds = trs.get(i).getElementsByTag("td");
+                    if(tds.size() == 4){
+                        quatersName.put(tds.get(0).text());
+                        quaterTrPosition.add(i);
+                    }
+                }
+            }
+
+            JSONArray allQuater = new JSONArray();
+            Pattern pattern = Pattern.compile("<span\\sonmouseover=\"tooltip\\.show\\('<div>(.*)<\\/div>'\\)\"\\sonmouseout=\"tooltip\\.hide\\(\\)\">(.*)\\s\\((.*)\\)<\\/span>");
+            Matcher matcher;
+            for (int i = 0; i < quaterTrPosition.size() - 1; i++) {
+
+                JSONObject quater = new JSONObject();
+                JSONArray hocPhanbatBuoc = new JSONArray();
+                JSONArray hocPhanTuChon = new JSONArray();
+                int check = 0;
+
+                for (int j = quaterTrPosition.get(i) + 1; j < quaterTrPosition.get((i + 1)); j++) {
+                    if(trs.get(j).hasAttr("style")){
+                        check++;
+                        continue;
+                    }
+                    Element tr = trs.get(j);
+                    Elements tds = tr.getElementsByTag("td");
+                    JSONArray subject = new JSONArray();
+                    for(int v= 1;v< tds.size();v++){
+                        if(v== 4 && tds.get(v).getElementsByTag("span").size() > 0){
+                            matcher = pattern.matcher(tds.get(v).getElementsByTag("span").get(0).toString());
+                            if(matcher.matches()){
+                                subject.put(matcher.group(1)+ " - "+ tds.get(v).text());
+                            }
+                        } else
+                            subject.put(tds.get(v).text());
+                    }
+                    if(check == 1) {
+                        hocPhanbatBuoc.put(subject);
+                    }
+                    else {
+                        hocPhanTuChon.put(subject);
+                    }
+                }
+                quater.put("quater_name",quatersName.get(i));
+                quater.put("bat_buoc",hocPhanbatBuoc);
+                quater.put("khong_bat_buoc",hocPhanTuChon);
+                allQuater.put(quater);
+            }
+
+            Log.d("AAA", String.valueOf(allQuater.get(allQuater.length()-1)));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }
