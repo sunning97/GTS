@@ -60,7 +60,7 @@ public class EpicDialog {
             @Override
             public void onClick(View v) {
                 PackageManager pm = context.getPackageManager();
-                Uri uri = Uri.parse("https://www.facebook.com/kuro.neko.sora.ni.tobu");
+                Uri uri = Uri.parse("https://www.facebook.com/duongrom.it.305");
 
                 try {
                     ApplicationInfo applicationInfo = pm.getApplicationInfo("com.facebook.katana", 0);
@@ -104,6 +104,16 @@ public class EpicDialog {
         this.epicDialog.dismiss();
     }
 
+    public void showFrameProgramInfoDialog(String param1,String param2){
+        this.epicDialog.setContentView(R.layout.student_frame_program_info_dialog);
+        TextView title1 = this.epicDialog.findViewById(R.id.title_1);
+        TextView title2 = this.epicDialog.findViewById(R.id.title_2);
+        title1.setText(param1);
+        title2.setText(param2);
+        this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        this.epicDialog.setCancelable(true);
+        this.epicDialog.show();
+    }
     private void popupInit(){
         popupClose = this.epicDialog.findViewById(R.id.close_popup_bottom);
         popupTitle = this.epicDialog.findViewById(R.id.popup_title);

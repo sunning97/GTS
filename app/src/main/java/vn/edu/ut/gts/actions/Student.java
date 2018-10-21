@@ -616,9 +616,14 @@ public class Student {
         }
     }
 
-    public JSONArray getFrameProgram() {
+    public JSONObject getFrameProgram() {
+        final String REGEX_1 = "CHƯƠNG\\sTRÌNH\\sKHUNG\\s(.*)";
+        final String REGEX_2 = "<span\\sonmouseover=\"tooltip\\.show\\('<div>(.*)<\\/div>'\\)\"\\sonmouseout=\"tooltip\\.hide\\(\\)\">(.*)\\s\\((.*)\\)<\\/span>";
+        Pattern pattern = null;
+        Matcher matcher = null;
+        JSONObject returnData = new JSONObject();
         getDataFrameProgram();
-        JSONArray allQuater = new JSONArray();
+
         try {
             JSONObject dataFrame = new JSONObject(this.storage.getString("data_frame"));
             Connection.Response res = Jsoup.connect(Helper.BASE_URL + "XemChuongTrinhKhung.aspx")
@@ -637,6 +642,12 @@ public class Student {
             Document document = res.parse();
             Elements trs = document.select("table.grid.grid-color2>tbody>tr");
 
+            Elements elements = document.getElementsByClass("title-group");
+            pattern = Pattern.compile(REGEX_1);
+            matcher = pattern.matcher(elements.get(1).text());
+            if(matcher.matches())
+            returnData.put("info",matcher.group(1));
+
             List<Integer> quaterTrPosition = new ArrayList<>();
             JSONArray quatersName = new JSONArray();
             for (int i = 0; i < trs.size(); i++) {
@@ -650,8 +661,8 @@ public class Student {
             }
 
 
-            Pattern pattern = Pattern.compile("<span\\sonmouseover=\"tooltip\\.show\\('<div>(.*)<\\/div>'\\)\"\\sonmouseout=\"tooltip\\.hide\\(\\)\">(.*)\\s\\((.*)\\)<\\/span>");
-            Matcher matcher;
+            pattern = Pattern.compile(REGEX_2);
+            JSONArray allQuater = new JSONArray();
             for (int i = 0; i <= quaterTrPosition.size() - 1; i++) {
 
                 JSONObject quater = new JSONObject();
@@ -729,12 +740,12 @@ public class Student {
                 quater.put("khong_bat_buoc", hocPhanTuChon);
                 allQuater.put(quater);
             }
-
+            returnData.put("all_quater",allQuater);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return allQuater;
+        return returnData;
     }
 }
