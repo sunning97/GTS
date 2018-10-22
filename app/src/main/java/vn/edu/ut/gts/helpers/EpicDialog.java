@@ -51,7 +51,6 @@ public class EpicDialog {
         });
         this.epicDialog.show();
     }
-
     public void showAboutDialog(){
         this.epicDialog.setContentView(R.layout.about_app_dialog_layout);
         TextView duong = this.epicDialog.findViewById(R.id.dev_duong);
@@ -112,6 +111,13 @@ public class EpicDialog {
         title2.setText(param2);
         this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(true);
+        this.epicDialog.show();
+    }
+
+    public void showLoadingDialog(){
+        this.epicDialog.setContentView(R.layout.custom_loading_dialog);
+        this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        this.epicDialog.setCancelable(false);
         this.epicDialog.show();
     }
     private void popupInit(){

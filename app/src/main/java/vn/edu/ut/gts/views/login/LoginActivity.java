@@ -35,6 +35,7 @@ import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.TextInputValidator;
 import vn.edu.ut.gts.presenters.login.LoginProcess;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
@@ -69,6 +70,9 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.addControl();
 
         handler.postDelayed(runnable, 1500);
+
+        EpicDialog epicDialog = new EpicDialog(LoginActivity.this);
+        //epicDialog.showLoadingDialog();
     }
 
     @Override
