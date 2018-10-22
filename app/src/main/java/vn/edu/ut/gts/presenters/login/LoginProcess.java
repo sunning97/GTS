@@ -21,14 +21,25 @@ public class LoginProcess implements ILoginProcess{
         this.context = context;
         this.storage = new Storage(context);
         student = new Student(context);
+        actionLogin = new Login(context);
         this.init();
     }
     private void init(){
         AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
             @Override
+            protected void onPreExecute() {
+                iLoginView.showLoadingDialog();
+            }
+
+            @Override
             protected String doInBackground(Void... voids) {
-                actionLogin = new Login(context);
+                actionLogin.getDataLogin();
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                iLoginView.dismisLoadingDialog();
             }
         };
         asyncTask.execute();

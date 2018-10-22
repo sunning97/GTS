@@ -42,12 +42,18 @@ import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 
 public class LoginActivity extends AppCompatActivity implements ILoginView {
 
-    @BindView(R.id.relay_1) RelativeLayout relay_1;
-    @BindView(R.id.btn_login) CircularProgressButton btnLogin;
-    @BindView(R.id.txtStudentId) EditText inputStudentId;
-    @BindView(R.id.txtPassword) EditText inputPassword;
-    @BindView(R.id.input_student_id_error) TextView studentIdInputErrorShow;
-    @BindView(R.id.input_password_error) TextView passwordInputErrorShow;
+    @BindView(R.id.relay_1)
+    RelativeLayout relay_1;
+    @BindView(R.id.btn_login)
+    CircularProgressButton btnLogin;
+    @BindView(R.id.txtStudentId)
+    EditText inputStudentId;
+    @BindView(R.id.txtPassword)
+    EditText inputPassword;
+    @BindView(R.id.input_student_id_error)
+    TextView studentIdInputErrorShow;
+    @BindView(R.id.input_password_error)
+    TextView passwordInputErrorShow;
 
     private LoginProcess loginProcess;
     private Boolean isValidateNoError;
@@ -56,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private Runnable runnable;
     private SweetAlertDialog loginAlert;
     private Storage storage;
+    private EpicDialog epicDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +78,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
         handler.postDelayed(runnable, 1500);
 
-        EpicDialog epicDialog = new EpicDialog(LoginActivity.this);
-        //epicDialog.showLoadingDialog();
+
     }
 
     @Override
@@ -131,8 +137,18 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void setLastLogin() {
-        if(this.storage.getString("last_student_login") != null)
+        if (this.storage.getString("last_student_login") != null)
             inputStudentId.setText(this.storage.getString("last_student_login"));
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        epicDialog.showLoadingDialog();
+    }
+
+    @Override
+    public void dismisLoadingDialog() {
+        epicDialog.dismisPopup();
     }
 
 
@@ -153,6 +169,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 })
                 .show();
     }
+
     /**
      * Initialization all needed for activity
      *
@@ -162,6 +179,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private void init() {
         storage = new Storage(this);
         this.isValidateNoError = false;
+        epicDialog = new EpicDialog(LoginActivity.this);
         this.handler = new Handler();
         this.runnable = new Runnable() {
             @Override
@@ -178,13 +196,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                     inputStudentId.setEnabled(true);
                     inputPassword.setEnabled(true);
                     btnLogin.setEnabled(true);
-                    if(loginAlert != null) loginAlert.dismissWithAnimation();
+                    if (loginAlert != null) loginAlert.dismissWithAnimation();
                     loginProcess = new LoginProcess(LoginActivity.this, context);
                 } else {
                     inputStudentId.setEnabled(false);
                     inputPassword.setEnabled(false);
                     btnLogin.setEnabled(false);
-                    loginAlert = new SweetAlertDialog(context,SweetAlertDialog.ERROR_TYPE);
+                    loginAlert = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
                     loginAlert.setTitleText(getResources().getString(R.string.no_internet_access_error_dialog_title))
                             .setContentText(getResources().getString(R.string.no_internet_access_error_dialog_content))
                             .show();
@@ -205,7 +223,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 if (validateStudentId() && validatePassword()) {
                     unsetInputError(passwordInputErrorShow);
                     unsetInputError(studentIdInputErrorShow);
-                    loginProcess.execute(getStudentId(),getPassword());
+                    loginProcess.execute(getStudentId(), getPassword());
                 }
             }
         });
@@ -287,10 +305,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         textView.setText("");
     }
 
-    private String getStudentId(){
+    private String getStudentId() {
         return this.inputStudentId.getText().toString().trim();
     }
-    private String getPassword(){
+
+    private String getPassword() {
         return this.inputPassword.getText().toString().trim();
     }
 }

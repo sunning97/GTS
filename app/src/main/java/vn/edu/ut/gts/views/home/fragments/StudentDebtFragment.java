@@ -153,18 +153,15 @@ public class StudentDebtFragment extends Fragment {
         TableRow header = new TableRow(getContext());
         header.setGravity(Gravity.CENTER);
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        header.setMinimumHeight((int)d*60);
+        header.setMinimumHeight((int)d*50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        for (String text:headerText) {
-
+        for (int i = 0;i < headerText.size();i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
-            linearLayout.setGravity(Gravity.CENTER);
-            linearLayout.setOrientation(LinearLayout.VERTICAL);
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-            layoutParams.gravity = Gravity.CENTER;
-            layoutParams.setMargins((int) d,0,(int) d,0);
-            linearLayout.setPadding((int)d*5,(int)d*5,(int)d*5,(int)d*5);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            if(i == 0) layoutParams.gravity = Gravity.CENTER_VERTICAL; else layoutParams.gravity = Gravity.CENTER;
+            if(i == headerText.size()-1) layoutParams.setMargins(0,0,0,0); else layoutParams.setMargins(0,0,0,0);
+            linearLayout.setPadding((int)d*5,(int)d*15,(int) d*5,0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
@@ -172,7 +169,7 @@ public class StudentDebtFragment extends Fragment {
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
-            textView.setText(text);
+            textView.setText(headerText.get(i));
             linearLayout.addView(textView);
             header.addView(linearLayout);
         }
@@ -192,9 +189,9 @@ public class StudentDebtFragment extends Fragment {
 
         // generate cell's text view
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        a.setMargins((int)d,0,(int)d,0);
-        textView.setLayoutParams(a);
+        LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        textLayoutParams.setMargins((int)d*3,0,(int)d,0);
+        textView.setLayoutParams(textLayoutParams);
         textView.setTextColor(getResources().getColor(R.color.black));
         if(isRed) textView.setTextColor(getResources().getColor(R.color.red));
         textView.setText(content);

@@ -20,10 +20,9 @@ public class Login {
     private Storage storage;
     public Login(Context context){
         this.storage = new Storage(context);
-        this.getDataLogin();
     }
     /* Get data login */
-    private void getDataLogin(){
+    public void getDataLogin(){
         JSONObject data = new JSONObject();
         try {
             Connection.Response res = Jsoup.connect(Helper.BASE_URL)

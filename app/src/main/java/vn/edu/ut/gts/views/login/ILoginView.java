@@ -7,4 +7,6 @@ public interface ILoginView {
     public void loginSuccess();
     public void loginFailed();
     public void setLastLogin();
+    public void showLoadingDialog();
+    public void dismisLoadingDialog();
 }

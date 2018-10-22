@@ -73,10 +73,10 @@ public class AttendanceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendance, container, false);
         ButterKnife.bind(this,view);
-        dp = getContext().getResources().getDisplayMetrics().density;
         this.storage = new Storage(getContext());
         this.student = new Student(getContext());
         this.init();
+        dp = getContext().getResources().getDisplayMetrics().density;
         this.initAttendance();
 
         this.dataInit(0);
@@ -168,9 +168,9 @@ public class AttendanceFragment extends Fragment {
 
         // generate cell's text view
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        a.setMargins((int) dp,0,(int) dp,0);
-        textView.setLayoutParams(a);
+        LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        textLayoutParams.setMargins((int)dp*3,0,(int)dp,0);
+        textView.setLayoutParams(textLayoutParams);
         textView.setTextColor(getResources().getColor(R.color.black));
         textView.setText(content);
         linearLayout.addView(textView);
@@ -180,19 +180,16 @@ public class AttendanceFragment extends Fragment {
     private TableRow generateTableHeader(){
         TableRow header = new TableRow(getContext());
         header.setGravity(Gravity.CENTER);
-        header.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-        header.setMinimumHeight((int)dp*60);
+        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        header.setMinimumHeight((int)dp*50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
-
-        for (String text:headerText) {
-
+        for (int i = 0;i < headerText.size();i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
-            linearLayout.setGravity(Gravity.CENTER);
-            linearLayout.setOrientation(LinearLayout.VERTICAL);
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-            layoutParams.gravity = Gravity.CENTER;
-            layoutParams.setMargins((int)dp*5,0,(int)dp*5,0);
+            if(i == 0) layoutParams.gravity = Gravity.CENTER_VERTICAL; else layoutParams.gravity = Gravity.CENTER;
+            if(i == headerText.size()-1) layoutParams.setMargins(0,0,0,0); else layoutParams.setMargins(0,0,0,0);
+            linearLayout.setPadding((int)dp*5,(int)dp*15,(int) dp*5,0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
@@ -200,9 +197,8 @@ public class AttendanceFragment extends Fragment {
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
-            textView.setText(text);
+            textView.setText(headerText.get(i));
             linearLayout.addView(textView);
-
             header.addView(linearLayout);
         }
 
