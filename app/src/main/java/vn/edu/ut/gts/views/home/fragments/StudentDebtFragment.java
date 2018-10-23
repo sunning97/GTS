@@ -51,10 +51,11 @@ public class StudentDebtFragment extends Fragment {
     private Student student;
     private Storage storage;
     private JSONArray semesters;
-    List<String> dataSnpinner = new ArrayList<>();
+    private List<String> dataSnpinner = new ArrayList<>();
     SweetAlertDialog loadingDialog;
     private int totalDeb = 0;
-    List<String> headerText = new ArrayList<>();
+    private List<String> headerText = new ArrayList<>();
+
     public StudentDebtFragment() {
         headerText.add("Nội dung thu");
         headerText.add("Tín chỉ");
@@ -83,7 +84,6 @@ public class StudentDebtFragment extends Fragment {
 
         return view;
     }
-
 
     private void dataInit(final int pos){
         AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
@@ -222,12 +222,14 @@ public class StudentDebtFragment extends Fragment {
         };
         asyncTask.execute();
     }
+
     private void init(){
         loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         loadingDialog.setTitleText("Loading");
         loadingDialog.setCancelable(false);
     }
+
     protected void debtDetailShow(JSONObject jsonObject) {
         String title = "Chi tiết công nợ";
         LayoutInflater factory = getLayoutInflater();
@@ -262,6 +264,7 @@ public class StudentDebtFragment extends Fragment {
             simpleDialog.show();
         }
     }
+
     public int getScreenWidthInDPs(Context context){
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

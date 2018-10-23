@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.helpers.Storage;
@@ -74,10 +75,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.init();
         this.setLastLogin();
         this.validate();
-        this.addControl();
 
         handler.postDelayed(runnable, 1500);
-
 
     }
 
@@ -129,6 +128,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void loginFailed() {
+        enableInput();
         new SweetAlertDialog(this)
                 .setTitleText(getResources().getString(R.string.login_failed_dialog_title))
                 .setContentText(getResources().getString(R.string.login_failed_dialog_content))
@@ -216,19 +216,25 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
      *
      * @return Void
      */
-    private void addControl() {
-        this.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateStudentId() && validatePassword()) {
-                    unsetInputError(passwordInputErrorShow);
-                    unsetInputError(studentIdInputErrorShow);
-                    loginProcess.execute(getStudentId(), getPassword());
-                }
-            }
-        });
+    @OnClick(R.id.btn_login)
+    public void submit(View view) {
+        if (validateStudentId() && validatePassword()) {
+            unsetInputError(passwordInputErrorShow);
+            unsetInputError(studentIdInputErrorShow);
+            disableInput();
+            loginProcess.execute(getStudentId(), getPassword());
+        }
     }
 
+    private void disableInput() {
+        inputPassword.setEnabled(false);
+        inputStudentId.setEnabled(false);
+    }
+
+    private void enableInput(){
+        inputPassword.setEnabled(true);
+        inputStudentId.setEnabled(true);
+    }
     /**
      * Request permission need for app on first launch
      *

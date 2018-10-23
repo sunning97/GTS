@@ -74,8 +74,8 @@ public class FrameProgramFragment extends Fragment {
         student = new Student(getContext());
         View view = inflater.inflate(R.layout.fragment_frame_program, container, false);
         ButterKnife.bind(this,view);
-        d = getContext().getResources().getDisplayMetrics().density;
         init();
+        d = getContext().getResources().getDisplayMetrics().density;
         setHasOptionsMenu(true);
         getDataFrameProgram();
         frameProgramSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
@@ -151,55 +151,51 @@ public class FrameProgramFragment extends Fragment {
             tableLayout.addView(generateSubjectGroup("Học phần bắt buộc ("+quater.getString("so_chi_bat_buoc")+" tín chỉ)"));
             JSONArray batBuoc = quater.getJSONArray("bat_buoc");
             JSONArray khongBatBuoc = quater.getJSONArray("khong_bat_buoc");
-            for (int i = 0; i< batBuoc.length(); i++) {
-                JSONArray subject = (JSONArray) batBuoc.get(i);
-                TableRow tableRow = new TableRow(getContext());
-                tableRow.setGravity(Gravity.CENTER);
-                tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-                tableRow.setMinimumHeight((int)d*60);
-                tableRow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                });
-                if((i+1) % 2 != 0){
-                    tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
-                }
-                try {
-                    tableRow.addView(generateTableCell(subject.get(1).toString(),false, (int) (getScreenWidthInDPs(getContext())*0.6)));
-                    tableRow.addView(generateTableCell(subject.get(4).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
-                    tableRow.addView(generateTableCell(subject.get(5).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
-                } catch (Exception e){
-
-                }
-                tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-            }
-            if(khongBatBuoc.length() > 0){
-                tableLayout.addView(generateSubjectGroup("Học phần tự chọn ("+quater.getString("so_chi_khong_bat_buoc")+" tín chỉ)"));
-                for (int i = 0; i< khongBatBuoc.length(); i++) {
-                    JSONArray subject = (JSONArray) khongBatBuoc.get(i);
-                    TableRow tableRow = new TableRow(getContext());
-                    tableRow.setGravity(Gravity.CENTER);
-                    tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-                    tableRow.setMinimumHeight((int)d*60);
-                    tableRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        }
-                    });
-                    if((i+1) % 2 != 0){
-                        tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
-                    }
-                    try {
-                        tableRow.addView(generateTableCell(subject.get(1).toString(),false, (int) (getScreenWidthInDPs(getContext())*0.6)));
-                        tableRow.addView(generateTableCell(subject.get(4).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
-                        tableRow.addView(generateTableCell(subject.get(5).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
-                    } catch (Exception e){
-
-                    }
-                    tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                }
-            }
+//            for (int i = 0; i< batBuoc.length(); i++) {
+//                JSONArray subject = (JSONArray) batBuoc.get(i);
+//                TableRow tableRow = new TableRow(getContext());
+//                tableRow.setGravity(Gravity.CENTER);
+//                tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+//                tableRow.setMinimumHeight((int)d*50);
+//
+//                if((i+1) % 2 != 0){
+//                    tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
+//                }
+//                try {
+//                    tableRow.addView(generateTableCell(subject.get(1).toString(),false, (int) (getScreenWidthInDPs(getContext())*0.4)));
+//                    tableRow.addView(generateTableCell(subject.get(4).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
+//                    tableRow.addView(generateTableCell(subject.get(5).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
+//                } catch (Exception e){
+//
+//                }
+//                tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+//            }
+//            if(khongBatBuoc.length() > 0){
+//                tableLayout.addView(generateSubjectGroup("Học phần tự chọn ("+quater.getString("so_chi_khong_bat_buoc")+" tín chỉ)"));
+//                for (int i = 0; i< khongBatBuoc.length(); i++) {
+//                    JSONArray subject = (JSONArray) khongBatBuoc.get(i);
+//                    TableRow tableRow = new TableRow(getContext());
+//                    tableRow.setGravity(Gravity.CENTER);
+//                    tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
+//                    tableRow.setMinimumHeight((int)d*50);
+//                    tableRow.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                        }
+//                    });
+//                    if((i+1) % 2 != 0){
+//                        tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
+//                    }
+//                    try {
+//                        tableRow.addView(generateTableCell(subject.get(1).toString(),false, (int) (getScreenWidthInDPs(getContext())*0.6)));
+//                        tableRow.addView(generateTableCell(subject.get(4).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
+//                        tableRow.addView(generateTableCell(subject.get(5).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
+//                    } catch (Exception e){
+//
+//                    }
+//                    tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+//                }
+//            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -209,18 +205,15 @@ public class FrameProgramFragment extends Fragment {
         TableRow header = new TableRow(getContext());
         header.setGravity(Gravity.CENTER);
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        header.setMinimumHeight((int)d*60);
+        header.setMinimumHeight((int)d*50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        for (String text:headerText) {
-
+        for (int i = 0;i < headerText.size();i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
-            linearLayout.setGravity(Gravity.CENTER);
-            linearLayout.setOrientation(LinearLayout.VERTICAL);
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-            layoutParams.gravity = Gravity.CENTER;
-            layoutParams.setMargins((int) d,0,(int) d,0);
-            linearLayout.setPadding((int)d*5,(int)d*5,(int)d*5,(int)d*5);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            if(i == 0) layoutParams.gravity = Gravity.CENTER_VERTICAL; else layoutParams.gravity = Gravity.CENTER;
+            if(i == headerText.size()-1) layoutParams.setMargins(0,0,0,0); else layoutParams.setMargins(0,0,0,0);
+            linearLayout.setPadding((int)d*10,(int)d*15,(int) d*10,0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
@@ -228,7 +221,7 @@ public class FrameProgramFragment extends Fragment {
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
-            textView.setText(text);
+            textView.setText(headerText.get(i));
             linearLayout.addView(textView);
             header.addView(linearLayout);
         }
@@ -238,18 +231,16 @@ public class FrameProgramFragment extends Fragment {
     private LinearLayout generateTableCell(String content,Boolean isGravityCenter,int width){
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
-        linearLayout.setGravity(Gravity.CENTER);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         if(isGravityCenter) layoutParams.gravity = Gravity.CENTER;
         layoutParams.width = (int) (width*d);
         linearLayout.setLayoutParams(layoutParams);
 
         // generate cell's text view
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        a.setMargins((int)d,0,(int)d,0);
-        textView.setLayoutParams(a);
+        LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        textLayoutParams.setMargins((int)d*5,0,(int)d,0);
+        textView.setLayoutParams(textLayoutParams);
         textView.setTextColor(getResources().getColor(R.color.black));
         textView.setText(content);
         linearLayout.addView(textView);
@@ -259,7 +250,8 @@ public class FrameProgramFragment extends Fragment {
         TableRow tableRow = new TableRow(getContext());
         tableRow.setGravity(Gravity.CENTER_VERTICAL);
         tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-        tableRow.setMinimumHeight((int)d*60);
+        tableRow.setMinimumHeight((int)d*50);
+        tableRow.setBackgroundColor(getResources().getColor(R.color.grandStart));
 
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());

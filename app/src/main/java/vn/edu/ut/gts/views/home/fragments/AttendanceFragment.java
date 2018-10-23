@@ -256,6 +256,7 @@ public class AttendanceFragment extends Fragment {
             simpleDialog.show();
         }
     }
+
     public int getScreenWidthInDPs(Context context){
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
