@@ -6,10 +6,13 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import org.json.JSONArray;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,20 +39,15 @@ public class StudentStudyResultFragment extends Fragment {
 
         final Student student = new Student(getContext());
 
-//        AsyncTask<Void,Void,Void> aa = new AsyncTask<Void, Void, Bitmap>() {
-//            @Override
-//            protected Bitmap doInBackground(Void... voids) {
-//                student.getStudentImage();
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Bitmap bitmap) {
-//
-//            }
-//        };
-//        aa.execute();
-
+        AsyncTask<Void,Void,Void> aa = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                JSONArray jsonArray = student.getStudentStudyResult();
+                Log.d("AAA",jsonArray.toString());
+                return null;
+            }
+        };
+        aa.execute();
         return  view;
     }
 

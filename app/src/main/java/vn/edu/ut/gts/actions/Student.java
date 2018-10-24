@@ -509,7 +509,8 @@ public class Student {
         }
     }
 
-    public void Test() {
+    public JSONArray getStudentStudyResult() {
+        JSONArray allQuater = new JSONArray();
         try {
             Document document = Jsoup.connect(Helper.BASE_URL + "Xemdiem.aspx")
                     .method(Connection.Method.GET)
@@ -540,7 +541,7 @@ public class Student {
                 }
             }
 
-            JSONArray allQuater = new JSONArray();
+
 
             for (int i = 0; i < indexs.size() - 1; i++) {
 
@@ -557,17 +558,29 @@ public class Student {
                 for (int j = indexs.get(i) + 1; j < indexs.get((i + 1)); j++) {
                     Element tr = trs.get(j);
                     if (!TextUtils.isEmpty(tr.text())) {
-                        JSONArray subject = new JSONArray();
+                        JSONObject subject = new JSONObject();
                         Elements tds = tr.getElementsByTag("td");
-                        for (int v = 0; v < tds.size(); v++) {
-                            JSONObject prop = new JSONObject();
-                            Element td = tds.get(v);
-                            try {
-                                prop.put(String.valueOf(v), td.text());
-                                subject.put(prop);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        subject.put("courseCode",tds.get(1).text());
+                        subject.put("courseName",tds.get(2).text());
+                        subject.put("courseClass",tds.get(3).text());
+                        subject.put("courseCredits",tds.get(4).text());
+
+                        if(tds.size() == 14){
+                            subject.put("processScore",0);
+                            subject.put("testScores",tds.get(7).text());
+                            subject.put("scoresOf10",tds.get(9).text());
+                            subject.put("scoresOf4",tds.get(10).text());
+                            subject.put("scoresString",tds.get(11).text());
+                            subject.put("classification",tds.get(12).text());
+                            subject.put("note",tds.get(13).text());
+                        } else {
+                            subject.put("processScore",tds.get(6).text());
+                            subject.put("testScores",tds.get(10).text());
+                            subject.put("scoresOf10",tds.get(12).text());
+                            subject.put("scoresOf4",tds.get(13).text());
+                            subject.put("scoresString",tds.get(14).text());
+                            subject.put("classification",tds.get(15).text());
+                            subject.put("note",tds.get(16).text());
                         }
                         quater.put(subject);
                     }
@@ -580,15 +593,13 @@ public class Student {
                 allQuater.put(jsonObject);
             }
 
-            try {
-                Log.d("WWW", allQuater.get(0).toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        return allQuater;
     }
 
     public void getDataFrameProgram() {
