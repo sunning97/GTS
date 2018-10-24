@@ -17,8 +17,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
@@ -75,9 +77,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.init();
         this.setLastLogin();
         this.validate();
-
         handler.postDelayed(runnable, 1500);
-
     }
 
     @Override

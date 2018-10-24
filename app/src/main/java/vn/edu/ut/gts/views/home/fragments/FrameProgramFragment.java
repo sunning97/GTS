@@ -151,51 +151,51 @@ public class FrameProgramFragment extends Fragment {
             tableLayout.addView(generateSubjectGroup("Học phần bắt buộc ("+quater.getString("so_chi_bat_buoc")+" tín chỉ)"));
             JSONArray batBuoc = quater.getJSONArray("bat_buoc");
             JSONArray khongBatBuoc = quater.getJSONArray("khong_bat_buoc");
-//            for (int i = 0; i< batBuoc.length(); i++) {
-//                JSONArray subject = (JSONArray) batBuoc.get(i);
-//                TableRow tableRow = new TableRow(getContext());
-//                tableRow.setGravity(Gravity.CENTER);
-//                tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-//                tableRow.setMinimumHeight((int)d*50);
-//
-//                if((i+1) % 2 != 0){
-//                    tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
-//                }
-//                try {
-//                    tableRow.addView(generateTableCell(subject.get(1).toString(),false, (int) (getScreenWidthInDPs(getContext())*0.4)));
-//                    tableRow.addView(generateTableCell(subject.get(4).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
-//                    tableRow.addView(generateTableCell(subject.get(5).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
-//                } catch (Exception e){
-//
-//                }
-//                tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-//            }
-//            if(khongBatBuoc.length() > 0){
-//                tableLayout.addView(generateSubjectGroup("Học phần tự chọn ("+quater.getString("so_chi_khong_bat_buoc")+" tín chỉ)"));
-//                for (int i = 0; i< khongBatBuoc.length(); i++) {
-//                    JSONArray subject = (JSONArray) khongBatBuoc.get(i);
-//                    TableRow tableRow = new TableRow(getContext());
-//                    tableRow.setGravity(Gravity.CENTER);
-//                    tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-//                    tableRow.setMinimumHeight((int)d*50);
-//                    tableRow.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                        }
-//                    });
-//                    if((i+1) % 2 != 0){
-//                        tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
-//                    }
-//                    try {
-//                        tableRow.addView(generateTableCell(subject.get(1).toString(),false, (int) (getScreenWidthInDPs(getContext())*0.6)));
-//                        tableRow.addView(generateTableCell(subject.get(4).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
-//                        tableRow.addView(generateTableCell(subject.get(5).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
-//                    } catch (Exception e){
-//
-//                    }
-//                    tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-//                }
-//            }
+            for (int i = 0; i< batBuoc.length(); i++) {
+                JSONArray subject = (JSONArray) batBuoc.get(i);
+                TableRow tableRow = new TableRow(getContext());
+                tableRow.setGravity(Gravity.CENTER);
+                tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                tableRow.setMinimumHeight((int)d*50);
+
+                if((i+1) % 2 != 0){
+                    tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
+                }
+                try {
+                    tableRow.addView(generateTableCell(subject.get(1).toString(),false, (int) (getScreenWidthInDPs(getContext())*0.4)));
+                    tableRow.addView(generateTableCell(subject.get(4).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
+                    tableRow.addView(generateTableCell(subject.get(5).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
+                } catch (Exception e){
+
+                }
+                tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+            }
+            if(khongBatBuoc.length() > 0){
+                tableLayout.addView(generateSubjectGroup("Học phần tự chọn ("+quater.getString("so_chi_khong_bat_buoc")+" tín chỉ)"));
+                for (int i = 0; i< khongBatBuoc.length(); i++) {
+                    JSONArray subject = (JSONArray) khongBatBuoc.get(i);
+                    TableRow tableRow = new TableRow(getContext());
+                    tableRow.setGravity(Gravity.CENTER);
+                    tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
+                    tableRow.setMinimumHeight((int)d*50);
+                    tableRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    });
+                    if((i+1) % 2 != 0){
+                        tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
+                    }
+                    try {
+                        tableRow.addView(generateTableCell(subject.get(1).toString(),false, (int) (getScreenWidthInDPs(getContext())*0.4)));
+                        tableRow.addView(generateTableCell(subject.get(4).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
+                        tableRow.addView(generateTableCell(subject.get(5).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
+                    } catch (Exception e){
+
+                    }
+                    tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -233,13 +233,13 @@ public class FrameProgramFragment extends Fragment {
         LinearLayout linearLayout = new LinearLayout(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         if(isGravityCenter) layoutParams.gravity = Gravity.CENTER;
-        layoutParams.width = (int) (width*d);
+        layoutParams.width = width;
         linearLayout.setLayoutParams(layoutParams);
 
         // generate cell's text view
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        textLayoutParams.setMargins((int)d*5,0,(int)d,0);
+        textLayoutParams.setMargins((int)d*10,0,(int)d*5,0);
         textView.setLayoutParams(textLayoutParams);
         textView.setTextColor(getResources().getColor(R.color.black));
         textView.setText(content);
