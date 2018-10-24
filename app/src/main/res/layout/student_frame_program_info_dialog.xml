@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="300dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:padding="20dp">
+    android:padding="30dp">
     <TextView
+        android:textAlignment="center"
+        android:textSize="26sp"
         android:textColor="@color/black"
         android:layout_gravity="center"
         android:text="CHƯƠNG TRÌNH KHUNG"
@@ -13,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"/>
     <TextView
+        android:textSize="17sp"
         android:id="@+id/title_1"
         android:textAlignment="center"
         android:text=""
@@ -21,6 +24,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="10dp"/>
     <TextView
+        android:textSize="17sp"
         android:id="@+id/title_2"
         android:layout_gravity="center"
         android:textAlignment="center"
@@ -28,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
+        android:textSize="17sp"
         android:id="@+id/close"
         android:textColor="@color/colorPrimary"
         android:text="Đóng"

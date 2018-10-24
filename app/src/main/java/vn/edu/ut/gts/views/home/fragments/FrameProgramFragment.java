@@ -252,7 +252,7 @@ public class FrameProgramFragment extends Fragment {
         tableRow.setGravity(Gravity.CENTER_VERTICAL);
         tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
         tableRow.setMinimumHeight((int)d*40);
-        tableRow.setBackgroundColor(getResources().getColor(R.color.grandStart));
+        tableRow.setBackgroundColor(getResources().getColor(R.color.violet));
 
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());

@@ -11,6 +11,6 @@
     <string name="app_full_name">Cổng thông tin Sinh viên GTS</string>
     <string name="app_version">1.0.0</string>
     <string name="contact_us">All issues related to this application please contact us:</string>
-
-
+    <string name="study_result">KẾT QUẢ HỌC TẬP</string>
+    <string name="frame_program">CHƯƠNG TRÌNH KHUNG</string>
 </resources>

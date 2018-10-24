@@ -31,17 +31,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:gravity="end">
-        <TextView
-            android:text="Điểm trung bình học kì: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/student_semester_average"
-            android:layout_marginLeft="3dp"
-            android:textColor="@color/black"
-            android:text=""
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
     </LinearLayout>
     <TableLayout
         android:id="@+id/study_result_table_header"

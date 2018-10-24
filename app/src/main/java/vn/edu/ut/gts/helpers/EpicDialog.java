@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
 import vn.edu.ut.gts.R;
 
 public class EpicDialog {
@@ -20,9 +23,6 @@ public class EpicDialog {
     public static int ABOUT_APP = 3;
     private Dialog epicDialog;
     private Context context;
-    private ImageView topClosePopup;
-    private TextView popupTitle,popupText;
-    private Button popupClose;
 
     public EpicDialog(Context context){
         this.context = context;
@@ -33,6 +33,7 @@ public class EpicDialog {
         this.epicDialog.setContentView(R.layout.about_app_dialog_layout);
         TextView duong = this.epicDialog.findViewById(R.id.dev_duong);
         TextView giang = this.epicDialog.findViewById(R.id.dev_giang);
+        TextView close = this.epicDialog.findViewById(R.id.close_dialog);
         duong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +74,12 @@ public class EpicDialog {
                 context.startActivity(intent);
             }
         });
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismisPopup();
+            }
+        });
         this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();
@@ -84,18 +91,35 @@ public class EpicDialog {
         this.epicDialog.setContentView(R.layout.student_frame_program_info_dialog);
         TextView title1 = this.epicDialog.findViewById(R.id.title_1);
         TextView title2 = this.epicDialog.findViewById(R.id.title_2);
+        TextView close = this.epicDialog.findViewById(R.id.close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismisPopup();
+            }
+        });
         title1.setText(param1);
         title2.setText(param2);
         this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();
     }
-    public void showStudyResultInfoDialog(String param1,String param2){
-        this.epicDialog.setContentView(R.layout.student_frame_program_info_dialog);
-        TextView title1 = this.epicDialog.findViewById(R.id.title_1);
-        TextView title2 = this.epicDialog.findViewById(R.id.title_2);
-        title1.setText(param1);
-        title2.setText(param2);
+    public void showStudyResultInfoDialog(String averageCumulative,String totalCredit,String debtCredits){
+        this.epicDialog.setContentView(R.layout.student_study_result_info_dialog);
+        TextView averageCumulativeValue = this.epicDialog.findViewById(R.id.average_cumulative);
+        TextView totalCreditValue = this.epicDialog.findViewById(R.id.total_credit);
+        TextView debtCreditsValue = this.epicDialog.findViewById(R.id.debt_credits);
+        TextView close = this.epicDialog.findViewById(R.id.close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismisPopup();
+            }
+        });
+        averageCumulativeValue.setText(averageCumulative);
+        totalCreditValue.setText(totalCredit);
+        debtCreditsValue.setText(debtCredits);
+
         this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();

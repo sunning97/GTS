@@ -52,8 +52,6 @@ public class StudentStudyResultFragment extends Fragment {
     TableLayout studyResultTable;
     @BindView(R.id.study_result_table_header)
     TableLayout studyResultTableHeader;
-    @BindView(R.id.student_semester_average)
-    TextView studentSemesterSverage;
 
     private Student student;
     private float d;
@@ -92,6 +90,10 @@ public class StudentStudyResultFragment extends Fragment {
             case R.id.infor: {
                 try {
 
+                    epicDialog.showStudyResultInfoDialog(
+                            data.getString("trung_binh_tich_luy"),
+                            data.getString("tong_tin_chi"),
+                            data.getString("ti_le_no"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -169,7 +171,6 @@ public class StudentStudyResultFragment extends Fragment {
             JSONArray allSemester = data.getJSONArray("all_semester");
             JSONObject semester = (JSONObject) allSemester.get(position);
             JSONArray subjects = semester.getJSONArray("subjects");
-            studentSemesterSverage.setText(String.valueOf(getStudentSemesterSverage(subjects)));
             for (int i = 0; i< subjects.length(); i++) {
                 JSONObject subject = (JSONObject) subjects.get(i);
                 try {
