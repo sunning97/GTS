@@ -228,7 +228,6 @@ public class FrameProgramFragment extends Fragment {
         }
         return row;
     }
-
     private LinearLayout generateTableCell(String data,boolean center,int width){
         LinearLayout linearLayout = new LinearLayout(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);

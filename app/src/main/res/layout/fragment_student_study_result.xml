@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".views.home.fragments.StudentStudyResultFragment">
-    <ImageView
-        android:id="@+id/image"
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:text="Chọn học kì:"
+        android:textStyle="bold"
+        android:textColor="@color/grayDark"
+        android:layout_marginBottom="5dp"
+        android:textSize="16sp"/>
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/study_result_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:gravity="end">
+        <TextView
+            android:text="Điểm trung bình học kì: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/student_semester_average"
+            android:layout_marginLeft="3dp"
+            android:textColor="@color/black"
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <TableLayout
+        android:id="@+id/study_result_table_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </TableLayout>
+
+    <ScrollView
+        android:background="@color/grayLight"
+        android:padding="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableLayout
+            android:id="@+id/study_result_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TableLayout>
+    </ScrollView>
+</LinearLayout>

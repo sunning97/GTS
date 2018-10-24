@@ -543,51 +543,87 @@ public class Student {
 
 
 
-            for (int i = 0; i < indexs.size() - 1; i++) {
+            for (int i = 0; i <= indexs.size() - 1; i++) {
 
                 JSONObject jsonObject = new JSONObject();
-
                 try {
                     jsonObject.put("quater", quaterText.get(i));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
                 JSONArray quater = new JSONArray();
 
-                for (int j = indexs.get(i) + 1; j < indexs.get((i + 1)); j++) {
-                    Element tr = trs.get(j);
-                    if (!TextUtils.isEmpty(tr.text())) {
-                        JSONObject subject = new JSONObject();
-                        Elements tds = tr.getElementsByTag("td");
-                        subject.put("courseCode",tds.get(1).text());
-                        subject.put("courseName",tds.get(2).text());
-                        subject.put("courseClass",tds.get(3).text());
-                        subject.put("courseCredits",tds.get(4).text());
+                if(i == indexs.size() - 1){
+                    for (int j = indexs.get(i) + 1; j < trs.size(); j++) {
+                        Element tr = trs.get(j);
+                        if (!TextUtils.isEmpty(tr.text())) {
+                            JSONObject subject = new JSONObject();
+                            Elements tds = tr.getElementsByTag("td");
+                            subject.put("courseCode",tds.get(1).text());
+                            subject.put("courseName",tds.get(2).text());
+                            subject.put("courseClass",tds.get(3).text());
+                            subject.put("courseCredits",tds.get(4).text());
 
-                        if(tds.size() == 14){
-                            subject.put("processScore",0);
-                            subject.put("testScores",tds.get(7).text());
-                            subject.put("scoresOf10",tds.get(9).text());
-                            subject.put("scoresOf4",tds.get(10).text());
-                            subject.put("scoresString",tds.get(11).text());
-                            subject.put("classification",tds.get(12).text());
-                            subject.put("note",tds.get(13).text());
-                        } else {
-                            subject.put("processScore",tds.get(6).text());
-                            subject.put("testScores",tds.get(10).text());
-                            subject.put("scoresOf10",tds.get(12).text());
-                            subject.put("scoresOf4",tds.get(13).text());
-                            subject.put("scoresString",tds.get(14).text());
-                            subject.put("classification",tds.get(15).text());
-                            subject.put("note",tds.get(16).text());
+                            if(tds.size() == 14){
+                                subject.put("processScore",0);
+                                subject.put("testScores",tds.get(7).text());
+                                subject.put("scoresOf10",tds.get(9).text());
+                                subject.put("scoresOf4",tds.get(10).text());
+                                subject.put("scoresString",tds.get(11).text());
+                                subject.put("classification",tds.get(12).text());
+                                subject.put("note",tds.get(13).text());
+                            } else {
+                                subject.put("processScore",tds.get(6).text());
+                                subject.put("testScores",tds.get(10).text());
+                                subject.put("scoresOf10",tds.get(12).text());
+                                subject.put("scoresOf4",tds.get(13).text());
+                                subject.put("scoresString",tds.get(14).text());
+                                subject.put("classification",tds.get(15).text());
+                                subject.put("note",tds.get(16).text());
+                            }
+                            quater.put(subject);
                         }
-                        quater.put(subject);
+                        try {
+                            jsonObject.put("subjects", quater);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    try {
-                        jsonObject.put("subject", quater);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                } else {
+                    for (int j = indexs.get(i) + 1; j < indexs.get((i + 1)); j++) {
+                        Element tr = trs.get(j);
+                        if (!TextUtils.isEmpty(tr.text())) {
+                            JSONObject subject = new JSONObject();
+                            Elements tds = tr.getElementsByTag("td");
+                            subject.put("courseCode",tds.get(1).text());
+                            subject.put("courseName",tds.get(2).text());
+                            subject.put("courseClass",tds.get(3).text());
+                            subject.put("courseCredits",tds.get(4).text());
+
+                            if(tds.size() == 14){
+                                subject.put("processScore",0);
+                                subject.put("testScores",tds.get(7).text());
+                                subject.put("scoresOf10",tds.get(9).text());
+                                subject.put("scoresOf4",tds.get(10).text());
+                                subject.put("scoresString",tds.get(11).text());
+                                subject.put("classification",tds.get(12).text());
+                                subject.put("note",tds.get(13).text());
+                            } else {
+                                subject.put("processScore",tds.get(6).text());
+                                subject.put("testScores",tds.get(10).text());
+                                subject.put("scoresOf10",tds.get(12).text());
+                                subject.put("scoresOf4",tds.get(13).text());
+                                subject.put("scoresString",tds.get(14).text());
+                                subject.put("classification",tds.get(15).text());
+                                subject.put("note",tds.get(16).text());
+                            }
+                            quater.put(subject);
+                        }
+                        try {
+                            jsonObject.put("subjects", quater);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 allQuater.put(jsonObject);
