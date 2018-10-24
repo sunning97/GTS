@@ -221,8 +221,8 @@ public class FrameProgramFragment extends Fragment {
         if(changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
         try {
             row.addView(generateTableCell(jsonArray.get(1).toString(),false,(int)(getScreenWidthInDPs(getContext())*0.6)));
+            row.addView(generateTableCell(jsonArray.get(4).toString(),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
             row.addView(generateTableCell(jsonArray.get(5).toString(),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
-            row.addView(generateTableCell(jsonArray.get(6).toString(),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
