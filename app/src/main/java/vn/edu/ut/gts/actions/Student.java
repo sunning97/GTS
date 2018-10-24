@@ -509,7 +509,8 @@ public class Student {
         }
     }
 
-    public JSONArray getStudentStudyResult() {
+    public JSONObject getStudentStudyResult() {
+        JSONObject result = new JSONObject();
         JSONArray allQuater = new JSONArray();
         try {
             Document document = Jsoup.connect(Helper.BASE_URL + "Xemdiem.aspx")
@@ -521,10 +522,13 @@ public class Student {
             Elements tableResult = document.select("table.grid.grid-color2.tblKetQuaHocTap");
             Element table1 = tableResult.first();
 
+            //asdasdasdasdassd
+            result.put("tong_tin_chi",tableResult.get(1).getElementById("ctl00_ContentPlaceHolder_ucThongTinTotNghiepTinChi1_lblTongTinChi").text());
+            result.put("trung_binh_tich_luy",tableResult.get(1).getElementById("ctl00_ContentPlaceHolder_ucThongTinTotNghiepTinChi1_lblTBCTL").text());
+            result.put("ti_le_no",tableResult.get(1).getElementById("ctl00_ContentPlaceHolder_ucThongTinTotNghiepTinChi1_lblSoTCNo").text());
+
             //header
             Elements trs = table1.select("tr");
-
-
             Elements headerTh = table1.select("tr").first().select("th");
             List<String> strings = new ArrayList<>();
             for (int i = 1; i < headerTh.size(); i++) {
@@ -540,8 +544,6 @@ public class Student {
                     quaterText.add(trs.get(i).text());
                 }
             }
-
-
 
             for (int i = 0; i <= indexs.size() - 1; i++) {
 
@@ -628,14 +630,14 @@ public class Student {
                 }
                 allQuater.put(jsonObject);
             }
-
-
+            result.put("all_semester",allQuater);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return allQuater;
+
+        return result;
     }
 
     public void getDataFrameProgram() {

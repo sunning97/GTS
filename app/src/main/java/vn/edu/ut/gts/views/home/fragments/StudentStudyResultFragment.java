@@ -61,7 +61,7 @@ public class StudentStudyResultFragment extends Fragment {
     private List<String> dataSpinner = new ArrayList<>();
     private SweetAlertDialog loadingDialog;
     private EpicDialog epicDialog;
-    private JSONArray data;
+    private JSONObject data;
 
     public StudentStudyResultFragment() {
         headerText.add("Học phần");
@@ -101,21 +101,22 @@ public class StudentStudyResultFragment extends Fragment {
         return true;
     }
     private void getDataStudyResult(){
-        AsyncTask<Void,Void,JSONArray> getData = new AsyncTask<Void, Void, JSONArray>() {
+        AsyncTask<Void,Void,JSONObject> getData = new AsyncTask<Void, Void, JSONObject>() {
             @Override
             protected void onPreExecute() {
                 loadingDialog.show();
             }
 
             @Override
-            protected JSONArray doInBackground(Void... voids) {
-                JSONArray jsonArray = student.getStudentStudyResult();
-                return jsonArray;
+            protected JSONObject doInBackground(Void... voids) {
+                JSONObject jsonObject = student.getStudentStudyResult();
+                Log.d("AAA",jsonObject.toString());
+                return jsonObject;
             }
 
             @Override
-            protected void onPostExecute(JSONArray jsonArray) {
-                data = jsonArray;
+            protected void onPostExecute(JSONObject jsonObject) {
+                data = jsonObject;
                 spinnerInit();
                 generateTableContent(0);
                 loadingDialog.dismiss();
@@ -165,7 +166,8 @@ public class StudentStudyResultFragment extends Fragment {
     private void generateTableContent(int position){
         this.studyResultTable.removeAllViews();
         try {
-            JSONObject semester = (JSONObject) data.get(position);
+            JSONArray allSemester = data.getJSONArray("all_semester");
+            JSONObject semester = (JSONObject) allSemester.get(position);
             JSONArray subjects = semester.getJSONArray("subjects");
             studentSemesterSverage.setText(String.valueOf(getStudentSemesterSverage(subjects)));
             for (int i = 0; i< subjects.length(); i++) {
@@ -218,8 +220,9 @@ public class StudentStudyResultFragment extends Fragment {
     }
     private void spinnerInit(){
         try {
-            for (int i = 0;i< data.length();i++){
-                JSONObject jsonObject = (JSONObject) data.get(i);
+            JSONArray allSemester = data.getJSONArray("all_semester");
+            for (int i = 0;i< allSemester.length();i++){
+                JSONObject jsonObject = (JSONObject) allSemester.get(i);
                 dataSpinner.add(jsonObject.getString("quater"));
             }
         } catch (JSONException e) {
