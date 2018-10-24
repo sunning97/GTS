@@ -23,158 +23,21 @@
         android:id="@+id/frame_program_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <TableLayout
+        android:id="@+id/frame_program_table_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </TableLayout>
+
     <ScrollView
         android:background="@color/grayLight"
         android:padding="1dp"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TableLayout
             android:id="@+id/frame_program_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TableRow
-                android:visibility="invisible"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="60dp">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Mã"
-                        android:textColor="@color/white"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Nôi dung thu"
-                        android:textColor="@color/white"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Tín chỉ"
-                        android:textColor="@color/white"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Số tiền (VNĐ)"
-                        android:textColor="@color/white"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Đã nộp (VNĐ)"
-                        android:textColor="@color/white"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Khấu trừ (VNĐ)"
-                        android:textColor="@color/white"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Công nợ (VNĐ)"
-                        android:textColor="@color/white"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Trạng thái"
-                        android:textColor="@color/white"/>
-                </LinearLayout>
-            </TableRow>
         </TableLayout>
     </ScrollView>
 </LinearLayout>

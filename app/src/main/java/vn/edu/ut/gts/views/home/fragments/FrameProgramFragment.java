@@ -47,6 +47,8 @@ import vn.edu.ut.gts.helpers.EpicDialog;
 public class FrameProgramFragment extends Fragment {
     @BindView(R.id.frame_program_table)
     TableLayout frameProgramTable;
+    @BindView(R.id.frame_program_table_header)
+    TableLayout frameprogramTableHeader;
     @BindView(R.id.frame_program_spinner)
     MaterialSpinner frameProgramSpinner;
 
@@ -144,56 +146,37 @@ public class FrameProgramFragment extends Fragment {
 
     private void generateTableContent(TableLayout tableLayout,int position){
         tableLayout.removeAllViews();
-        tableLayout.addView(this.generateTableHeader());
         try {
             JSONArray allQuater = data.getJSONArray("all_quater");
             JSONObject quater = (JSONObject) allQuater.get(position);
             tableLayout.addView(generateSubjectGroup("Học phần bắt buộc ("+quater.getString("so_chi_bat_buoc")+" tín chỉ)"));
             JSONArray batBuoc = quater.getJSONArray("bat_buoc");
             JSONArray khongBatBuoc = quater.getJSONArray("khong_bat_buoc");
+
             for (int i = 0; i< batBuoc.length(); i++) {
                 JSONArray subject = (JSONArray) batBuoc.get(i);
-                TableRow tableRow = new TableRow(getContext());
-                tableRow.setGravity(Gravity.CENTER);
-                tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                tableRow.setMinimumHeight((int)d*50);
-
-                if((i+1) % 2 != 0){
-                    tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
-                }
                 try {
-                    tableRow.addView(generateTableCell(subject.get(1).toString(),false, (int) (getScreenWidthInDPs(getContext())*0.4)));
-                    tableRow.addView(generateTableCell(subject.get(4).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
-                    tableRow.addView(generateTableCell(subject.get(5).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
-                } catch (Exception e){
+                    if ((i + 1) % 2 != 0) {
+                        tableLayout.addView(generateTableRow(subject, true));
+                    } else tableLayout.addView(generateTableRow(subject, false));
+
+                } catch (Exception e) {
 
                 }
-                tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
             }
+
             if(khongBatBuoc.length() > 0){
                 tableLayout.addView(generateSubjectGroup("Học phần tự chọn ("+quater.getString("so_chi_khong_bat_buoc")+" tín chỉ)"));
                 for (int i = 0; i< khongBatBuoc.length(); i++) {
                     JSONArray subject = (JSONArray) khongBatBuoc.get(i);
-                    TableRow tableRow = new TableRow(getContext());
-                    tableRow.setGravity(Gravity.CENTER);
-                    tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-                    tableRow.setMinimumHeight((int)d*50);
-                    tableRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        }
-                    });
-                    if((i+1) % 2 != 0){
-                        tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
-                    }
                     try {
-                        tableRow.addView(generateTableCell(subject.get(1).toString(),false, (int) (getScreenWidthInDPs(getContext())*0.4)));
-                        tableRow.addView(generateTableCell(subject.get(4).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
-                        tableRow.addView(generateTableCell(subject.get(5).toString(),true,(int) (getScreenWidthInDPs(getContext())*0.3)));
-                    } catch (Exception e){
+                        if ((i + 1) % 2 != 0) {
+                            tableLayout.addView(generateTableRow(subject, true));
+                        } else tableLayout.addView(generateTableRow(subject, false));
+
+                    } catch (Exception e) {
 
                     }
-                    tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
                 }
             }
         } catch (JSONException e) {
@@ -203,7 +186,6 @@ public class FrameProgramFragment extends Fragment {
 
     private TableRow generateTableHeader(){
         TableRow header = new TableRow(getContext());
-        header.setGravity(Gravity.CENTER);
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
         header.setMinimumHeight((int)d*50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -211,13 +193,17 @@ public class FrameProgramFragment extends Fragment {
         for (int i = 0;i < headerText.size();i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-            if(i == 0) layoutParams.gravity = Gravity.CENTER_VERTICAL; else layoutParams.gravity = Gravity.CENTER;
-            if(i == headerText.size()-1) layoutParams.setMargins(0,0,0,0); else layoutParams.setMargins(0,0,0,0);
-            linearLayout.setPadding((int)d*10,(int)d*15,(int) d*10,0);
+            if(i == 0){
+                layoutParams.width = (int) (getScreenWidthInDPs(getContext())*0.6);
+            } else{
+                layoutParams.gravity = Gravity.CENTER;
+                layoutParams.width = (int) (getScreenWidthInDPs(getContext())*0.2);
+            }
+            linearLayout.setPadding((int)d*5,(int)d*15,(int) d*5,0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
@@ -228,46 +214,62 @@ public class FrameProgramFragment extends Fragment {
 
         return  header;
     }
-    private LinearLayout generateTableCell(String content,Boolean isGravityCenter,int width){
-        // generate cell container
+    private TableRow generateTableRow(JSONArray jsonArray,boolean changeBG){
+        TableRow row = new TableRow(getContext());
+        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        row.setMinimumHeight((int)d*40);
+        if(changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
+        try {
+            row.addView(generateTableCell(jsonArray.get(1).toString(),false,(int)(getScreenWidthInDPs(getContext())*0.6)));
+            row.addView(generateTableCell(jsonArray.get(5).toString(),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
+            row.addView(generateTableCell(jsonArray.get(6).toString(),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return row;
+    }
+
+    private LinearLayout generateTableCell(String data,boolean center,int width){
         LinearLayout linearLayout = new LinearLayout(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-        if(isGravityCenter) layoutParams.gravity = Gravity.CENTER;
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         layoutParams.width = width;
+        linearLayout.setPadding((int)d*5,(int)d*10,(int) d*10,(int) d*5);
+        if(center) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
-        // generate cell's text view
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        textLayoutParams.setMargins((int)d*10,0,(int)d*5,0);
-        textView.setLayoutParams(textLayoutParams);
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        if(center) textViewLayout.gravity = Gravity.CENTER;
+        textView.setLayoutParams(textViewLayout);
         textView.setTextColor(getResources().getColor(R.color.black));
-        textView.setText(content);
+        textView.setText(data);
         linearLayout.addView(textView);
-        return linearLayout;
+
+        return  linearLayout;
     }
+
     private TableRow generateSubjectGroup(String content){
         TableRow tableRow = new TableRow(getContext());
         tableRow.setGravity(Gravity.CENTER_VERTICAL);
-        tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-        tableRow.setMinimumHeight((int)d*50);
+        tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        tableRow.setMinimumHeight((int)d*40);
         tableRow.setBackgroundColor(getResources().getColor(R.color.grandStart));
 
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setGravity(Gravity.START);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         linearLayout.setLayoutParams(layoutParams);
 
         // generate cell's text view
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        a.setMargins((int)d*20,0,(int)d,0);
+        LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        a.setMargins((int)d*10,0,(int)d,0);
         textView.setLayoutParams(a);
         textView.setTextColor(getResources().getColor(R.color.colorPrimary));
         textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
         textView.setText(content);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,getResources().getDimension(R.dimen.textsize));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,getResources().getDimension(R.dimen.text_size));
         linearLayout.addView(textView);
         tableRow.addView(linearLayout);
         return tableRow;
@@ -278,19 +280,20 @@ public class FrameProgramFragment extends Fragment {
 
             for (int i = 0;i< allQuater.length();i++){
                 JSONObject jsonObject = (JSONObject) allQuater.get(i);
-                int total = Integer.parseInt(jsonObject.getString("so_chi_bat_buoc"))+Integer.parseInt(jsonObject.getString("so_chi_khong_bat_buoc"));
-                dataSpinner.add(jsonObject.getString("quater_name")+" ("+total+" tín chỉ)");
+                dataSpinner.add(jsonObject.getString("quater_name"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         frameProgramSpinner.setItems(dataSpinner);
+        frameprogramTableHeader.addView(this.generateTableHeader());
     }
     public int getScreenWidthInDPs(Context context){
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int widthInDP = Math.round(dm.widthPixels / dm.density);
-        return widthInDP;
+//        int widthInDP = Math.round(dm.widthPixels / dm.density);
+        int screenWidth = dm.widthPixels;
+        return screenWidth;
     }
 }
