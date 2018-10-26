@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.views.home.fragments;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.viethoa.DialogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,11 +82,6 @@ public class FrameProgramFragment extends Fragment {
         d = getContext().getResources().getDisplayMetrics().density;
         setHasOptionsMenu(true);
         getDataFrameProgram();
-        frameProgramSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                generateTableContent(frameProgramTable,position);
-            }
-        });
         return view;
     }
 
@@ -214,10 +211,17 @@ public class FrameProgramFragment extends Fragment {
 
         return  header;
     }
-    private TableRow generateTableRow(JSONArray jsonArray,boolean changeBG){
+    private TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG){
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
         row.setMinimumHeight((int)d*40);
+        row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                frameDetailShow(jsonArray);
+                Log.d("AAA",jsonArray.toString());
+            }
+        });
         if(changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
         try {
             row.addView(generateTableCell(jsonArray.get(1).toString(),false,(int)(getScreenWidthInDPs(getContext())*0.6)));
@@ -286,6 +290,11 @@ public class FrameProgramFragment extends Fragment {
         }
         frameProgramSpinner.setItems(dataSpinner);
         frameprogramTableHeader.addView(this.generateTableHeader());
+        frameProgramSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                generateTableContent(frameProgramTable,position);
+            }
+        });
     }
     public int getScreenWidthInDPs(Context context){
         DisplayMetrics dm = new DisplayMetrics();
@@ -294,5 +303,35 @@ public class FrameProgramFragment extends Fragment {
 //        int widthInDP = Math.round(dm.widthPixels / dm.density);
         int screenWidth = dm.widthPixels;
         return screenWidth;
+    }
+
+    protected void frameDetailShow(JSONArray jsonArray) {
+
+        LayoutInflater factory = getLayoutInflater();
+        View view = factory.inflate(R.layout.student_frame_program_detail_dialog, null);
+
+        TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
+        TextView tenMonHoc = view.findViewById(R.id.ten_mon_hoc);
+        TextView maHocPhan = view.findViewById(R.id.ma_hoc_phan);
+        TextView hocPhan = view.findViewById(R.id.hoc_phan);
+        TextView soTC = view.findViewById(R.id.so_tc_dvht);
+        TextView soTietLT = view.findViewById(R.id.so_tiet_lt);
+        TextView soTietTH = view.findViewById(R.id.so_tiet_th);
+
+        try {
+            maMonHoc.setText(jsonArray.get(0).toString());
+            tenMonHoc.setText(jsonArray.get(1).toString());
+            maHocPhan.setText(jsonArray.get(2).toString());
+            hocPhan.setText(jsonArray.get(3).toString());
+            soTC.setText(jsonArray.get(4).toString());
+            soTietLT.setText(jsonArray.get(5).toString());
+            soTietTH.setText(jsonArray.get(6).toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Dialog simpleDialog = DialogUtils.createSimpleDialog(getContext(), view, true);
+        if (simpleDialog != null && !simpleDialog.isShowing()) {
+            simpleDialog.show();
+        }
     }
 }
