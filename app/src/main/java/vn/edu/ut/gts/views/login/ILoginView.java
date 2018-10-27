@@ -9,4 +9,7 @@ public interface ILoginView {
     public void setLastLogin();
     public void showLoadingDialog();
     public void dismisLoadingDialog();
+    public void showError();
+    public void transferToRetryBtn();
+    public void transferToLoginBtn();
 }

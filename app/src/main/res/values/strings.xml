@@ -3,6 +3,8 @@
 
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="login_error_dialog_title">Kết nối quá hạn</string>
+    <string name="login_error_dialog_content">Kiểm tra lại kết nối interet</string>
     <string name="login_failed_dialog_title">Đăng nhập thất bại</string>
     <string name="login_failed_dialog_content">Mã số sinh viên / mật khẩu không đúng</string>
     <string name="no_internet_access_error_dialog_title">Oops...</string>

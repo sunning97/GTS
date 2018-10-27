@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.actions;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +29,7 @@ public class Login {
             Connection.Response res = Jsoup.connect(Helper.BASE_URL)
                     .userAgent(Helper.USER_AGENT)
                     .method(Connection.Method.GET)
+                    .timeout(1000)
                     .execute();
             Document doc = res.parse();
             this.storage.setCookie(res.cookie("ASP.NET_SessionId"));
@@ -41,7 +43,7 @@ public class Login {
             data.put("btnLogin", doc.select("input[name=\"ctl00$ucRight1$btnLogin\"]").val());
             this.storage.putString("dataLogin", data.toString());
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            Log.d("AAA",e.toString());
         }
     }
     /* Get private key */

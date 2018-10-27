@@ -71,8 +71,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         ButterKnife.bind(this);
+
         this.requestPermission();
         this.init();
         this.setLastLogin();
@@ -151,6 +151,26 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         epicDialog.dismisPopup();
     }
 
+    @Override
+    public void showError() {
+        enableInput();
+        new SweetAlertDialog(this)
+                .setTitleText(getResources().getString(R.string.login_error_dialog_title))
+                .setContentText(getResources().getString(R.string.login_error_dialog_content))
+                .show();
+    }
+
+    @Override
+    public void transferToRetryBtn() {
+        disableInput();
+        btnLogin.setText("Thử lại");
+    }
+
+    @Override
+    public void transferToLoginBtn() {
+        enableInput();
+        btnLogin.setText("Đăng nhập");
+    }
 
     @Override
     public void onBackPressed() {
@@ -170,12 +190,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 .show();
     }
 
-    /**
-     * Initialization all needed for activity
-     *
-     * @return Void
-     */
-
     private void init() {
         storage = new Storage(this);
         this.isValidateNoError = false;
@@ -193,14 +207,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             public void onReceive(Context context, Intent intent) {
                 ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                 if (connectivityManager.getActiveNetworkInfo() != null) {
-                    inputStudentId.setEnabled(true);
-                    inputPassword.setEnabled(true);
+                    enableInput();
                     btnLogin.setEnabled(true);
                     if (loginAlert != null) loginAlert.dismissWithAnimation();
                     loginProcess = new LoginProcess(LoginActivity.this, context);
+                    loginProcess.initData();
                 } else {
-                    inputStudentId.setEnabled(false);
-                    inputPassword.setEnabled(false);
+                    disableInput();
                     btnLogin.setEnabled(false);
                     loginAlert = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
                     loginAlert.setTitleText(getResources().getString(R.string.no_internet_access_error_dialog_title))
@@ -211,19 +224,19 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         };
     }
 
-    /**
-     * Handle all event on activity
-     *
-     * @return Void
-     */
     @OnClick(R.id.btn_login)
     public void submit(View view) {
-        if (validateStudentId() && validatePassword()) {
-            unsetInputError(passwordInputErrorShow);
-            unsetInputError(studentIdInputErrorShow);
-            disableInput();
-            loginProcess.execute(getStudentId(), getPassword());
+        if(LoginProcess.currentStatus == LoginProcess.TIMEOUT){
+            loginProcess.initData();
+        } else {
+            if (validateStudentId() && validatePassword()) {
+                unsetInputError(passwordInputErrorShow);
+                unsetInputError(studentIdInputErrorShow);
+                disableInput();
+                loginProcess.execute(getStudentId(), getPassword());
+            }
         }
+
     }
 
     private void disableInput() {
@@ -235,11 +248,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         inputPassword.setEnabled(true);
         inputStudentId.setEnabled(true);
     }
-    /**
-     * Request permission need for app on first launch
-     *
-     * @return Void
-     */
 
     private void requestPermission() {
         String[] permissions = new String[]{
