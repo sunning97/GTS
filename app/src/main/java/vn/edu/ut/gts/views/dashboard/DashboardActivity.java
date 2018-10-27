@@ -59,6 +59,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @BindView(R.id.profile_image)
     CircleImageView profileImage;
 
+    private Storage storage;
     private DashboardPresenter dashboardPresenter;
     private SweetAlertDialog loadingDialog;
 
@@ -67,6 +68,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
+        storage = new Storage(DashboardActivity.this);
         dashboardPresenter = new DashboardPresenter(this,this);
         setSupportActionBar(dashboardToolbar);
         this.init();
@@ -132,15 +134,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public void onBackPressed() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Xác nhận thoát?")
-                .setCancelText("Ok")
-                .setConfirmText("Hủy")
+                .setCancelText("Hủy")
+                .setConfirmText("Xác nhận")
                 .showCancelButton(true)
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
-                        moveTaskToBack(true);
-                        android.os.Process.killProcess(android.os.Process.myPid());
-                        System.exit(1);
+                        storage.deleteAllsharedPreferences();
+                        DashboardActivity.this.finishAffinity();
                     }
                 })
                 .show();

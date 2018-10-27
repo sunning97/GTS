@@ -75,4 +75,13 @@ public class Storage {
         }
         return b;
     }
+
+
+    public boolean deleteAllsharedPreferences(){
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        String id = this.getString("last_student_login");
+        editor.clear();
+        editor.putString("last_student_login",id);
+        return editor.commit();
+    }
 }

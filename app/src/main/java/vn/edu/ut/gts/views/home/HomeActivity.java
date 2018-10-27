@@ -147,9 +147,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.logout: {
-                storage.deleteString("cookie");
-                storage.deleteString("dataAttendance");
-                storage.deleteString("dataLogin");
+                storage.deleteAllsharedPreferences();
+                HomeActivity.isLogin = false;
                 startActivity(new Intent(HomeActivity.this,LoginActivity.class));
                 break;
             }
@@ -161,15 +160,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Xác nhận thoát?")
-                .setCancelText("Ok")
-                .setConfirmText("Hủy")
+                .setCancelText("Hủy")
+                .setConfirmText("Xác nhận")
                 .showCancelButton(true)
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
-                        moveTaskToBack(true);
-                        android.os.Process.killProcess(android.os.Process.myPid());
-                        System.exit(1);
+                        storage.deleteAllsharedPreferences();
+                        HomeActivity.this.finishAffinity();
                     }
                 })
                 .show();
