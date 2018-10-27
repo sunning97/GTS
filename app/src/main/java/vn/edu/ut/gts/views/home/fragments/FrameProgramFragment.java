@@ -42,11 +42,12 @@ import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.presenters.home.FrameProgramFragmentPresenter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FrameProgramFragment extends Fragment {
+public class FrameProgramFragment extends Fragment implements IFrameProgramFragment{
     @BindView(R.id.frame_program_table)
     TableLayout frameProgramTable;
     @BindView(R.id.frame_program_table_header)
@@ -54,9 +55,9 @@ public class FrameProgramFragment extends Fragment {
     @BindView(R.id.frame_program_spinner)
     MaterialSpinner frameProgramSpinner;
 
-    private Student student;
-    private EpicDialog epicDialog;
+    private FrameProgramFragmentPresenter frameProgramFragmentPresenter;
     private JSONObject data;
+    private EpicDialog epicDialog;
     private SweetAlertDialog loadingDialog;
     private float d;
     private List<String> headerText = new ArrayList<>();
@@ -73,15 +74,19 @@ public class FrameProgramFragment extends Fragment {
         inflater.inflate(R.menu.fragment_frame_program_toolbar_menu, menu);
     }
 
+    public void setData(JSONObject data) {
+        this.data = data;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        student = new Student(getContext());
         View view = inflater.inflate(R.layout.fragment_frame_program, container, false);
         ButterKnife.bind(this,view);
         init();
         d = getContext().getResources().getDisplayMetrics().density;
+        frameProgramFragmentPresenter = new FrameProgramFragmentPresenter(this,getContext());
+        frameProgramFragmentPresenter.getFrameProgram();
         setHasOptionsMenu(true);
-        getDataFrameProgram();
         return view;
     }
 
@@ -93,29 +98,6 @@ public class FrameProgramFragment extends Fragment {
         loadingDialog.setCancelable(false);
     }
 
-    private void getDataFrameProgram(){
-        AsyncTask<Void,Void,JSONObject> getData = new AsyncTask<Void, Void, JSONObject>() {
-            @Override
-            protected void onPreExecute() {
-                loadingDialog.show();
-            }
-
-            @Override
-            protected JSONObject doInBackground(Void... voids) {
-                JSONObject jsonObject = student.getFrameProgram();
-                return jsonObject;
-            }
-
-            @Override
-            protected void onPostExecute(JSONObject jsonObject) {
-                data = jsonObject;
-                spinnerInit();
-                generateTableContent(frameProgramTable,0);
-                loadingDialog.dismiss();
-            }
-        };
-        getData.execute();
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -140,13 +122,13 @@ public class FrameProgramFragment extends Fragment {
         }
         return true;
     }
-
-    private void generateTableContent(TableLayout tableLayout,int position){
-        tableLayout.removeAllViews();
+    @Override
+    public void generateTableContent(int position){
+        frameProgramTable.removeAllViews();
         try {
             JSONArray allQuater = data.getJSONArray("all_quater");
             JSONObject quater = (JSONObject) allQuater.get(position);
-            tableLayout.addView(generateSubjectGroup("Học phần bắt buộc ("+quater.getString("so_chi_bat_buoc")+" tín chỉ)"));
+            frameProgramTable.addView(generateSubjectGroup("Học phần bắt buộc ("+quater.getString("so_chi_bat_buoc")+" tín chỉ)"));
             JSONArray batBuoc = quater.getJSONArray("bat_buoc");
             JSONArray khongBatBuoc = quater.getJSONArray("khong_bat_buoc");
 
@@ -154,8 +136,8 @@ public class FrameProgramFragment extends Fragment {
                 JSONArray subject = (JSONArray) batBuoc.get(i);
                 try {
                     if ((i + 1) % 2 != 0) {
-                        tableLayout.addView(generateTableRow(subject, true));
-                    } else tableLayout.addView(generateTableRow(subject, false));
+                        frameProgramTable.addView(generateTableRow(subject, true));
+                    } else frameProgramTable.addView(generateTableRow(subject, false));
 
                 } catch (Exception e) {
 
@@ -163,13 +145,13 @@ public class FrameProgramFragment extends Fragment {
             }
 
             if(khongBatBuoc.length() > 0){
-                tableLayout.addView(generateSubjectGroup("Học phần tự chọn ("+quater.getString("so_chi_khong_bat_buoc")+" tín chỉ)"));
+                frameProgramTable.addView(generateSubjectGroup("Học phần tự chọn ("+quater.getString("so_chi_khong_bat_buoc")+" tín chỉ)"));
                 for (int i = 0; i< khongBatBuoc.length(); i++) {
                     JSONArray subject = (JSONArray) khongBatBuoc.get(i);
                     try {
                         if ((i + 1) % 2 != 0) {
-                            tableLayout.addView(generateTableRow(subject, true));
-                        } else tableLayout.addView(generateTableRow(subject, false));
+                            frameProgramTable.addView(generateTableRow(subject, true));
+                        } else frameProgramTable.addView(generateTableRow(subject, false));
 
                     } catch (Exception e) {
 
@@ -181,7 +163,18 @@ public class FrameProgramFragment extends Fragment {
         }
     }
 
-    private TableRow generateTableHeader(){
+    @Override
+    public void showLoadingDialog() {
+        loadingDialog.show();
+    }
+
+    @Override
+    public void dismissLoadingDialog() {
+        loadingDialog.dismiss();
+    }
+
+    @Override
+    public TableRow generateTableHeader(){
         TableRow header = new TableRow(getContext());
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
         header.setMinimumHeight((int)d*50);
@@ -211,7 +204,8 @@ public class FrameProgramFragment extends Fragment {
 
         return  header;
     }
-    private TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG){
+    @Override
+    public TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG){
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
         row.setMinimumHeight((int)d*40);
@@ -232,7 +226,8 @@ public class FrameProgramFragment extends Fragment {
         }
         return row;
     }
-    private LinearLayout generateTableCell(String data,boolean center,int width){
+    @Override
+    public LinearLayout generateTableCell(String data,boolean center,int width){
         LinearLayout linearLayout = new LinearLayout(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         layoutParams.width = width;
@@ -251,7 +246,7 @@ public class FrameProgramFragment extends Fragment {
         return  linearLayout;
     }
 
-    private TableRow generateSubjectGroup(String content){
+    public TableRow generateSubjectGroup(String content){
         TableRow tableRow = new TableRow(getContext());
         tableRow.setGravity(Gravity.CENTER_VERTICAL);
         tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -277,10 +272,10 @@ public class FrameProgramFragment extends Fragment {
         tableRow.addView(linearLayout);
         return tableRow;
     }
-    private void spinnerInit(){
+    @Override
+    public void spinnerInit(){
         try {
             JSONArray allQuater = data.getJSONArray("all_quater");
-
             for (int i = 0;i< allQuater.length();i++){
                 JSONObject jsonObject = (JSONObject) allQuater.get(i);
                 dataSpinner.add(jsonObject.getString("quater_name"));
@@ -292,7 +287,7 @@ public class FrameProgramFragment extends Fragment {
         frameprogramTableHeader.addView(this.generateTableHeader());
         frameProgramSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                generateTableContent(frameProgramTable,position);
+                generateTableContent(position);
             }
         });
     }
@@ -304,8 +299,8 @@ public class FrameProgramFragment extends Fragment {
         int screenWidth = dm.widthPixels;
         return screenWidth;
     }
-
-    protected void frameDetailShow(JSONArray jsonArray) {
+    @Override
+    public void frameDetailShow(JSONArray jsonArray) {
 
         LayoutInflater factory = getLayoutInflater();
         View view = factory.inflate(R.layout.student_frame_program_detail_dialog, null);
