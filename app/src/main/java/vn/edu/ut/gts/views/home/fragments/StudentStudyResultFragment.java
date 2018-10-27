@@ -43,11 +43,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StudentStudyResultFragment extends Fragment {
+public class StudentStudyResultFragment extends Fragment implements IStudentStudyResultFragment{
     @BindView(R.id.study_result_spinner)
     MaterialSpinner studyResultSpinner;
     @BindView(R.id.study_result_table)
@@ -55,7 +56,7 @@ public class StudentStudyResultFragment extends Fragment {
     @BindView(R.id.study_result_table_header)
     TableLayout studyResultTableHeader;
 
-    private Student student;
+    private StudentStudyResultFragmentPresenter studentStudyResultFragmentPresenter;
     private float d;
     private List<String> headerText = new ArrayList<>();
     private List<String> dataSpinner = new ArrayList<>();
@@ -70,15 +71,19 @@ public class StudentStudyResultFragment extends Fragment {
         headerText.add("Điểm chữ");
     }
 
+    public void setData(JSONObject data) {
+        this.data = data;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_student_study_result, container, false);
         ButterKnife.bind(this,view);
-        student = new Student(getContext());
         d = getContext().getResources().getDisplayMetrics().density;
         init();
+        studentStudyResultFragmentPresenter = new StudentStudyResultFragmentPresenter(this,getContext());
+        studentStudyResultFragmentPresenter.getStudentStudyResult(0);
         setHasOptionsMenu(true);
-        getDataStudyResult();
         return  view;
     }
 
@@ -104,31 +109,7 @@ public class StudentStudyResultFragment extends Fragment {
         }
         return true;
     }
-    private void getDataStudyResult(){
-        AsyncTask<Void,Void,JSONObject> getData = new AsyncTask<Void, Void, JSONObject>() {
-            @Override
-            protected void onPreExecute() {
-                loadingDialog.show();
-            }
 
-            @Override
-            protected JSONObject doInBackground(Void... voids) {
-                JSONObject jsonObject = student.getStudentStudyResult();
-                Log.d("AAA",jsonObject.toString());
-                return jsonObject;
-            }
-
-            @Override
-            protected void onPostExecute(JSONObject jsonObject) {
-                data = jsonObject;
-                spinnerInit();
-                generateTableContent(0);
-                loadingDialog.dismiss();
-            }
-        };
-        getData.execute();
-
-    }
     private void init() {
         epicDialog = new EpicDialog(getContext());
         loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
@@ -166,8 +147,8 @@ public class StudentStudyResultFragment extends Fragment {
 
         return  header;
     }
-
-    private void generateTableContent(int position){
+    @Override
+    public void generateTableContent(int position){
         this.studyResultTable.removeAllViews();
         try {
             JSONArray allSemester = data.getJSONArray("all_semester");
@@ -188,6 +169,17 @@ public class StudentStudyResultFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void showLoadingDialog() {
+        loadingDialog.show();
+    }
+
+    @Override
+    public void dismissLoadingDialog() {
+        loadingDialog.dismiss();
+    }
+
     private TableRow generateTableRow(final JSONObject data, boolean changeBG){
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -228,7 +220,8 @@ public class StudentStudyResultFragment extends Fragment {
 
         return  linearLayout;
     }
-    private void spinnerInit(){
+    @Override
+    public void spinnerInit(){
         try {
             JSONArray allSemester = data.getJSONArray("all_semester");
             for (int i = 0;i< allSemester.length();i++){
@@ -271,8 +264,8 @@ public class StudentStudyResultFragment extends Fragment {
         }
         return (a/totalCourseCredits);
     }
-
-    protected void studyResultDetailShow(JSONObject jsonObject) {
+    @Override
+    public void studyResultDetailShow(JSONObject jsonObject) {
         LayoutInflater factory = getLayoutInflater();
         View view = factory.inflate(R.layout.student_study_result_detail_dialog, null);
         TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
