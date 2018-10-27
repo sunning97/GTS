@@ -33,11 +33,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.adapters.WeekScheduleTablayoutAdapter;
+import vn.edu.ut.gts.presenters.home.WeekSchedulePresenter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener {
+public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener,IWeekSchedule {
 
     @BindView(R.id.week_schedule_tablayout)
     TabLayout tabLayout;
@@ -55,11 +56,11 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     ImageButton datePicker;
 
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
+    private WeekSchedulePresenter weekSchedulePresenter;
     private int day = 0;
     private int month = 0;
     private int year = 0;
 
-    private Student student;
     private SweetAlertDialog loadingDialog;
     private WeekScheduleTablayoutAdapter weekScheduleTablayoutAdapter;
 
@@ -71,82 +72,22 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
         View view = inflater.inflate(R.layout.fragment_week_schedule, container, false);
         ButterKnife.bind(this,view);
         init();
-        getDataWeekSchedule();
-
+        weekSchedulePresenter = new WeekSchedulePresenter(this,getContext());
+        weekSchedulePresenter.getSchedulesGetMethod();
         return view;
     }
 
     @OnClick(R.id.next_week)
     public void setNextWeek(View view) {
-        AsyncTask<Void,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
-            @Override
-            protected void onPreExecute() {
-                loadingDialog.show();
-            }
-
-            @Override
-            protected JSONArray doInBackground(Void... voids) {
-                JSONArray jsonArray = student.getNextSchedulesWeek();
-                return jsonArray;
-            }
-
-            @Override
-            protected void onPostExecute(JSONArray jsonArray) {
-                setDateToDate(jsonArray);
-                weekScheduleTablayoutAdapter.setData(jsonArray);
-                weekScheduleTablayoutAdapter.notifyDataSetChanged();
-                loadingDialog.dismiss();
-            }
-        };
-        voidVoidVoidAsyncTask.execute();
+        weekSchedulePresenter.getNextSchedulesWeek();
     }
     @OnClick(R.id.prev_week)
     public void setPrevWeek(View view) {
-        AsyncTask<Void,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
-            @Override
-            protected void onPreExecute() {
-                loadingDialog.show();
-            }
-
-            @Override
-            protected JSONArray doInBackground(Void... voids) {
-                JSONArray jsonArray = student.getPrevSchedulesWeek();
-                return jsonArray;
-            }
-
-            @Override
-            protected void onPostExecute(JSONArray jsonArray) {
-                setDateToDate(jsonArray);
-                weekScheduleTablayoutAdapter.setData(jsonArray);
-                weekScheduleTablayoutAdapter.notifyDataSetChanged();
-                loadingDialog.dismiss();
-            }
-        };
-        voidVoidVoidAsyncTask.execute();
+        weekSchedulePresenter.getPrevSchedulesWeek();
     }
     @OnClick(R.id.current_week)
     public void setCurrentWeek(View view) {
-        AsyncTask<Void,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
-            @Override
-            protected void onPreExecute() {
-                loadingDialog.show();
-            }
-
-            @Override
-            protected JSONArray doInBackground(Void... voids) {
-                JSONArray jsonArray = student.getCurrentSchedulesWeek();
-                return jsonArray;
-            }
-
-            @Override
-            protected void onPostExecute(JSONArray jsonArray) {
-                setDateToDate(jsonArray);
-                weekScheduleTablayoutAdapter.setData(jsonArray);
-                weekScheduleTablayoutAdapter.notifyDataSetChanged();
-                loadingDialog.dismiss();
-            }
-        };
-        voidVoidVoidAsyncTask.execute();
+        weekSchedulePresenter.getCurrentSchedulesWeek();
     }
     @OnClick(R.id.date_picker)
     public void showDatePickerDialog(View view) {
@@ -161,38 +102,8 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
         datePicker.show(getFragmentManager(), FRAG_TAG_DATE_PICKER);
     }
 
-    private void getDataWeekSchedule(){
-        AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
-            @Override
-            protected void onPreExecute() {
-                loadingDialog.show();
-            }
-
-            @Override
-            protected JSONArray doInBackground(Void... voids) {
-                JSONArray jsonArray = student.getSchedulesGetMethod();
-                return jsonArray;
-            }
-
-            @Override
-            protected void onPostExecute(JSONArray jsonArray) {
-                setDateToDate(jsonArray);
-                weekScheduleTablayoutAdapter = new WeekScheduleTablayoutAdapter(getFragmentManager(),jsonArray);
-                viewPager.setAdapter(weekScheduleTablayoutAdapter);
-                tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-                tabLayout.setTabMode(TabLayout.MODE_FIXED);
-                tabLayout.setupWithViewPager(viewPager);
-                tabLayout.setScrollPosition(getCurrentDate(jsonArray),0f,true);
-                viewPager.setCurrentItem(getCurrentDate(jsonArray));
-                loadingDialog.dismiss();
-            }
-        };
-        asyncTask.execute();
-    }
-
 
     private void init(){
-        student = new Student(getContext());
         loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         loadingDialog.setTitleText("Loading");
@@ -200,7 +111,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     }
 
     @SuppressLint("SetTextI18n")
-    private void setDateToDate(JSONArray jsonArray){
+    public void setDateToDate(JSONArray jsonArray){
         dateToDate.setText("");
         try {
             JSONObject firstDate = jsonArray.getJSONObject(0);
@@ -209,6 +120,23 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void modifyDataOnfirst(JSONArray jsonArray) {
+        weekScheduleTablayoutAdapter = new WeekScheduleTablayoutAdapter(getFragmentManager(),jsonArray);
+        viewPager.setAdapter(weekScheduleTablayoutAdapter);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setScrollPosition(getCurrentDate(jsonArray),0f,true);
+        viewPager.setCurrentItem(getCurrentDate(jsonArray));
+    }
+
+    @Override
+    public void modifyDataChange(JSONArray jsonArray) {
+        weekScheduleTablayoutAdapter.setData(jsonArray);
+        weekScheduleTablayoutAdapter.notifyDataSetChanged();
     }
 
     private int getCurrentDate(JSONArray jsonArray){
@@ -234,29 +162,18 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
 
         String day = (dayOfMonth < 10) ? "0"+String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
         String mounth = ((monthOfYear+1) < 10) ? "0"+String.valueOf(monthOfYear+1) : String.valueOf(monthOfYear+1);
-        String time = day+"-"+mounth+"-"+String.valueOf(year);
+        String date = day+"-"+mounth+"-"+String.valueOf(year);
 
-        AsyncTask<String,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<String, Void, JSONArray>() {
-            @Override
-            protected void onPreExecute() {
-                loadingDialog.show();
-            }
+        weekSchedulePresenter.getSchedulesByDate(date);
+    }
 
-            @Override
-            protected JSONArray doInBackground(String... strings) {
-                Log.d("AAA",strings[0]);
-                JSONArray jsonArray = student.getSchedulesByDate(strings[0]);
-                return jsonArray;
-            }
+    @Override
+    public void showLoadingDialog() {
+        loadingDialog.show();
+    }
 
-            @Override
-            protected void onPostExecute(JSONArray jsonArray) {
-                setDateToDate(jsonArray);
-                weekScheduleTablayoutAdapter.setData(jsonArray);
-                weekScheduleTablayoutAdapter.notifyDataSetChanged();
-                loadingDialog.dismiss();
-            }
-        };
-        voidVoidVoidAsyncTask.execute(time);
+    @Override
+    public void dismissLoadingDialog() {
+        loadingDialog.dismiss();
     }
 }
