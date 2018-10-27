@@ -55,7 +55,7 @@ public class LoginProcess implements ILoginProcess{
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL)
                             .userAgent(Helper.USER_AGENT)
                             .method(Connection.Method.GET)
-                            .timeout(500)
+                            .timeout(10000)
                             .execute();
                     Document doc = res.parse();
                     storage.setCookie(res.cookie("ASP.NET_SessionId"));
@@ -128,7 +128,7 @@ public class LoginProcess implements ILoginProcess{
                         .data("ctl00$ucRight1$txtSercurityCode", securityValue)
                         .data("txtSecurityCodeValue", Helper.md5(securityValue))
                         .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
-                        .timeout(50)
+                        .timeout(10000)
                         .execute();
                 } catch (SocketTimeoutException connTimeout) {
                     result = LoginProcess.TIMEOUT;
@@ -152,6 +152,7 @@ public class LoginProcess implements ILoginProcess{
                     case 2: {
                         saveLastLoginID(studentId);
                         saveCurrentStudentName();
+                        HomeActivity.isLogin = true;
                         iLoginView.doneLoadingButton();
                         iLoginView.loginSuccess();
                         break;

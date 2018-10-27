@@ -1,5 +1,6 @@
 package vn.edu.ut.gts.views.dashboard;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,9 +34,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.presenters.dashboard.DashboardPresenter;
 import vn.edu.ut.gts.views.home.HomeActivity;
 
-public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
+public class DashboardActivity extends AppCompatActivity implements View.OnClickListener,IDashboardActivity {
     @BindView(R.id.dashboard_toolbar)
     Toolbar dashboardToolbar;
     @BindView(R.id.dashboard_appbar_layout)
@@ -57,17 +59,18 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @BindView(R.id.profile_image)
     CircleImageView profileImage;
 
-    private Storage storage;
-    private Student student;
+    private DashboardPresenter dashboardPresenter;
     private SweetAlertDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
         ButterKnife.bind(this);
+        dashboardPresenter = new DashboardPresenter(this,this);
+        setSupportActionBar(dashboardToolbar);
         this.init();
+        dashboardPresenter.go();
     }
 
     @Override
@@ -119,25 +122,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private void init() {
         collapsingToolbarLayout.setTitle("loading...");
-        this.storage = new Storage(this);
-        this.student = new Student(this);
-
         loadingDialog = new SweetAlertDialog(DashboardActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         loadingDialog.setTitleText("Loading");
         loadingDialog.setCancelable(false);
-
-        if(!HomeActivity.isLogin){
-            getStudentData();
-        } else {
-            Bitmap image = storage.getImageFromStorage(DashboardActivity.this);
-            profileImage.setImageBitmap(image);
-        }
-        HomeActivity.isLogin = true;
-        setSupportActionBar(dashboardToolbar);
-        String studentName = this.storage.getString("student_name");
-        String studentID = this.storage.getString("last_student_login");
-        collapsingToolbarLayout.setTitle(studentName+" - "+studentID);
     }
 
     @Override
@@ -158,29 +146,27 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 .show();
     }
 
-    private void getStudentData(){
-        AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
-            @Override
-            protected void onPreExecute() {
-                loadingDialog.show();
-            }
 
-            @Override
-            protected JSONObject doInBackground(Void... voids) {
-                JSONObject studentData = student.getStudentInfo();
-                student.saveStudentImage(DashboardActivity.this);
-                return studentData;
-            }
+    @Override
+    public void setToolbarTitle(String title) {
 
-            @Override
-            protected void onPostExecute(JSONObject jsonObject) {
-                storage.putString("student_info",jsonObject.toString());
-                Bitmap image = storage.getImageFromStorage(DashboardActivity.this);
-                profileImage.setImageBitmap(image);
-                loadingDialog.dismiss();
-            }
-        };
-        asyncTask.execute();
+        collapsingToolbarLayout.setTitle(title);
     }
+
+    @Override
+    public void setStudentPortrait(Bitmap studentPortrait) {
+        profileImage.setImageBitmap(studentPortrait);
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        loadingDialog.show();
+    }
+
+    @Override
+    public void dismisLoadingDialog() {
+        loadingDialog.dismiss();
+    }
+
 
 }

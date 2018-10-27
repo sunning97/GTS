@@ -75,9 +75,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
         this.requestPermission();
         this.init();
-        this.setLastLogin();
         this.validate();
-        handler.postDelayed(runnable, 1500);
     }
 
     @Override
@@ -201,7 +199,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 relay_1.setVisibility(View.VISIBLE);
             }
         };
-
+        this.setLastLogin();
+        handler.postDelayed(runnable, 1500);
         listenToInteret = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -222,6 +221,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 }
             }
         };
+
     }
 
     @OnClick(R.id.btn_login)
