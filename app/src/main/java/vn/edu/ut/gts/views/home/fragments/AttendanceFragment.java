@@ -38,11 +38,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.presenters.home.AttendanceFragmentPresenter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AttendanceFragment extends Fragment {
+public class AttendanceFragment extends Fragment implements IAttendanceFragment{
 
     @BindView(R.id.student_total_halt_date) TextView tvStudentTotalDaltDate;
     @BindView(R.id.student_attendance_table)
@@ -50,14 +51,10 @@ public class AttendanceFragment extends Fragment {
     @BindView(R.id.student_attendance_spinner)
     MaterialSpinner studentAttendanceSpinner;
 
-    Storage storage;
-    Student student;
-
+    private AttendanceFragmentPresenter attendanceFragmentPresenter;
     private float dp;
     private int totalHaltDate = 0;
-    private JSONArray semesters;
 
-    List<String> dataSnpinner = new ArrayList<>();
     List<String> headerText = new ArrayList<>();
 
     SweetAlertDialog loadingDialog;
@@ -73,50 +70,20 @@ public class AttendanceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendance, container, false);
         ButterKnife.bind(this,view);
-        this.storage = new Storage(getContext());
-        this.student = new Student(getContext());
+        this.attendanceFragmentPresenter = new AttendanceFragmentPresenter(this,getContext());
         this.init();
         dp = getContext().getResources().getDisplayMetrics().density;
-        this.initAttendance();
-
-        this.dataInit(0);
-        studentAttendanceSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                dataInit(position);
-            }
-        });
-
+        attendanceFragmentPresenter.getDataAttendanceSpinner();
+        attendanceFragmentPresenter.getDataAttendance(0);
         return  view;
     }
 
-    private void initAttendance(){
-        AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... voids) {
-                student.getDataTTDiemDanh();
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(String s) {
-                try {
-                    JSONObject dataDiemDanh = new JSONObject(storage.getString("dataAttendance"));
-                    semesters = new JSONArray(dataDiemDanh.getString("semesters"));
-                    for (int i = 0; i < semesters.length(); i++) {
-                        JSONObject jsonObject = (JSONObject) semesters.get(i);
-                        dataSnpinner.add(jsonObject.getString("text"));
-                    }
-                } catch (Exception e){}
-                studentAttendanceSpinner.setItems(dataSnpinner);
-            }
-        };
-        asyncTask.execute();
-    }
-
-    private void generateTableContent(TableLayout tableLayout,JSONArray data){
-        tableLayout.removeAllViews();
+    @Override
+    public void generateTableContent(JSONArray data){
+        studentAttendanceTable.removeAllViews();
         totalHaltDate = 0;
-        tableLayout.addView(this.generateTableHeader());
+        studentAttendanceTable.addView(this.generateTableHeader());
         try {
             for (int i = 0; i< data.length(); i++) {
 
@@ -145,7 +112,7 @@ public class AttendanceFragment extends Fragment {
                 } catch (Exception e){
 
                 }
-                tableLayout.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                studentAttendanceTable.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
             }
             tvStudentTotalDaltDate.setText(String.valueOf(totalHaltDate));
@@ -154,7 +121,8 @@ public class AttendanceFragment extends Fragment {
         }
     }
 
-    private LinearLayout generateTableCell(String content, Boolean isMarginCenter,int width){
+    @Override
+    public LinearLayout generateTableCell(String content, Boolean isMarginCenter,int width){
 
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
@@ -177,7 +145,8 @@ public class AttendanceFragment extends Fragment {
         return linearLayout;
     }
 
-    private TableRow generateTableHeader(){
+    @Override
+    public TableRow generateTableHeader(){
         TableRow header = new TableRow(getContext());
         header.setGravity(Gravity.CENTER);
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -205,28 +174,6 @@ public class AttendanceFragment extends Fragment {
         return  header;
     }
 
-    private void dataInit(final int pos){
-        AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
-            @Override
-            protected void onPreExecute() {
-                loadingDialog.show();
-            }
-
-            @Override
-            protected JSONArray doInBackground(Void... voids) {
-                return student.getTTDiemDanh(pos);
-            }
-
-            @Override
-            protected void onPostExecute(JSONArray jsonArray) {
-                generateTableContent(studentAttendanceTable, jsonArray);
-                if(loadingDialog != null)
-                loadingDialog.dismiss();
-            }
-        };
-        asyncTask.execute();
-    }
-
     private void init(){
         loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -234,7 +181,8 @@ public class AttendanceFragment extends Fragment {
         loadingDialog.setCancelable(false);
     }
 
-    protected void attendanceDetailShow(JSONObject jsonObject) {
+    @Override
+    public void attendanceDetailShow(JSONObject jsonObject) {
         LayoutInflater factory = getLayoutInflater();
         View view = factory.inflate(R.layout.student_attendance_detail_dialog, null);
         TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
@@ -255,6 +203,26 @@ public class AttendanceFragment extends Fragment {
         if (simpleDialog != null && !simpleDialog.isShowing()) {
             simpleDialog.show();
         }
+    }
+
+    @Override
+    public void initAttendanceSpiner(List<String> dataSnpinner) {
+        studentAttendanceSpinner.setItems(dataSnpinner);
+        studentAttendanceSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                attendanceFragmentPresenter.getDataAttendance(position);
+            }
+        });
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        this.loadingDialog.show();
+    }
+
+    @Override
+    public void dismissLoadingDialog() {
+        this.loadingDialog.dismiss();
     }
 
     public int getScreenWidthInDPs(Context context){
