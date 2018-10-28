@@ -45,10 +45,11 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     @BindView(R.id.student_debt_table) TableLayout studentDebtTable;
     @BindView(R.id.student_debt_spinner) MaterialSpinner studentDebtSpinner;
     @BindView(R.id.student_total_debt) TextView studentTotalDebt;
+    @BindView(R.id.student_debt_table_header) TableLayout studentDebtTableHeader;
+
     private StudentDebtFragmentPresenter studentDebtFragmentPresenter;
     private float d;
     SweetAlertDialog loadingDialog;
-    private int totalDeb = 0;
     private List<String> headerText = new ArrayList<>();
 
     public StudentDebtFragment() {
@@ -73,49 +74,44 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     @Override
     public void generateTableContent(JSONArray data){
         studentDebtTable.removeAllViews();
-        totalDeb = 0;
-        studentDebtTable.addView(this.generateTableHeader());
+        studentDebtTableHeader.removeAllViews();
+        studentDebtTableHeader.addView(this.generateTableHeader());
         try {
             for (int i = 0; i< data.length(); i++) {
-
-                final JSONObject subject = data.getJSONObject(i);
-
-                TableRow tableRow = new TableRow(getContext());
-                tableRow.setGravity(Gravity.CENTER);
-                tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-                tableRow.setMinimumHeight((int)d*60);
-                tableRow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        debtDetailShow(subject);
-                    }
-                });
-                if((i+1) % 2 == 0){
-                    tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
-                }
-                try {
-                    tableRow.addView(generateTableCell(subject.getString("noi_dung_thu"),false,(subject.getString("trang_thai").equals("Chưa nộp")), (int) (getScreenWidthInDPs(getContext())*0.4)));
-                    tableRow.addView(generateTableCell(subject.getString("tin_chi"),true,(subject.getString("trang_thai").equals("Chưa nộp")),(int) (getScreenWidthInDPs(getContext())*0.2)));
-                    tableRow.addView(generateTableCell(subject.getString("cong_no_vnd"),true,(subject.getString("trang_thai").equals("Chưa nộp")),(int) (getScreenWidthInDPs(getContext())*0.2)));
-
-                    if(Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd"))) > 0)
-                        totalDeb+= Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd")));
-                    tableRow.addView(generateTableCell(subject.getString("trang_thai"),true,(subject.getString("trang_thai").equals("Chưa nộp")),(int) (getScreenWidthInDPs(getContext())*0.2)));
-                } catch (Exception e){
-
-                }
-                studentDebtTable.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                JSONObject subject = data.getJSONObject(i);
+                studentDebtTable.addView(generateTableRow(subject,(i % 2 == 0)));
             }
+            studentTotalDebt.setText(numberFormat(String.valueOf(getTotalDeb(data))));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        studentTotalDebt.setText(numberFormat(String.valueOf(totalDeb)));
+    }
+
+    public TableRow generateTableRow(final JSONObject jsonObject, boolean changeBG){
+        TableRow row = new TableRow(getContext());
+        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        row.setMinimumHeight((int)d*60);
+        row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                debtDetailShow(jsonObject);
+            }
+        });
+        if(changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
+        try {
+            row.addView(generateTableCell(jsonObject.getString("noi_dung_thu"),false,jsonObject.getString("trang_thai").equals("Chưa nộp"),(int)(getScreenWidthInDPs(getContext())*0.4)));
+            row.addView(generateTableCell(jsonObject.getString("tin_chi"),true,jsonObject.getString("trang_thai").equals("Chưa nộp"),(int)(getScreenWidthInDPs(getContext())*0.2)));
+            row.addView(generateTableCell(jsonObject.getString("cong_no_vnd"),true,jsonObject.getString("trang_thai").equals("Chưa nộp"),(int)(getScreenWidthInDPs(getContext())*0.2)));
+            row.addView(generateTableCell(jsonObject.getString("trang_thai"),true,jsonObject.getString("trang_thai").equals("Chưa nộp"),(int)(getScreenWidthInDPs(getContext())*0.2)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return row;
     }
 
     @Override
     public TableRow generateTableHeader(){
         TableRow header = new TableRow(getContext());
-        header.setGravity(Gravity.CENTER);
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
         header.setMinimumHeight((int)d*50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -123,13 +119,17 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         for (int i = 0;i < headerText.size();i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-            if(i == 0) layoutParams.gravity = Gravity.CENTER_VERTICAL; else layoutParams.gravity = Gravity.CENTER;
-            if(i == headerText.size()-1) layoutParams.setMargins(0,0,0,0); else layoutParams.setMargins(0,0,0,0);
+            if(i == 0){
+                layoutParams.width = (int) (getScreenWidthInDPs(getContext())*0.4);
+            } else{
+                layoutParams.gravity = Gravity.CENTER;
+                layoutParams.width = (int) (getScreenWidthInDPs(getContext())*0.2);
+            }
             linearLayout.setPadding((int)d*5,(int)d*15,(int) d*5,0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
@@ -143,25 +143,25 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
 
     @Override
     public LinearLayout generateTableCell(String content,Boolean isGravityCenter,Boolean isRed,int width){
-        // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
-        linearLayout.setGravity(Gravity.CENTER);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        layoutParams.width = width;
+        linearLayout.setPadding((int)d*5,(int)d*10,(int) d*10,(int) d*5);
         if(isGravityCenter) layoutParams.gravity = Gravity.CENTER;
-        layoutParams.width = (int) (width*d);
         linearLayout.setLayoutParams(layoutParams);
 
-        // generate cell's text view
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        textLayoutParams.setMargins((int)d*3,0,(int)d,0);
-        textView.setLayoutParams(textLayoutParams);
-        textView.setTextColor(getResources().getColor(R.color.black));
-        if(isRed) textView.setTextColor(getResources().getColor(R.color.red));
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        if(isGravityCenter) textViewLayout.gravity = Gravity.CENTER;
+        textView.setLayoutParams(textViewLayout);
+        if(isRed){
+            textView.setTextColor(getResources().getColor(R.color.red));
+        } else textView.setTextColor(getResources().getColor(R.color.black));
+
         textView.setText(content);
         linearLayout.addView(textView);
-        return linearLayout;
+
+        return  linearLayout;
     }
 
     private void init(){
@@ -210,8 +210,8 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int widthInDP = Math.round(dm.widthPixels / dm.density);
-        return widthInDP;
+        int screenWidth = dm.widthPixels;
+        return screenWidth;
     }
 
     @Override
@@ -263,4 +263,19 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         };
         return  result;
     }
+
+    private int getTotalDeb(JSONArray data){
+        int result = 0;
+        for (int i = 0; i< data.length(); i++) {
+            try {
+                JSONObject subject = data.getJSONObject(i);
+                if(Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd"))) > 0)
+                    result+= Integer.parseInt(Helper.toSlug(subject.getString("cong_no_vnd")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
 }

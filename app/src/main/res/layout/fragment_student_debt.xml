@@ -52,10 +52,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
+    <TableLayout
+        android:id="@+id/student_debt_table_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </TableLayout>
     <ScrollView
         android:background="@color/grayLight"
         android:padding="1dp"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TableLayout
