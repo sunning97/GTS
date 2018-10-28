@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,11 +105,11 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
 
                 }
                 studentDebtTable.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                studentTotalDebt.setText(String.valueOf(totalDeb));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        studentTotalDebt.setText(numberFormat(String.valueOf(totalDeb)));
     }
 
     @Override
@@ -172,7 +173,6 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
 
     @Override
     public void debtDetailShow(JSONObject jsonObject) {
-        String title = "Chi tiết công nợ";
         LayoutInflater factory = getLayoutInflater();
         View view = factory.inflate(R.layout.student_debt_detail_dialog, null);
         TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
@@ -232,5 +232,35 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
                 studentDebtFragmentPresenter.getStudentDebt(position);
             }
         });
+    }
+
+    private String numberFormat(String num){
+        String result = "";
+        List<String> resultArray = new ArrayList<>();
+        String temp = "";
+        int counter = 0;
+        for (int i = num.length() - 1; i >= 0; i--) {
+            temp += num.charAt(i);
+            counter++;
+            if(counter == 3){
+                resultArray.add(temp);
+                counter = 0;
+                temp = "";
+            }
+        };
+        if(counter > 0){
+            resultArray.add(temp);
+        }
+
+        for (int i = resultArray.size() - 1; i >= 0; i--) {
+            String resTemp = resultArray.get(i);
+            for (int j = resTemp.length() - 1; j >= 0; j--) {
+                result += resTemp.charAt(j);
+            };
+            if(i > 0){
+                result += ',';
+            }
+        };
+        return  result;
     }
 }
