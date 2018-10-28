@@ -135,7 +135,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
             for (int i = 0; i< batBuoc.length(); i++) {
                 JSONArray subject = (JSONArray) batBuoc.get(i);
                 try {
-                    if ((i + 1) % 2 != 0) {
+                    if ((i + 1) % 2 == 0) {
                         frameProgramTable.addView(generateTableRow(subject, true));
                     } else frameProgramTable.addView(generateTableRow(subject, false));
 
@@ -149,7 +149,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
                 for (int i = 0; i< khongBatBuoc.length(); i++) {
                     JSONArray subject = (JSONArray) khongBatBuoc.get(i);
                     try {
-                        if ((i + 1) % 2 != 0) {
+                        if ((i + 1) % 2 == 0) {
                             frameProgramTable.addView(generateTableRow(subject, true));
                         } else frameProgramTable.addView(generateTableRow(subject, false));
 
@@ -208,12 +208,11 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
     public TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG){
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        row.setMinimumHeight((int)d*40);
+        row.setMinimumHeight((int)d*50);
         row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 frameDetailShow(jsonArray);
-                Log.d("AAA",jsonArray.toString());
             }
         });
         if(changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
@@ -231,7 +230,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         LinearLayout linearLayout = new LinearLayout(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         layoutParams.width = width;
-        linearLayout.setPadding((int)d*5,(int)d*10,(int) d*10,(int) d*5);
+        linearLayout.setPadding((int)d*5,(int)d*15,(int) d*15,(int) d*5);
         if(center) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 

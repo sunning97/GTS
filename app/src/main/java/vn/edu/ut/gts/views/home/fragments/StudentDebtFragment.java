@@ -146,7 +146,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         LinearLayout linearLayout = new LinearLayout(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         layoutParams.width = width;
-        linearLayout.setPadding((int)d*5,(int)d*10,(int) d*10,(int) d*5);
+        linearLayout.setPadding((int)d*5,(int)d*15,(int) d*15,(int) d*5);
         if(isGravityCenter) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 

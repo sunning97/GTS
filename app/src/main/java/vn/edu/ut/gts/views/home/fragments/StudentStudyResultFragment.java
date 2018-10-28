@@ -183,7 +183,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     private TableRow generateTableRow(final JSONObject data, boolean changeBG){
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        row.setMinimumHeight((int)d*40);
+        row.setMinimumHeight((int)d*50);
         row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,7 +206,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         LinearLayout linearLayout = new LinearLayout(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         layoutParams.width = width;
-        linearLayout.setPadding((int)d*5,(int)d*10,(int) d*10,(int) d*5);
+        linearLayout.setPadding((int)d*5,(int)d*15,(int) d*15,(int) d*5);
         if(center) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
