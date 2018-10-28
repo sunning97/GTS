@@ -3,6 +3,7 @@ package vn.edu.ut.gts.presenters.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,9 +115,11 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                             .data("ctl00$ContentPlaceHolder$cboHocKy", dataDiemDanh.getJSONArray("semesters").getJSONObject(pos).getString("key"))
                             .data("ctl00$ContentPlaceHolder$btnLoc", dataDiemDanh.getString("ctl00$ContentPlaceHolder$btnLoc"))
                             .execute();
+
                     Document document = res.parse();
-                    Elements trs = document.select("table.grid.grid-color2>tbody>tr");
-                    Elements ths = trs.first().select("th");
+                    Elements table = document.getElementsByClass("grid-color2");
+                    Elements trs = table.get(0).select("tr");
+                    Elements ths = trs.get(0).select("th");
                     JSONArray keys = new JSONArray();
                     for (int i = 1; i < ths.size(); i++) {
                         String keyTmp = Helper.toSlug(ths.get(i).text().trim());
@@ -131,7 +134,10 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                         }
                         data.put(subject);
                     }
-                } catch (IOException | JSONException e) {
+                } catch (IndexOutOfBoundsException e){
+
+                }
+                catch (IOException | JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
@@ -146,5 +152,4 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
         };
         asyncTask.execute();
     }
-
 }

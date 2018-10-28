@@ -116,8 +116,9 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                             .data("ctl00$ContentPlaceHolder$btnLoc", dataDiemDanh.getString("ctl00$ContentPlaceHolder$btnLoc"))
                             .execute();
                     Document document = res.parse();
-                    Elements trs = document.select("table.grid.grid-color2>tbody>tr");
-                    Elements ths = trs.first().select("th");
+                    Elements table = document.getElementsByClass("grid-color2");
+                    Elements trs = table.get(0).select("tr");
+                    Elements ths = trs.get(0).select("th");
                     JSONArray keys = new JSONArray();
                     for (int i = 2; i < ths.size(); i++) {
                         String keyTmp = Helper.toSlug(ths.get(i).text().trim());
@@ -132,7 +133,9 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                         }
                         data.put(subject);
                     }
-                } catch (IOException | JSONException e) {
+                } catch (IndexOutOfBoundsException e){
+
+                }catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return data;

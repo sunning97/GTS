@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.views.home.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -44,16 +45,19 @@ import vn.edu.ut.gts.presenters.home.AttendanceFragmentPresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AttendanceFragment extends Fragment implements IAttendanceFragment{
+public class AttendanceFragment extends Fragment implements IAttendanceFragment {
 
-    @BindView(R.id.student_total_halt_date) TextView tvStudentTotalDaltDate;
+    @BindView(R.id.student_total_halt_date)
+    TextView tvStudentTotalDaltDate;
     @BindView(R.id.student_attendance_table)
     TableLayout studentAttendanceTable;
     @BindView(R.id.student_attendance_spinner)
     MaterialSpinner studentAttendanceSpinner;
+    @BindView(R.id.student_attendance_table_header)
+    TableLayout studentAttendanceTableHeader;
 
     private AttendanceFragmentPresenter attendanceFragmentPresenter;
-    private float dp;
+    private float d;
     private int totalHaltDate = 0;
 
     List<String> headerText = new ArrayList<>();
@@ -72,100 +76,95 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendance, container, false);
-        ButterKnife.bind(this,view);
-        this.attendanceFragmentPresenter = new AttendanceFragmentPresenter(this,getContext());
+        ButterKnife.bind(this, view);
+        this.attendanceFragmentPresenter = new AttendanceFragmentPresenter(this, getContext());
         this.init();
-        dp = getContext().getResources().getDisplayMetrics().density;
+        d = getContext().getResources().getDisplayMetrics().density;
         attendanceFragmentPresenter.getDataAttendanceSpinner();
         attendanceFragmentPresenter.getDataAttendance(0);
-        return  view;
+        return view;
     }
 
 
     @Override
-    public void generateTableContent(JSONArray data){
+    public void generateTableContent(JSONArray data) {
         studentAttendanceTable.removeAllViews();
         totalHaltDate = 0;
         studentAttendanceTable.addView(this.generateTableHeader());
         try {
-            for (int i = 0; i< data.length(); i++) {
-
-                final JSONObject subject = data.getJSONObject(i);
-
-                TableRow tableRow = new TableRow(getContext());
-                tableRow.setGravity(Gravity.CENTER);
-                tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
-                tableRow.setMinimumHeight((int) dp*60);
-                tableRow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        attendanceDetailShow(subject);
-                    }
-                });
-                if((i+1) % 2 == 0){
-                    tableRow.setBackgroundColor(getResources().getColor(R.color.gray));
-                }
-                try {
-                    tableRow.addView(generateTableCell(subject.getString("ten_mon_hoc"),false, (int) (getScreenWidthInDPs(getContext())*0.4)));
-                    tableRow.addView(generateTableCell(subject.getString("dvht"),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
-                    tableRow.addView(generateTableCell(subject.getString("nghi_co_phep"),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
-                    tableRow.addView(generateTableCell(subject.getString("nghi_ko_phep"),true,(int) (getScreenWidthInDPs(getContext())*0.2)));
-                    if(Integer.parseInt(subject.getString("nghi_co_phep")) > 0) totalHaltDate+= Integer.parseInt(subject.getString("nghi_co_phep"));
-                    if(Integer.parseInt(subject.getString("nghi_ko_phep")) > 0) totalHaltDate+= Integer.parseInt(subject.getString("nghi_co_phep"));
-                } catch (Exception e){
-
-                }
-                studentAttendanceTable.addView(tableRow, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject subject = data.getJSONObject(i);
+                studentAttendanceTable.addView(generateTableRow(subject,((i + 1) % 2 == 0)));
             }
-            tvStudentTotalDaltDate.setText(String.valueOf(totalHaltDate));
+            tvStudentTotalDaltDate.setText(String.valueOf(getTotalHaltDate(data)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public LinearLayout generateTableCell(String content, Boolean isMarginCenter,int width){
-
-        // generate cell container
-        LinearLayout linearLayout = new LinearLayout(getContext());
-        linearLayout.setGravity(Gravity.CENTER);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
-        if(isMarginCenter) layoutParams.gravity = Gravity.CENTER;
-        layoutParams.width = (int) (width*dp);
-
-        linearLayout.setLayoutParams(layoutParams);
-
-        // generate cell's text view
-        TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        textLayoutParams.setMargins((int)dp*3,0,(int)dp,0);
-        textView.setLayoutParams(textLayoutParams);
-        textView.setTextColor(getResources().getColor(R.color.black));
-        textView.setText(content);
-        linearLayout.addView(textView);
-        return linearLayout;
+    public TableRow generateTableRow(final JSONObject jsonObject, boolean changeBG){
+        TableRow row = new TableRow(getContext());
+        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        row.setMinimumHeight((int)d*50);
+        row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attendanceDetailShow(jsonObject);
+            }
+        });
+        if(changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
+        try {
+            row.addView(generateTableCell(jsonObject.getString("ten_mon_hoc"),false,(int)(getScreenWidthInDPs(getContext())*0.4)));
+            row.addView(generateTableCell(jsonObject.getString("dvht"),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
+            row.addView(generateTableCell(jsonObject.getString("nghi_co_phep"),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
+            row.addView(generateTableCell(jsonObject.getString("nghi_ko_phep"),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return row;
     }
 
     @Override
-    public TableRow generateTableHeader(){
+    public LinearLayout generateTableCell(String content, Boolean isMarginCenter, int width) {
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        layoutParams.width = width;
+        linearLayout.setPadding((int)d*5,(int)d*15,(int) d*15,(int) d*5);
+        if(isMarginCenter) layoutParams.gravity = Gravity.CENTER;
+        linearLayout.setLayoutParams(layoutParams);
+
+        TextView textView = new TextView(getContext());
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        if(isMarginCenter) textViewLayout.gravity = Gravity.CENTER;
+        textView.setLayoutParams(textViewLayout);
+        textView.setTextColor(getResources().getColor(R.color.black));
+        textView.setText(content);
+        linearLayout.addView(textView);
+
+        return  linearLayout;
+    }
+
+    @Override
+    public TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
-        header.setGravity(Gravity.CENTER);
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        header.setMinimumHeight((int)dp*50);
+        header.setMinimumHeight((int)d*50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         for (int i = 0;i < headerText.size();i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-            if(i == 0) layoutParams.gravity = Gravity.CENTER_VERTICAL; else layoutParams.gravity = Gravity.CENTER;
-            if(i == headerText.size()-1) layoutParams.setMargins(0,0,0,0); else layoutParams.setMargins(0,0,0,0);
-            linearLayout.setPadding((int)dp*5,(int)dp*15,(int) dp*5,0);
+            if(i == 0){
+                layoutParams.width = (int) (getScreenWidthInDPs(getContext())*0.4);
+            } else{
+                layoutParams.gravity = Gravity.CENTER;
+                layoutParams.width = (int) (getScreenWidthInDPs(getContext())*0.2);
+            }
+            linearLayout.setPadding((int)d*5,(int)d*15,(int) d*5,0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
@@ -173,17 +172,17 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment{
             linearLayout.addView(textView);
             header.addView(linearLayout);
         }
-
         return  header;
     }
 
-    private void init(){
+    private void init() {
         loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         loadingDialog.setTitleText("Loading");
         loadingDialog.setCancelable(false);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void attendanceDetailShow(JSONObject jsonObject) {
         LayoutInflater factory = getLayoutInflater();
@@ -197,8 +196,8 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment{
             maMonHoc.setText(jsonObject.getString("ma_mon_hoc"));
             tenMonHoc.setText(jsonObject.getString("ten_mon_hoc"));
             dvht.setText(jsonObject.getString("dvht"));
-            coPhep.setText(jsonObject.getString("nghi_co_phep")+" buổi");
-            khongPhep.setText(jsonObject.getString("nghi_ko_phep")+" buổi");
+            coPhep.setText(jsonObject.getString("nghi_co_phep") + " buổi");
+            khongPhep.setText(jsonObject.getString("nghi_ko_phep") + " buổi");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -212,7 +211,8 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment{
     public void initAttendanceSpiner(List<String> dataSnpinner) {
         studentAttendanceSpinner.setItems(dataSnpinner);
         studentAttendanceSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 attendanceFragmentPresenter.getDataAttendance(position);
             }
         });
@@ -228,11 +228,26 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment{
         this.loadingDialog.dismiss();
     }
 
-    public int getScreenWidthInDPs(Context context){
+    public int getTotalHaltDate(JSONArray data){
+        int result = 0;
+        for (int i = 0; i < data.length(); i++) {
+            try {
+                JSONObject subject = data.getJSONObject(i);
+                if (Integer.parseInt(subject.getString("nghi_co_phep")) > 0)
+                    result += Integer.parseInt(subject.getString("nghi_co_phep"));
+                if (Integer.parseInt(subject.getString("nghi_ko_phep")) > 0)
+                    result += Integer.parseInt(subject.getString("nghi_co_phep"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return  result;
+    }
+    public int getScreenWidthInDPs(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int widthInDP = Math.round(dm.widthPixels / dm.density);
-        return widthInDP;
+        int screenWidth = dm.widthPixels;
+        return screenWidth;
     }
 }
