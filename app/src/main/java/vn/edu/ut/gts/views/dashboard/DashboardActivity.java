@@ -37,6 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.presenters.dashboard.DashboardPresenter;
 import vn.edu.ut.gts.views.home.HomeActivity;
 
@@ -86,6 +87,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             setStudentPortrait(dashboardPresenter.getStudentPortraitFromStorage());
             setToolbarTitle(dashboardPresenter.getStudentNameFromStorate());
         }
+
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     @Override

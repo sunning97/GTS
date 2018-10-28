@@ -14,6 +14,7 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import vn.edu.ut.gts.actions.Login;
 import vn.edu.ut.gts.actions.Student;
@@ -28,6 +29,7 @@ public class LoginProcess implements ILoginProcess{
     public static int TIMEOUT = 1;
     public static int LOGIN_SUCCESS = 2;
     public static int LOGIN_FAILED = 3;
+    public static int NO_INTERNET = 4;
     public static int currentStatus = LOGIN_FAILED;
 
     private ILoginView iLoginView;
@@ -72,7 +74,11 @@ public class LoginProcess implements ILoginProcess{
                 } catch (SocketTimeoutException connTimeout) {
                     result = LoginProcess.TIMEOUT;
                     currentStatus = result;
-                } catch (JSONException e) {
+                } catch (UnknownHostException e){
+                    result = LoginProcess.NO_INTERNET;
+                    currentStatus = result;
+                }
+                catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -83,15 +89,34 @@ public class LoginProcess implements ILoginProcess{
 
             @Override
             protected void onPostExecute(Integer integer) {
-                if(integer == LoginProcess.TIMEOUT){
-                    iLoginView.dismisLoadingDialog();
-                    iLoginView.transferToRetryBtn();
-                    iLoginView.showError();
-                } else {
-                    iLoginView.transferToLoginBtn();
-                    iLoginView.dismisLoadingDialog();
-                    currentStatus = 0;
+                switch (integer){
+                    case 1:{
+                        iLoginView.dismisLoadingDialog();
+                        iLoginView.transferToRetryBtn();
+                        iLoginView.showError();
+                        break;
+                    }
+                    case 4:{
+                        iLoginView.dismisLoadingDialog();
+                        iLoginView.transferToRetryBtn();
+                        iLoginView.showNoInternetDialog();
+                        break;
+                    }
+                    default:{
+                        iLoginView.transferToLoginBtn();
+                        iLoginView.dismisLoadingDialog();
+                        currentStatus = 0;
+                    }
                 }
+//                if(integer == LoginProcess.TIMEOUT){
+//                    iLoginView.dismisLoadingDialog();
+//                    iLoginView.transferToRetryBtn();
+//                    iLoginView.showError();
+//                } else {
+//                    iLoginView.transferToLoginBtn();
+//                    iLoginView.dismisLoadingDialog();
+//                    currentStatus = 0;
+//                }
             }
         };
         asyncTask.execute();
@@ -130,14 +155,19 @@ public class LoginProcess implements ILoginProcess{
                         .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
                         .timeout(10000)
                         .execute();
+
+                    if(Helper.checkLogin(storage.getCookie())) result = LoginProcess.LOGIN_SUCCESS;
+
                 } catch (SocketTimeoutException connTimeout) {
                     result = LoginProcess.TIMEOUT;
+                } catch (NullPointerException e){
+                    result = LoginProcess.NO_INTERNET;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if(Helper.checkLogin(storage.getCookie())) result = LoginProcess.LOGIN_SUCCESS;
+
                 return result;
             }
 
@@ -160,6 +190,11 @@ public class LoginProcess implements ILoginProcess{
                     case 3: {
                         iLoginView.revertLoadingButton();
                         iLoginView.loginFailed();
+                        break;
+                    }
+                    case 4:{
+                        iLoginView.revertLoadingButton();
+                        iLoginView.showNoInternetDialog();
                         break;
                     }
                 }

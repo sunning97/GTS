@@ -85,7 +85,9 @@ public class EpicDialog {
         this.epicDialog.show();
     }
     public void dismisPopup(){
-        this.epicDialog.dismiss();
+        if(this.epicDialog.isShowing()){
+            this.epicDialog.dismiss();
+        }
     }
     public void showFrameProgramInfoDialog(String param1,String param2){
         this.epicDialog.setContentView(R.layout.student_frame_program_info_dialog);
@@ -124,10 +126,15 @@ public class EpicDialog {
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();
     }
-    public void showLoadingDialog(){
+    public void initLoadingDialog(){
         this.epicDialog.setContentView(R.layout.custom_loading_dialog);
         this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(false);
+    }
+    public void showLoadingDialog(){
+        if(this.epicDialog.isShowing()){
+            this.epicDialog.dismiss();
+        }
         this.epicDialog.show();
     }
 }

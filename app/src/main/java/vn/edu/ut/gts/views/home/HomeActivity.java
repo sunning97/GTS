@@ -19,6 +19,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 import vn.edu.ut.gts.views.home.fragments.AttendanceFragment;
 import vn.edu.ut.gts.views.home.fragments.FrameProgramFragment;
@@ -74,6 +75,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         profileImage.setImageBitmap(storage.getImageFromStorage(HomeActivity.this));
         studentFullName.setText(storage.getString("student_name"));
         studentID.setText(storage.getString("last_student_login"));
+
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     @Override

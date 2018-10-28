@@ -10,6 +10,7 @@ public interface ILoginView {
     public void showLoadingDialog();
     public void dismisLoadingDialog();
     public void showError();
+    public void showNoInternetDialog();
     public void transferToRetryBtn();
     public void transferToLoginBtn();
 }

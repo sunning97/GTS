@@ -38,6 +38,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.AttendanceFragmentPresenter;
 
 /**
@@ -58,6 +59,8 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment{
     List<String> headerText = new ArrayList<>();
 
     SweetAlertDialog loadingDialog;
+
+//    EpicDialog loadingDialog;
 
     public AttendanceFragment() {
         headerText.add("Tên môn học");

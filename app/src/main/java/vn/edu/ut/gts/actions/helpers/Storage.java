@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 
 import org.jsoup.Connection;
 
@@ -81,7 +82,8 @@ public class Storage {
         SharedPreferences.Editor editor = this.sharedPreferences.edit();
         String id = this.getString("last_student_login");
         editor.clear();
-        editor.putString("last_student_login",id);
+        if(!TextUtils.isEmpty(id))
+            editor.putString("last_student_login",id);
         return editor.commit();
     }
 }

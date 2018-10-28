@@ -41,7 +41,6 @@ public class Aes {
         try {
             return Hex.decodeHex(str.toCharArray());
         } catch (DecoderException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
@@ -52,7 +51,6 @@ public class Aes {
             cipher.init(Cipher.ENCRYPT_MODE, generateKey(privateKey), new IvParameterSpec(hexToBytes(KEY)));
             HASHED = cipher.doFinal(password.getBytes());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return new Aes();

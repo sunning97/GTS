@@ -26,6 +26,8 @@ import android.widget.RelativeLayout;
 
 import android.widget.TextView;
 
+import com.roger.catloadinglibrary.CatLoadingView;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -39,6 +41,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.helpers.TextInputValidator;
 import vn.edu.ut.gts.presenters.login.LoginProcess;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
@@ -63,9 +66,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private BroadcastReceiver listenToInteret;
     private Handler handler;
     private Runnable runnable;
+    private Runnable runnable2;
     private SweetAlertDialog loginAlert;
     private Storage storage;
     private EpicDialog epicDialog;
+    private Boolean isLogoShowing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,21 +81,27 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.requestPermission();
         this.init();
         this.validate();
+//        CatLoadingView mView = new CatLoadingView();
+//        mView.setCanceledOnTouchOutside(false);
+//        mView.show(getSupportFragmentManager(), "");
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(listenToInteret, intentFilter);
+//        if(!isLogoShowing){
+//            IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+//            registerReceiver(listenToInteret, intentFilter);
+//        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (listenToInteret != null) {
-            unregisterReceiver(listenToInteret);
-        }
+//        if (listenToInteret != null) {
+//            unregisterReceiver(listenToInteret);
+//        }
     }
 
     @Override
@@ -159,6 +170,15 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     }
 
     @Override
+    public void showNoInternetDialog() {
+        disableInput();
+        new SweetAlertDialog(this)
+                .setTitleText(getResources().getString(R.string.no_internet_access_title))
+                .setContentText(getResources().getString(R.string.no_internet_access_content))
+                .show();
+    }
+
+    @Override
     public void transferToRetryBtn() {
         disableInput();
         btnLogin.setText("Thử lại");
@@ -192,6 +212,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         storage = new Storage(this);
         this.isValidateNoError = false;
         epicDialog = new EpicDialog(LoginActivity.this);
+        epicDialog.initLoadingDialog();
         this.handler = new Handler();
         this.runnable = new Runnable() {
             @Override
@@ -199,34 +220,44 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 relay_1.setVisibility(View.VISIBLE);
             }
         };
-        this.setLastLogin();
-        handler.postDelayed(runnable, 1500);
-        listenToInteret = new BroadcastReceiver() {
+        this.runnable2 = new Runnable() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                if (connectivityManager.getActiveNetworkInfo() != null) {
-                    enableInput();
-                    btnLogin.setEnabled(true);
-                    if (loginAlert != null) loginAlert.dismissWithAnimation();
-                    loginProcess = new LoginProcess(LoginActivity.this, context);
-                    loginProcess.initData();
-                } else {
-                    disableInput();
-                    btnLogin.setEnabled(false);
-                    loginAlert = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
-                    loginAlert.setTitleText(getResources().getString(R.string.no_internet_access_error_dialog_title))
-                            .setContentText(getResources().getString(R.string.no_internet_access_error_dialog_content))
-                            .show();
-                }
+            public void run() {
+                loginProcess = new LoginProcess(LoginActivity.this, LoginActivity.this);
+                loginProcess.initData();
             }
         };
+//        listenToInteret = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//                if (connectivityManager.getActiveNetworkInfo() != null) {
+//                    enableInput();
+//                    btnLogin.setEnabled(true);
+//                    if (loginAlert != null) loginAlert.dismissWithAnimation();
+//                    loginProcess = new LoginProcess(LoginActivity.this, context);
+//                    loginProcess.initData();
+//                } else {
+//                    disableInput();
+//                    btnLogin.setEnabled(false);
+//                    loginAlert = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
+//                    loginAlert.setTitleText(getResources().getString(R.string.no_internet_access_error_dialog_title))
+//                            .setContentText(getResources().getString(R.string.no_internet_access_error_dialog_content))
+//                            .show();
+//                }
+//            }
+//        };
+
+        this.setLastLogin();
+        handler.postDelayed(runnable, 1500);
+        handler.postDelayed(runnable2,2000);
+
 
     }
 
     @OnClick(R.id.btn_login)
     public void submit(View view) {
-        if(LoginProcess.currentStatus == LoginProcess.TIMEOUT){
+        if(LoginProcess.currentStatus == LoginProcess.TIMEOUT || LoginProcess.currentStatus == LoginProcess.NO_INTERNET){
             loginProcess.initData();
         } else {
             if (validateStudentId() && validatePassword()) {

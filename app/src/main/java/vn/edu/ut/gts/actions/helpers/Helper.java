@@ -36,7 +36,6 @@ public class Helper {
                     .get();
             return doc.select("em[class=\"long-content string\"]").text().trim();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return "";
