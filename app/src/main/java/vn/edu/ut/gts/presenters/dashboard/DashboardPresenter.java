@@ -18,7 +18,6 @@ import java.io.IOException;
 
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
-import vn.edu.ut.gts.views.dashboard.DashboardActivity;
 import vn.edu.ut.gts.views.dashboard.IDashboardActivity;
 import vn.edu.ut.gts.views.home.HomeActivity;
 
@@ -37,7 +36,7 @@ public class DashboardPresenter implements IDashboardPresenter{
             @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
                 @Override
                 protected void onPreExecute() {
-                    iDashboardActivity.showLoadingDialog();
+//                    iDashboardActivity.showLoadingDialog();
                 }
                 @Override
                 protected JSONObject doInBackground(Void... voids) {
@@ -55,7 +54,7 @@ public class DashboardPresenter implements IDashboardPresenter{
                 String title = studentName+"-"+studentID;
                 iDashboardActivity.setToolbarTitle(title);
                 iDashboardActivity.setStudentPortrait(image);
-                iDashboardActivity.dismisLoadingDialog();
+//                iDashboardActivity.dismisLoadingDialog();
                 }
             };
             asyncTask.execute();
@@ -133,5 +132,15 @@ public class DashboardPresenter implements IDashboardPresenter{
         }
     }
 
+    public Bitmap getStudentPortraitFromStorage(){
+        Bitmap image = storage.getImageFromStorage(context);
+        return  image;
+    }
 
+    public String getStudentNameFromStorate(){
+        String studentName = storage.getString("student_name");
+        String studentID = storage.getString("last_student_login");
+        String title = studentName+"-"+studentID;
+        return title;
+    }
 }

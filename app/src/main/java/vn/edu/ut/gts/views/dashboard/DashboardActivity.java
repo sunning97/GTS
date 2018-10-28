@@ -14,9 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+
+import com.elyeproj.loaderviewlibrary.LoaderImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,6 +59,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     CardView scheduleByWeekCard;
     @BindView(R.id.attendance_card)
     CardView attendanceCard;
+    @BindView(R.id.profile_image_loading)
+    LoaderImageView profileImageLoading;
     @BindView(R.id.profile_image)
     CircleImageView profileImage;
 
@@ -72,7 +77,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         dashboardPresenter = new DashboardPresenter(this,this);
         setSupportActionBar(dashboardToolbar);
         this.init();
-        dashboardPresenter.go();
+        if(TextUtils.isEmpty(storage.getString("student_info"))){
+            profileImage.setVisibility(View.INVISIBLE);
+            profileImageLoading.resetLoader();
+            collapsingToolbarLayout.setTitle("loading...");
+            dashboardPresenter.go();
+        } else {
+            setStudentPortrait(dashboardPresenter.getStudentPortraitFromStorage());
+            setToolbarTitle(dashboardPresenter.getStudentNameFromStorate());
+        }
     }
 
     @Override
@@ -123,7 +136,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void init() {
-        collapsingToolbarLayout.setTitle("loading...");
         loadingDialog = new SweetAlertDialog(DashboardActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         loadingDialog.setTitleText("Loading");
@@ -147,7 +159,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 .show();
     }
 
-
     @Override
     public void setToolbarTitle(String title) {
 
@@ -157,6 +168,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void setStudentPortrait(Bitmap studentPortrait) {
         profileImage.setImageBitmap(studentPortrait);
+        profileImageLoading.setVisibility(View.INVISIBLE);
+        profileImage.setVisibility(View.VISIBLE);
     }
 
     @Override
