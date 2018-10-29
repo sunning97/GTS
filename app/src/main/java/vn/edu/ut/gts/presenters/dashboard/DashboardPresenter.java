@@ -36,6 +36,7 @@ public class DashboardPresenter implements IDashboardPresenter{
             @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
                 @Override
                 protected void onPreExecute() {
+                    iDashboardActivity.disableAll();
 //                    iDashboardActivity.showLoadingDialog();
                 }
                 @Override
@@ -54,6 +55,7 @@ public class DashboardPresenter implements IDashboardPresenter{
                 String title = studentName+"-"+studentID;
                 iDashboardActivity.setToolbarTitle(title);
                 iDashboardActivity.setStudentPortrait(image);
+                iDashboardActivity.enableAll();
 //                iDashboardActivity.dismisLoadingDialog();
                 }
             };

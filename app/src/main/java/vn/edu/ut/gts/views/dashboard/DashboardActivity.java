@@ -183,5 +183,35 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         loadingDialog.dismiss();
     }
 
+    @Override
+    public void enableAll() {
+        studentInfoCard.setEnabled(true);
+        studentStudyResultCard.setEnabled(true);
+        frameProgramCard.setEnabled(true);
+        studentDebtCard.setEnabled(true);
+        scheduleByWeekCard.setEnabled(true);
+        attendanceCard.setEnabled(true);
+    }
+
+    @Override
+    public void disableAll() {
+        studentInfoCard.setEnabled(false);
+        studentStudyResultCard.setEnabled(false);
+        frameProgramCard.setEnabled(false);
+        studentDebtCard.setEnabled(false);
+        scheduleByWeekCard.setEnabled(false);
+        attendanceCard.setEnabled(false);
+    }
+
+    @Override
+    public void startLoading() {
+
+    }
+
+    @Override
+    public void finishLoading() {
+
+    }
+
 
 }

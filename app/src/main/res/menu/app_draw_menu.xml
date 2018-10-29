@@ -5,7 +5,8 @@
     <group android:checkableBehavior="single">
         <item android:title="Menu điều hướng">
             <menu>
-                <item android:id="@+id/home_dashboard"
+                <item
+                    android:id="@+id/home_dashboard"
                     android:icon="@drawable/ic_navigation_black_24dp"
                     android:title="Bảng điều khiển"></item>
             </menu>
@@ -49,6 +50,10 @@
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_logout_black_48"
                 android:title="Đăng xuất"></item>
+            <item
+                android:id="@+id/exit"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Thoát"></item>
         </menu>
     </item>
 </menu>

@@ -155,25 +155,32 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(HomeActivity.this,LoginActivity.class));
                 break;
             }
+            case R.id.exit: {
+                storage.deleteAllsharedPreferences();
+                HomeActivity.this.finishAffinity();
+                break;
+            }
         }
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Xác nhận thoát?")
-                .setCancelText("Hủy")
-                .setConfirmText("Xác nhận")
-                .showCancelButton(true)
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        storage.deleteAllsharedPreferences();
-                        HomeActivity.this.finishAffinity();
-                    }
-                })
-                .show();
+//        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+//                .setTitleText("Xác nhận thoát?")
+//                .setCancelText("Hủy")
+//                .setConfirmText("Xác nhận")
+//                .showCancelButton(true)
+//                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                    @Override
+//                    public void onClick(SweetAlertDialog sDialog) {
+//                        storage.deleteAllsharedPreferences();
+//                        HomeActivity.this.finishAffinity();
+//                    }
+//                })
+//                .show();
+        Intent dashboardIntent = new Intent(HomeActivity.this, DashboardActivity.class);
+        startActivity(dashboardIntent);
     }
 
     private void setHomeFragment(Intent intent) {

@@ -7,4 +7,8 @@ public interface IDashboardActivity {
     public void setStudentPortrait(Bitmap studentPortrait);
     public void showLoadingDialog();
     public void dismisLoadingDialog();
+    public void enableAll();
+    public void disableAll();
+    public void startLoading();
+    public void finishLoading();
 }

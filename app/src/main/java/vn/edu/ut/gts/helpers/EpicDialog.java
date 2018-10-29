@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.view.View;
@@ -34,6 +35,8 @@ public class EpicDialog {
         TextView duong = this.epicDialog.findViewById(R.id.dev_duong);
         TextView giang = this.epicDialog.findViewById(R.id.dev_giang);
         TextView close = this.epicDialog.findViewById(R.id.close_dialog);
+        duong.setPaintFlags(duong.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        giang.setPaintFlags(giang.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         duong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
