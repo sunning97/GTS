@@ -88,7 +88,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout: {
-                storage.deleteAllsharedPreferences();
+                storage.deleteAllsharedPreferences(DashboardActivity.this);
                 HomeActivity.isLogin = false;
                 startActivity(new Intent(DashboardActivity.this,LoginActivity.class));
                 break;
@@ -154,7 +154,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
-                        storage.deleteAllsharedPreferences();
+                        storage.deleteAllsharedPreferences(DashboardActivity.this);
                         DashboardActivity.this.finishAffinity();
                     }
                 })

@@ -28,6 +28,8 @@ import android.widget.TextView;
 
 import com.roger.catloadinglibrary.CatLoadingView;
 
+import net.igenius.customcheckbox.CustomCheckBox;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -60,7 +62,12 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     TextView studentIdInputErrorShow;
     @BindView(R.id.input_password_error)
     TextView passwordInputErrorShow;
+    @BindView(R.id.cb_remember)
+    CustomCheckBox cbRemember;
+    @BindView(R.id.tv_pass_remember)
+    TextView tvRemember;
 
+    public static Boolean isRememberPassword = false;
     private LoginProcess loginProcess;
     private Boolean isValidateNoError;
     private BroadcastReceiver listenToInteret;
@@ -146,8 +153,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void setLastLogin() {
-        if (this.storage.getString("last_student_login") != null)
+        if (!TextUtils.isEmpty(this.storage.getString("last_student_login")))
             inputStudentId.setText(this.storage.getString("last_student_login"));
+        if(!TextUtils.isEmpty(this.storage.getString("password")) && Boolean.valueOf(this.storage.getString("is_remember_pass"))){
+            inputPassword.setText(this.storage.getString("password"));
+            cbRemember.setChecked(Boolean.valueOf(this.storage.getString("is_remember_pass")));
+            LoginActivity.isRememberPassword = Boolean.valueOf(this.storage.getString("is_remember_pass"));
+        }
     }
 
     @Override
@@ -254,6 +266,15 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
 
     }
+    @OnClick(R.id.tv_pass_remember)
+    public void tvRememberClick(View view){
+        cbRemember.setChecked(!cbRemember.isChecked(),true);
+    }
+//
+//    @OnClick(R.id.cb_remember)
+//    public void cbRememberClick(View view){
+//
+//    }
 
     @OnClick(R.id.btn_login)
     public void submit(View view) {
@@ -261,6 +282,14 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             loginProcess.initData();
         } else {
             if (validateStudentId() && validatePassword()) {
+                if (cbRemember.isChecked()){
+                    LoginActivity.isRememberPassword = true;
+                    storage.putString("password",inputPassword.getText().toString().trim());
+                    storage.putString("is_remember_pass",String.valueOf(LoginActivity.isRememberPassword));
+                } else {
+                    LoginActivity.isRememberPassword = false;
+                    storage.putString("is_remember_pass",String.valueOf(LoginActivity.isRememberPassword));
+                }
                 unsetInputError(passwordInputErrorShow);
                 unsetInputError(studentIdInputErrorShow);
                 disableInput();

@@ -136,6 +136,28 @@
                             android:textColor="@color/red"
                             android:layout_marginLeft="10dp"/>
                     </android.support.design.widget.TextInputLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <net.igenius.customcheckbox.CustomCheckBox
+                            android:id="@+id/cb_remember"
+                            android:layout_marginLeft="10dp"
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
+                            app:color_checked="@color/white"
+                            app:color_tick="@color/white"
+                            app:color_unchecked="#2A5B76"
+                            app:color_unchecked_stroke="@color/white"
+                            app:stroke_width="5dp"/>
+                        <TextView
+                            android:id="@+id/tv_pass_remember"
+                            android:layout_marginLeft="5dp"
+                            android:textColor="@color/white"
+                            android:text="Nhớ mật khẩu"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 

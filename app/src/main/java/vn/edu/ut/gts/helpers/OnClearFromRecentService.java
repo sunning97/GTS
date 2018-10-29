@@ -26,7 +26,7 @@ public class OnClearFromRecentService extends Service{
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Storage storage = new Storage(getApplicationContext());
-        storage.deleteAllsharedPreferences();
+        storage.deleteAllsharedPreferences(getApplicationContext());
         stopSelf();
     }
 }

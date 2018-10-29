@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import vn.edu.ut.gts.views.login.LoginActivity;
+
 public class Storage {
     private SharedPreferences sharedPreferences;
     private String fileName = "storage";
@@ -78,12 +80,19 @@ public class Storage {
     }
 
 
-    public boolean deleteAllsharedPreferences(){
+    public boolean deleteAllsharedPreferences(Context context){
+        File image = new File(context.getFilesDir(), "student_portrait.jpg");
+        if (image.exists()) image.delete();
         SharedPreferences.Editor editor = this.sharedPreferences.edit();
         String id = this.getString("last_student_login");
+        String pass = this.getString("password");
         editor.clear();
         if(!TextUtils.isEmpty(id))
             editor.putString("last_student_login",id);
+        if(LoginActivity.isRememberPassword && !TextUtils.isEmpty(pass)){
+            editor.putString("password",pass);
+            editor.putString("is_remember_pass",String.valueOf(LoginActivity.isRememberPassword));
+        }
         return editor.commit();
     }
 }
