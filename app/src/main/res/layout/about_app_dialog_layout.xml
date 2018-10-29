@@ -48,7 +48,7 @@
             android:textSize="17sp"
             android:id="@+id/dev_duong"
             android:textColor="@color/black"
-            android:text="DươngRomIT"
+            android:text="duongrom.it.305"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
@@ -62,7 +62,7 @@
             android:textSize="17sp"
             android:id="@+id/dev_giang"
             android:textColor="@color/black"
-            android:text="GiangNguyen.130"
+            android:text="giangnguyen.130"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

@@ -51,9 +51,7 @@ public class DashboardPresenter implements IDashboardPresenter{
                 storage.putString("student_info",jsonObject.toString());
                 Bitmap image = storage.getImageFromStorage(context);
                 String studentName = storage.getString("student_name");
-                String studentID = storage.getString("last_student_login");
-                String title = studentName+"-"+studentID;
-                iDashboardActivity.setToolbarTitle(title);
+                iDashboardActivity.setToolbarTitle(studentName);
                 iDashboardActivity.setStudentPortrait(image);
                 iDashboardActivity.enableAll();
 //                iDashboardActivity.dismisLoadingDialog();
@@ -141,8 +139,6 @@ public class DashboardPresenter implements IDashboardPresenter{
 
     public String getStudentNameFromStorate(){
         String studentName = storage.getString("student_name");
-        String studentID = storage.getString("last_student_login");
-        String title = studentName+"-"+studentID;
-        return title;
+        return studentName;
     }
 }

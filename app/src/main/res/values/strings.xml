@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GTS</string>
+    <string name="app_name">Cổng thông tin sinh viên</string>
 
     <string name="open">Open</string>
     <string name="close">Close</string>
@@ -12,7 +12,7 @@
     <string name="no_internet_access_error_dialog_title">Oops...</string>
     <string name="no_internet_access_error_dialog_content">Ứng dụng cần internet để lấy dữ liệu, vui lòng bật dữ liệu mạng hoặc Wifi</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="app_full_name">Cổng thông tin Sinh viên GTS</string>
+    <string name="app_full_name">Cổng thông tin sinh viên \n GTVT</string>
     <string name="app_version">1.0.0</string>
     <string name="contact_us">All issues related to this application please contact us:</string>
     <string name="study_result">KẾT QUẢ HỌC TẬP</string>
