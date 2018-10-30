@@ -17,4 +17,7 @@ public interface IAttendanceFragment {
     public void initAttendanceSpiner(List<String> dataSnpinner);
     public void showLoadingDialog();
     public void dismissLoadingDialog();
+    public void showTimeoutDialog();
+    public void showNoInternetDialog();
+    public void showLoadedLayout();
 }

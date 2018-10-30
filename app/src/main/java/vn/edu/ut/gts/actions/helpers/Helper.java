@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 public class Helper {
     public static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:56.0) Gecko/20100101 Firefox/56.0";
     public static String BASE_URL = "https://sv.ut.edu.vn/";
+    public static final int TIMEOUT = 500;
+    public static final int NO_CONNECTION = 400;
 
     public static String md5(String str) {
         String md5 = null;

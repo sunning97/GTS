@@ -1,70 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".views.home.fragments.AttendanceFragment">
+
     <TextView
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Chọn học kì:"
-        android:textStyle="bold"
-        android:textColor="@color/grayDark"
-        android:layout_marginBottom="5dp"
-        android:textSize="16sp"/>
-    <com.jaredrummler.materialspinner.MaterialSpinner
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:text="Chọn học kì:"
+        android:textColor="@color/grayDark"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <com.jaredrummler.materialspinner.MaterialSpinner
         android:id="@+id/student_attendance_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+
     <LinearLayout
-        android:layout_marginTop="5dp"
+        android:id="@+id/total_halt_day_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="end"
         android:orientation="horizontal"
-        android:paddingRight="10dp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:gravity="end">
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp">
+
         <TextView
-            android:text="Tổng só ngày nghỉ: "
-            android:textColor="@color/black"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Tổng số ngày nghỉ: "
+            android:textColor="@color/black" />
+
         <TextView
             android:id="@+id/student_total_halt_date"
-            android:layout_marginLeft="3dp"
-            android:textColor="@color/red"
-            android:textStyle="bold"
-            android:text="0"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:text="0"
+            android:textColor="@color/red"
+            android:textStyle="bold" />
     </LinearLayout>
-    <TableLayout
-        android:id="@+id/student_attendance_table_header"
+
+    <LinearLayout
+        android:id="@+id/loaded_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </TableLayout>
-    <ScrollView
-        android:background="@color/grayLight"
-        android:padding="1dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
         <TableLayout
+            android:id="@+id/student_attendance_table_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TableLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grayLight"
+            android:padding="1dp">
+
+            <TableLayout
                 android:id="@+id/student_attendance_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TableRow
-                    android:visibility="invisible"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="60dp">
+                    android:minHeight="60dp"
+                    android:visibility="invisible">
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -76,12 +93,14 @@
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="5dp">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Mã môn học"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -93,12 +112,14 @@
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="5dp">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Tên môn học"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -110,12 +131,14 @@
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="5dp">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="ĐVHT"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -127,12 +150,14 @@
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="5dp">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Có phép"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -144,13 +169,56 @@
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="5dp">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Ko phép"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white" />
                     </LinearLayout>
                 </TableRow>
             </TableLayout>
-    </ScrollView>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_internet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/no_conection_clound" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/rety_icon"
+                android:layout_gravity="center"
+                style="@style/AVLoadingIndicatorView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:indicatorColor="@color/gray2"
+                app:indicatorName="PacmanIndicator" />
+
+            <TextView
+                android:id="@+id/retry_text"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chạm để thử lại"
+                android:textColor="@color/gray2"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+    </LinearLayout>
 </LinearLayout>

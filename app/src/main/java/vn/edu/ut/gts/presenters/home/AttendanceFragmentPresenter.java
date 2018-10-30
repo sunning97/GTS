@@ -3,6 +3,7 @@ package vn.edu.ut.gts.presenters.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -15,19 +16,24 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.presenters.login.LoginProcess;
 import vn.edu.ut.gts.views.home.fragments.IAttendanceFragment;
 
 public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter {
 
+    public static int currentStatus = 0;
     private IAttendanceFragment iAttendanceFragment;
     private Context context;
     private Storage storage;
-    public AttendanceFragmentPresenter(IAttendanceFragment iAttendanceFragment,Context context) {
+
+    public AttendanceFragmentPresenter(IAttendanceFragment iAttendanceFragment, Context context) {
         this.iAttendanceFragment = iAttendanceFragment;
         this.context = context;
         this.storage = new Storage(this.context);
@@ -35,13 +41,15 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
 
     @Override
     public void getDataAttendanceSpinner() {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
-            protected String doInBackground(Void... voids) {
+            protected JSONArray doInBackground(Void... voids) {
                 JSONObject data = new JSONObject();
+                JSONArray semesters = new JSONArray();
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "ThongTinDiemDanh.aspx")
                             .method(Connection.Method.GET)
+                            .timeout(10000)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
@@ -54,7 +62,7 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                     data.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
                     data.put("ctl00$ContentPlaceHolder$btnLoc", document.select("input[name=\"ctl00$ContentPlaceHolder$btnLoc\"][type=\"submit\"]").val());
 
-                    JSONArray semesters = new JSONArray();
+
                     Elements options = document.select("select[name=\"ctl00$ContentPlaceHolder$cboHocKy\"]>option");
                     for (Element option : options) {
                         JSONObject tmp = new JSONObject();
@@ -64,25 +72,43 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                         semesters.put(tmp);
                     }
                     data.put("semesters", semesters);
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 storage.putString("dataAttendance", data.toString());
-                return null;
+                return semesters;
             }
 
             @Override
-            protected void onPostExecute(String s) {
-                List<String> dataSnpinner = new ArrayList<>();
-                try {
-                    JSONObject dataDiemDanh = new JSONObject(storage.getString("dataAttendance"));
-                    JSONArray semesters = new JSONArray(dataDiemDanh.getString("semesters"));
-                    for (int i = 0; i < semesters.length(); i++) {
-                        JSONObject jsonObject = (JSONObject) semesters.get(i);
-                        dataSnpinner.add(jsonObject.getString("text"));
+            protected void onPostExecute(JSONArray semesters) {
+                switch (currentStatus) {
+                    case 400:
+                        iAttendanceFragment.showNoInternetDialog();
+                        break;
+                    case 500:
+                        iAttendanceFragment.showTimeoutDialog();
+                        break;
+                    default: {
+                        currentStatus = 0;
+                        List<String> dataSnpinner = new ArrayList<>();
+                        try {
+                            for (int i = 0; i < semesters.length(); i++) {
+                                JSONObject jsonObject = (JSONObject) semesters.get(i);
+                                dataSnpinner.add(jsonObject.getString("text"));
+                            }
+                        } catch (Exception e) {
+                        }
+                        iAttendanceFragment.initAttendanceSpiner(dataSnpinner);
+                        getDataAttendance(0);
                     }
-                } catch (Exception e){}
-                iAttendanceFragment.initAttendanceSpiner(dataSnpinner);
+                }
+
             }
         };
         asyncTask.execute();
@@ -103,6 +129,7 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                     JSONObject dataDiemDanh = new JSONObject(storage.getString("dataAttendance"));
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "ThongTinDiemDanh.aspx")
                             .method(Connection.Method.POST)
+                            .timeout(10000)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataDiemDanh.getString("eventTarget"))
@@ -134,11 +161,15 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                         }
                         data.put(subject);
                     }
-                } catch (IndexOutOfBoundsException e){
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
+                } catch (IndexOutOfBoundsException e) {
 
-                }
-                catch (IOException | JSONException e) {
-                    // TODO Auto-generated catch block
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return data;
@@ -146,10 +177,33 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                iAttendanceFragment.generateTableContent(jsonArray);
-                iAttendanceFragment.dismissLoadingDialog();
+                switch (currentStatus) {
+                    case 400:
+                        iAttendanceFragment.showNoInternetDialog();
+                        break;
+                    case 500:
+                        iAttendanceFragment.showTimeoutDialog();
+                        break;
+                    default: {
+                        currentStatus = 0;
+                        iAttendanceFragment.generateTableContent(jsonArray);
+                        iAttendanceFragment.showLoadedLayout();
+                        iAttendanceFragment.dismissLoadingDialog();
+                    }
+                }
+
             }
         };
         asyncTask.execute();
+    }
+
+    public void aaa(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                iAttendanceFragment.showTimeoutDialog();
+            }
+        },3000);
     }
 }

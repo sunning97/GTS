@@ -23,4 +23,5 @@
     <color name="primaryLight">#DDEBF7</color>
     <color name="amber">#FF9800</color>
     <color name="indigo">#3F51B5</color>
+    <color name="gray2">#b1b5ba</color>
 </resources>
