@@ -11,4 +11,8 @@ public interface IDashboardActivity {
     public void disableAll();
     public void startLoading();
     public void finishLoading();
+    public void showErrorDialog();
+    public void showTimeOutDialog();
+    public void disableSwipeRefresh();
+    public void resetLoaderImage();
 }

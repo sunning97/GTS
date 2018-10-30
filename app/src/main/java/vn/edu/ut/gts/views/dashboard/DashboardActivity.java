@@ -3,8 +3,10 @@ package vn.edu.ut.gts.views.dashboard;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -28,7 +30,7 @@ import vn.edu.ut.gts.presenters.dashboard.DashboardPresenter;
 import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.login.LoginActivity;
 
-public class DashboardActivity extends AppCompatActivity implements View.OnClickListener,IDashboardActivity {
+public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, IDashboardActivity {
     @BindView(R.id.dashboard_toolbar)
     Toolbar dashboardToolbar;
     @BindView(R.id.dashboard_appbar_layout)
@@ -51,6 +53,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     LoaderImageView profileImageLoading;
     @BindView(R.id.profile_image)
     CircleImageView profileImage;
+    @BindView(R.id.swipe_refresh_dashboard)
+    SwipeRefreshLayout swipeRefreshDashboard;
 
     private Storage storage;
     private DashboardPresenter dashboardPresenter;
@@ -62,10 +66,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
         storage = new Storage(DashboardActivity.this);
-        dashboardPresenter = new DashboardPresenter(this,this);
+        dashboardPresenter = new DashboardPresenter(this, this);
         setSupportActionBar(dashboardToolbar);
         this.init();
-        if(TextUtils.isEmpty(storage.getString("student_info"))){
+        if (TextUtils.isEmpty(storage.getString("student_info"))) {
             profileImage.setVisibility(View.INVISIBLE);
             profileImageLoading.resetLoader();
             collapsingToolbarLayout.setTitle("loading...");
@@ -75,6 +79,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             setToolbarTitle(dashboardPresenter.getStudentNameFromStorate());
         }
 
+        swipeRefreshDashboard.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        swipeRefreshDashboard.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(DashboardPresenter.currentStatus !=0){
+                    swipeRefreshDashboard.setRefreshing(true);
+                    dashboardPresenter.go();
+                }
+            }
+        });
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
@@ -90,7 +104,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             case R.id.logout: {
                 storage.deleteAllsharedPreferences(DashboardActivity.this);
                 HomeActivity.isLogin = false;
-                startActivity(new Intent(DashboardActivity.this,LoginActivity.class));
+                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
                 break;
             }
         }
@@ -211,6 +225,36 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void finishLoading() {
 
+    }
+
+    @Override
+    public void showErrorDialog() {
+        swipeRefreshDashboard.setEnabled(true);
+        swipeRefreshDashboard.setRefreshing(false);
+        new SweetAlertDialog(this)
+                .setTitleText(getResources().getString(R.string.no_internet_access_title))
+                .setContentText(getResources().getString(R.string.no_internet_access_content))
+                .show();
+    }
+
+    @Override
+    public void showTimeOutDialog() {
+        swipeRefreshDashboard.setEnabled(true);
+        swipeRefreshDashboard.setRefreshing(false);
+        new SweetAlertDialog(this)
+                .setTitleText(getResources().getString(R.string.login_error_dialog_title))
+                .setContentText(getResources().getString(R.string.login_error_dialog_content))
+                .show();
+    }
+
+    @Override
+    public void disableSwipeRefresh() {
+        swipeRefreshDashboard.setEnabled(false);
+    }
+
+    @Override
+    public void resetLoaderImage() {
+        profileImageLoading.resetLoader();
     }
 
 
