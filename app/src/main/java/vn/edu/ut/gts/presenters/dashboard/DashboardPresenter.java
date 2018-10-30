@@ -53,7 +53,7 @@ public class DashboardPresenter implements IDashboardPresenter {
 
                 @Override
                 protected JSONObject doInBackground(Void... voids) {
-                    JSONObject info = new JSONObject();
+                    JSONObject info = null;
                     try {
                         String studentID = storage.getString("last_student_login");
                         Connection.Response resultImageResponse;
@@ -73,49 +73,49 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 .cookie("ASP.NET_SessionId", storage.getCookie())
                                 .timeout(10000)
                                 .get();
-
-                        Element bodyGroup = document.getElementsByClass("body-group").first();
-                        Elements tds = bodyGroup.select("td");
-                        JSONArray studentInfo = new JSONArray();
-                        for (Element td : tds) {
-                            JSONObject prop = new JSONObject();
-                            String key = Helper.toSlug(td.text().split(":")[0]);
-                            String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
-                            prop.put("key", key);
-                            prop.put("value", value);
-                            studentInfo.put(prop);
-                        }
-                        info.put("studentInfo", studentInfo);
-                        Element bodyGroup1 = document.getElementsByClass("body-group").get(1);
-                        Elements tds1 = bodyGroup1.select("td");
-                        JSONArray studentDetail = new JSONArray();
-                        for (Element td : tds1) {
-                            JSONObject prop = new JSONObject();
-                            String key = Helper.toSlug(td.text().split(":")[0]);
-                            String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
-                            prop.put("key", key);
-                            prop.put("value", value);
-                            studentDetail.put(prop);
-                        }
-                        info.put("studentDetail", studentDetail);
-
-                        Element bodyGroup2 = document.getElementsByClass("body-group").get(2);
-                        Elements tds2 = bodyGroup2.select("td");
-                        JSONArray studentFamily = new JSONArray();
-                        for (Element td : tds2) {
-                            JSONObject prop = new JSONObject();
-                            String key = Helper.toSlug(td.text().split(":")[0]);
-                            String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
-                            prop.put("key", key);
-                            prop.put("value", value);
-                            studentFamily.put(prop);
-                        }
-                        info.put("studentFamily", studentFamily);
+                        info = parseData(document);
+//                        Element bodyGroup = document.getElementsByClass("body-group").first();
+//                        Elements tds = bodyGroup.select("td");
+//                        JSONArray studentInfo = new JSONArray();
+//                        for (Element td : tds) {
+//                            JSONObject prop = new JSONObject();
+//                            String key = Helper.toSlug(td.text().split(":")[0]);
+//                            String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
+//                            prop.put("key", key);
+//                            prop.put("value", value);
+//                            studentInfo.put(prop);
+//                        }
+//                        info.put("studentInfo", studentInfo);
+//                        Element bodyGroup1 = document.getElementsByClass("body-group").get(1);
+//                        Elements tds1 = bodyGroup1.select("td");
+//                        JSONArray studentDetail = new JSONArray();
+//                        for (Element td : tds1) {
+//                            JSONObject prop = new JSONObject();
+//                            String key = Helper.toSlug(td.text().split(":")[0]);
+//                            String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
+//                            prop.put("key", key);
+//                            prop.put("value", value);
+//                            studentDetail.put(prop);
+//                        }
+//                        info.put("studentDetail", studentDetail);
+//
+//                        Element bodyGroup2 = document.getElementsByClass("body-group").get(2);
+//                        Elements tds2 = bodyGroup2.select("td");
+//                        JSONArray studentFamily = new JSONArray();
+//                        for (Element td : tds2) {
+//                            JSONObject prop = new JSONObject();
+//                            String key = Helper.toSlug(td.text().split(":")[0]);
+//                            String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
+//                            prop.put("key", key);
+//                            prop.put("value", value);
+//                            studentFamily.put(prop);
+//                        }
+//                        info.put("studentFamily", studentFamily);
                     } catch (SocketTimeoutException e) {
-                        DashboardPresenter.currentStatus =  DashboardPresenter.TIMEOUT;
-                    }  catch (UnknownHostException e){
+                        DashboardPresenter.currentStatus = DashboardPresenter.TIMEOUT;
+                    } catch (UnknownHostException e) {
                         currentStatus = DashboardPresenter.NO_INTERNET;
-                    }catch (Exception e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     return info;
@@ -123,18 +123,18 @@ public class DashboardPresenter implements IDashboardPresenter {
 
                 @Override
                 protected void onPostExecute(JSONObject jsonObject) {
-                    switch (DashboardPresenter.currentStatus){
-                        case 2:{
+                    switch (DashboardPresenter.currentStatus) {
+                        case 2: {
                             iDashboardActivity.disableAll();
                             iDashboardActivity.showErrorDialog();
                             break;
                         }
-                        case 1:{
+                        case 1: {
                             iDashboardActivity.disableAll();
                             iDashboardActivity.showTimeOutDialog();
                             break;
                         }
-                        default:{
+                        default: {
                             storage.putString("student_info", jsonObject.toString());
                             Bitmap image = storage.getImageFromStorage(context);
                             String studentName = storage.getString("student_name");
@@ -220,9 +220,9 @@ public class DashboardPresenter implements IDashboardPresenter {
                     .execute();
 
             storage.saveImage(resultImageResponse, context);
-            Log.d("AAA","save image");
+            Log.d("AAA", "save image");
         } catch (SocketTimeoutException e) {
-            Log.d("AAA",e.toString());
+            Log.d("AAA", e.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -236,5 +236,53 @@ public class DashboardPresenter implements IDashboardPresenter {
     public String getStudentNameFromStorate() {
         String studentName = storage.getString("student_name");
         return studentName;
+    }
+
+    private JSONObject parseData(Document document) {
+        JSONObject info = new JSONObject();
+        try {
+            Element bodyGroup = document.getElementsByClass("body-group").first();
+            Elements tds = bodyGroup.select("td");
+            JSONArray studentInfo = new JSONArray();
+            for (Element td : tds) {
+                JSONObject prop = new JSONObject();
+                String key = Helper.toSlug(td.text().split(":")[0]);
+                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
+
+                prop.put("key", key);
+
+                prop.put("value", value);
+                studentInfo.put(prop);
+            }
+            info.put("studentInfo", studentInfo);
+            Element bodyGroup1 = document.getElementsByClass("body-group").get(1);
+            Elements tds1 = bodyGroup1.select("td");
+            JSONArray studentDetail = new JSONArray();
+            for (Element td : tds1) {
+                JSONObject prop = new JSONObject();
+                String key = Helper.toSlug(td.text().split(":")[0]);
+                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
+                prop.put("key", key);
+                prop.put("value", value);
+                studentDetail.put(prop);
+            }
+            info.put("studentDetail", studentDetail);
+
+            Element bodyGroup2 = document.getElementsByClass("body-group").get(2);
+            Elements tds2 = bodyGroup2.select("td");
+            JSONArray studentFamily = new JSONArray();
+            for (Element td : tds2) {
+                JSONObject prop = new JSONObject();
+                String key = Helper.toSlug(td.text().split(":")[0]);
+                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
+                prop.put("key", key);
+                prop.put("value", value);
+                studentFamily.put(prop);
+            }
+            info.put("studentFamily", studentFamily);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  info;
     }
 }
