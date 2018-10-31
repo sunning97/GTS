@@ -40,6 +40,7 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
+import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.AttendanceFragmentPresenter;
@@ -67,11 +68,15 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     TextView retryText;
     @BindView(R.id.total_halt_day_layout)
     LinearLayout totalHaltDayLayout;
+    @BindView(R.id.semester_select_tv)
+    TextView semesterSelectTV;
+
     private AttendanceFragmentPresenter attendanceFragmentPresenter;
     private float d;
-    private int currentPos = 0;
+    public static int currentPos = 0;
 
-    List<String> headerText = new ArrayList<>();
+    private List<String> headerText = new ArrayList<>();
+    private List<String> spinnerData = new ArrayList<>();
 
     SweetAlertDialog loadingDialog;
 
@@ -91,6 +96,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         this.attendanceFragmentPresenter = new AttendanceFragmentPresenter(this, getContext());
         this.init();
         d = getContext().getResources().getDisplayMetrics().density;
+        AttendanceFragmentPresenter.isNotFirst = false;
         attendanceFragmentPresenter.getDataAttendanceSpinner();
         return view;
     }
@@ -98,9 +104,11 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
 
     @OnClick(R.id.retry_text)
     public void retry(View view) {
-        retryIcon.smoothToShow();
+        retryIcon.show();
+        AttendanceFragmentPresenter.currentStatus = 0;
+        AttendanceFragmentPresenter.isNotFirst = true;
         retryText.setVisibility(View.GONE);
-        attendanceFragmentPresenter.getDataAttendance(currentPos);
+        attendanceFragmentPresenter.getDataAttendanceSpinner();
     }
 
     @Override
@@ -227,6 +235,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     @Override
     public void initAttendanceSpiner(List<String> dataSnpinner) {
         studentAttendanceSpinner.setItems(dataSnpinner);
+        studentAttendanceSpinner.setEnabled(true);
         studentAttendanceSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
@@ -252,13 +261,13 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     public void showTimeoutDialog() {
         if (loadingDialog.isShowing()) loadingDialog.dismiss();
         new SweetAlertDialog(getContext())
-                .setTitleText(getResources().getString(R.string.login_error_dialog_title))
-                .setContentText(getResources().getString(R.string.login_error_dialog_content))
+                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
+                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
                 .show();
+        removeAllSpinnerItem();
         retryIcon.hide();
         retryText.setVisibility(View.VISIBLE);
-        loadedLayout.setVisibility(View.GONE);
-        totalHaltDayLayout.setVisibility(View.GONE);
+        hideAllComponent();
         noInternetLayout.setVisibility(View.VISIBLE);
     }
 
@@ -269,15 +278,17 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
                 .setTitleText(getResources().getString(R.string.no_internet_access_title))
                 .setContentText(getResources().getString(R.string.no_internet_access_content))
                 .show();
+        removeAllSpinnerItem();
         retryIcon.hide();
         retryText.setVisibility(View.VISIBLE);
-        loadedLayout.setVisibility(View.GONE);
-        totalHaltDayLayout.setVisibility(View.GONE);
+        hideAllComponent();
         noInternetLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showLoadedLayout() {
+        semesterSelectTV.setVisibility(View.VISIBLE);
+        studentAttendanceSpinner.setVisibility(View.VISIBLE);
         totalHaltDayLayout.setVisibility(View.VISIBLE);
         loadedLayout.setVisibility(View.VISIBLE);
         retryIcon.hide();
@@ -308,5 +319,25 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         windowManager.getDefaultDisplay().getMetrics(dm);
         int screenWidth = dm.widthPixels;
         return screenWidth;
+    }
+
+    private void removeAllSpinnerItem(){
+        studentAttendanceSpinner.setItems(spinnerData);
+        studentAttendanceSpinner.setEnabled(false);
+    }
+
+    @Override
+    public void hideAllComponent(){
+        loadedLayout.setVisibility(View.GONE);
+        semesterSelectTV.setVisibility(View.GONE);
+        studentAttendanceSpinner.setVisibility(View.GONE);
+        totalHaltDayLayout.setVisibility(View.GONE);
+    }
+    @Override
+    public void showAllComponent(){
+        loadedLayout.setVisibility(View.VISIBLE);
+        semesterSelectTV.setVisibility(View.VISIBLE);
+        studentAttendanceSpinner.setVisibility(View.VISIBLE);
+        totalHaltDayLayout.setVisibility(View.VISIBLE);
     }
 }

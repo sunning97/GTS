@@ -20,4 +20,6 @@ public interface IAttendanceFragment {
     public void showTimeoutDialog();
     public void showNoInternetDialog();
     public void showLoadedLayout();
+    public void hideAllComponent();
+    public void showAllComponent();
 }

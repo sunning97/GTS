@@ -242,8 +242,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         swipeRefreshDashboard.setEnabled(true);
         swipeRefreshDashboard.setRefreshing(false);
         new SweetAlertDialog(this)
-                .setTitleText(getResources().getString(R.string.login_error_dialog_title))
-                .setContentText(getResources().getString(R.string.login_error_dialog_content))
+                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
+                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
                 .show();
     }
 
