@@ -8,4 +8,8 @@ public interface IWeekSchedule {
     void setDateToDate(JSONArray jsonArray);
     void modifyDataOnfirst(JSONArray jsonArray);
     void modifyDataChange(JSONArray jsonArray);
+    void hideAllComponent();
+    void showAllComponent();
+    void showTimeoutDialog();
+    void showNoInternetDialog();
 }

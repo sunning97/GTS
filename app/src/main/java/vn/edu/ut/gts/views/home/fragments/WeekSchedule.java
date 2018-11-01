@@ -13,11 +13,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +58,16 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     FloatingActionButton currentWeek;
     @BindView(R.id.date_picker)
     ImageButton datePicker;
+    @BindView(R.id.tablayout_container)
+    RelativeLayout tablayoutContainer;
+    @BindView(R.id.floating_container)
+    FloatingActionMenu floatingContainer;
+    @BindView(R.id.no_internet_layout)
+    LinearLayout noInternetLayout;
+    @BindView(R.id.rety_icon)
+    AVLoadingIndicatorView retyIcon;
+    @BindView(R.id.retry_text)
+    TextView retryText;
 
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private WeekSchedulePresenter weekSchedulePresenter;
@@ -72,6 +86,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
         View view = inflater.inflate(R.layout.fragment_week_schedule, container, false);
         ButterKnife.bind(this,view);
         init();
+        WeekSchedulePresenter.currentStatus = 0;
         weekSchedulePresenter = new WeekSchedulePresenter(this,getContext());
         weekSchedulePresenter.getSchedulesGetMethod();
         return view;
@@ -79,14 +94,17 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
 
     @OnClick(R.id.next_week)
     public void setNextWeek(View view) {
+        floatingContainer.close(true);
         weekSchedulePresenter.getNextSchedulesWeek();
     }
     @OnClick(R.id.prev_week)
     public void setPrevWeek(View view) {
+        floatingContainer.close(true);
         weekSchedulePresenter.getPrevSchedulesWeek();
     }
     @OnClick(R.id.current_week)
     public void setCurrentWeek(View view) {
+        floatingContainer.close(true);
         weekSchedulePresenter.getCurrentSchedulesWeek();
     }
     @OnClick(R.id.date_picker)
@@ -108,6 +126,12 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         loadingDialog.setTitleText("Loading");
         loadingDialog.setCancelable(false);
+    }
+
+    @OnClick(R.id.retry_text)
+    public void retry(View view){
+        WeekSchedulePresenter.currentStatus = 0;
+        weekSchedulePresenter.getSchedulesGetMethod();
     }
 
     @SuppressLint("SetTextI18n")
@@ -137,6 +161,49 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     public void modifyDataChange(JSONArray jsonArray) {
         weekScheduleTablayoutAdapter.setData(jsonArray);
         weekScheduleTablayoutAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void hideAllComponent() {
+        tablayoutContainer.setVisibility(View.GONE);
+        viewPager.setVisibility(View.GONE);
+        floatingContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showAllComponent() {
+        noInternetLayout.setVisibility(View.GONE);
+        tablayoutContainer.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.VISIBLE);
+        floatingContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showTimeoutDialog() {
+        if (loadingDialog.isShowing()) loadingDialog.dismiss();
+//        new SweetAlertDialog(getContext())
+//                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
+//                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
+//                .show();
+        floatingContainer.close(true);
+        hideAllComponent();
+        retyIcon.hide();
+        retryText.setVisibility(View.VISIBLE);
+        noInternetLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showNoInternetDialog() {
+        if (loadingDialog.isShowing()) loadingDialog.dismiss();
+//        new SweetAlertDialog(getContext())
+//                .setTitleText(getResources().getString(R.string.no_internet_access_title))
+//                .setContentText(getResources().getString(R.string.no_internet_access_content))
+//                .show();
+        floatingContainer.close(true);
+        hideAllComponent();
+        retyIcon.hide();
+        retryText.setVisibility(View.VISIBLE);
+        noInternetLayout.setVisibility(View.VISIBLE);
     }
 
     private int getCurrentDate(JSONArray jsonArray){

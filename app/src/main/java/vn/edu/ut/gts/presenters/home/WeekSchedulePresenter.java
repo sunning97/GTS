@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,14 +15,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.home.fragments.IWeekSchedule;
+import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 
 public class WeekSchedulePresenter implements IWeekSchedulePresenter{
+    public static int currentStatus = 0;
     private IWeekSchedule iWeekSchedule;
     private Context context;
     private Storage storage;
@@ -131,6 +138,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.GET)
+                            .timeout(10000)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
@@ -138,6 +146,12 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     schedules = parseWeekData(document);
 
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -146,9 +160,21 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
             }
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                iWeekSchedule.setDateToDate(jsonArray);
-                iWeekSchedule.modifyDataOnfirst(jsonArray);
-                iWeekSchedule.dismissLoadingDialog();
+                switch (currentStatus) {
+                    case 400:
+                        iWeekSchedule.showNoInternetDialog();
+                        break;
+                    case 500:
+                        iWeekSchedule.showTimeoutDialog();
+                        break;
+                    default: {
+                        currentStatus = 0;
+                        iWeekSchedule.setDateToDate(jsonArray);
+                        iWeekSchedule.modifyDataOnfirst(jsonArray);
+                        iWeekSchedule.showAllComponent();
+                        iWeekSchedule.dismissLoadingDialog();
+                    }
+                }
             }
         };
         asyncTask.execute();
@@ -169,6 +195,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
+                            .timeout(10000)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
@@ -187,6 +214,12 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     data = parseWeekData(document);
 
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -197,9 +230,24 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                iWeekSchedule.setDateToDate(jsonArray);
-                iWeekSchedule.modifyDataChange(jsonArray);
-                iWeekSchedule.dismissLoadingDialog();
+                switch (currentStatus) {
+                    case 400:
+                        iWeekSchedule.showNoInternetDialog();
+                        break;
+                    case 500:
+                        iWeekSchedule.showTimeoutDialog();
+                        break;
+                    default: {
+                        currentStatus = 0;
+                        iWeekSchedule.setDateToDate(jsonArray);
+                        iWeekSchedule.modifyDataOnfirst(jsonArray);
+                        iWeekSchedule.showAllComponent();
+                        iWeekSchedule.dismissLoadingDialog();
+                    }
+                }
+//                iWeekSchedule.setDateToDate(jsonArray);
+//                iWeekSchedule.modifyDataChange(jsonArray);
+//                iWeekSchedule.dismissLoadingDialog();
             }
         };
         voidVoidVoidAsyncTask.execute();
@@ -220,6 +268,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
+                            .timeout(10000)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
@@ -238,6 +287,12 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     data = parseWeekData(document);
 
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -248,9 +303,24 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                iWeekSchedule.setDateToDate(jsonArray);
-                iWeekSchedule.modifyDataChange(jsonArray);
-                iWeekSchedule.dismissLoadingDialog();
+                switch (currentStatus) {
+                    case 400:
+                        iWeekSchedule.showNoInternetDialog();
+                        break;
+                    case 500:
+                        iWeekSchedule.showTimeoutDialog();
+                        break;
+                    default: {
+                        currentStatus = 0;
+                        iWeekSchedule.setDateToDate(jsonArray);
+                        iWeekSchedule.modifyDataOnfirst(jsonArray);
+                        iWeekSchedule.showAllComponent();
+                        iWeekSchedule.dismissLoadingDialog();
+                    }
+                }
+//                iWeekSchedule.setDateToDate(jsonArray);
+//                iWeekSchedule.modifyDataChange(jsonArray);
+//                iWeekSchedule.dismissLoadingDialog();
             }
         };
         voidVoidVoidAsyncTask.execute();
@@ -272,6 +342,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
+                            .timeout(10000)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId",storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
@@ -290,6 +361,12 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     data = parseWeekData(document);
 
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -300,9 +377,24 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                iWeekSchedule.setDateToDate(jsonArray);
-                iWeekSchedule.modifyDataChange(jsonArray);
-                iWeekSchedule.dismissLoadingDialog();
+                switch (currentStatus) {
+                    case 400:
+                        iWeekSchedule.showNoInternetDialog();
+                        break;
+                    case 500:
+                        iWeekSchedule.showTimeoutDialog();
+                        break;
+                    default: {
+                        currentStatus = 0;
+                        iWeekSchedule.setDateToDate(jsonArray);
+                        iWeekSchedule.modifyDataOnfirst(jsonArray);
+                        iWeekSchedule.showAllComponent();
+                        iWeekSchedule.dismissLoadingDialog();
+                    }
+                }
+//                iWeekSchedule.setDateToDate(jsonArray);
+//                iWeekSchedule.modifyDataChange(jsonArray);
+//                iWeekSchedule.dismissLoadingDialog();
             }
         };
         voidVoidVoidAsyncTask.execute();
@@ -325,6 +417,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
+                            .timeout(10000)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId",storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
@@ -343,6 +436,12 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     data = parseWeekData(document);
 
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -353,9 +452,24 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                iWeekSchedule.setDateToDate(jsonArray);
-                iWeekSchedule.modifyDataChange(jsonArray);
-                iWeekSchedule.dismissLoadingDialog();
+                switch (currentStatus) {
+                    case 400:
+                        iWeekSchedule.showNoInternetDialog();
+                        break;
+                    case 500:
+                        iWeekSchedule.showTimeoutDialog();
+                        break;
+                    default: {
+                        currentStatus = 0;
+                        iWeekSchedule.setDateToDate(jsonArray);
+                        iWeekSchedule.modifyDataOnfirst(jsonArray);
+                        iWeekSchedule.showAllComponent();
+                        iWeekSchedule.dismissLoadingDialog();
+                    }
+                }
+//                iWeekSchedule.setDateToDate(jsonArray);
+//                iWeekSchedule.modifyDataChange(jsonArray);
+//                iWeekSchedule.dismissLoadingDialog();
             }
         };
         voidVoidVoidAsyncTask.execute(date);

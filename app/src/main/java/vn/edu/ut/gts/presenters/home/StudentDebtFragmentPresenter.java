@@ -78,11 +78,9 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                     data.put("semesters", semesters);
                 }catch (SocketTimeoutException e) {
                     currentStatus = Helper.TIMEOUT;
-                    Log.d("AAA","1");
                     e.printStackTrace();
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
-                    Log.d("AAA","1");
                     e.printStackTrace();
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
@@ -167,11 +165,9 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                     }
                 } catch (SocketTimeoutException e) {
                     currentStatus = Helper.TIMEOUT;
-                    Log.d("AAA","2");
                     e.printStackTrace();
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
-                    Log.d("AAA","1");
                     e.printStackTrace();
                 } catch (IndexOutOfBoundsException e){
 

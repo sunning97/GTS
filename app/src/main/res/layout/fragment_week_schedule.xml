@@ -5,54 +5,108 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.home.fragments.StudentStudyResultFragment">
-        <RelativeLayout
-            android:id="@+id/tablayout_container"
+
+    <RelativeLayout
+        android:id="@+id/tablayout_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+        <LinearLayout
+            android:id="@+id/week_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary">
-            <LinearLayout
-                android:id="@+id/week_detail"
-                android:padding="10dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/date_to_date"
-                    android:textSize="16sp"
-                    android:layout_marginTop="10dp"
-                    android:text=""
-                    android:textColor="@color/white"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <ImageButton
-                    android:id="@+id/date_picker"
-                    android:src="@drawable/ic_perm_contact_calendar_white_24dp"
-                    android:backgroundTint="@color/transparent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <android.support.design.widget.TabLayout
-                android:layout_below="@+id/week_detail"
-                android:id="@+id/week_schedule_tablayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tabMode="scrollable"
-                app:tabIndicatorColor="@color/white"
-                app:tabIndicatorHeight="5dp"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/white"
-                app:tabTextAppearance="@style/capfale">
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-            </android.support.design.widget.TabLayout>
-        </RelativeLayout>
-        <android.support.v4.view.ViewPager
-            android:layout_below="@id/tablayout_container"
-            android:id="@+id/week_schedule_view_pager"
+            <TextView
+                android:id="@+id/date_to_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/date_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/transparent"
+                android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
+        </LinearLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/week_schedule_tablayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </android.support.v4.view.ViewPager>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/week_detail"
+            app:tabIndicatorColor="@color/white"
+            app:tabIndicatorHeight="5dp"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextAppearance="@style/capfale"
+            app:tabTextColor="@color/white">
+
+        </android.support.design.widget.TabLayout>
+    </RelativeLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/week_schedule_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tablayout_container">
+
+    </android.support.v4.view.ViewPager>
+    <LinearLayout
+        android:id="@+id/no_internet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/no_conection_clound" />
+        <TextView
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/gray2"
+            android:layout_gravity="center"
+            android:text="@string/cant_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/rety_icon"
+                android:layout_gravity="center"
+                style="@style/AVLoadingIndicatorView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:indicatorColor="@color/gray2"
+                app:indicatorName="PacmanIndicator" />
+
+            <TextView
+                android:id="@+id/retry_text"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chạm để thử lại"
+                android:textColor="@color/gray2"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+    </LinearLayout>
     <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/floating_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -66,8 +120,7 @@
         app:menu_labels_textColor="@color/grayDark"
         app:menu_labels_colorNormal="@color/white"
         app:menu_colorPressed="@color/colorPrimaryDark"
-        app:menu_colorNormal="@color/colorPrimary"
-        >
+        app:menu_colorNormal="@color/colorPrimary">
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/next_week"
             android:layout_width="wrap_content"
