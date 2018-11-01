@@ -1,5 +1,5 @@
 package vn.edu.ut.gts.presenters.home;
 
 public interface IStudentDebtFragmentPresenter {
-    public void initDataStudentDebt();
+    public void getDataDebtSpinner();
 }
