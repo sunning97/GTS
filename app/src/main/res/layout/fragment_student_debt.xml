@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".views.home.fragments.StudentDebtFragment">
     <TextView
+        android:visibility="invisible"
         android:id="@+id/semester_select_tv"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -20,12 +21,14 @@
         android:layout_marginBottom="5dp"
         android:textSize="16sp"/>
     <com.jaredrummler.materialspinner.MaterialSpinner
+        android:visibility="invisible"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:id="@+id/student_debt_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <LinearLayout
+        android:visibility="invisible"
         android:id="@+id/total_debt_layout"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
