@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.viethoa.DialogUtils;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +38,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
@@ -47,14 +49,27 @@ import vn.edu.ut.gts.presenters.home.FrameProgramFragmentPresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FrameProgramFragment extends Fragment implements IFrameProgramFragment{
+public class FrameProgramFragment extends Fragment implements IFrameProgramFragment {
     @BindView(R.id.frame_program_table)
     TableLayout frameProgramTable;
     @BindView(R.id.frame_program_table_header)
     TableLayout frameprogramTableHeader;
     @BindView(R.id.frame_program_spinner)
     MaterialSpinner frameProgramSpinner;
+    @BindView(R.id.retry_text)
+    TextView retryText;
+    @BindView(R.id.semester_select_tv)
+    TextView semesterSelectTV;
+    @BindView(R.id.loaded_layout)
+    LinearLayout loadedLayout;
+    @BindView(R.id.no_internet_layout)
+    LinearLayout noInternetLayout;
+    @BindView(R.id.rety_icon)
+    AVLoadingIndicatorView retyIcon;
 
+
+
+    public static int currentPos = 0;
     private FrameProgramFragmentPresenter frameProgramFragmentPresenter;
     private JSONObject data;
     private EpicDialog epicDialog;
@@ -79,15 +94,65 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
     }
 
     @Override
+    public void showAllComponent() {
+        semesterSelectTV.setVisibility(View.VISIBLE);
+        frameProgramSpinner.setVisibility(View.VISIBLE);
+        loadedLayout.setVisibility(View.VISIBLE);
+        noInternetLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideAllComponent() {
+        semesterSelectTV.setVisibility(View.GONE);
+        frameProgramSpinner.setVisibility(View.GONE);
+        loadedLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showTimeoutDialog() {
+        if (loadingDialog.isShowing()) loadingDialog.dismiss();
+        new SweetAlertDialog(getContext())
+                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
+                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
+                .show();
+
+        hideAllComponent();
+        retyIcon.hide();
+        retryText.setVisibility(View.VISIBLE);
+        noInternetLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showNoConnectionDialog() {
+        if (loadingDialog.isShowing()) loadingDialog.dismiss();
+        new SweetAlertDialog(getContext())
+                .setTitleText(getResources().getString(R.string.no_internet_access_title))
+                .setContentText(getResources().getString(R.string.no_internet_access_content))
+                .show();
+
+        hideAllComponent();
+        retyIcon.hide();
+        retryText.setVisibility(View.VISIBLE);
+        noInternetLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frame_program, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         init();
         d = getContext().getResources().getDisplayMetrics().density;
-        frameProgramFragmentPresenter = new FrameProgramFragmentPresenter(this,getContext());
-        frameProgramFragmentPresenter.getFrameProgram();
+        FrameProgramFragmentPresenter.currentStatus = 0;
+        frameProgramFragmentPresenter = new FrameProgramFragmentPresenter(this, getContext());
         setHasOptionsMenu(true);
+        frameProgramFragmentPresenter.getDataFrameProgram();
         return view;
+    }
+
+    @OnClick(R.id.retry_text)
+    public void retry(View view){
+        FrameProgramFragmentPresenter.currentStatus = 0;
+        frameProgramFragmentPresenter.getDataFrameProgram();
     }
 
     private void init() {
@@ -103,17 +168,19 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         switch (item.getItemId()) {
             case R.id.infor: {
                 try {
-                    String titleAll = data.getString("info");
-                    String[] parts = titleAll.split("-");
-                    String title1 = "";
-                    for (int i = 0;i <= parts.length-3;i++){
-                        if(i == parts.length-3){
-                            title1+=parts[i].trim();
-                            break;
+                    if(FrameProgramFragmentPresenter.currentStatus == 0){
+                        String titleAll = data.getString("info");
+                        String[] parts = titleAll.split("-");
+                        String title1 = "";
+                        for (int i = 0; i <= parts.length - 3; i++) {
+                            if (i == parts.length - 3) {
+                                title1 += parts[i].trim();
+                                break;
+                            }
+                            title1 += parts[i].trim() + " - ";
                         }
-                        title1+=parts[i].trim()+" - ";
+                        epicDialog.showFrameProgramInfoDialog(title1.trim(), parts[parts.length - 2].trim() + " - " + parts[parts.length - 1].trim());
                     }
-                    epicDialog.showFrameProgramInfoDialog(title1.trim(),parts[parts.length-2].trim()+" - "+parts[parts.length-1].trim());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -122,17 +189,18 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         }
         return true;
     }
+
     @Override
-    public void generateTableContent(int position){
+    public void generateTableContent(int position) {
         frameProgramTable.removeAllViews();
         try {
             JSONArray allQuater = data.getJSONArray("all_quater");
             JSONObject quater = (JSONObject) allQuater.get(position);
-            frameProgramTable.addView(generateSubjectGroup("Học phần bắt buộc ("+quater.getString("so_chi_bat_buoc")+" tín chỉ)"));
+            frameProgramTable.addView(generateSubjectGroup("Học phần bắt buộc (" + quater.getString("so_chi_bat_buoc") + " tín chỉ)"));
             JSONArray batBuoc = quater.getJSONArray("bat_buoc");
             JSONArray khongBatBuoc = quater.getJSONArray("khong_bat_buoc");
 
-            for (int i = 0; i< batBuoc.length(); i++) {
+            for (int i = 0; i < batBuoc.length(); i++) {
                 JSONArray subject = (JSONArray) batBuoc.get(i);
                 try {
                     if ((i + 1) % 2 == 0) {
@@ -144,9 +212,9 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
                 }
             }
 
-            if(khongBatBuoc.length() > 0){
-                frameProgramTable.addView(generateSubjectGroup("Học phần tự chọn ("+quater.getString("so_chi_khong_bat_buoc")+" tín chỉ)"));
-                for (int i = 0; i< khongBatBuoc.length(); i++) {
+            if (khongBatBuoc.length() > 0) {
+                frameProgramTable.addView(generateSubjectGroup("Học phần tự chọn (" + quater.getString("so_chi_khong_bat_buoc") + " tín chỉ)"));
+                for (int i = 0; i < khongBatBuoc.length(); i++) {
                     JSONArray subject = (JSONArray) khongBatBuoc.get(i);
                     try {
                         if ((i + 1) % 2 == 0) {
@@ -165,91 +233,95 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
 
     @Override
     public void showLoadingDialog() {
-        loadingDialog.show();
+        if (!loadingDialog.isShowing())
+            loadingDialog.show();
     }
 
     @Override
     public void dismissLoadingDialog() {
-        loadingDialog.dismiss();
+        if (loadingDialog.isShowing())
+            loadingDialog.dismiss();
     }
 
     @Override
-    public TableRow generateTableHeader(){
+    public TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        header.setMinimumHeight((int)d*50);
+        header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        for (int i = 0;i < headerText.size();i++) {
+        for (int i = 0; i < headerText.size(); i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-            if(i == 0){
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext())*0.6);
-            } else{
+            if (i == 0) {
+                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.6);
+            } else {
                 layoutParams.gravity = Gravity.CENTER;
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext())*0.2);
+                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.2);
             }
-            linearLayout.setPadding((int)d*5,(int)d*15,(int) d*5,0);
+            linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 5, 0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
             LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
-            textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
+            textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
             textView.setText(headerText.get(i));
             linearLayout.addView(textView);
             header.addView(linearLayout);
         }
 
-        return  header;
+        return header;
     }
+
     @Override
-    public TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG){
+    public TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG) {
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        row.setMinimumHeight((int)d*50);
+        row.setMinimumHeight((int) d * 50);
         row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 frameDetailShow(jsonArray);
             }
         });
-        if(changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
+        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
         try {
-            row.addView(generateTableCell(jsonArray.get(1).toString(),false,(int)(getScreenWidthInDPs(getContext())*0.6)));
-            row.addView(generateTableCell(jsonArray.get(4).toString(),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
-            row.addView(generateTableCell(jsonArray.get(5).toString(),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
+            row.addView(generateTableCell(jsonArray.get(1).toString(), false, (int) (getScreenWidthInDPs(getContext()) * 0.6)));
+            row.addView(generateTableCell(jsonArray.get(4).toString(), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonArray.get(5).toString(), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return row;
     }
+
     @Override
-    public LinearLayout generateTableCell(String data,boolean center,int width){
+    public LinearLayout generateTableCell(String data, boolean center, int width) {
         LinearLayout linearLayout = new LinearLayout(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         layoutParams.width = width;
-        linearLayout.setPadding((int)d*5,(int)d*15,(int) d*15,(int) d*5);
-        if(center) layoutParams.gravity = Gravity.CENTER;
+        linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 15, (int) d * 5);
+        if (center) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        if(center) textViewLayout.gravity = Gravity.CENTER;
+        if (center) textViewLayout.gravity = Gravity.CENTER;
         textView.setLayoutParams(textViewLayout);
         textView.setTextColor(getResources().getColor(R.color.black));
         textView.setText(data);
         linearLayout.addView(textView);
 
-        return  linearLayout;
+        return linearLayout;
     }
 
-    public TableRow generateSubjectGroup(String content){
+    public TableRow generateSubjectGroup(String content) {
         TableRow tableRow = new TableRow(getContext());
         tableRow.setGravity(Gravity.CENTER_VERTICAL);
         tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        tableRow.setMinimumHeight((int)d*40);
+        tableRow.setMinimumHeight((int) d * 40);
         tableRow.setBackgroundColor(getResources().getColor(R.color.violet));
 
         // generate cell container
@@ -261,21 +333,22 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         // generate cell's text view
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        a.setMargins((int)d*10,0,(int)d,0);
+        a.setMargins((int) d * 10, 0, (int) d, 0);
         textView.setLayoutParams(a);
         textView.setTextColor(getResources().getColor(R.color.colorPrimary));
-        textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
         textView.setText(content);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,getResources().getDimension(R.dimen.text_size));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size));
         linearLayout.addView(textView);
         tableRow.addView(linearLayout);
         return tableRow;
     }
+
     @Override
-    public void spinnerInit(){
+    public void spinnerInit() {
         try {
             JSONArray allQuater = data.getJSONArray("all_quater");
-            for (int i = 0;i< allQuater.length();i++){
+            for (int i = 0; i < allQuater.length(); i++) {
                 JSONObject jsonObject = (JSONObject) allQuater.get(i);
                 dataSpinner.add(jsonObject.getString("quater_name"));
             }
@@ -285,19 +358,22 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         frameProgramSpinner.setItems(dataSpinner);
         frameprogramTableHeader.addView(this.generateTableHeader());
         frameProgramSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                FrameProgramFragment.currentPos = position;
                 generateTableContent(position);
             }
         });
     }
-    public int getScreenWidthInDPs(Context context){
+
+    public int getScreenWidthInDPs(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-//        int widthInDP = Math.round(dm.widthPixels / dm.density);
         int screenWidth = dm.widthPixels;
         return screenWidth;
     }
+
     @Override
     public void frameDetailShow(JSONArray jsonArray) {
 

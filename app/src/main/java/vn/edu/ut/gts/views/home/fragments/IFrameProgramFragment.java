@@ -18,4 +18,8 @@ public interface IFrameProgramFragment {
     public void showLoadingDialog();
     public void dismissLoadingDialog();
     public void setData(JSONObject data);
+    public void showAllComponent();
+    public void hideAllComponent();
+    public void showTimeoutDialog();
+    public void showNoConnectionDialog();
 }

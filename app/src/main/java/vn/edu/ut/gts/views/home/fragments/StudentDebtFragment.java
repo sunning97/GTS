@@ -88,6 +88,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         studentDebtFragmentPresenter = new StudentDebtFragmentPresenter(this, getContext());
         init();
         d = getContext().getResources().getDisplayMetrics().density;
+        StudentDebtFragmentPresenter.currentStatus = 0;
         studentDebtFragmentPresenter.getDataDebtSpinner();
         return view;
     }

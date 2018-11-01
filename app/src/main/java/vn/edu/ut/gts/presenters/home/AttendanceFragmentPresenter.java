@@ -115,7 +115,6 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                         getDataAttendance(AttendanceFragment.currentPos);
                     }
                 }
-
             }
         };
         asyncTask.execute();

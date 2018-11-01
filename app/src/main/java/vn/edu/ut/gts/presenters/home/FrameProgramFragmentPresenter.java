@@ -15,6 +15,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,47 +24,83 @@ import java.util.regex.Pattern;
 
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.views.home.fragments.AttendanceFragment;
 import vn.edu.ut.gts.views.home.fragments.IFrameProgramFragment;
 
-public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPresenter{
+public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPresenter {
+    public static int currentStatus = 0;
     private IFrameProgramFragment iFrameProgramFragment;
     private Context context;
     private Storage storage;
 
-    public FrameProgramFragmentPresenter(IFrameProgramFragment iFrameProgramFragment,Context context){
+    public FrameProgramFragmentPresenter(IFrameProgramFragment iFrameProgramFragment, Context context) {
         this.iFrameProgramFragment = iFrameProgramFragment;
         this.context = context;
         this.storage = new Storage(this.context);
     }
 
     public void getDataFrameProgram() {
-        JSONObject dataFrame = new JSONObject();
-        try {
-            Document document = Jsoup.connect(Helper.BASE_URL + "XemChuongTrinhKhung.aspx")
-                    .method(Connection.Method.GET)
-                    .userAgent(Helper.USER_AGENT)
-                    .cookie("ASP.NET_SessionId", storage.getCookie())
-                    .get();
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,Void> asyncTask =  new AsyncTask<Void, Void, Void>() {
 
-            dataFrame.put("eventTarget", document.select("input[name=\"__EVENTTARGET\"]").val());
-            dataFrame.put("eventArgument", document.select("input[name=\"__EVENTARGUMENT\"]").val());
-            dataFrame.put("lastFocus", document.select("input[name=\"__LASTFOCUS\"]").val());
-            dataFrame.put("viewState", document.select("input[name=\"__VIEWSTATE\"]").val());
-            dataFrame.put("viewStartGenerator", document.select("input[name=\"__VIEWSTATEGENERATOR\"]").val());
-            dataFrame.put("radioBtnListPhieuKhaoSat", document.select("input[name=\"ctl00$ucPhieuKhaoSat1$RadioButtonList1\"][checked=\"checked\"]").val());
-            dataFrame.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
-            dataFrame.put("btnXem", document.select("input[name=\"ctl00$ContentPlaceHolder$btnXem\"]").val());
-            storage.putString("data_frame", dataFrame.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            @Override
+            protected void onPreExecute() {
+                iFrameProgramFragment.showLoadingDialog();
+            }
 
+            @Override
+            protected Void doInBackground(Void... voids) {
+                JSONObject dataFrame = new JSONObject();
+                try {
+                    Document document = Jsoup.connect(Helper.BASE_URL + "XemChuongTrinhKhung.aspx")
+                            .method(Connection.Method.GET)
+                            .timeout(10000)
+                            .userAgent(Helper.USER_AGENT)
+                            .cookie("ASP.NET_SessionId", storage.getCookie())
+                            .get();
+                    dataFrame.put("eventTarget", document.select("input[name=\"__EVENTTARGET\"]").val());
+                    dataFrame.put("eventArgument", document.select("input[name=\"__EVENTARGUMENT\"]").val());
+                    dataFrame.put("lastFocus", document.select("input[name=\"__LASTFOCUS\"]").val());
+                    dataFrame.put("viewState", document.select("input[name=\"__VIEWSTATE\"]").val());
+                    dataFrame.put("viewStartGenerator", document.select("input[name=\"__VIEWSTATEGENERATOR\"]").val());
+                    dataFrame.put("radioBtnListPhieuKhaoSat", document.select("input[name=\"ctl00$ucPhieuKhaoSat1$RadioButtonList1\"][checked=\"checked\"]").val());
+                    dataFrame.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
+                    dataFrame.put("btnXem", document.select("input[name=\"ctl00$ContentPlaceHolder$btnXem\"]").val());
+                    storage.putString("data_frame", dataFrame.toString());
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                switch (currentStatus) {
+                    case 400:
+                        iFrameProgramFragment.showNoConnectionDialog();
+                        break;
+                    case 500:
+                        iFrameProgramFragment.showTimeoutDialog();
+                        break;
+                    default: {
+                        currentStatus = 0;
+                        getFrameProgram();
+                    }
+                }
+            }
+        };
+        asyncTask.execute();
     }
 
     public void getFrameProgram() {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,JSONObject> getData = new AsyncTask<Void, Void, JSONObject>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> getData = new AsyncTask<Void, Void, JSONObject>() {
             @Override
             protected void onPreExecute() {
                 iFrameProgramFragment.showLoadingDialog();
@@ -76,8 +114,6 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                 Pattern pattern = null;
                 Matcher matcher = null;
                 JSONObject returnData = new JSONObject();
-
-                getDataFrameProgram();
 
                 try {
                     JSONObject dataFrame = new JSONObject(storage.getString("data_frame"));
@@ -100,8 +136,8 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                     Elements elements = document.getElementsByClass("title-group");
                     pattern = Pattern.compile(REGEX_1);
                     matcher = pattern.matcher(elements.get(1).text());
-                    if(matcher.matches())
-                        returnData.put("info",matcher.group(1));
+                    if (matcher.matches())
+                        returnData.put("info", matcher.group(1));
 
                     List<Integer> quaterTrPosition = new ArrayList<>();
                     JSONArray quatersName = new JSONArray();
@@ -114,7 +150,6 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                             }
                         }
                     }
-
 
                     pattern = Pattern.compile(REGEX_2);
                     JSONArray allQuater = new JSONArray();
@@ -131,7 +166,8 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                             for (int j = quaterTrPosition.get(i) + 1; j < trs.size() - 1; j++) {
                                 if (trs.get(j).hasAttr("style")) {
                                     check++;
-                                    if(check == 1) trBatBuoc = trs.get(j); else trKhongBatBuoc = trs.get(j);
+                                    if (check == 1) trBatBuoc = trs.get(j);
+                                    else trKhongBatBuoc = trs.get(j);
                                     continue;
                                 }
                                 Element tr = trs.get(j);
@@ -154,17 +190,18 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                                     }
                                 }
                             }
-                            quater.put("so_chi_bat_buoc",trBatBuoc.getElementsByTag("td").get(2).text());
-                            if(trKhongBatBuoc != null)
-                                quater.put("so_chi_khong_bat_buoc",trKhongBatBuoc.getElementsByTag("td").get(2).text());
-                            else quater.put("so_chi_khong_bat_buoc","0");
+                            quater.put("so_chi_bat_buoc", trBatBuoc.getElementsByTag("td").get(2).text());
+                            if (trKhongBatBuoc != null)
+                                quater.put("so_chi_khong_bat_buoc", trKhongBatBuoc.getElementsByTag("td").get(2).text());
+                            else quater.put("so_chi_khong_bat_buoc", "0");
                         } else {
                             Element trBatBuoc = null;
                             Element trKhongBatBuoc = null;
                             for (int j = quaterTrPosition.get(i) + 1; j < quaterTrPosition.get((i + 1)); j++) {
                                 if (trs.get(j).hasAttr("style")) {
                                     check++;
-                                    if(check == 1) trBatBuoc = trs.get(j); else trKhongBatBuoc = trs.get(j);
+                                    if (check == 1) trBatBuoc = trs.get(j);
+                                    else trKhongBatBuoc = trs.get(j);
                                     continue;
                                 }
                                 Element tr = trs.get(j);
@@ -185,17 +222,23 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                                     hocPhanTuChon.put(subject);
                                 }
                             }
-                            quater.put("so_chi_bat_buoc",trBatBuoc.getElementsByTag("td").get(2).text());
-                            if(trKhongBatBuoc != null)
-                                quater.put("so_chi_khong_bat_buoc",trKhongBatBuoc.getElementsByTag("td").get(2).text());
-                            else quater.put("so_chi_khong_bat_buoc","0");
+                            quater.put("so_chi_bat_buoc", trBatBuoc.getElementsByTag("td").get(2).text());
+                            if (trKhongBatBuoc != null)
+                                quater.put("so_chi_khong_bat_buoc", trKhongBatBuoc.getElementsByTag("td").get(2).text());
+                            else quater.put("so_chi_khong_bat_buoc", "0");
                         }
                         quater.put("quater_name", quatersName.get(i));
                         quater.put("bat_buoc", hocPhanbatBuoc);
                         quater.put("khong_bat_buoc", hocPhanTuChon);
                         allQuater.put(quater);
                     }
-                    returnData.put("all_quater",allQuater);
+                    returnData.put("all_quater", allQuater);
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -206,10 +249,23 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
 
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
-                iFrameProgramFragment.setData(jsonObject);
-                iFrameProgramFragment.spinnerInit();
-                iFrameProgramFragment.generateTableContent(0);
-                iFrameProgramFragment.dismissLoadingDialog();
+                switch (currentStatus) {
+                    case 400:
+                        iFrameProgramFragment.showNoConnectionDialog();
+                        break;
+                    case 500:
+                        iFrameProgramFragment.showTimeoutDialog();
+                        break;
+                    default: {
+                        currentStatus = 0;
+                        iFrameProgramFragment.setData(jsonObject);
+                        iFrameProgramFragment.spinnerInit();
+                        iFrameProgramFragment.generateTableContent(0);
+                        iFrameProgramFragment.showAllComponent();
+                        iFrameProgramFragment.dismissLoadingDialog();
+                    }
+                }
+
             }
         };
         getData.execute();
