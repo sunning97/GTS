@@ -42,7 +42,7 @@ import vn.edu.ut.gts.presenters.home.WeekSchedulePresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener,IWeekSchedule {
+public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener, IWeekSchedule {
 
     @BindView(R.id.week_schedule_tablayout)
     TabLayout tabLayout;
@@ -84,10 +84,10 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_week_schedule, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         init();
         WeekSchedulePresenter.currentStatus = 0;
-        weekSchedulePresenter = new WeekSchedulePresenter(this,getContext());
+        weekSchedulePresenter = new WeekSchedulePresenter(this, getContext());
         weekSchedulePresenter.getSchedulesGetMethod();
         return view;
     }
@@ -97,16 +97,19 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
         floatingContainer.close(true);
         weekSchedulePresenter.getNextSchedulesWeek();
     }
+
     @OnClick(R.id.prev_week)
     public void setPrevWeek(View view) {
         floatingContainer.close(true);
         weekSchedulePresenter.getPrevSchedulesWeek();
     }
+
     @OnClick(R.id.current_week)
     public void setCurrentWeek(View view) {
         floatingContainer.close(true);
         weekSchedulePresenter.getCurrentSchedulesWeek();
     }
+
     @OnClick(R.id.date_picker)
     public void showDatePickerDialog(View view) {
         CalendarDatePickerDialogFragment datePicker = new CalendarDatePickerDialogFragment()
@@ -114,14 +117,14 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
                 .setFirstDayOfWeek(Calendar.MONDAY)
                 .setCancelText("Hủy")
                 .setDoneText("Chọn");
-        if(day != 0){
-            datePicker.setPreselectedDate(year,month,day);
+        if (day != 0) {
+            datePicker.setPreselectedDate(year, month, day);
         }
         datePicker.show(getFragmentManager(), FRAG_TAG_DATE_PICKER);
     }
 
 
-    private void init(){
+    private void init() {
         loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
         loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         loadingDialog.setTitleText("Loading");
@@ -129,18 +132,18 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     }
 
     @OnClick(R.id.retry_text)
-    public void retry(View view){
+    public void retry(View view) {
         WeekSchedulePresenter.currentStatus = 0;
         weekSchedulePresenter.getSchedulesGetMethod();
     }
 
     @SuppressLint("SetTextI18n")
-    public void setDateToDate(JSONArray jsonArray){
+    public void setDateToDate(JSONArray jsonArray) {
         dateToDate.setText("");
         try {
             JSONObject firstDate = jsonArray.getJSONObject(0);
-            JSONObject lastDate = jsonArray.getJSONObject(jsonArray.length()-1);
-            dateToDate.setText("Tuần: "+firstDate.getString("date")+" - "+lastDate.getString("date"));
+            JSONObject lastDate = jsonArray.getJSONObject(jsonArray.length() - 1);
+            dateToDate.setText("Tuần: " + firstDate.getString("date") + " - " + lastDate.getString("date"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -148,12 +151,12 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
 
     @Override
     public void modifyDataOnfirst(JSONArray jsonArray) {
-        weekScheduleTablayoutAdapter = new WeekScheduleTablayoutAdapter(getFragmentManager(),jsonArray);
+        weekScheduleTablayoutAdapter = new WeekScheduleTablayoutAdapter(getFragmentManager(), jsonArray);
         viewPager.setAdapter(weekScheduleTablayoutAdapter);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setScrollPosition(getCurrentDate(jsonArray),0f,true);
+        tabLayout.setScrollPosition(getCurrentDate(jsonArray), 0f, true);
         viewPager.setCurrentItem(getCurrentDate(jsonArray));
     }
 
@@ -206,11 +209,11 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
         noInternetLayout.setVisibility(View.VISIBLE);
     }
 
-    private int getCurrentDate(JSONArray jsonArray){
+    private int getCurrentDate(JSONArray jsonArray) {
         int position = 0;
-        for (int i = 0;i< jsonArray.length();i++){
+        for (int i = 0; i < jsonArray.length(); i++) {
             try {
-                if(jsonArray.getJSONObject(i).getString("current_date").equals("true")){
+                if (jsonArray.getJSONObject(i).getString("current_date").equals("true")) {
                     position = i;
                     break;
                 }
@@ -218,7 +221,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
                 e.printStackTrace();
             }
         }
-        return  position;
+        return position;
     }
 
     @Override
@@ -227,20 +230,22 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
         this.month = monthOfYear;
         this.year = year;
 
-        String day = (dayOfMonth < 10) ? "0"+String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
-        String mounth = ((monthOfYear+1) < 10) ? "0"+String.valueOf(monthOfYear+1) : String.valueOf(monthOfYear+1);
-        String date = day+"-"+mounth+"-"+String.valueOf(year);
+        String day = (dayOfMonth < 10) ? "0" + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
+        String mounth = ((monthOfYear + 1) < 10) ? "0" + String.valueOf(monthOfYear + 1) : String.valueOf(monthOfYear + 1);
+        String date = day + "-" + mounth + "-" + String.valueOf(year);
 
         weekSchedulePresenter.getSchedulesByDate(date);
     }
 
     @Override
     public void showLoadingDialog() {
-        loadingDialog.show();
+        if (!loadingDialog.isShowing())
+            loadingDialog.show();
     }
 
     @Override
     public void dismissLoadingDialog() {
-        loadingDialog.dismiss();
+        if (loadingDialog.isShowing())
+            loadingDialog.dismiss();
     }
 }

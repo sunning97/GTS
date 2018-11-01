@@ -245,9 +245,6 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
                         iWeekSchedule.dismissLoadingDialog();
                     }
                 }
-//                iWeekSchedule.setDateToDate(jsonArray);
-//                iWeekSchedule.modifyDataChange(jsonArray);
-//                iWeekSchedule.dismissLoadingDialog();
             }
         };
         voidVoidVoidAsyncTask.execute();
@@ -318,9 +315,6 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
                         iWeekSchedule.dismissLoadingDialog();
                     }
                 }
-//                iWeekSchedule.setDateToDate(jsonArray);
-//                iWeekSchedule.modifyDataChange(jsonArray);
-//                iWeekSchedule.dismissLoadingDialog();
             }
         };
         voidVoidVoidAsyncTask.execute();
@@ -392,9 +386,6 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
                         iWeekSchedule.dismissLoadingDialog();
                     }
                 }
-//                iWeekSchedule.setDateToDate(jsonArray);
-//                iWeekSchedule.modifyDataChange(jsonArray);
-//                iWeekSchedule.dismissLoadingDialog();
             }
         };
         voidVoidVoidAsyncTask.execute();
@@ -467,9 +458,6 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
                         iWeekSchedule.dismissLoadingDialog();
                     }
                 }
-//                iWeekSchedule.setDateToDate(jsonArray);
-//                iWeekSchedule.modifyDataChange(jsonArray);
-//                iWeekSchedule.dismissLoadingDialog();
             }
         };
         voidVoidVoidAsyncTask.execute(date);
