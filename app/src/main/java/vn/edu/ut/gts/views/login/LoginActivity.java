@@ -2,38 +2,28 @@ package vn.edu.ut.gts.views.login;
 
 import android.Manifest;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
-import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import android.widget.TextView;
 
-import com.roger.catloadinglibrary.CatLoadingView;
 
 import net.igenius.customcheckbox.CustomCheckBox;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import butterknife.BindView;
@@ -70,14 +60,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     public static Boolean isRememberPassword = false;
     private LoginProcess loginProcess;
     private Boolean isValidateNoError;
-    private BroadcastReceiver listenToInteret;
     private Handler handler;
     private Runnable runnable;
     private Runnable runnable2;
-    private SweetAlertDialog loginAlert;
     private Storage storage;
     private EpicDialog epicDialog;
-    private Boolean isLogoShowing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,18 +84,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     @Override
     protected void onResume() {
         super.onResume();
-//        if(!isLogoShowing){
-//            IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-//            registerReceiver(listenToInteret, intentFilter);
-//        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        if (listenToInteret != null) {
-//            unregisterReceiver(listenToInteret);
-//        }
     }
 
     @Override
@@ -239,27 +219,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 loginProcess.initData();
             }
         };
-//        listenToInteret = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//                if (connectivityManager.getActiveNetworkInfo() != null) {
-//                    enableInput();
-//                    btnLogin.setEnabled(true);
-//                    if (loginAlert != null) loginAlert.dismissWithAnimation();
-//                    loginProcess = new LoginProcess(LoginActivity.this, context);
-//                    loginProcess.initData();
-//                } else {
-//                    disableInput();
-//                    btnLogin.setEnabled(false);
-//                    loginAlert = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
-//                    loginAlert.setTitleText(getResources().getString(R.string.no_internet_access_error_dialog_title))
-//                            .setContentText(getResources().getString(R.string.no_internet_access_error_dialog_content))
-//                            .show();
-//                }
-//            }
-//        };
-
         this.setLastLogin();
         handler.postDelayed(runnable, 1500);
         handler.postDelayed(runnable2,2000);
