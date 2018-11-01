@@ -9,4 +9,8 @@ public interface IStudentStudyResultFragment {
     void showLoadingDialog();
     void dismissLoadingDialog();
     void setData(JSONObject data);
+    void showAllComponent();
+    void hideAllComponent();
+    void showTimeoutDialog();
+    void showNoConnectionDialog();
 }

@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.viethoa.DialogUtils;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,9 +40,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
+import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 
@@ -55,7 +58,18 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     TableLayout studyResultTable;
     @BindView(R.id.study_result_table_header)
     TableLayout studyResultTableHeader;
+    @BindView(R.id.loaded_layout)
+    LinearLayout loadedLayout;
+    @BindView(R.id.no_internet_layout)
+    LinearLayout noInternetLayout;
+    @BindView(R.id.rety_icon)
+    AVLoadingIndicatorView retryIcon;
+    @BindView(R.id.retry_text)
+    TextView retryText;
+    @BindView(R.id.semester_select_tv)
+    TextView semesterSelectTV;
 
+    public static int currentPos = 0;
     private StudentStudyResultFragmentPresenter studentStudyResultFragmentPresenter;
     private float d;
     private List<String> headerText = new ArrayList<>();
@@ -73,6 +87,46 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
     public void setData(JSONObject data) {
         this.data = data;
+    }
+
+    @Override
+    public void showAllComponent() {
+        semesterSelectTV.setVisibility(View.VISIBLE);
+        studyResultSpinner.setVisibility(View.VISIBLE);
+        loadedLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideAllComponent() {
+        semesterSelectTV.setVisibility(View.GONE);
+        studyResultSpinner.setVisibility(View.GONE);
+        loadedLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showTimeoutDialog() {
+        if (loadingDialog.isShowing()) loadingDialog.dismiss();
+        new SweetAlertDialog(getContext())
+                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
+                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
+                .show();
+        hideAllComponent();
+        retryIcon.hide();
+        retryText.setVisibility(View.VISIBLE);
+        noInternetLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showNoConnectionDialog() {
+        if (loadingDialog.isShowing()) loadingDialog.dismiss();
+        new SweetAlertDialog(getContext())
+                .setTitleText(getResources().getString(R.string.no_internet_access_title))
+                .setContentText(getResources().getString(R.string.no_internet_access_content))
+                .show();
+        hideAllComponent();
+        retryIcon.hide();
+        retryText.setVisibility(View.VISIBLE);
+        noInternetLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -96,11 +150,12 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         switch (item.getItemId()) {
             case R.id.infor: {
                 try {
-
-                    epicDialog.showStudyResultInfoDialog(
-                            data.getString("trung_binh_tich_luy"),
-                            data.getString("tong_tin_chi"),
-                            data.getString("ti_le_no"));
+                    if(StudentStudyResultFragmentPresenter.currentStatus == 0){
+                        epicDialog.showStudyResultInfoDialog(
+                                data.getString("trung_binh_tich_luy"),
+                                data.getString("tong_tin_chi"),
+                                data.getString("ti_le_no"));
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -172,12 +227,25 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
     @Override
     public void showLoadingDialog() {
-        loadingDialog.show();
+        if(!loadingDialog.isShowing())
+            loadingDialog.show();
     }
 
     @Override
     public void dismissLoadingDialog() {
+        if(loadingDialog.isShowing())
         loadingDialog.dismiss();
+    }
+
+
+    @OnClick(R.id.retry_text)
+    public void retry(View view){
+        if(StudentStudyResultFragmentPresenter.currentStatus == Helper.TIMEOUT){
+            retryIcon.smoothToShow();
+            retryText.setVisibility(View.INVISIBLE);
+        }
+        StudentStudyResultFragmentPresenter.currentStatus = 0;
+        studentStudyResultFragmentPresenter.getStudentStudyResult(currentPos);
     }
 
     private TableRow generateTableRow(final JSONObject data, boolean changeBG){
@@ -234,6 +302,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         studyResultSpinner.setItems(dataSpinner);
         studyResultSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                StudentStudyResultFragment.currentPos = position;
                 generateTableContent(position);
             }
         });
@@ -243,7 +312,6 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-//        int widthInDP = Math.round(dm.widthPixels / dm.density);
         int screenWidth = dm.widthPixels;
         return screenWidth;
     }

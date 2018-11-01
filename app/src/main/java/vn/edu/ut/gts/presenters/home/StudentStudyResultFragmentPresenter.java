@@ -16,14 +16,18 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.views.home.fragments.AttendanceFragment;
 import vn.edu.ut.gts.views.home.fragments.IStudentStudyResultFragment;
 
 public class StudentStudyResultFragmentPresenter implements IStudentStudyResultFragmentPresenter{
+    public static int currentStatus = 0;
     private IStudentStudyResultFragment iStudentStudyResultFragment;
     private Context context;
     private Storage storage;
@@ -49,6 +53,7 @@ public class StudentStudyResultFragmentPresenter implements IStudentStudyResultF
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "Xemdiem.aspx")
                             .method(Connection.Method.GET)
+                            .timeout(10000)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
@@ -164,6 +169,12 @@ public class StudentStudyResultFragmentPresenter implements IStudentStudyResultF
                         allQuater.put(jsonObject);
                     }
                     result.put("all_semester",allQuater);
+                }  catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -174,10 +185,22 @@ public class StudentStudyResultFragmentPresenter implements IStudentStudyResultF
 
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
-                iStudentStudyResultFragment.setData(jsonObject);
-                iStudentStudyResultFragment.spinnerInit();
-                iStudentStudyResultFragment.generateTableContent(post);
-                iStudentStudyResultFragment.dismissLoadingDialog();
+                switch (currentStatus) {
+                    case 400:
+                        iStudentStudyResultFragment.showNoConnectionDialog();
+                        break;
+                    case 500:
+                        iStudentStudyResultFragment.showTimeoutDialog();
+                        break;
+                    default: {
+                        currentStatus = 0;
+                        iStudentStudyResultFragment.setData(jsonObject);
+                        iStudentStudyResultFragment.spinnerInit();
+                        iStudentStudyResultFragment.generateTableContent(post);
+                        iStudentStudyResultFragment.showAllComponent();
+                        iStudentStudyResultFragment.dismissLoadingDialog();
+                    }
+                }
             }
         };
         getData.execute();

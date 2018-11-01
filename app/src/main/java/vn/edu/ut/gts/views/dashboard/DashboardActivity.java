@@ -205,6 +205,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         studentDebtCard.setEnabled(true);
         scheduleByWeekCard.setEnabled(true);
         attendanceCard.setEnabled(true);
+        swipeRefreshDashboard.setEnabled(false);
     }
 
     @Override
@@ -215,6 +216,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         studentDebtCard.setEnabled(false);
         scheduleByWeekCard.setEnabled(false);
         attendanceCard.setEnabled(false);
+        swipeRefreshDashboard.setEnabled(true);
     }
 
     @Override
