@@ -135,6 +135,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         ButterKnife.bind(this,view);
         d = getContext().getResources().getDisplayMetrics().density;
         init();
+        StudentStudyResultFragment.currentPos = 0;
         StudentStudyResultFragmentPresenter.currentStatus = 0;
         studentStudyResultFragmentPresenter = new StudentStudyResultFragmentPresenter(this,getContext());
         studentStudyResultFragmentPresenter.getStudentStudyResult(0);

@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.helpers;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -40,41 +42,60 @@ public class EpicDialog {
         duong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PackageManager pm = context.getPackageManager();
-                Uri uri = Uri.parse("https://www.facebook.com/duongrom.it.305");
+//                PackageManager pm = context.getPackageManager();
+//                Uri uri = null;
+//
+//                try {
+//                    ApplicationInfo applicationInfo = pm.getApplicationInfo("com.facebook.katana", 0);
+//                    if (applicationInfo.enabled) {
+//                        uri = Uri.parse("fb://facewebmodal/f?href=" + "https://www.facebook.com/duongrom.it.305");
+//                    }
+//                }
+//
+//                catch (PackageManager.NameNotFoundException ignored) {
+//                    Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//                context.startActivity(intent);
 
                 try {
-                    ApplicationInfo applicationInfo = pm.getApplicationInfo("com.facebook.katana", 0);
-                    if (applicationInfo.enabled) {
-                        uri = Uri.parse("fb://facewebmodal/f?href=" + "https://www.facebook.com/duongrom.it.305");
-                    }
+                    Uri webpage = Uri.parse("https://www.facebook.com/duongrom.it.305");
+                    Intent myIntent = new Intent(Intent.ACTION_VIEW, webpage);
+                    context.startActivity(myIntent);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
-
-                catch (PackageManager.NameNotFoundException ignored) {
-                }
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                context.startActivity(intent);
             }
         });
         giang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PackageManager pm = context.getPackageManager();
-                Uri uri = Uri.parse("https://www.facebook.com/kuro.neko.sora.ni.tobu");
-
+//                PackageManager pm = context.getPackageManager();
+//                Uri uri = null;
+//
+//                try {
+//                    ApplicationInfo applicationInfo = pm.getApplicationInfo("com.facebook.katana", 0);
+//                    if (applicationInfo.enabled) {
+//                        uri = Uri.parse("fb://facewebmodal/f?href=" + "https://www.facebook.com/kuro.neko.sora.ni.tobu");
+//                    }
+//                }
+//
+//                catch (PackageManager.NameNotFoundException ignored) {
+//                    Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//                context.startActivity(intent);
                 try {
-                    ApplicationInfo applicationInfo = pm.getApplicationInfo("com.facebook.katana", 0);
-                    if (applicationInfo.enabled) {
-                        uri = Uri.parse("fb://facewebmodal/f?href=" + "https://www.facebook.com/kuro.neko.sora.ni.tobu");
-                    }
+                    Uri webpage = Uri.parse("https://www.facebook.com/kuro.neko.sora.ni.tobu");
+                    Intent myIntent = new Intent(Intent.ACTION_VIEW, webpage);
+                    context.startActivity(myIntent);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
-
-                catch (PackageManager.NameNotFoundException ignored) {
-                }
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                context.startActivity(intent);
             }
         });
         close.setOnClickListener(new View.OnClickListener() {

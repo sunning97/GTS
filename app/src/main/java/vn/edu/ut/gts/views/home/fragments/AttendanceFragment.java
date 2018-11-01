@@ -96,6 +96,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         this.attendanceFragmentPresenter = new AttendanceFragmentPresenter(this, getContext());
         this.init();
         d = getContext().getResources().getDisplayMetrics().density;
+        AttendanceFragment.currentPos = 0;
         AttendanceFragmentPresenter.currentStatus = 0;
         attendanceFragmentPresenter.getDataAttendanceSpinner();
         return view;
