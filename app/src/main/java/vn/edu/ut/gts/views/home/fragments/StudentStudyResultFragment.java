@@ -106,10 +106,10 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     @Override
     public void showTimeoutDialog() {
         if (loadingDialog.isShowing()) loadingDialog.dismiss();
-        new SweetAlertDialog(getContext())
-                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
-                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
-                .show();
+//        new SweetAlertDialog(getContext())
+//                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
+//                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
+//                .show();
         hideAllComponent();
         retryIcon.hide();
         retryText.setVisibility(View.VISIBLE);
@@ -119,10 +119,10 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     @Override
     public void showNoConnectionDialog() {
         if (loadingDialog.isShowing()) loadingDialog.dismiss();
-        new SweetAlertDialog(getContext())
-                .setTitleText(getResources().getString(R.string.no_internet_access_title))
-                .setContentText(getResources().getString(R.string.no_internet_access_content))
-                .show();
+//        new SweetAlertDialog(getContext())
+//                .setTitleText(getResources().getString(R.string.no_internet_access_title))
+//                .setContentText(getResources().getString(R.string.no_internet_access_content))
+//                .show();
         hideAllComponent();
         retryIcon.hide();
         retryText.setVisibility(View.VISIBLE);

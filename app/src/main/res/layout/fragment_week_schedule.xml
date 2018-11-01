@@ -7,6 +7,7 @@
     tools:context=".views.home.fragments.StudentStudyResultFragment">
 
     <RelativeLayout
+        android:visibility="invisible"
         android:id="@+id/tablayout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,6 +53,7 @@
         </android.support.design.widget.TabLayout>
     </RelativeLayout>
     <android.support.v4.view.ViewPager
+        android:visibility="invisible"
         android:id="@+id/week_schedule_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -106,6 +108,7 @@
         </FrameLayout>
     </LinearLayout>
     <com.github.clans.fab.FloatingActionMenu
+        android:visibility="invisible"
         android:id="@+id/floating_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

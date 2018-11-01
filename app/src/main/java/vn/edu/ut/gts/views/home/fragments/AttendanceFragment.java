@@ -96,7 +96,6 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         this.attendanceFragmentPresenter = new AttendanceFragmentPresenter(this, getContext());
         this.init();
         d = getContext().getResources().getDisplayMetrics().density;
-        AttendanceFragmentPresenter.isNotFirst = false;
         AttendanceFragmentPresenter.currentStatus = 0;
         attendanceFragmentPresenter.getDataAttendanceSpinner();
         return view;
@@ -105,10 +104,8 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
 
     @OnClick(R.id.retry_text)
     public void retry(View view) {
-        retryIcon.show();
         AttendanceFragmentPresenter.currentStatus = 0;
-        AttendanceFragmentPresenter.isNotFirst = true;
-        retryText.setVisibility(View.GONE);
+        retryText.setVisibility(View.VISIBLE);
         attendanceFragmentPresenter.getDataAttendanceSpinner();
     }
 
@@ -261,10 +258,10 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     @Override
     public void showTimeoutDialog() {
         if (loadingDialog.isShowing()) loadingDialog.dismiss();
-        new SweetAlertDialog(getContext())
-                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
-                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
-                .show();
+//        new SweetAlertDialog(getContext())
+//                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
+//                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
+//                .show();
         removeAllSpinnerItem();
         retryIcon.hide();
         retryText.setVisibility(View.VISIBLE);
@@ -275,10 +272,10 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     @Override
     public void showNoInternetDialog() {
         if (loadingDialog.isShowing()) loadingDialog.dismiss();
-        new SweetAlertDialog(getContext())
-                .setTitleText(getResources().getString(R.string.no_internet_access_title))
-                .setContentText(getResources().getString(R.string.no_internet_access_content))
-                .show();
+//        new SweetAlertDialog(getContext())
+//                .setTitleText(getResources().getString(R.string.no_internet_access_title))
+//                .setContentText(getResources().getString(R.string.no_internet_access_content))
+//                .show();
         removeAllSpinnerItem();
         retryIcon.hide();
         retryText.setVisibility(View.VISIBLE);

@@ -8,6 +8,7 @@
     tools:context=".views.home.fragments.AttendanceFragment">
 
     <TextView
+        android:visibility="invisible"
         android:id="@+id/semester_select_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,6 +22,7 @@
         android:textStyle="bold" />
 
     <com.jaredrummler.materialspinner.MaterialSpinner
+        android:visibility="invisible"
         android:id="@+id/student_attendance_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,6 +30,7 @@
         android:layout_marginRight="10dp" />
 
     <LinearLayout
+        android:visibility="invisible"
         android:id="@+id/total_halt_day_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

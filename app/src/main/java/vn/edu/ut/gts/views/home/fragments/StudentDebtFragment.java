@@ -238,10 +238,10 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     @Override
     public void showTimeoutDialog() {
         if (loadingDialog.isShowing()) loadingDialog.dismiss();
-        new SweetAlertDialog(getContext())
-                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
-                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
-                .show();
+//        new SweetAlertDialog(getContext())
+//                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
+//                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
+//                .show();
         removeAllSpinnerItem();
         hideAllComponent();
         retyIcon.hide();
@@ -251,10 +251,10 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     @Override
     public void showNoInternetDialog() {
         if (loadingDialog.isShowing()) loadingDialog.dismiss();
-        new SweetAlertDialog(getContext())
-                .setTitleText(getResources().getString(R.string.no_internet_access_title))
-                .setContentText(getResources().getString(R.string.no_internet_access_content))
-                .show();
+//        new SweetAlertDialog(getContext())
+//                .setTitleText(getResources().getString(R.string.no_internet_access_title))
+//                .setContentText(getResources().getString(R.string.no_internet_access_content))
+//                .show();
         removeAllSpinnerItem();
         hideAllComponent();
         retyIcon.hide();

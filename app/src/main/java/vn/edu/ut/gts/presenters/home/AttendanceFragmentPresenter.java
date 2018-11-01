@@ -29,7 +29,6 @@ import vn.edu.ut.gts.views.home.fragments.IAttendanceFragment;
 
 public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter {
     public static int currentStatus = 0;
-    public static boolean isNotFirst = false;
     private IAttendanceFragment iAttendanceFragment;
     private Context context;
     private Storage storage;
@@ -45,8 +44,7 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
-                if(currentStatus == 0 && !isNotFirst)
-                    iAttendanceFragment.showLoadingDialog();
+                iAttendanceFragment.showLoadingDialog();
             }
 
             @Override
@@ -103,7 +101,6 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                         break;
                     default: {
                         currentStatus = 0;
-                        isNotFirst = false;
                         List<String> dataSnpinner = new ArrayList<>();
                         try {
                             for (int i = 0; i < semesters.length(); i++) {
@@ -125,7 +122,6 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
-                if(currentStatus == 0 && !isNotFirst)
                 iAttendanceFragment.showLoadingDialog();
             }
 
@@ -194,7 +190,6 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                         break;
                     default: {
                         currentStatus = 0;
-                        isNotFirst = false;
                         iAttendanceFragment.generateTableContent(jsonArray);
                         iAttendanceFragment.showLoadedLayout();
                         iAttendanceFragment.dismissLoadingDialog();

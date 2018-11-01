@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".views.home.fragments.FrameProgramFragment">
     <TextView
+        android:visibility="invisible"
         android:id="@+id/semester_select_tv"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -20,6 +21,7 @@
         android:layout_marginBottom="5dp"
         android:textSize="16sp"/>
     <com.jaredrummler.materialspinner.MaterialSpinner
+        android:visibility="invisible"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:id="@+id/frame_program_spinner"
@@ -30,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="invisible">
         <TableLayout
             android:id="@+id/frame_program_table_header"
             android:layout_width="match_parent"
