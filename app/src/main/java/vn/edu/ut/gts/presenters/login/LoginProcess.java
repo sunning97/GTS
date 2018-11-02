@@ -105,9 +105,12 @@ public class LoginProcess implements ILoginProcess {
                     case 4: {
                         iLoginView.dismisLoadingDialog();
                         iLoginView.transferToRetryBtn();
-                        iLoginView.showLoginLayout();
-                        if (!isAuto)
+                        if (!isAuto){
+                            iLoginView.showLoginLayout();
                             iLoginView.showNoInternetDialog();
+                        } else {
+                            iLoginView.setLastLogin();
+                        }
                         break;
                     }
                     default: {
@@ -190,8 +193,10 @@ public class LoginProcess implements ILoginProcess {
                     }
                     case 3: {
                         iLoginView.revertLoadingButton();
-                        iLoginView.showLoginLayout();
-                        if (isAuto) iLoginView.showLoginAutoErrorDialog();
+                        if (isAuto){
+                            iLoginView.showLoginLayout();
+                            iLoginView.showLoginAutoErrorDialog();
+                        }
                         else iLoginView.loginFailed();
                         break;
                     }

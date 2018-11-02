@@ -112,6 +112,7 @@ public class Storage {
             File image = new File(context.getFilesDir(), "student_portrait.jpg");
             if (image.exists()) image.delete();
             String id = this.getString("last_student_login");
+            editor.clear();
             if(!TextUtils.isEmpty(id)){
                 editor.putString("last_student_login",id);
             }

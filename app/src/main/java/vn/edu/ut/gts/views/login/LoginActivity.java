@@ -255,6 +255,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             loginProcess.initData(true);
             loginProcess.execute(id, pass, true);
         } else {
+            LoginActivity.isAutoLogin = false;
             layoutAutoLogin.setVisibility(View.GONE);
             layoutLogin.setVisibility(View.VISIBLE);
             this.setLastLogin();
