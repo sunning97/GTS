@@ -8,40 +8,48 @@
                 <item
                     android:id="@+id/home_dashboard"
                     android:icon="@drawable/ic_navigation_black_24dp"
-                    android:title="Bảng điều khiển"></item>
+                    android:title="Bảng điều khiển" />
             </menu>
         </item>
         <item
             android:id="@+id/student_profile"
             android:icon="@drawable/ic_info_black_48"
-            android:title="Thông tin sinh viên"></item>
+            android:title="Thông tin sinh viên" />
         <item
             android:id="@+id/student_study_result"
             android:icon="@drawable/ic_school_white_24dp"
-            android:title="Kết quả học tập"></item>
+            android:title="Kết quả học tập" />
         <item
             android:id="@+id/frame_program"
             android:icon="@drawable/ic_calendar_white_filled_96"
-            android:title="Chương trình khung"></item>
+            android:title="Chương trình khung" />
         <item
             android:id="@+id/student_debt"
             android:icon="@drawable/ic_cash_white_96"
-            android:title="Công nợ"></item>
+            android:title="Công nợ" />
         <item
             android:id="@+id/schedule_by_week"
             android:icon="@drawable/ic_health_calendar_white_96"
-            android:title="Xem lịch tuần"></item>
+            android:title="Xem lịch tuần" />
         <item
             android:id="@+id/attendance"
             android:icon="@drawable/ic_attendance_filled_white_96"
-            android:title="Thông tin điểm danh"></item>
+            android:title="Thông tin điểm danh" />
     </group>
+    <item android:title="Tìm kiếm">
+        <menu>
+            <item
+                android:id="@+id/student_search"
+                android:icon="@drawable/ic_search_black_48dp"
+                android:title="Tìm kiếm sinh viên" />
+        </menu>
+    </item>
     <item android:title="Thông tin">
         <menu>
             <item
                 android:id="@+id/about_app"
                 android:icon="@drawable/ic_about_us_48_black"
-                android:title="Về ứng dụng"></item>
+                android:title="Về ứng dụng" />
         </menu>
     </item>
     <item android:title="Tài khoản">
@@ -49,11 +57,11 @@
             <item
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_logout_black_48"
-                android:title="Đăng xuất"></item>
+                android:title="Đăng xuất" />
             <item
                 android:id="@+id/exit"
                 android:icon="@drawable/ic_exit_to_app_black_24dp"
-                android:title="Thoát"></item>
+                android:title="Thoát" />
         </menu>
     </item>
 </menu>

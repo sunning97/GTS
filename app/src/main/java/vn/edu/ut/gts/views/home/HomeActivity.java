@@ -33,6 +33,7 @@ import vn.edu.ut.gts.views.home.fragments.StudentStudyResultFragment;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.views.home.fragments.WeekSchedule;
 import vn.edu.ut.gts.views.login.LoginActivity;
+import vn.edu.ut.gts.views.search.StudentSearchActivity;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final int STUDENT_INFO = 1;
@@ -153,6 +154,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         new AttendanceFragment()
                 ).commit();
                 setTitle(item.getTitle());
+                break;
+            }
+            case R.id.student_search: {
+                startActivity(new Intent(HomeActivity.this,StudentSearchActivity.class));
                 break;
             }
             case R.id.about_app:{
