@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.elyeproj.loaderviewlibrary.LoaderImageView;
+import com.elyeproj.loaderviewlibrary.LoaderTextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +54,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     LoaderImageView profileImageLoading;
     @BindView(R.id.profile_image)
     CircleImageView profileImage;
+    @BindView(R.id.student_name_text_loading)
+    LoaderTextView studentNameTextLoading;
     @BindView(R.id.swipe_refresh_dashboard)
     SwipeRefreshLayout swipeRefreshDashboard;
 
@@ -66,6 +69,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
         storage = new Storage(DashboardActivity.this);
+        dashboardToolbar.setTitle("");
+        collapsingToolbarLayout.setTitle("");
         dashboardPresenter = new DashboardPresenter(this, this);
         swipeRefreshDashboard.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         swipeRefreshDashboard.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -77,18 +82,16 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         });
-        setSupportActionBar(dashboardToolbar);
         if (TextUtils.isEmpty(storage.getString("student_info"))) {
             profileImage.setVisibility(View.INVISIBLE);
-            profileImageLoading.resetLoader();
-            collapsingToolbarLayout.setTitle("");
             dashboardPresenter.go();
         } else {
+            hideLoaderTextView();
             disableSwipeRefresh();
             setStudentPortrait(dashboardPresenter.getStudentPortraitFromStorage());
             setToolbarTitle(dashboardPresenter.getStudentNameFromStorate());
         }
-
+        setSupportActionBar(dashboardToolbar);
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
@@ -212,15 +215,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         attendanceCard.setEnabled(false);
     }
 
-    @Override
-    public void startLoading() {
-
-    }
-
-    @Override
-    public void finishLoading() {
-
-    }
 
     @Override
     public void showErrorDialog() {
@@ -255,6 +249,21 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void resetLoaderImage() {
         profileImageLoading.resetLoader();
+    }
+
+    @Override
+    public void resetLoaderTextView() {
+        studentNameTextLoading.resetLoader();
+    }
+
+    @Override
+    public void hideLoaderTextView() {
+        studentNameTextLoading.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showLoaderTextView() {
+        studentNameTextLoading.setVisibility(View.VISIBLE);
     }
 
 

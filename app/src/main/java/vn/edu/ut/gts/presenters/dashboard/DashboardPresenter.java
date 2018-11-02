@@ -38,12 +38,15 @@ public class DashboardPresenter implements IDashboardPresenter {
         this.storage = new Storage(this.context);
     }
 
+    @Override
     public void go() {
         if (HomeActivity.isLogin) {
             @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
                 @Override
                 protected void onPreExecute() {
                     iDashboardActivity.resetLoaderImage();
+                    iDashboardActivity.resetLoaderTextView();
+                    iDashboardActivity.showLoaderTextView();
                     iDashboardActivity.disableAll();
                     iDashboardActivity.disableSwipeRefresh();
                 }
@@ -56,10 +59,11 @@ public class DashboardPresenter implements IDashboardPresenter {
                         Connection.Response resultImageResponse;
                         resultImageResponse = Jsoup.connect(Helper.BASE_URL + "GetImage.aspx?MSSV=" + studentID)
                                 .userAgent(Helper.USER_AGENT)
+                                .timeout(Helper.TIMEOUT_VALUE)
                                 .method(Connection.Method.GET)
                                 .cookie("ASP.NET_Session_Id", storage.getCookie())
                                 .ignoreContentType(true)
-                                .timeout(10000)
+                                .timeout(Helper.TIMEOUT_VALUE)
                                 .execute();
 
                         storage.saveImage(resultImageResponse, context);
@@ -68,7 +72,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 .method(Connection.Method.GET)
                                 .userAgent(Helper.USER_AGENT)
                                 .cookie("ASP.NET_SessionId", storage.getCookie())
-                                .timeout(10000)
+                                .timeout(Helper.TIMEOUT_VALUE)
                                 .get();
                         info = parseData(document);
 
@@ -97,6 +101,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                         }
                         default: {
                             storage.putString("student_info", jsonObject.toString());
+                            iDashboardActivity.hideLoaderTextView();
                             Bitmap image = storage.getImageFromStorage(context);
                             String studentName = storage.getString("student_name");
                             iDashboardActivity.setToolbarTitle(studentName);
@@ -179,9 +184,8 @@ public class DashboardPresenter implements IDashboardPresenter {
                     .execute();
 
             storage.saveImage(resultImageResponse, context);
-            Log.d("AAA", "save image");
         } catch (SocketTimeoutException e) {
-            Log.d("AAA", e.toString());
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

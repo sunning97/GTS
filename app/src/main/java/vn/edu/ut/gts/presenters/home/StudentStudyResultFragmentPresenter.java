@@ -38,7 +38,7 @@ public class StudentStudyResultFragmentPresenter implements IStudentStudyResultF
         this.storage = new Storage(this.context);
     }
 
-
+    @Override
     public void getStudentStudyResult(final int post) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,JSONObject> getData = new AsyncTask<Void, Void, JSONObject>() {
             @Override
@@ -53,7 +53,7 @@ public class StudentStudyResultFragmentPresenter implements IStudentStudyResultF
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "Xemdiem.aspx")
                             .method(Connection.Method.GET)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();

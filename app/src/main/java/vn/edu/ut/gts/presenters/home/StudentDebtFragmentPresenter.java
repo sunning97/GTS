@@ -53,7 +53,7 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "CongNoSinhVien.aspx")
                             .method(Connection.Method.GET)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
@@ -117,7 +117,7 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
         };
         asyncTask.execute();
     }
-
+    @Override
     public void getStudentDebt(final int pos) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
@@ -132,7 +132,7 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                     JSONObject dataDiemDanh = new JSONObject(storage.getString("dataDebt"));
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "CongNoSinhVien.aspx")
                             .method(Connection.Method.POST)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataDiemDanh.getString("eventTarget"))

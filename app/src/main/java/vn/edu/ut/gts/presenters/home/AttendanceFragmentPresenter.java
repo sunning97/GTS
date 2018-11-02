@@ -54,7 +54,7 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "ThongTinDiemDanh.aspx")
                             .method(Connection.Method.GET)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
@@ -132,7 +132,7 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                     JSONObject dataDiemDanh = new JSONObject(storage.getString("dataAttendance"));
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "ThongTinDiemDanh.aspx")
                         .method(Connection.Method.POST)
-                        .timeout(10000)
+                        .timeout(Helper.TIMEOUT_VALUE)
                         .userAgent(Helper.USER_AGENT)
                         .cookie("ASP.NET_SessionId", storage.getCookie())
                         .data("__EVENTTARGET", dataDiemDanh.getString("eventTarget"))

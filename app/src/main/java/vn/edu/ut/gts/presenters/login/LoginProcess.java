@@ -25,7 +25,7 @@ import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.login.ILoginView;
 
-public class LoginProcess implements ILoginProcess{
+public class LoginProcess implements ILoginProcess {
     public static int TIMEOUT = 1;
     public static int LOGIN_SUCCESS = 2;
     public static int LOGIN_FAILED = 3;
@@ -37,13 +37,15 @@ public class LoginProcess implements ILoginProcess{
     private Context context;
     private Storage storage;
     private Student student;
+
     public LoginProcess(ILoginView iLoginView, Context context) {
         this.iLoginView = iLoginView;
         this.context = context;
         this.storage = new Storage(this.context);
         student = new Student(this.context);
     }
-    public void initData(final boolean isAuto){
+
+    public void initData(final boolean isAuto) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Integer> asyncTask = new AsyncTask<Void, Void, Integer>() {
             @Override
             protected void onPreExecute() {
@@ -59,7 +61,7 @@ public class LoginProcess implements ILoginProcess{
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL)
                             .userAgent(Helper.USER_AGENT)
                             .method(Connection.Method.GET)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .execute();
                     Document doc = res.parse();
                     storage.setCookie(res.cookie("ASP.NET_SessionId"));
@@ -76,11 +78,10 @@ public class LoginProcess implements ILoginProcess{
                 } catch (SocketTimeoutException connTimeout) {
                     result = LoginProcess.TIMEOUT;
                     currentStatus = result;
-                } catch (UnknownHostException e){
+                } catch (UnknownHostException e) {
                     result = LoginProcess.NO_INTERNET;
                     currentStatus = result;
-                }
-                catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -91,16 +92,16 @@ public class LoginProcess implements ILoginProcess{
 
             @Override
             protected void onPostExecute(Integer integer) {
-                switch (integer){
-                    case 1:{
+                switch (integer) {
+                    case 1: {
                         iLoginView.dismisLoadingDialog();
                         iLoginView.transferToRetryBtn();
                         iLoginView.showLoginLayout();
-                        if(!isAuto)
+                        if (!isAuto)
                             iLoginView.showTimeoutDialog();
                         break;
                     }
-                    case 4:{
+                    case 4: {
                         iLoginView.dismisLoadingDialog();
                         iLoginView.transferToRetryBtn();
                         iLoginView.showLoginLayout();
@@ -108,7 +109,7 @@ public class LoginProcess implements ILoginProcess{
                             iLoginView.showNoInternetDialog();
                         break;
                     }
-                    default:{
+                    default: {
                         iLoginView.transferToLoginBtn();
                         iLoginView.dismisLoadingDialog();
                         currentStatus = 0;
@@ -118,6 +119,7 @@ public class LoginProcess implements ILoginProcess{
         };
         asyncTask.execute();
     }
+
     @Override
     public void execute(final String studentId, final String password, final boolean isAuto) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Integer> asyncTask = new AsyncTask<Void, Void, Integer>() {
@@ -135,30 +137,30 @@ public class LoginProcess implements ILoginProcess{
                     String hashPassword = Aes.encrypt(getPrivateKey(studentId), password).toBase64();
                     String securityValue = createConfirmImage();
                     Jsoup.connect(Helper.BASE_URL)
-                        .method(Connection.Method.POST)
-                        .userAgent(Helper.USER_AGENT)
-                        .cookie("ASP.NET_SessionId", storage.getCookie())
-                        .data("__EVENTTARGET", dataLogin.getString("eventTarget"))
-                        .data("__EVENTARGUMENT", dataLogin.getString("eventArgument"))
-                        .data("__LASTFOCUS", dataLogin.getString("lastFocus"))
-                        .data("__VIEWSTATE", dataLogin.getString("viewState"))
-                        .data("__VIEWSTATEGENERATOR", dataLogin.getString("viewStartGenerator"))
-                        .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataLogin.getString("radioBtnList"))
-                        .data("ctl00$DdListMenu",dataLogin.getString("listMenu"))
-                        .data("ctl00$ucRight1$btnLogin", dataLogin.getString("btnLogin"))
-                        .data("ctl00$ucRight1$txtMaSV",studentId)
-                        .data("ctl00$ucRight1$txtMatKhau", hashPassword)
-                        .data("ctl00$ucRight1$txtSercurityCode", securityValue)
-                        .data("txtSecurityCodeValue", Helper.md5(securityValue))
-                        .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
-                        .timeout(10000)
-                        .execute();
+                            .method(Connection.Method.POST)
+                            .timeout(Helper.TIMEOUT_VALUE)
+                            .userAgent(Helper.USER_AGENT)
+                            .cookie("ASP.NET_SessionId", storage.getCookie())
+                            .data("__EVENTTARGET", dataLogin.getString("eventTarget"))
+                            .data("__EVENTARGUMENT", dataLogin.getString("eventArgument"))
+                            .data("__LASTFOCUS", dataLogin.getString("lastFocus"))
+                            .data("__VIEWSTATE", dataLogin.getString("viewState"))
+                            .data("__VIEWSTATEGENERATOR", dataLogin.getString("viewStartGenerator"))
+                            .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataLogin.getString("radioBtnList"))
+                            .data("ctl00$DdListMenu", dataLogin.getString("listMenu"))
+                            .data("ctl00$ucRight1$btnLogin", dataLogin.getString("btnLogin"))
+                            .data("ctl00$ucRight1$txtMaSV", studentId)
+                            .data("ctl00$ucRight1$txtMatKhau", hashPassword)
+                            .data("ctl00$ucRight1$txtSercurityCode", securityValue)
+                            .data("txtSecurityCodeValue", Helper.md5(securityValue))
+                            .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
+                            .execute();
 
-                    if(Helper.checkLogin(storage.getCookie())) result = LoginProcess.LOGIN_SUCCESS;
+                    if (Helper.checkLogin(storage.getCookie())) result = LoginProcess.LOGIN_SUCCESS;
 
                 } catch (SocketTimeoutException connTimeout) {
                     result = LoginProcess.TIMEOUT;
-                } catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     result = LoginProcess.NO_INTERNET;
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -171,7 +173,7 @@ public class LoginProcess implements ILoginProcess{
 
             @Override
             protected void onPostExecute(Integer status) {
-                switch (status){
+                switch (status) {
                     case 1: {
                         iLoginView.revertLoadingButton();
                         iLoginView.showLoginLayout();
@@ -189,11 +191,11 @@ public class LoginProcess implements ILoginProcess{
                     case 3: {
                         iLoginView.revertLoadingButton();
                         iLoginView.showLoginLayout();
-                        if(isAuto) iLoginView.showLoginAutoErrorDialog();
+                        if (isAuto) iLoginView.showLoginAutoErrorDialog();
                         else iLoginView.loginFailed();
                         break;
                     }
-                    case 4:{
+                    case 4: {
                         iLoginView.revertLoadingButton();
                         iLoginView.showLoginLayout();
                         iLoginView.showNoInternetDialog();
@@ -204,7 +206,8 @@ public class LoginProcess implements ILoginProcess{
         };
         asyncTask.execute();
     }
-    private void saveCurrentStudentName(){
+
+    private void saveCurrentStudentName() {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
@@ -214,14 +217,16 @@ public class LoginProcess implements ILoginProcess{
 
             @Override
             protected void onPostExecute(String s) {
-                storage.putString("student_name",s);
+                storage.putString("student_name", s);
             }
         };
         asyncTask.execute();
     }
-    private void saveLastLoginID(String ID){
-        this.storage.putString("last_student_login",ID);
+
+    private void saveLastLoginID(String ID) {
+        this.storage.putString("last_student_login", ID);
     }
+
     private String createConfirmImage() {
         try {
             String res = Curl.connect(Helper.BASE_URL + "ajaxpro/AjaxConfirmImage,PMT.Web.PhongDaoTao.ashx")
@@ -239,15 +244,16 @@ public class LoginProcess implements ILoginProcess{
         }
         return "";
     }
+
     private String getPrivateKey(String studentId) {
-        String res = Curl.connect(Helper.BASE_URL+"ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx")
+        String res = Curl.connect(Helper.BASE_URL + "ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx")
                 .method("POST")
                 .userAgent(Helper.USER_AGENT)
-                .header("X-AjaxPro-Method","GetPrivateKey")
+                .header("X-AjaxPro-Method", "GetPrivateKey")
                 .setStringCookie(this.storage.getCookie())
-                .dataString("{\"salt\":\""+ studentId +"\"}")
+                .dataString("{\"salt\":\"" + studentId + "\"}")
                 .execute();
-        if(res != null) return res.substring(1,33);
+        if (res != null) return res.substring(1, 33);
         return null;
     }
 }

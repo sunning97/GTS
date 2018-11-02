@@ -38,7 +38,7 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
         this.context = context;
         this.storage = new Storage(this.context);
     }
-
+    @Override
     public void getDataFrameProgram() {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,Void> asyncTask =  new AsyncTask<Void, Void, Void>() {
 
@@ -53,7 +53,7 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "XemChuongTrinhKhung.aspx")
                             .method(Connection.Method.GET)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
@@ -98,7 +98,7 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
         };
         asyncTask.execute();
     }
-
+    @Override
     public void getFrameProgram() {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> getData = new AsyncTask<Void, Void, JSONObject>() {
             @Override

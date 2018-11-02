@@ -190,17 +190,17 @@
         <ImageView
             android:layout_width="88dp"
             android:layout_height="124dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="10dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_logo_gts" />
         <com.wang.avi.AVLoadingIndicatorView
             android:layout_gravity="center"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             style="@style/AVLoadingIndicatorView.Large"
             android:visibility="visible"
-            app:indicatorName="BallPulseIndicator"
+            app:indicatorName="PacmanIndicator"
             app:indicatorColor="@color/white"/>
     </LinearLayout>
 </RelativeLayout>

@@ -21,7 +21,7 @@
                 android:id="@+id/dashboard_collapsing_toolbar_alyout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/colorPrimary"
                 app:contentScrim="?attr/colorPrimaryDark"
                 app:expandedTitleGravity="bottom|center_horizontal"
                 app:expandedTitleTextAppearance="@style/CollapsedAppBarTitle"
@@ -43,13 +43,20 @@
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="20dp"
-                    app:custom_color="@color/colorPrimary" />
+                    app:custom_color="@color/violet" />
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_gravity="center"
                     android:id="@+id/profile_image"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginBottom="20dp"/>
+                <com.elyeproj.loaderviewlibrary.LoaderTextView
+                    android:id="@+id/student_name_text_loading"
+                    android:layout_marginTop="65dp"
+                    android:layout_gravity="center"
+                    android:layout_width="180dp"
+                    android:layout_height="18dp"
+                    app:custom_color="@color/violet"/>
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>
@@ -87,7 +94,7 @@
                                 android:layout_width="64dp"
                                 android:layout_height="64dp"
                                 android:background="@drawable/circlebackgroundgreen"
-                                android:padding="5dp"
+                                android:padding="15dp"
                                 android:src="@drawable/ic_info_outline_white_24dp" />
 
                             <TextView
@@ -133,7 +140,7 @@
                                 android:layout_width="64dp"
                                 android:layout_height="64dp"
                                 android:background="@drawable/circlebackgroundpink"
-                                android:padding="5dp"
+                                android:padding="15dp"
                                 android:src="@drawable/ic_school_white_24dp" />
 
                             <TextView
@@ -187,7 +194,7 @@
                                 android:layout_width="64dp"
                                 android:layout_height="64dp"
                                 android:background="@drawable/circlebackgroundviolet"
-                                android:padding="15dp"
+                                android:padding="20dp"
                                 android:src="@drawable/ic_calendar_white_filled_96" />
 
                             <TextView
@@ -233,7 +240,7 @@
                                 android:layout_width="64dp"
                                 android:layout_height="64dp"
                                 android:background="@drawable/circlebackgroundblue"
-                                android:padding="5dp"
+                                android:padding="15dp"
                                 android:src="@drawable/ic_cash_white_96" />
 
                             <TextView
@@ -287,7 +294,7 @@
                                 android:layout_width="64dp"
                                 android:layout_height="64dp"
                                 android:background="@drawable/circlebackgroundgray"
-                                android:padding="5dp"
+                                android:padding="15dp"
                                 android:src="@drawable/ic_health_calendar_white_96" />
 
                             <TextView
@@ -333,7 +340,7 @@
                                 android:layout_width="64dp"
                                 android:layout_height="64dp"
                                 android:background="@drawable/circlebackgroundorange"
-                                android:padding="10dp"
+                                android:padding="17dp"
                                 android:src="@drawable/ic_attendance_filled_white_96" />
 
                             <TextView

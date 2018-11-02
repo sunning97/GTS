@@ -27,15 +27,15 @@ import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.home.fragments.IWeekSchedule;
 import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 
-public class WeekSchedulePresenter implements IWeekSchedulePresenter{
+public class WeekSchedulePresenter implements IWeekSchedulePresenter {
     public static int currentStatus = 0;
     private IWeekSchedule iWeekSchedule;
     private Context context;
     private Storage storage;
 
-    public WeekSchedulePresenter(IWeekSchedule iWeekSchedule,Context context){
+    public WeekSchedulePresenter(IWeekSchedule iWeekSchedule, Context context) {
         this.iWeekSchedule = iWeekSchedule;
-        this.context  = context;
+        this.context = context;
         this.storage = new Storage(this.context);
     }
 
@@ -124,6 +124,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
         return data;
     }
 
+    @Override
     public void getSchedulesGetMethod() {
 
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
@@ -138,7 +139,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.GET)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
@@ -158,6 +159,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
                 }
                 return schedules;
             }
+
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
@@ -180,8 +182,9 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
         asyncTask.execute();
     }
 
+    @Override
     public void getNextSchedulesWeek() {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
                 iWeekSchedule.showLoadingDialog();
@@ -195,7 +198,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
@@ -250,8 +253,9 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
         voidVoidVoidAsyncTask.execute();
     }
 
+    @Override
     public void getPrevSchedulesWeek() {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
                 iWeekSchedule.showLoadingDialog();
@@ -265,7 +269,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
@@ -321,8 +325,9 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
     }
 
+    @Override
     public void getCurrentSchedulesWeek() {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> voidVoidVoidAsyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
                 iWeekSchedule.showLoadingDialog();
@@ -336,9 +341,9 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
-                            .cookie("ASP.NET_SessionId",storage.getCookie())
+                            .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
                             .data("__EVENTARGUMENT", dataWeek.getString("eventArgument"))
                             .data("__LASTFOCUS", dataWeek.getString("lastFocus"))
@@ -393,7 +398,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
     }
 
     public void getSchedulesByDate(String date) {
-        @SuppressLint("StaticFieldLeak") AsyncTask<String,Void,JSONArray> voidVoidVoidAsyncTask = new AsyncTask<String, Void, JSONArray>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<String, Void, JSONArray> voidVoidVoidAsyncTask = new AsyncTask<String, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
                 iWeekSchedule.showLoadingDialog();
@@ -408,9 +413,9 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
-                            .timeout(10000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
-                            .cookie("ASP.NET_SessionId",storage.getCookie())
+                            .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
                             .data("__EVENTARGUMENT", dataWeek.getString("eventArgument"))
                             .data("__LASTFOCUS", dataWeek.getString("lastFocus"))
