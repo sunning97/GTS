@@ -129,8 +129,9 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         if (!TextUtils.isEmpty(this.storage.getString("last_student_login")))
             inputStudentId.setText(this.storage.getString("last_student_login"));
         if(!TextUtils.isEmpty(this.storage.getString("password")) && (Boolean.valueOf(this.storage.getString("is_remember_pass")) || LoginActivity.isRememberPassword)){
-            inputPassword.setText(this.storage.getString("password"));
-            cbRemember.setChecked(LoginActivity.isRememberPassword);
+            if(Boolean.valueOf(this.storage.getString("is_remember_pass")))
+                inputPassword.setText(this.storage.getString("password"));
+            cbRemember.setChecked(Boolean.valueOf(this.storage.getString("is_remember_pass")));
 //            LoginActivity.isRememberPassword = Boolean.valueOf(this.storage.getString("is_remember_pass"));
         }
     }
@@ -246,7 +247,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             layoutAutoLogin.setVisibility(View.VISIBLE);
             String id = this.storage.getString("last_student_login");
             String pass = this.storage.getString("password");
-
             loginProcess = new LoginProcess(LoginActivity.this, LoginActivity.this);
             loginProcess.initData(true);
             loginProcess.execute(id,pass,true);
