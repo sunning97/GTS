@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -182,7 +183,6 @@ public class LoginProcess implements ILoginProcess {
                     }
                     case 2: {
                         saveLastLoginID(studentId);
-                        saveCurrentStudentName();
                         HomeActivity.isLogin = true;
                         iLoginView.doneLoadingButton();
                         iLoginView.loginSuccess();
@@ -207,26 +207,10 @@ public class LoginProcess implements ILoginProcess {
         asyncTask.execute();
     }
 
-    private void saveCurrentStudentName() {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... voids) {
-                String name = student.getStudentName();
-                return name;
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                storage.putString("student_name", s);
-            }
-        };
-        asyncTask.execute();
-    }
 
     private void saveLastLoginID(String ID) {
         this.storage.putString("last_student_login", ID);
     }
-
     private String createConfirmImage() {
         try {
             String res = Curl.connect(Helper.BASE_URL + "ajaxpro/AjaxConfirmImage,PMT.Web.PhongDaoTao.ashx")
@@ -244,7 +228,6 @@ public class LoginProcess implements ILoginProcess {
         }
         return "";
     }
-
     private String getPrivateKey(String studentId) {
         String res = Curl.connect(Helper.BASE_URL + "ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx")
                 .method("POST")

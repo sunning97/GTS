@@ -151,14 +151,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.logout: {
-                storage.deleteAllsharedPreferences(HomeActivity.this);
-                storage.deleteImage(HomeActivity.this);
-                storage.putString("is_remember_pass",String.valueOf(false));
+                LoginActivity.isLogout = true;
                 HomeActivity.isLogin = false;
+                LoginActivity.isAutoLogin = false;
+                storage.deleteAllsharedPreferences(HomeActivity.this);
                 startActivity(new Intent(HomeActivity.this,LoginActivity.class));
                 break;
             }
             case R.id.exit: {
+                LoginActivity.isLogout = false;
                 storage.deleteAllsharedPreferences(HomeActivity.this);
                 HomeActivity.this.finishAffinity();
                 break;

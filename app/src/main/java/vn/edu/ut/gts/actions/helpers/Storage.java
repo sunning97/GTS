@@ -79,25 +79,43 @@ public class Storage {
         return b;
     }
 
-    public void deleteImage(Context context){
+    public boolean isImageExist(Context context) {
         File image = new File(context.getFilesDir(), "student_portrait.jpg");
-        if (image.exists()) image.delete();
+        return  image.exists();
     }
 
-    public boolean deleteAllsharedPreferences(Context context){
-        if(!LoginActivity.isRememberPassword){
+    public boolean deleteAllsharedPreferences(Context context) {
+
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        if (LoginActivity.isAutoLogin && !LoginActivity.isLogout) {
+            String id = this.getString("last_student_login");
+            String pass = this.getString("password");
+            editor.clear();
+            if (!TextUtils.isEmpty(id)) {
+                editor.putString("last_student_login", id);
+            }
+            if (!TextUtils.isEmpty(pass)) {
+                editor.putString("password", pass);
+            }
+            editor.putString("is_auto_login",String.valueOf(true));
+        }
+        if(LoginActivity.isAutoLogin && LoginActivity.isLogout){
             File image = new File(context.getFilesDir(), "student_portrait.jpg");
             if (image.exists()) image.delete();
-        }
-        SharedPreferences.Editor editor = this.sharedPreferences.edit();
-        String id = this.getString("last_student_login");
-        String pass = this.getString("password");
-        editor.clear();
-        if(!TextUtils.isEmpty(id))
+            String id = this.getString("last_student_login");
+            editor.clear();
             editor.putString("last_student_login",id);
-        if(LoginActivity.isRememberPassword && !TextUtils.isEmpty(pass)){
-            editor.putString("password",pass);
-            editor.putString("is_remember_pass",String.valueOf(LoginActivity.isRememberPassword));
+            editor.putString("is_auto_login",String.valueOf(false));
+        }
+
+        if(!LoginActivity.isAutoLogin && (!LoginActivity.isLogout || LoginActivity.isLogout)){
+            File image = new File(context.getFilesDir(), "student_portrait.jpg");
+            if (image.exists()) image.delete();
+            String id = this.getString("last_student_login");
+            if(!TextUtils.isEmpty(id)){
+                editor.putString("last_student_login",id);
+            }
+            editor.putString("is_auto_login",String.valueOf(false));
         }
         return editor.commit();
     }

@@ -53,16 +53,17 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     TextView studentIdInputErrorShow;
     @BindView(R.id.input_password_error)
     TextView passwordInputErrorShow;
-    @BindView(R.id.cb_remember)
-    CustomCheckBox cbRemember;
-    @BindView(R.id.tv_pass_remember)
-    TextView tvRemember;
+    @BindView(R.id.cb_auto_login)
+    CustomCheckBox cbAutoLogin;
+    @BindView(R.id.tv_auto_login)
+    TextView tvAuthoLogin;
     @BindView(R.id.layout_auto_login)
     LinearLayout layoutAutoLogin;
     @BindView(R.id.layout_login)
     RelativeLayout layoutLogin;
 
-    public static Boolean isRememberPassword = false;
+    public static Boolean isAutoLogin = false;
+    public static Boolean isLogout = false;
     private LoginProcess loginProcess;
     private Boolean isValidateNoError;
     private Handler handler;
@@ -126,13 +127,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void setLastLogin() {
-        if (!TextUtils.isEmpty(this.storage.getString("last_student_login")))
+        if(LoginActivity.isAutoLogin){
             inputStudentId.setText(this.storage.getString("last_student_login"));
-        if(!TextUtils.isEmpty(this.storage.getString("password")) && (Boolean.valueOf(this.storage.getString("is_remember_pass")) || LoginActivity.isRememberPassword)){
-            if(Boolean.valueOf(this.storage.getString("is_remember_pass")))
-                inputPassword.setText(this.storage.getString("password"));
-            cbRemember.setChecked(Boolean.valueOf(this.storage.getString("is_remember_pass")));
-//            LoginActivity.isRememberPassword = Boolean.valueOf(this.storage.getString("is_remember_pass"));
+            inputPassword.setText(this.storage.getString("password"));
+            cbAutoLogin.setChecked(true);
+        } else {
+            inputStudentId.setText(this.storage.getString("last_student_login"));
+            cbAutoLogin.setChecked(false);
         }
     }
 
@@ -144,7 +145,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void dismisLoadingDialog() {
-        if(epicDialog.isShowing())
+        if (epicDialog.isShowing())
             epicDialog.dismisPopup();
     }
 
@@ -159,7 +160,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void showNoInternetDialog() {
-        if(epicDialog.isShowing()) epicDialog.dismisPopup();
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
         disableInput();
         new SweetAlertDialog(this)
                 .setTitleText(getResources().getString(R.string.no_internet_access_title))
@@ -169,7 +170,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void transferToRetryBtn() {
-        if(epicDialog.isShowing()) epicDialog.dismisPopup();
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
         disableInput();
         btnLogin.setText("Thử lại");
     }
@@ -182,6 +183,9 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void showLoginLayout() {
+        if (Boolean.valueOf(storage.getString("is_auto_login"))) {
+            LoginActivity.isAutoLogin = true;
+        }
         this.setLastLogin();
         relay_1.setVisibility(View.VISIBLE);
         layoutAutoLogin.setVisibility(View.GONE);
@@ -196,7 +200,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void showLoginAutoErrorDialog() {
-        if(epicDialog.isShowing()) epicDialog.dismisPopup();
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
         enableInput();
         new SweetAlertDialog(this)
                 .setTitleText(getResources().getString(R.string.auto_login_error_title))
@@ -241,49 +245,49 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 loginProcess.initData(false);
             }
         };
-        if(Boolean.valueOf(this.storage.getString("is_remember_pass"))){
-            LoginActivity.isRememberPassword = true;
+        if (Boolean.valueOf(this.storage.getString("is_auto_login"))) {
+            LoginActivity.isAutoLogin = true;
             layoutLogin.setVisibility(View.GONE);
             layoutAutoLogin.setVisibility(View.VISIBLE);
             String id = this.storage.getString("last_student_login");
             String pass = this.storage.getString("password");
             loginProcess = new LoginProcess(LoginActivity.this, LoginActivity.this);
             loginProcess.initData(true);
-            loginProcess.execute(id,pass,true);
+            loginProcess.execute(id, pass, true);
         } else {
             layoutAutoLogin.setVisibility(View.GONE);
             layoutLogin.setVisibility(View.VISIBLE);
             this.setLastLogin();
             handler.postDelayed(runnable, 1500);
-            handler.postDelayed(runnable2,2000);
+            handler.postDelayed(runnable2, 2000);
         }
 
 
-
     }
-    @OnClick(R.id.tv_pass_remember)
-    public void tvRememberClick(View view){
-        cbRemember.setChecked(!cbRemember.isChecked(),true);
+
+    @OnClick(R.id.tv_auto_login)
+    public void tvRememberClick(View view) {
+        cbAutoLogin.setChecked(!cbAutoLogin.isChecked(), true);
     }
 
     @OnClick(R.id.btn_login)
     public void submit(View view) {
-        if(LoginProcess.currentStatus == LoginProcess.TIMEOUT || LoginProcess.currentStatus == LoginProcess.NO_INTERNET){
+        if (LoginProcess.currentStatus == LoginProcess.TIMEOUT || LoginProcess.currentStatus == LoginProcess.NO_INTERNET) {
             loginProcess.initData(false);
         } else {
             if (validateStudentId() && validatePassword()) {
-                if (cbRemember.isChecked()){
-                    LoginActivity.isRememberPassword = true;
-                    storage.putString("password",inputPassword.getText().toString().trim());
-                    storage.putString("is_remember_pass",String.valueOf(LoginActivity.isRememberPassword));
+                if (cbAutoLogin.isChecked()) {
+                    LoginActivity.isAutoLogin = true;
+                    storage.putString("password", inputPassword.getText().toString().trim());
+                    storage.putString("is_auto_login", String.valueOf(true));
                 } else {
-                    LoginActivity.isRememberPassword = false;
-                    storage.putString("is_remember_pass",String.valueOf(LoginActivity.isRememberPassword));
+                    LoginActivity.isAutoLogin = false;
+                    storage.putString("is_auto_login", String.valueOf(false));
                 }
                 unsetInputError(passwordInputErrorShow);
                 unsetInputError(studentIdInputErrorShow);
                 disableInput();
-                loginProcess.execute(getStudentId(), getPassword(),false);
+                loginProcess.execute(getStudentId(), getPassword(), false);
             }
         }
 
@@ -294,7 +298,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         inputStudentId.setEnabled(false);
     }
 
-    private void enableInput(){
+    private void enableInput() {
         inputPassword.setEnabled(true);
         inputStudentId.setEnabled(true);
     }

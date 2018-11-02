@@ -74,6 +74,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 .cookie("ASP.NET_SessionId", storage.getCookie())
                                 .timeout(Helper.TIMEOUT_VALUE)
                                 .get();
+
                         info = parseData(document);
                     } catch (SocketTimeoutException e) {
                         DashboardPresenter.currentStatus = Helper.TIMEOUT;
@@ -102,7 +103,12 @@ public class DashboardPresenter implements IDashboardPresenter {
                             storage.putString("student_info", jsonObject.toString());
                             iDashboardActivity.hideLoaderTextView();
                             Bitmap image = storage.getImageFromStorage(context);
-                            String studentName = storage.getString("student_name");
+                            String studentName = null;
+                            try {
+                                studentName = jsonObject.getString("student_name");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             iDashboardActivity.setToolbarTitle(studentName);
                             iDashboardActivity.setStudentPortrait(image);
                             iDashboardActivity.enableAll();
@@ -196,13 +202,22 @@ public class DashboardPresenter implements IDashboardPresenter {
     }
 
     public String getStudentNameFromStorate() {
-        String studentName = storage.getString("student_name");
+        JSONObject jsonObject = null;
+        String studentName = null;
+        try {
+            jsonObject = new JSONObject(storage.getString("student_info"));
+            studentName = jsonObject.getString("student_name");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return studentName;
     }
 
     private JSONObject parseData(Document document) {
         JSONObject info = new JSONObject();
         try {
+            Element span = document.getElementById("ctl00_ucRight1_Span2");
+            info.put("student_name", span.text());
             Element bodyGroup = document.getElementsByClass("body-group").first();
             Elements tds = bodyGroup.select("td");
             JSONArray studentInfo = new JSONArray();
@@ -245,6 +260,6 @@ public class DashboardPresenter implements IDashboardPresenter {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return  info;
+        return info;
     }
 }

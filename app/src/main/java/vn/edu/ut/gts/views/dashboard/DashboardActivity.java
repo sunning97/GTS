@@ -82,7 +82,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         });
-        if (TextUtils.isEmpty(storage.getString("student_info"))) {
+        if (!storage.isImageExist(getApplicationContext()) || TextUtils.isEmpty(storage.getString("student_info"))) {
             profileImage.setVisibility(View.INVISIBLE);
             dashboardPresenter.go();
         } else {
@@ -105,10 +105,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout: {
-                storage.deleteAllsharedPreferences(DashboardActivity.this);
-                storage.deleteImage(DashboardActivity.this);
-                storage.putString("is_remember_pass",String.valueOf(false));
+                LoginActivity.isLogout = true;
+                LoginActivity.isAutoLogin = false;
                 HomeActivity.isLogin = false;
+                storage.deleteAllsharedPreferences(DashboardActivity.this);
                 startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
                 break;
             }
@@ -156,7 +156,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
     }
 
-
     @Override
     public void onBackPressed() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
@@ -167,6 +166,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
+                        LoginActivity.isLogout = false;
                         storage.deleteAllsharedPreferences(DashboardActivity.this);
                         DashboardActivity.this.finishAffinity();
                     }

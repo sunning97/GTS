@@ -143,7 +143,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                         <net.igenius.customcheckbox.CustomCheckBox
-                            android:id="@+id/cb_remember"
+                            android:id="@+id/cb_auto_login"
                             android:layout_marginLeft="10dp"
                             android:layout_width="17dp"
                             android:layout_height="17dp"
@@ -153,7 +153,7 @@
                             app:color_unchecked_stroke="@color/white"
                             app:stroke_width="5dp"/>
                         <TextView
-                            android:id="@+id/tv_pass_remember"
+                            android:id="@+id/tv_auto_login"
                             android:layout_marginLeft="5dp"
                             android:textColor="@color/white"
                             android:text="Tự động đăng nhập"
