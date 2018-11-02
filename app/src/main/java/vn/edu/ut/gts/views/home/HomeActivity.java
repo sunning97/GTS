@@ -14,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -54,7 +57,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     TextView studentID;
 
     private Storage storage;
-
+    private JSONObject studentInfo = null;
     ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
@@ -62,7 +65,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         this.storage = new Storage(this);
-
+        try {
+            studentInfo = new JSONObject(storage.getString("student_info"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         Intent intent = getIntent();
         ButterKnife.bind(this);
 
@@ -74,7 +81,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setHomeFragment(intent);
         navigationView.setNavigationItemSelectedListener(this);
         profileImage.setImageBitmap(storage.getImageFromStorage(HomeActivity.this));
-        studentFullName.setText(storage.getString("student_name"));
+        try {
+            studentFullName.setText(studentInfo.getString("student_name"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         studentID.setText(storage.getString("last_student_login"));
 
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
