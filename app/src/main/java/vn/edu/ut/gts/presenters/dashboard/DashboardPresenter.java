@@ -70,6 +70,7 @@ public class DashboardPresenter implements IDashboardPresenter {
 
                         Document document = Jsoup.connect(Helper.BASE_URL + "HoSoSinhVien.aspx")
                                 .method(Connection.Method.GET)
+                                .timeout(Helper.TIMEOUT_VALUE)
                                 .userAgent(Helper.USER_AGENT)
                                 .cookie("ASP.NET_SessionId", storage.getCookie())
                                 .timeout(Helper.TIMEOUT_VALUE)
