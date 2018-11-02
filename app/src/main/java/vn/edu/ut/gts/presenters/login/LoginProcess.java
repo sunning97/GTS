@@ -30,6 +30,7 @@ public class LoginProcess implements ILoginProcess{
     public static int LOGIN_SUCCESS = 2;
     public static int LOGIN_FAILED = 3;
     public static int NO_INTERNET = 4;
+
     public static int currentStatus = LOGIN_FAILED;
 
     private ILoginView iLoginView;
@@ -94,13 +95,17 @@ public class LoginProcess implements ILoginProcess{
                     case 1:{
                         iLoginView.dismisLoadingDialog();
                         iLoginView.transferToRetryBtn();
-                        iLoginView.showError();
+                        iLoginView.showLoginLayout();
+                        if(!isAuto)
+                            iLoginView.showTimeoutDialog();
                         break;
                     }
                     case 4:{
                         iLoginView.dismisLoadingDialog();
                         iLoginView.transferToRetryBtn();
-                        iLoginView.showNoInternetDialog();
+                        iLoginView.showLoginLayout();
+                        if (!isAuto)
+                            iLoginView.showNoInternetDialog();
                         break;
                     }
                     default:{
@@ -109,25 +114,17 @@ public class LoginProcess implements ILoginProcess{
                         currentStatus = 0;
                     }
                 }
-//                if(integer == LoginProcess.TIMEOUT){
-//                    iLoginView.dismisLoadingDialog();
-//                    iLoginView.transferToRetryBtn();
-//                    iLoginView.showError();
-//                } else {
-//                    iLoginView.transferToLoginBtn();
-//                    iLoginView.dismisLoadingDialog();
-//                    currentStatus = 0;
-//                }
             }
         };
         asyncTask.execute();
     }
     @Override
-    public void execute(final String studentId, final String password) {
+    public void execute(final String studentId, final String password, final boolean isAuto) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Integer> asyncTask = new AsyncTask<Void, Void, Integer>() {
             @Override
             protected void onPreExecute() {
-                iLoginView.startLoadingButton();
+                if (!isAuto)
+                    iLoginView.startLoadingButton();
             }
 
             @Override
@@ -177,7 +174,8 @@ public class LoginProcess implements ILoginProcess{
                 switch (status){
                     case 1: {
                         iLoginView.revertLoadingButton();
-                        iLoginView.showError();
+                        iLoginView.showLoginLayout();
+                        iLoginView.showTimeoutDialog();
                         break;
                     }
                     case 2: {
@@ -190,11 +188,14 @@ public class LoginProcess implements ILoginProcess{
                     }
                     case 3: {
                         iLoginView.revertLoadingButton();
-                        iLoginView.loginFailed();
+                        iLoginView.showLoginLayout();
+                        if(isAuto) iLoginView.showLoginAutoErrorDialog();
+                        else iLoginView.loginFailed();
                         break;
                     }
                     case 4:{
                         iLoginView.revertLoadingButton();
+                        iLoginView.showLoginLayout();
                         iLoginView.showNoInternetDialog();
                         break;
                     }

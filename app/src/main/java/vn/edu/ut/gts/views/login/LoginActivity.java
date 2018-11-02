@@ -80,21 +80,9 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.requestPermission();
         this.init();
         this.validate();
-//        CatLoadingView mView = new CatLoadingView();
-//        mView.setCanceledOnTouchOutside(false);
-//        mView.show(getSupportFragmentManager(), "");
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 
     @Override
     public void startLoadingButton() {
@@ -160,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     }
 
     @Override
-    public void showError() {
+    public void showTimeoutDialog() {
         enableInput();
         new SweetAlertDialog(this)
                 .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
@@ -170,6 +158,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void showNoInternetDialog() {
+        if(epicDialog.isShowing()) epicDialog.dismisPopup();
         disableInput();
         new SweetAlertDialog(this)
                 .setTitleText(getResources().getString(R.string.no_internet_access_title))
@@ -179,6 +168,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void transferToRetryBtn() {
+        if(epicDialog.isShowing()) epicDialog.dismisPopup();
         disableInput();
         btnLogin.setText("Thử lại");
     }
@@ -187,6 +177,30 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     public void transferToLoginBtn() {
         enableInput();
         btnLogin.setText("Đăng nhập");
+    }
+
+    @Override
+    public void showLoginLayout() {
+        this.setLastLogin();
+        relay_1.setVisibility(View.VISIBLE);
+        layoutAutoLogin.setVisibility(View.GONE);
+        layoutLogin.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showAutoLoginLayout() {
+        layoutLogin.setVisibility(View.GONE);
+        layoutAutoLogin.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showLoginAutoErrorDialog() {
+        if(epicDialog.isShowing()) epicDialog.dismisPopup();
+        enableInput();
+        new SweetAlertDialog(this)
+                .setTitleText(getResources().getString(R.string.auto_login_error_title))
+                .setContentText(getResources().getString(R.string.auto_login_error_content))
+                .show();
     }
 
     @Override
@@ -235,7 +249,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
             loginProcess = new LoginProcess(LoginActivity.this, LoginActivity.this);
             loginProcess.initData(true);
-            loginProcess.execute(id,pass);
+            loginProcess.execute(id,pass,true);
         } else {
             layoutAutoLogin.setVisibility(View.GONE);
             layoutLogin.setVisibility(View.VISIBLE);
@@ -269,7 +283,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 unsetInputError(passwordInputErrorShow);
                 unsetInputError(studentIdInputErrorShow);
                 disableInput();
-                loginProcess.execute(getStudentId(), getPassword());
+                loginProcess.execute(getStudentId(), getPassword(),false);
             }
         }
 
