@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -151,6 +152,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.logout: {
                 storage.deleteAllsharedPreferences(HomeActivity.this);
+                storage.deleteImage(HomeActivity.this);
                 storage.putString("is_remember_pass",String.valueOf(false));
                 HomeActivity.isLogin = false;
                 startActivity(new Intent(HomeActivity.this,LoginActivity.class));
@@ -167,26 +169,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-//        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-//                .setTitleText("Xác nhận thoát?")
-//                .setCancelText("Hủy")
-//                .setConfirmText("Xác nhận")
-//                .showCancelButton(true)
-//                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                    @Override
-//                    public void onClick(SweetAlertDialog sDialog) {
-//                        storage.deleteAllsharedPreferences();
-//                        HomeActivity.this.finishAffinity();
-//                    }
-//                })
-//                .show();
         Intent dashboardIntent = new Intent(HomeActivity.this, DashboardActivity.class);
         startActivity(dashboardIntent);
     }
 
     private void setHomeFragment(Intent intent) {
+        Menu menu = navigationView.getMenu();
+        MenuItem menuItem = null;
         switch (Integer.parseInt(intent.getStringExtra("order"))) {
             case HomeActivity.STUDENT_INFO: {
+                menuItem = menu.findItem(R.id.student_profile);
+                menuItem.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new StudentInfoRootFragment()
@@ -195,6 +188,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case HomeActivity.STUDENT_STUDY_RESULT: {
+                menuItem = menu.findItem(R.id.student_study_result);
+                menuItem.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new StudentStudyResultFragment()
@@ -203,6 +198,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case HomeActivity.SCHEDULE_BY_WEEK: {
+                menuItem = menu.findItem(R.id.schedule_by_week);
+                menuItem.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new WeekSchedule()
@@ -211,6 +208,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case HomeActivity.FRAME_PROGRAM: {
+                menuItem = menu.findItem(R.id.frame_program);
+                menuItem.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new FrameProgramFragment()
@@ -219,6 +218,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case HomeActivity.STUDENT_DEBT: {
+                menuItem = menu.findItem(R.id.student_debt);
+                menuItem.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new StudentDebtFragment()
@@ -227,6 +228,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case HomeActivity.ATTENDACE: {
+                menuItem = menu.findItem(R.id.attendance);
+                menuItem.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new AttendanceFragment()

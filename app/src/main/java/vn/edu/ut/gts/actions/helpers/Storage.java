@@ -79,10 +79,16 @@ public class Storage {
         return b;
     }
 
-
-    public boolean deleteAllsharedPreferences(Context context){
+    public void deleteImage(Context context){
         File image = new File(context.getFilesDir(), "student_portrait.jpg");
         if (image.exists()) image.delete();
+    }
+
+    public boolean deleteAllsharedPreferences(Context context){
+        if(!LoginActivity.isRememberPassword){
+            File image = new File(context.getFilesDir(), "student_portrait.jpg");
+            if (image.exists()) image.delete();
+        }
         SharedPreferences.Editor editor = this.sharedPreferences.edit();
         String id = this.getString("last_student_login");
         String pass = this.getString("password");

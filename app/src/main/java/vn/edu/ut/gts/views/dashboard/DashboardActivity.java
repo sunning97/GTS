@@ -106,6 +106,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         switch (item.getItemId()) {
             case R.id.logout: {
                 storage.deleteAllsharedPreferences(DashboardActivity.this);
+                storage.deleteImage(DashboardActivity.this);
                 storage.putString("is_remember_pass",String.valueOf(false));
                 HomeActivity.isLogin = false;
                 startActivity(new Intent(DashboardActivity.this, LoginActivity.class));

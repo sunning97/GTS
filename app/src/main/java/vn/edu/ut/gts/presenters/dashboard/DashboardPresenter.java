@@ -75,7 +75,6 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 .timeout(Helper.TIMEOUT_VALUE)
                                 .get();
                         info = parseData(document);
-
                     } catch (SocketTimeoutException e) {
                         DashboardPresenter.currentStatus = Helper.TIMEOUT;
                     } catch (UnknownHostException e) {

@@ -202,7 +202,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loại hình đào tạo"
+                android:text="Ngày cấp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"/>
             <TextView
