@@ -157,6 +157,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.student_search: {
+                item.setChecked(false);
                 startActivity(new Intent(HomeActivity.this,StudentSearchActivity.class));
                 break;
             }

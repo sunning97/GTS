@@ -7,7 +7,7 @@
     tools:context=".views.home.fragments.StudentStudyResultFragment">
 
     <RelativeLayout
-        android:visibility="invisible"
+        android:visibility="visible"
         android:id="@+id/tablayout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,10 +31,10 @@
                 android:textSize="16sp" />
 
             <ImageButton
+                android:background="@drawable/circlebackgroundbluedark"
                 android:id="@+id/date_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/transparent"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
         </LinearLayout>
 
