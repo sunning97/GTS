@@ -42,11 +42,12 @@ public class LoginProcess implements ILoginProcess{
         this.storage = new Storage(this.context);
         student = new Student(this.context);
     }
-    public void initData(){
+    public void initData(final boolean isAuto){
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Integer> asyncTask = new AsyncTask<Void, Void, Integer>() {
             @Override
             protected void onPreExecute() {
-                iLoginView.showLoadingDialog();
+                if (!isAuto)
+                    iLoginView.showLoadingDialog();
             }
 
             @Override

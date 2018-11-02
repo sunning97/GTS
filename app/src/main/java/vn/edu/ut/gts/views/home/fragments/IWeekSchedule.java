@@ -10,6 +10,5 @@ public interface IWeekSchedule {
     void modifyDataChange(JSONArray jsonArray);
     void hideAllComponent();
     void showAllComponent();
-    void showTimeoutDialog();
-    void showNoInternetDialog();
+    void showNetworkErrorLayout();
 }

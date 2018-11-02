@@ -151,6 +151,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.logout: {
                 storage.deleteAllsharedPreferences(HomeActivity.this);
+                storage.putString("is_remember_pass",String.valueOf(false));
                 HomeActivity.isLogin = false;
                 startActivity(new Intent(HomeActivity.this,LoginActivity.class));
                 break;

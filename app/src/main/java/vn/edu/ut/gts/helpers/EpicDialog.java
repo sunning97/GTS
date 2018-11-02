@@ -161,4 +161,7 @@ public class EpicDialog {
         }
         this.epicDialog.show();
     }
+    public boolean isShowing(){
+        return this.epicDialog.isShowing();
+    }
 }

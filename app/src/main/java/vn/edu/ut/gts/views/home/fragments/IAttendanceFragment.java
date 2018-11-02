@@ -10,16 +10,25 @@ import org.json.JSONObject;
 import java.util.List;
 
 public interface IAttendanceFragment {
-    public void generateTableContent(JSONArray data);
-    public LinearLayout generateTableCell(String content, Boolean isMarginCenter,int width);
-    public TableRow generateTableHeader();
-    public void attendanceDetailShow(JSONObject jsonObject);
-    public void initAttendanceSpiner(List<String> dataSnpinner);
-    public void showLoadingDialog();
-    public void dismissLoadingDialog();
-    public void showTimeoutDialog();
-    public void showNoInternetDialog();
-    public void showLoadedLayout();
-    public void hideAllComponent();
-    public void showAllComponent();
+    void generateTableContent(JSONArray data);
+
+    LinearLayout generateTableCell(String content, Boolean isMarginCenter, int width);
+
+    TableRow generateTableHeader();
+
+    void attendanceDetailShow(JSONObject jsonObject);
+
+    void initAttendanceSpiner(List<String> dataSnpinner);
+
+    void showLoadingDialog();
+
+    void dismissLoadingDialog();
+
+    void showNetworkErrorLayout();
+
+    void showLoadedLayout();
+
+    void hideAllComponent();
+
+    void showAllComponent();
 }

@@ -37,6 +37,7 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.helpers.Helper;
+import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.StudentDebtFragmentPresenter;
 import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 
@@ -70,7 +71,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     public static int currentPos = 0;
     private StudentDebtFragmentPresenter studentDebtFragmentPresenter;
     private float d;
-    SweetAlertDialog loadingDialog;
+    EpicDialog loadingDialog;
     private List<String> headerText = new ArrayList<>();
     private List<String> spinnerData = new ArrayList<>();
 
@@ -195,10 +196,8 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     }
 
     private void init() {
-        loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
-        loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        loadingDialog.setTitleText("Loading");
-        loadingDialog.setCancelable(false);
+        loadingDialog = new EpicDialog(getContext());
+        loadingDialog.initLoadingDialog();
     }
 
     @Override
@@ -237,30 +236,14 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     }
 
     @Override
-    public void showTimeoutDialog() {
-        if (loadingDialog.isShowing()) loadingDialog.dismiss();
-//        new SweetAlertDialog(getContext())
-//                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
-//                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
-//                .show();
+    public void showNetworkErrorLayout() {
+        if (loadingDialog.isShowing()) loadingDialog.dismisPopup();
         removeAllSpinnerItem();
         hideAllComponent();
         retyIcon.hide();
         noInternetLayout.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void showNoInternetDialog() {
-        if (loadingDialog.isShowing()) loadingDialog.dismiss();
-//        new SweetAlertDialog(getContext())
-//                .setTitleText(getResources().getString(R.string.no_internet_access_title))
-//                .setContentText(getResources().getString(R.string.no_internet_access_content))
-//                .show();
-        removeAllSpinnerItem();
-        hideAllComponent();
-        retyIcon.hide();
-        noInternetLayout.setVisibility(View.VISIBLE);
-    }
 
     @Override
     public void hideAllComponent() {
@@ -292,13 +275,13 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     @Override
     public void showLoadingDialog() {
         if (!loadingDialog.isShowing())
-            loadingDialog.show();
+            loadingDialog.showLoadingDialog();
     }
 
     @Override
     public void dismissLoadingDialog() {
         if (loadingDialog.isShowing())
-            loadingDialog.dismiss();
+            loadingDialog.dismisPopup();
     }
 
     @Override

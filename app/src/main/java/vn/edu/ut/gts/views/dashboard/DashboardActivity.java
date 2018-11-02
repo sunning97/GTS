@@ -67,18 +67,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         ButterKnife.bind(this);
         storage = new Storage(DashboardActivity.this);
         dashboardPresenter = new DashboardPresenter(this, this);
-        setSupportActionBar(dashboardToolbar);
-        this.init();
-        if (TextUtils.isEmpty(storage.getString("student_info"))) {
-            profileImage.setVisibility(View.INVISIBLE);
-            profileImageLoading.resetLoader();
-            collapsingToolbarLayout.setTitle("loading...");
-            dashboardPresenter.go();
-        } else {
-            setStudentPortrait(dashboardPresenter.getStudentPortraitFromStorage());
-            setToolbarTitle(dashboardPresenter.getStudentNameFromStorate());
-        }
-
         swipeRefreshDashboard.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         swipeRefreshDashboard.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -89,6 +77,18 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         });
+        setSupportActionBar(dashboardToolbar);
+        if (TextUtils.isEmpty(storage.getString("student_info"))) {
+            profileImage.setVisibility(View.INVISIBLE);
+            profileImageLoading.resetLoader();
+            collapsingToolbarLayout.setTitle("");
+            dashboardPresenter.go();
+        } else {
+            disableSwipeRefresh();
+            setStudentPortrait(dashboardPresenter.getStudentPortraitFromStorage());
+            setToolbarTitle(dashboardPresenter.getStudentNameFromStorate());
+        }
+
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
@@ -103,6 +103,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         switch (item.getItemId()) {
             case R.id.logout: {
                 storage.deleteAllsharedPreferences(DashboardActivity.this);
+                storage.putString("is_remember_pass",String.valueOf(false));
                 HomeActivity.isLogin = false;
                 startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
                 break;
@@ -151,12 +152,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
     }
 
-    private void init() {
-        loadingDialog = new SweetAlertDialog(DashboardActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        loadingDialog.setTitleText("Loading");
-        loadingDialog.setCancelable(false);
-    }
 
     @Override
     public void onBackPressed() {
@@ -205,7 +200,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         studentDebtCard.setEnabled(true);
         scheduleByWeekCard.setEnabled(true);
         attendanceCard.setEnabled(true);
-        swipeRefreshDashboard.setEnabled(false);
     }
 
     @Override
@@ -216,7 +210,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         studentDebtCard.setEnabled(false);
         scheduleByWeekCard.setEnabled(false);
         attendanceCard.setEnabled(false);
-        swipeRefreshDashboard.setEnabled(true);
     }
 
     @Override
@@ -252,6 +245,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void disableSwipeRefresh() {
         swipeRefreshDashboard.setEnabled(false);
+    }
+
+    @Override
+    public void enableSwipeRefresh() {
+        swipeRefreshDashboard.setEnabled(true);
     }
 
     @Override

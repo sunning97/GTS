@@ -37,6 +37,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.Student;
 import vn.edu.ut.gts.adapters.WeekScheduleTablayoutAdapter;
+import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.WeekSchedulePresenter;
 
 /**
@@ -75,7 +76,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     private int month = 0;
     private int year = 0;
 
-    private SweetAlertDialog loadingDialog;
+    private EpicDialog loadingDialog;
     private WeekScheduleTablayoutAdapter weekScheduleTablayoutAdapter;
 
     public WeekSchedule() {
@@ -125,10 +126,8 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
 
 
     private void init() {
-        loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
-        loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        loadingDialog.setTitleText("Loading");
-        loadingDialog.setCancelable(false);
+        loadingDialog = new EpicDialog(getContext());
+        loadingDialog.initLoadingDialog();
     }
 
     @OnClick(R.id.retry_text)
@@ -182,26 +181,8 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     }
 
     @Override
-    public void showTimeoutDialog() {
-        if (loadingDialog.isShowing()) loadingDialog.dismiss();
-//        new SweetAlertDialog(getContext())
-//                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
-//                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
-//                .show();
-        floatingContainer.close(true);
-        hideAllComponent();
-        retyIcon.hide();
-        retryText.setVisibility(View.VISIBLE);
-        noInternetLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showNoInternetDialog() {
-        if (loadingDialog.isShowing()) loadingDialog.dismiss();
-//        new SweetAlertDialog(getContext())
-//                .setTitleText(getResources().getString(R.string.no_internet_access_title))
-//                .setContentText(getResources().getString(R.string.no_internet_access_content))
-//                .show();
+    public void showNetworkErrorLayout() {
+        if (loadingDialog.isShowing()) loadingDialog.dismisPopup();
         floatingContainer.close(true);
         hideAllComponent();
         retyIcon.hide();
@@ -240,12 +221,12 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     @Override
     public void showLoadingDialog() {
         if (!loadingDialog.isShowing())
-            loadingDialog.show();
+            loadingDialog.showLoadingDialog();
     }
 
     @Override
     public void dismissLoadingDialog() {
         if (loadingDialog.isShowing())
-            loadingDialog.dismiss();
+            loadingDialog.dismisPopup();
     }
 }

@@ -11,6 +11,5 @@ public interface IStudentStudyResultFragment {
     void setData(JSONObject data);
     void showAllComponent();
     void hideAllComponent();
-    void showTimeoutDialog();
-    void showNoConnectionDialog();
+    void showNetworkErrorLayout();
 }

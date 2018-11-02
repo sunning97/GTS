@@ -14,5 +14,6 @@ public interface IDashboardActivity {
     public void showErrorDialog();
     public void showTimeOutDialog();
     public void disableSwipeRefresh();
+    public void enableSwipeRefresh();
     public void resetLoaderImage();
 }

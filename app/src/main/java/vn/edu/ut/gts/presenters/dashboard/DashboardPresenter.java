@@ -27,10 +27,7 @@ import vn.edu.ut.gts.views.dashboard.IDashboardActivity;
 import vn.edu.ut.gts.views.home.HomeActivity;
 
 public class DashboardPresenter implements IDashboardPresenter {
-    public static int TIMEOUT = 1;
-    public static int NO_INTERNET = 2;
     public static int currentStatus = 0;
-
     private IDashboardActivity iDashboardActivity;
     private Storage storage;
     private Context context;
@@ -48,7 +45,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                 protected void onPreExecute() {
                     iDashboardActivity.resetLoaderImage();
                     iDashboardActivity.disableAll();
-//                    iDashboardActivity.showLoadingDialog();
+                    iDashboardActivity.disableSwipeRefresh();
                 }
 
                 @Override
@@ -74,47 +71,11 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 .timeout(10000)
                                 .get();
                         info = parseData(document);
-//                        Element bodyGroup = document.getElementsByClass("body-group").first();
-//                        Elements tds = bodyGroup.select("td");
-//                        JSONArray studentInfo = new JSONArray();
-//                        for (Element td : tds) {
-//                            JSONObject prop = new JSONObject();
-//                            String key = Helper.toSlug(td.text().split(":")[0]);
-//                            String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
-//                            prop.put("key", key);
-//                            prop.put("value", value);
-//                            studentInfo.put(prop);
-//                        }
-//                        info.put("studentInfo", studentInfo);
-//                        Element bodyGroup1 = document.getElementsByClass("body-group").get(1);
-//                        Elements tds1 = bodyGroup1.select("td");
-//                        JSONArray studentDetail = new JSONArray();
-//                        for (Element td : tds1) {
-//                            JSONObject prop = new JSONObject();
-//                            String key = Helper.toSlug(td.text().split(":")[0]);
-//                            String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
-//                            prop.put("key", key);
-//                            prop.put("value", value);
-//                            studentDetail.put(prop);
-//                        }
-//                        info.put("studentDetail", studentDetail);
-//
-//                        Element bodyGroup2 = document.getElementsByClass("body-group").get(2);
-//                        Elements tds2 = bodyGroup2.select("td");
-//                        JSONArray studentFamily = new JSONArray();
-//                        for (Element td : tds2) {
-//                            JSONObject prop = new JSONObject();
-//                            String key = Helper.toSlug(td.text().split(":")[0]);
-//                            String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
-//                            prop.put("key", key);
-//                            prop.put("value", value);
-//                            studentFamily.put(prop);
-//                        }
-//                        info.put("studentFamily", studentFamily);
+
                     } catch (SocketTimeoutException e) {
-                        DashboardPresenter.currentStatus = DashboardPresenter.TIMEOUT;
+                        DashboardPresenter.currentStatus = Helper.TIMEOUT;
                     } catch (UnknownHostException e) {
-                        currentStatus = DashboardPresenter.NO_INTERNET;
+                        currentStatus = Helper.NO_CONNECTION;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -124,14 +85,14 @@ public class DashboardPresenter implements IDashboardPresenter {
                 @Override
                 protected void onPostExecute(JSONObject jsonObject) {
                     switch (DashboardPresenter.currentStatus) {
-                        case 2: {
+                        case 400: {
                             iDashboardActivity.disableAll();
-                            iDashboardActivity.showErrorDialog();
+                            iDashboardActivity.enableSwipeRefresh();
                             break;
                         }
-                        case 1: {
+                        case 500: {
                             iDashboardActivity.disableAll();
-                            iDashboardActivity.showTimeOutDialog();
+                            iDashboardActivity.enableSwipeRefresh();
                             break;
                         }
                         default: {
@@ -144,8 +105,6 @@ public class DashboardPresenter implements IDashboardPresenter {
                             iDashboardActivity.disableSwipeRefresh();
                         }
                     }
-
-//                iDashboardActivity.dismisLoadingDialog();
                 }
             };
             asyncTask.execute();

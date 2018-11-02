@@ -93,10 +93,10 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
             protected void onPostExecute(JSONArray semesters) {
                 switch (currentStatus) {
                     case 400:
-                        iStudentDebtFragment.showNoInternetDialog();
+                        iStudentDebtFragment.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iStudentDebtFragment.showTimeoutDialog();
+                        iStudentDebtFragment.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;
@@ -181,10 +181,10 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
                     case 400:
-                        iStudentDebtFragment.showNoInternetDialog();
+                        iStudentDebtFragment.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iStudentDebtFragment.showTimeoutDialog();
+                        iStudentDebtFragment.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;

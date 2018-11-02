@@ -51,7 +51,7 @@ import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StudentStudyResultFragment extends Fragment implements IStudentStudyResultFragment{
+public class StudentStudyResultFragment extends Fragment implements IStudentStudyResultFragment {
     @BindView(R.id.study_result_spinner)
     MaterialSpinner studyResultSpinner;
     @BindView(R.id.study_result_table)
@@ -74,7 +74,6 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     private float d;
     private List<String> headerText = new ArrayList<>();
     private List<String> dataSpinner = new ArrayList<>();
-    private SweetAlertDialog loadingDialog;
     private EpicDialog epicDialog;
     private JSONObject data;
 
@@ -104,25 +103,8 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     }
 
     @Override
-    public void showTimeoutDialog() {
-        if (loadingDialog.isShowing()) loadingDialog.dismiss();
-//        new SweetAlertDialog(getContext())
-//                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
-//                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
-//                .show();
-        hideAllComponent();
-        retryIcon.hide();
-        retryText.setVisibility(View.VISIBLE);
-        noInternetLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showNoConnectionDialog() {
-        if (loadingDialog.isShowing()) loadingDialog.dismiss();
-//        new SweetAlertDialog(getContext())
-//                .setTitleText(getResources().getString(R.string.no_internet_access_title))
-//                .setContentText(getResources().getString(R.string.no_internet_access_content))
-//                .show();
+    public void showNetworkErrorLayout() {
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
         hideAllComponent();
         retryIcon.hide();
         retryText.setVisibility(View.VISIBLE);
@@ -131,28 +113,29 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_student_study_result, container, false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_student_study_result, container, false);
+        ButterKnife.bind(this, view);
         d = getContext().getResources().getDisplayMetrics().density;
         init();
         StudentStudyResultFragment.currentPos = 0;
         StudentStudyResultFragmentPresenter.currentStatus = 0;
-        studentStudyResultFragmentPresenter = new StudentStudyResultFragmentPresenter(this,getContext());
+        studentStudyResultFragmentPresenter = new StudentStudyResultFragmentPresenter(this, getContext());
         studentStudyResultFragmentPresenter.getStudentStudyResult(0);
         setHasOptionsMenu(true);
-        return  view;
+        return view;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.study_result_program_toolbar_menu, menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.infor: {
                 try {
-                    if(StudentStudyResultFragmentPresenter.currentStatus == 0){
+                    if (StudentStudyResultFragmentPresenter.currentStatus == 0) {
                         epicDialog.showStudyResultInfoDialog(
                                 data.getString("trung_binh_tich_luy"),
                                 data.getString("tong_tin_chi"),
@@ -169,49 +152,48 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
     private void init() {
         epicDialog = new EpicDialog(getContext());
-        loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
-        loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        loadingDialog.setTitleText("Loading");
-        loadingDialog.setCancelable(false);
+        epicDialog.initLoadingDialog();
     }
-    private TableRow generateTableHeader(){
+
+    private TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        header.setMinimumHeight((int)d*50);
+        header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        for (int i = 0;i < headerText.size();i++) {
+        for (int i = 0; i < headerText.size(); i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-            if(i == 0){
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext())*0.4);
-            } else{
+            if (i == 0) {
+                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.4);
+            } else {
                 layoutParams.gravity = Gravity.CENTER;
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext())*0.2);
+                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.2);
             }
-            linearLayout.setPadding((int)d*5,(int)d*15,(int) d*5,0);
+            linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 5, 0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
             LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
-            textView.setTypeface(textView.getTypeface(),Typeface.BOLD);
+            textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
             textView.setText(headerText.get(i));
             linearLayout.addView(textView);
             header.addView(linearLayout);
         }
 
-        return  header;
+        return header;
     }
+
     @Override
-    public void generateTableContent(int position){
+    public void generateTableContent(int position) {
         this.studyResultTable.removeAllViews();
         try {
             JSONArray allSemester = data.getJSONArray("all_semester");
             JSONObject semester = (JSONObject) allSemester.get(position);
             JSONArray subjects = semester.getJSONArray("subjects");
-            for (int i = 0; i< subjects.length(); i++) {
+            for (int i = 0; i < subjects.length(); i++) {
                 JSONObject subject = (JSONObject) subjects.get(i);
                 try {
                     if ((i + 1) % 2 != 0) {
@@ -229,20 +211,20 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
     @Override
     public void showLoadingDialog() {
-        if(!loadingDialog.isShowing())
-            loadingDialog.show();
+        if (!epicDialog.isShowing())
+            epicDialog.showLoadingDialog();
     }
 
     @Override
     public void dismissLoadingDialog() {
-        if(loadingDialog.isShowing())
-        loadingDialog.dismiss();
+        if (epicDialog.isShowing())
+            epicDialog.dismisPopup();
     }
 
 
     @OnClick(R.id.retry_text)
-    public void retry(View view){
-        if(StudentStudyResultFragmentPresenter.currentStatus == Helper.TIMEOUT){
+    public void retry(View view) {
+        if (StudentStudyResultFragmentPresenter.currentStatus == Helper.TIMEOUT) {
             retryIcon.smoothToShow();
             retryText.setVisibility(View.INVISIBLE);
         }
@@ -250,51 +232,53 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         studentStudyResultFragmentPresenter.getStudentStudyResult(currentPos);
     }
 
-    private TableRow generateTableRow(final JSONObject data, boolean changeBG){
+    private TableRow generateTableRow(final JSONObject data, boolean changeBG) {
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        row.setMinimumHeight((int)d*50);
+        row.setMinimumHeight((int) d * 50);
         row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 studyResultDetailShow(data);
-                Log.d("AAA",data.toString());
+                Log.d("AAA", data.toString());
             }
         });
-        if(changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
+        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
         try {
-            row.addView(generateTableCell(data.getString("courseName"),false,(int)(getScreenWidthInDPs(getContext())*0.4)));
-            row.addView(generateTableCell(data.getString("scoresOf10"),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
-            row.addView(generateTableCell(data.getString("scoresOf4"),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
-            row.addView(generateTableCell(data.getString("scoresString"),true,(int)(getScreenWidthInDPs(getContext())*0.2)));
+            row.addView(generateTableCell(data.getString("courseName"), false, (int) (getScreenWidthInDPs(getContext()) * 0.4)));
+            row.addView(generateTableCell(data.getString("scoresOf10"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(data.getString("scoresOf4"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(data.getString("scoresString"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return row;
     }
-    private LinearLayout generateTableCell(String data,boolean center,int width){
+
+    private LinearLayout generateTableCell(String data, boolean center, int width) {
         LinearLayout linearLayout = new LinearLayout(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         layoutParams.width = width;
-        linearLayout.setPadding((int)d*5,(int)d*15,(int) d*15,(int) d*5);
-        if(center) layoutParams.gravity = Gravity.CENTER;
+        linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 15, (int) d * 5);
+        if (center) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        if(center) textViewLayout.gravity = Gravity.CENTER;
+        if (center) textViewLayout.gravity = Gravity.CENTER;
         textView.setLayoutParams(textViewLayout);
         textView.setTextColor(getResources().getColor(R.color.black));
         textView.setText(data);
         linearLayout.addView(textView);
 
-        return  linearLayout;
+        return linearLayout;
     }
+
     @Override
-    public void spinnerInit(){
+    public void spinnerInit() {
         try {
             JSONArray allSemester = data.getJSONArray("all_semester");
-            for (int i = 0;i< allSemester.length();i++){
+            for (int i = 0; i < allSemester.length(); i++) {
                 JSONObject jsonObject = (JSONObject) allSemester.get(i);
                 dataSpinner.add(jsonObject.getString("quater"));
             }
@@ -303,37 +287,41 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         }
         studyResultSpinner.setItems(dataSpinner);
         studyResultSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 StudentStudyResultFragment.currentPos = position;
                 generateTableContent(position);
             }
         });
         studyResultTableHeader.addView(this.generateTableHeader());
     }
-    private int getScreenWidthInDPs(Context context){
+
+    private int getScreenWidthInDPs(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
         int screenWidth = dm.widthPixels;
         return screenWidth;
     }
-    private float getStudentSemesterSverage(JSONArray subjects){
+
+    private float getStudentSemesterSverage(JSONArray subjects) {
         float a = 0;
         int totalCourseCredits = 0;
-        for (int i = 0; i< subjects.length(); i++) {
+        for (int i = 0; i < subjects.length(); i++) {
             JSONObject subject = null;
             try {
                 subject = (JSONObject) subjects.get(i);
-                int courseCredits = (TextUtils.isEmpty(subject.getString("courseCredits")) ? 0 :Integer.parseInt(subject.getString("courseCredits")));
-                float scoresOf4 = (TextUtils.isEmpty(subject.getString("scoresOf4")) ? 0 :Float.parseFloat(subject.getString("scoresOf4")));
-                a+=(courseCredits*scoresOf4);
-                totalCourseCredits+=Integer.parseInt(subject.getString("courseCredits"));
+                int courseCredits = (TextUtils.isEmpty(subject.getString("courseCredits")) ? 0 : Integer.parseInt(subject.getString("courseCredits")));
+                float scoresOf4 = (TextUtils.isEmpty(subject.getString("scoresOf4")) ? 0 : Float.parseFloat(subject.getString("scoresOf4")));
+                a += (courseCredits * scoresOf4);
+                totalCourseCredits += Integer.parseInt(subject.getString("courseCredits"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        return (a/totalCourseCredits);
+        return (a / totalCourseCredits);
     }
+
     @Override
     public void studyResultDetailShow(JSONObject jsonObject) {
         LayoutInflater factory = getLayoutInflater();

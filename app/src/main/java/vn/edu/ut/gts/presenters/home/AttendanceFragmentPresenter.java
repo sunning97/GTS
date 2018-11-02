@@ -94,10 +94,10 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
             protected void onPostExecute(JSONArray semesters) {
                 switch (currentStatus) {
                     case 400:
-                        iAttendanceFragment.showNoInternetDialog();
+                        iAttendanceFragment.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iAttendanceFragment.showTimeoutDialog();
+                        iAttendanceFragment.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;
@@ -183,10 +183,10 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
                     case 400:
-                        iAttendanceFragment.showNoInternetDialog();
+                        iAttendanceFragment.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iAttendanceFragment.showTimeoutDialog();
+                        iAttendanceFragment.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;

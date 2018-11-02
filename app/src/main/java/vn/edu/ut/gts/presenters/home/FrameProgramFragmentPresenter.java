@@ -84,10 +84,10 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
             protected void onPostExecute(Void aVoid) {
                 switch (currentStatus) {
                     case 400:
-                        iFrameProgramFragment.showNoConnectionDialog();
+                        iFrameProgramFragment.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iFrameProgramFragment.showTimeoutDialog();
+                        iFrameProgramFragment.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;
@@ -251,10 +251,10 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
             protected void onPostExecute(JSONObject jsonObject) {
                 switch (currentStatus) {
                     case 400:
-                        iFrameProgramFragment.showNoConnectionDialog();
+                        iFrameProgramFragment.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iFrameProgramFragment.showTimeoutDialog();
+                        iFrameProgramFragment.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;

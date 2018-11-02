@@ -77,10 +77,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
 
     private List<String> headerText = new ArrayList<>();
     private List<String> spinnerData = new ArrayList<>();
-
-    SweetAlertDialog loadingDialog;
-
-//    EpicDialog loadingDialog;
+    private EpicDialog loadingDialog;
 
     public AttendanceFragment() {
         headerText.add("Tên môn học");
@@ -199,11 +196,8 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     }
 
     private void init() {
-        loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
-        loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        loadingDialog.setTitleText("Loading");
-        loadingDialog.setCancelable(false);
-        retryIcon.smoothToHide();
+        loadingDialog = new EpicDialog(getContext());
+        loadingDialog.initLoadingDialog();
     }
 
     @SuppressLint("SetTextI18n")
@@ -247,36 +241,18 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     @Override
     public void showLoadingDialog() {
         if (!loadingDialog.isShowing())
-            this.loadingDialog.show();
+            this.loadingDialog.showLoadingDialog();
     }
 
     @Override
     public void dismissLoadingDialog() {
         if (loadingDialog.isShowing())
-            this.loadingDialog.dismiss();
+            this.loadingDialog.dismisPopup();
     }
 
     @Override
-    public void showTimeoutDialog() {
-        if (loadingDialog.isShowing()) loadingDialog.dismiss();
-//        new SweetAlertDialog(getContext())
-//                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
-//                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
-//                .show();
-        removeAllSpinnerItem();
-        retryIcon.hide();
-        retryText.setVisibility(View.VISIBLE);
-        hideAllComponent();
-        noInternetLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showNoInternetDialog() {
-        if (loadingDialog.isShowing()) loadingDialog.dismiss();
-//        new SweetAlertDialog(getContext())
-//                .setTitleText(getResources().getString(R.string.no_internet_access_title))
-//                .setContentText(getResources().getString(R.string.no_internet_access_content))
-//                .show();
+    public void showNetworkErrorLayout() {
+        if (loadingDialog.isShowing()) loadingDialog.dismisPopup();
         removeAllSpinnerItem();
         retryIcon.hide();
         retryText.setVisibility(View.VISIBLE);

@@ -72,8 +72,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/grayLight"
-            android:padding="1dp">
+            android:background="@color/grayLight">
 
             <TableLayout
                 android:id="@+id/student_attendance_table"
@@ -197,7 +196,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/no_conection_clound" />
+            android:src="@drawable/no_connection_clound" />
         <TextView
             android:textSize="16sp"
             android:textStyle="bold"

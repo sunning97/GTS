@@ -187,10 +187,10 @@ public class StudentStudyResultFragmentPresenter implements IStudentStudyResultF
             protected void onPostExecute(JSONObject jsonObject) {
                 switch (currentStatus) {
                     case 400:
-                        iStudentStudyResultFragment.showNoConnectionDialog();
+                        iStudentStudyResultFragment.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iStudentStudyResultFragment.showTimeoutDialog();
+                        iStudentStudyResultFragment.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;

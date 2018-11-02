@@ -9,17 +9,28 @@ import org.json.JSONObject;
 
 public interface IFrameProgramFragment {
     void frameDetailShow(JSONArray jsonArray);
+
     void spinnerInit();
+
     TableRow generateSubjectGroup(String content);
+
     LinearLayout generateTableCell(String data, boolean center, int width);
+
     TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG);
+
     TableRow generateTableHeader();
+
     void generateTableContent(int position);
-    public void showLoadingDialog();
-    public void dismissLoadingDialog();
-    public void setData(JSONObject data);
-    public void showAllComponent();
-    public void hideAllComponent();
-    public void showTimeoutDialog();
-    public void showNoConnectionDialog();
+
+    void showLoadingDialog();
+
+    void dismissLoadingDialog();
+
+    void setData(JSONObject data);
+
+    void showAllComponent();
+
+    void hideAllComponent();
+
+    void showNetworkErrorLayout();
 }

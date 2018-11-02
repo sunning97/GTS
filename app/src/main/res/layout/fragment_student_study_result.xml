@@ -39,7 +39,6 @@
         </TableLayout>
         <ScrollView
             android:background="@color/grayLight"
-            android:padding="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TableLayout
@@ -61,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/no_conection_clound" />
+            android:src="@drawable/no_connection_clound" />
         <TextView
             android:textSize="16sp"
             android:textStyle="bold"

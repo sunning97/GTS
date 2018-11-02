@@ -9,25 +9,23 @@ import org.json.JSONObject;
 import java.util.List;
 
 public interface IStudentDebtFragment {
-    public void showLoadingDialog();
+    void showLoadingDialog();
 
-    public void dismissLoadingDialog();
+    void dismissLoadingDialog();
 
-    public void initAttendanceSpiner(List<String> dataSnpinner);
+    void initAttendanceSpiner(List<String> dataSnpinner);
 
-    public void generateTableContent(JSONArray data);
+    void generateTableContent(JSONArray data);
 
-    public TableRow generateTableHeader();
+    TableRow generateTableHeader();
 
-    public LinearLayout generateTableCell(String content, Boolean isGravityCenter, Boolean isRed, int width);
+    LinearLayout generateTableCell(String content, Boolean isGravityCenter, Boolean isRed, int width);
 
-    public void debtDetailShow(JSONObject jsonObject);
+    void debtDetailShow(JSONObject jsonObject);
 
-    public void showTimeoutDialog();
+    void showNetworkErrorLayout();
 
-    public void showNoInternetDialog();
+    void hideAllComponent();
 
-    public void hideAllComponent();
-
-    public void showAllComponent();
+    void showAllComponent();
 }

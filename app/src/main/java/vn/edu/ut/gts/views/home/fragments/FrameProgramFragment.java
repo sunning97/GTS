@@ -73,7 +73,6 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
     private FrameProgramFragmentPresenter frameProgramFragmentPresenter;
     private JSONObject data;
     private EpicDialog epicDialog;
-    private SweetAlertDialog loadingDialog;
     private float d;
     private List<String> headerText = new ArrayList<>();
     private List<String> dataSpinner = new ArrayList<>();
@@ -109,27 +108,8 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
     }
 
     @Override
-    public void showTimeoutDialog() {
-        if (loadingDialog.isShowing()) loadingDialog.dismiss();
-//        new SweetAlertDialog(getContext())
-//                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
-//                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
-//                .show();
-
-        hideAllComponent();
-        retyIcon.hide();
-        retryText.setVisibility(View.VISIBLE);
-        noInternetLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showNoConnectionDialog() {
-        if (loadingDialog.isShowing()) loadingDialog.dismiss();
-//        new SweetAlertDialog(getContext())
-//                .setTitleText(getResources().getString(R.string.no_internet_access_title))
-//                .setContentText(getResources().getString(R.string.no_internet_access_content))
-//                .show();
-
+    public void showNetworkErrorLayout() {
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
         hideAllComponent();
         retyIcon.hide();
         retryText.setVisibility(View.VISIBLE);
@@ -157,10 +137,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
 
     private void init() {
         epicDialog = new EpicDialog(getContext());
-        loadingDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
-        loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        loadingDialog.setTitleText("Loading");
-        loadingDialog.setCancelable(false);
+        epicDialog.initLoadingDialog();
     }
 
     @Override
@@ -233,14 +210,14 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
 
     @Override
     public void showLoadingDialog() {
-        if (!loadingDialog.isShowing())
-            loadingDialog.show();
+        if (!epicDialog.isShowing())
+            epicDialog.showLoadingDialog();
     }
 
     @Override
     public void dismissLoadingDialog() {
-        if (loadingDialog.isShowing())
-            loadingDialog.dismiss();
+        if (epicDialog.isShowing())
+            epicDialog.dismisPopup();
     }
 
     @Override
@@ -319,14 +296,14 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
 
     public TableRow generateSubjectGroup(String content) {
         TableRow tableRow = new TableRow(getContext());
-        tableRow.setGravity(Gravity.CENTER_VERTICAL);
+        tableRow.setGravity(Gravity.CENTER);
         tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
         tableRow.setMinimumHeight((int) d * 40);
         tableRow.setBackgroundColor(getResources().getColor(R.color.violet));
 
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
-        linearLayout.setGravity(Gravity.START);
+        linearLayout.setGravity(Gravity.CENTER);
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         linearLayout.setLayoutParams(layoutParams);
 

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import android.widget.TextView;
@@ -56,6 +57,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     CustomCheckBox cbRemember;
     @BindView(R.id.tv_pass_remember)
     TextView tvRemember;
+    @BindView(R.id.layout_auto_login)
+    LinearLayout layoutAutoLogin;
+    @BindView(R.id.layout_login)
+    RelativeLayout layoutLogin;
 
     public static Boolean isRememberPassword = false;
     private LoginProcess loginProcess;
@@ -135,21 +140,23 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     public void setLastLogin() {
         if (!TextUtils.isEmpty(this.storage.getString("last_student_login")))
             inputStudentId.setText(this.storage.getString("last_student_login"));
-        if(!TextUtils.isEmpty(this.storage.getString("password")) && Boolean.valueOf(this.storage.getString("is_remember_pass"))){
+        if(!TextUtils.isEmpty(this.storage.getString("password")) && (Boolean.valueOf(this.storage.getString("is_remember_pass")) || LoginActivity.isRememberPassword)){
             inputPassword.setText(this.storage.getString("password"));
-            cbRemember.setChecked(Boolean.valueOf(this.storage.getString("is_remember_pass")));
-            LoginActivity.isRememberPassword = Boolean.valueOf(this.storage.getString("is_remember_pass"));
+            cbRemember.setChecked(LoginActivity.isRememberPassword);
+//            LoginActivity.isRememberPassword = Boolean.valueOf(this.storage.getString("is_remember_pass"));
         }
     }
 
     @Override
     public void showLoadingDialog() {
-        epicDialog.showLoadingDialog();
+        if (!epicDialog.isShowing())
+            epicDialog.showLoadingDialog();
     }
 
     @Override
     public void dismisLoadingDialog() {
-        epicDialog.dismisPopup();
+        if(epicDialog.isShowing())
+            epicDialog.dismisPopup();
     }
 
     @Override
@@ -216,12 +223,27 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             @Override
             public void run() {
                 loginProcess = new LoginProcess(LoginActivity.this, LoginActivity.this);
-                loginProcess.initData();
+                loginProcess.initData(false);
             }
         };
-        this.setLastLogin();
-        handler.postDelayed(runnable, 1500);
-        handler.postDelayed(runnable2,2000);
+        if(Boolean.valueOf(this.storage.getString("is_remember_pass"))){
+            LoginActivity.isRememberPassword = true;
+            layoutLogin.setVisibility(View.GONE);
+            layoutAutoLogin.setVisibility(View.VISIBLE);
+            String id = this.storage.getString("last_student_login");
+            String pass = this.storage.getString("password");
+
+            loginProcess = new LoginProcess(LoginActivity.this, LoginActivity.this);
+            loginProcess.initData(true);
+            loginProcess.execute(id,pass);
+        } else {
+            layoutAutoLogin.setVisibility(View.GONE);
+            layoutLogin.setVisibility(View.VISIBLE);
+            this.setLastLogin();
+            handler.postDelayed(runnable, 1500);
+            handler.postDelayed(runnable2,2000);
+        }
+
 
 
     }
@@ -229,16 +251,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     public void tvRememberClick(View view){
         cbRemember.setChecked(!cbRemember.isChecked(),true);
     }
-//
-//    @OnClick(R.id.cb_remember)
-//    public void cbRememberClick(View view){
-//
-//    }
 
     @OnClick(R.id.btn_login)
     public void submit(View view) {
         if(LoginProcess.currentStatus == LoginProcess.TIMEOUT || LoginProcess.currentStatus == LoginProcess.NO_INTERNET){
-            loginProcess.initData();
+            loginProcess.initData(false);
         } else {
             if (validateStudentId() && validatePassword()) {
                 if (cbRemember.isChecked()){

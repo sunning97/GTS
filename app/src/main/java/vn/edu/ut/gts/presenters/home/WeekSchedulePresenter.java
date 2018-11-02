@@ -162,10 +162,10 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
                     case 400:
-                        iWeekSchedule.showNoInternetDialog();
+                        iWeekSchedule.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iWeekSchedule.showTimeoutDialog();
+                        iWeekSchedule.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;
@@ -232,10 +232,10 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
                     case 400:
-                        iWeekSchedule.showNoInternetDialog();
+                        iWeekSchedule.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iWeekSchedule.showTimeoutDialog();
+                        iWeekSchedule.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;
@@ -302,10 +302,10 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
                     case 400:
-                        iWeekSchedule.showNoInternetDialog();
+                        iWeekSchedule.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iWeekSchedule.showTimeoutDialog();
+                        iWeekSchedule.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;
@@ -373,10 +373,10 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
                     case 400:
-                        iWeekSchedule.showNoInternetDialog();
+                        iWeekSchedule.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iWeekSchedule.showTimeoutDialog();
+                        iWeekSchedule.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;
@@ -445,10 +445,10 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter{
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
                     case 400:
-                        iWeekSchedule.showNoInternetDialog();
+                        iWeekSchedule.showNetworkErrorLayout();
                         break;
                     case 500:
-                        iWeekSchedule.showTimeoutDialog();
+                        iWeekSchedule.showNetworkErrorLayout();
                         break;
                     default: {
                         currentStatus = 0;
