@@ -9,10 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.adapters.StudentInfoViewPagerAdapter;
 import vn.edu.ut.gts.views.home.fragments.student_info.StudentFamilyInfoFragment;
 import vn.edu.ut.gts.views.home.fragments.student_info.StudentInfoFragment;
@@ -23,42 +29,34 @@ import vn.edu.ut.gts.views.home.fragments.student_info.StudentPersonalInfoFragme
  */
 public class StudentInfoRootFragment extends Fragment {
 
-    private List<Fragment> fragments;
-    private List<String> fragmentTitle;
     private StudentInfoViewPagerAdapter studentInfoViewPagerAdapter;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+    @BindView(R.id.student_info_tablayout)
+    TabLayout tabLayout;
+    @BindView(R.id.student_info_view_pager)
+    ViewPager viewPager;
+    private Storage storage;
     public StudentInfoRootFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_info_root,container,false);
-        this.init(view);
+        ButterKnife.bind(this,view);
+        init();
         return view;
     }
-    private void init(View view){
-        tabLayout = view.findViewById(R.id.student_info_tablayout);
-        viewPager = view.findViewById(R.id.student_info_view_pager);
-
-        this.fragments = new ArrayList<>();
-        fragments.add(new StudentInfoFragment());
-        fragments.add(new StudentPersonalInfoFragment());
-        fragments.add(new StudentFamilyInfoFragment());
-
-        this.fragmentTitle = new ArrayList<>();
-        fragmentTitle.add("Thông tin sinh viên");
-        fragmentTitle.add("Thông tin cá nhân");
-        fragmentTitle.add("Quan hệ gia đình");
-        this.studentInfoViewPagerAdapter = new StudentInfoViewPagerAdapter(
-                getChildFragmentManager(),
-                fragments,
-                fragmentTitle
-        );
-        viewPager.setAdapter(studentInfoViewPagerAdapter);
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.setupWithViewPager(viewPager);
+    private void init(){
+        storage = new Storage(getContext());
+        try {
+            JSONObject data = new JSONObject(storage.getString("student_info"));
+            this.studentInfoViewPagerAdapter = new StudentInfoViewPagerAdapter(getChildFragmentManager(),data);
+            viewPager.setAdapter(studentInfoViewPagerAdapter);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.setTabMode(TabLayout.MODE_FIXED);
+            tabLayout.setupWithViewPager(viewPager);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

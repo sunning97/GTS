@@ -45,7 +45,6 @@ public class StudentPersonalInfoFragment extends Fragment {
     @BindView(R.id.ho_khau) TextView hoKhau;
     @BindView(R.id.dia_chi_lien_he) TextView diaChiLienHe;
 
-    private Storage storage;
     private List<TextView> listProp;
     public StudentPersonalInfoFragment() {
         listProp = new ArrayList<>();
@@ -57,16 +56,14 @@ public class StudentPersonalInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_student_personal_info, container, false);
         ButterKnife.bind(this,view);
         init();
-        this.storage = new Storage(getContext());
 
+        Bundle bundle = getArguments();
         try {
-            JSONObject jsonObject = new JSONObject(storage.getString("student_info"));
-            JSONArray jsonArray = jsonObject.getJSONArray("studentDetail");
-            generateStudentInfo(jsonArray);
+            JSONArray data = new JSONArray(bundle.getString("data"));
+            generateStudentInfo(data);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return  view;
     }
 
