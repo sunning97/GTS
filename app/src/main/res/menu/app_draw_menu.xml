@@ -36,16 +36,12 @@
             android:icon="@drawable/ic_attendance_filled_white_96"
             android:title="Thông tin điểm danh" />
     </group>
-    <item android:title="Tìm kiếm">
+    <item android:title="Thêm">
         <menu>
             <item
                 android:id="@+id/student_search"
                 android:icon="@drawable/ic_search_black_48dp"
                 android:title="Tìm kiếm sinh viên" />
-        </menu>
-    </item>
-    <item android:title="Thông tin">
-        <menu>
             <item
                 android:id="@+id/about_app"
                 android:icon="@drawable/ic_about_us_48_black"
