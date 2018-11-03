@@ -252,6 +252,11 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         detailToResultLayout();
     }
 
+    @OnClick(R.id.to_search_layout_float_btn)
+    public void returnSearchLayoutFromDetail(){
+        floatingContainer.close(true);
+        detailToSearchLayout();
+    }
     public void viewStudentDetail(final JSONObject jsonObject){
         resultToLoadLayout();
         Handler handler = new Handler();
@@ -610,6 +615,35 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                                     public void call(Animator animator) {
                                         searchToolbar.setTitle("Kết quả tìm kiếm");
                                         resultLayout.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .playOn(resultLayout);
+                    }
+                })
+                .playOn(detailLayout);
+    }
+
+    public void detailToSearchLayout(){
+        YoYo.with(Techniques.SlideOutRight)
+                .duration(150)
+                .repeat(0)
+                .onEnd(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        floatingContainer.setVisibility(View.GONE);
+                        toSearchLayoutFloatBTN.setVisibility(View.GONE);
+                        toResultLayoutFloatBTN.setVisibility(View.GONE);
+                        floatingContainer.animate();
+                        detailLayout.setVisibility(View.GONE);
+                        resultLayout.setVisibility(View.GONE);
+                        YoYo.with(Techniques.SlideInLeft)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        searchToolbar.setTitle("Tìm kiếm sinh viên");
+                                        searchLayout.setVisibility(View.VISIBLE);
                                     }
                                 })
                                 .playOn(resultLayout);

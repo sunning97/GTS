@@ -66,6 +66,7 @@ public class StudentSearchDetailViewPagerAdpater extends FragmentStatePagerAdapt
                     break;
                 case 1:
                     fragment = new StudentSearchStudyResultFragment();
+                    StudentSearchStudyResultFragment.clearDataSpinner();
                     JSONObject studyResult = data.getJSONObject(1);
                     bundle = new Bundle();
                     bundle.putString("data", studyResult.toString());

@@ -47,7 +47,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
     @BindView(R.id.semester_select_tv)
     TextView semesterSelectTV;
     private List<String> headerText;
-    private List<String> dataSpinner;
+    private static List<String> dataSpinner;
     private JSONObject data;
     private float d;
     public StudentSearchStudyResultFragment() {
@@ -58,7 +58,9 @@ public class StudentSearchStudyResultFragment extends Fragment {
         headerText.add("Điểm 4");
         headerText.add("Điểm chữ");
     }
-
+    public static void clearDataSpinner(){
+        dataSpinner.clear();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
