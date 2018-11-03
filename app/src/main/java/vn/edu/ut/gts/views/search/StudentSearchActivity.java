@@ -4,12 +4,13 @@ import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +24,6 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.daimajia.androidanimations.library.Techniques;
@@ -46,6 +46,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.adapters.StudentInfoViewPagerAdapter;
+import vn.edu.ut.gts.adapters.StudentSearchDetailViewPagerAdpater;
 import vn.edu.ut.gts.presenters.search.StudentSearchPresenter;
 
 public class StudentSearchActivity extends AppCompatActivity implements IStudentSearchActivity, CalendarDatePickerDialogFragment.OnDateSetListener {
@@ -100,11 +103,11 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     @BindView(R.id.detail_layout)
     LinearLayout detailLayout;
 
-    private static final int SEARCH_LAYOUT = 1;
-    private static final int RESULT_LAYOUT = 2;
-    private static final int DETAIL_LAYOUT = 3;
-    private int currentLayout = StudentSearchActivity.SEARCH_LAYOUT;
-    private int nextLayout = 0;
+    @BindView(R.id.student_search_tablayout)
+    TabLayout studentSearchTablayout;
+    @BindView(R.id.student_search_view_pager)
+    ViewPager studentSearchViewPager;
+
 
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private final String DATE_REGEX = "(.*)-(.*)-(.*)";
@@ -116,6 +119,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     private String[] spinnerData = {"Mã số sinh viên", "Họ tên", "Ngày sinh", "Lớp Học"};
     private String[] searchResultHeaderData = {"MSSV", "Họ tên", "Ngày sinh"};
     private float d;
+    private StudentSearchDetailViewPagerAdpater studentSearchDetailViewPagerAdpater;
+    Storage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,12 +128,20 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         setContentView(R.layout.activity_student_search);
         ButterKnife.bind(this);
         d = getResources().getDisplayMetrics().density;
+        storage = new Storage(StudentSearchActivity.this);
         studentSearchPresenter = new StudentSearchPresenter(this, StudentSearchActivity.this);
         studentSearchPresenter.getDataSearch();
         searchToolbar.setTitle("Tìm kiếm sinh viên");
         setSupportActionBar(searchToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        this.studentSearchDetailViewPagerAdpater = new StudentSearchDetailViewPagerAdpater(getSupportFragmentManager());
+        studentSearchViewPager.setAdapter(studentSearchDetailViewPagerAdpater);
+        studentSearchTablayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        studentSearchTablayout.setTabMode(TabLayout.MODE_FIXED);
+        studentSearchTablayout.setupWithViewPager(studentSearchViewPager);
+
         typeSearchSpinner.setItems(spinnerData);
         typeSearchSpinner.setSelectedIndex(0);
         typeSearchSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
@@ -239,13 +252,13 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         detailToResultLayout();
     }
 
-    public void viewStudentDetail(JSONObject jsonObject){
+    public void viewStudentDetail(final JSONObject jsonObject){
         resultToLoadLayout();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                loadToDetailLayout();
+                studentSearchPresenter.getStudentDetail(jsonObject);
             }
         }, 1000);
     }
@@ -442,7 +455,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     }
 
 
-
     @Override
     public void showNoResultLayout() {
         searchResultTableHeader.setVisibility(View.GONE);
@@ -473,6 +485,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                                         toSearchLayoutFloatBTN.setVisibility(View.VISIBLE);
                                         floatingContainer.animate();
                                         resultLayout.setVisibility(View.VISIBLE);
+                                        searchToolbar.setTitle("Kết quả tìm kiếm");
                                     }
                                 })
                                 .playOn(findViewById(R.id.result_layout));
@@ -499,6 +512,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
                                     public void call(Animator animator) {
+                                        searchToolbar.setTitle("Tìm kiếm sinh viên");
                                         searchLayout.setVisibility(View.VISIBLE);
                                     }
                                 })
@@ -525,6 +539,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 .onStart(new YoYo.AnimatorCallback() {
                     @Override
                     public void call(Animator animator) {
+                        searchToolbar.setTitle("");
                         floatingContainer.setVisibility(View.GONE);
                     }
                 })
@@ -547,7 +562,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 .playOn(resultLayout);
     }
 
-    public void loadToDetailLayout(){
+    @Override
+    public void loadToDetailLayout(final String name){
         YoYo.with(Techniques.SlideOutLeft)
                 .duration(150)
                 .repeat(0)
@@ -565,6 +581,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                                         toSearchLayoutFloatBTN.setVisibility(View.VISIBLE);
                                         toResultLayoutFloatBTN.setVisibility(View.VISIBLE);
                                         detailLayout.setVisibility(View.VISIBLE);
+                                        searchToolbar.setTitle(name);
                                     }
                                 })
                                 .playOn(detailLayout);
@@ -591,6 +608,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
                                     public void call(Animator animator) {
+                                        searchToolbar.setTitle("Kết quả tìm kiếm");
                                         resultLayout.setVisibility(View.VISIBLE);
                                     }
                                 })
@@ -606,5 +624,12 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         windowManager.getDefaultDisplay().getMetrics(dm);
         int screenWidth = dm.widthPixels;
         return screenWidth;
+    }
+
+    public void setStudentDetailData(JSONArray data){
+        this.studentSearchDetailViewPagerAdpater.setData(data);
+        this.studentSearchDetailViewPagerAdpater.notifyDataSetChanged();
+        this.studentSearchTablayout.setScrollPosition(0, 0f, true);
+        this.studentSearchViewPager.setCurrentItem(0);
     }
 }

@@ -240,7 +240,6 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
             @Override
             public void onClick(View v) {
                 studyResultDetailShow(data);
-                Log.d("AAA", data.toString());
             }
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));

@@ -240,8 +240,8 @@
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
-        android:layout_below="@+id/search_toolbar"
         android:id="@+id/detail_layout"
+        android:layout_below="@+id/search_toolbar"
         android:visibility="gone"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -250,9 +250,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary">
+
             <android.support.design.widget.TabLayout
                 android:layout_marginTop="15dp"
-                android:id="@+id/student_detail_tablayout"
+                android:layout_below="@id/student_info_card"
+                android:id="@+id/student_search_tablayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:tabMode="scrollable"
@@ -261,12 +263,15 @@
                 app:tabSelectedTextColor="@color/white"
                 app:tabTextColor="@color/white"
                 app:tabTextAppearance="@style/capfale">
+
             </android.support.design.widget.TabLayout>
         </RelativeLayout>
+
         <android.support.v4.view.ViewPager
-            android:id="@+id/student_detail_view_pager"
+            android:id="@+id/student_search_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
         </android.support.v4.view.ViewPager>
     </LinearLayout>
     <com.github.clans.fab.FloatingActionMenu
