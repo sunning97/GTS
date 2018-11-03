@@ -97,7 +97,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     FloatingActionButton toResultLayoutFloatBTN;
     @BindView(R.id.no_result_layout)
     LinearLayout noResultLayout;
-
+    @BindView(R.id.detail_layout)
+    LinearLayout detailLayout;
 
     private static final int SEARCH_LAYOUT = 1;
     private static final int RESULT_LAYOUT = 2;
@@ -232,6 +233,23 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         resultToSearchLayout();
     }
 
+    @OnClick(R.id.to_result_layout_float_btn)
+    public void returnResultLayout(){
+        floatingContainer.close(true);
+        detailToResultLayout();
+    }
+
+    public void viewStudentDetail(JSONObject jsonObject){
+        resultToLoadLayout();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadToDetailLayout();
+            }
+        }, 1000);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home)
@@ -297,13 +315,14 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         //body
         try {
             for (int i = 0; i < jsonObjects.size(); i++) {
-                JSONObject subject = jsonObjects.get(i);
+                final JSONObject subject = jsonObjects.get(i);
                 TableRow row = new TableRow(StudentSearchActivity.this);
                 row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                 row.setMinimumHeight((int) d * 50);
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        viewStudentDetail(subject);
                     }
                 });
                 if (i % 2 != 0) row.setBackgroundColor(getResources().getColor(R.color.gray));
@@ -422,17 +441,26 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 .playOn(gtsLogo);
     }
 
+
+
+    @Override
+    public void showNoResultLayout() {
+        searchResultTableHeader.setVisibility(View.GONE);
+        resultLayoutScroll.setVisibility(View.GONE);
+        noResultLayout.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void loadToResultLayout(final Boolean isNoResult) {
         YoYo.with(Techniques.SlideOutLeft)
-                .duration(250)
+                .duration(150)
                 .repeat(0)
                 .onEnd(new YoYo.AnimatorCallback() {
                     @Override
                     public void call(Animator animator) {
                         loadingLayout.setVisibility(View.GONE);
                         YoYo.with(Techniques.SlideInRight)
-                                .duration(250)
+                                .duration(150)
                                 .repeat(0)
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
@@ -453,16 +481,9 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 .playOn(findViewById(R.id.loading_layout));
     }
 
-    @Override
-    public void showNoResultLayout() {
-        searchResultTableHeader.setVisibility(View.GONE);
-        resultLayoutScroll.setVisibility(View.GONE);
-        noResultLayout.setVisibility(View.VISIBLE);
-    }
-
     public void resultToSearchLayout() {
         YoYo.with(Techniques.SlideOutRight)
-                .duration(250)
+                .duration(150)
                 .repeat(0)
                 .onEnd(new YoYo.AnimatorCallback() {
                     @Override
@@ -473,7 +494,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                         resultLayout.setVisibility(View.GONE);
                         noResultLayout.setVisibility(View.GONE);
                         YoYo.with(Techniques.SlideInLeft)
-                                .duration(250)
+                                .duration(150)
                                 .repeat(0)
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
@@ -495,6 +516,88 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                     }
                 })
                 .playOn(resultLayout);
+    }
+
+    public void resultToLoadLayout() {
+        YoYo.with(Techniques.SlideOutLeft)
+                .duration(150)
+                .repeat(0)
+                .onStart(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        floatingContainer.setVisibility(View.GONE);
+                    }
+                })
+                .onEnd(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        resultLayout.setVisibility(View.GONE);
+                        YoYo.with(Techniques.SlideInRight)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        loadingLayout.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .playOn(loadingLayout);
+                    }
+                })
+                .playOn(resultLayout);
+    }
+
+    public void loadToDetailLayout(){
+        YoYo.with(Techniques.SlideOutLeft)
+                .duration(150)
+                .repeat(0)
+                .onEnd(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        loadingLayout.setVisibility(View.GONE);
+                        YoYo.with(Techniques.SlideInRight)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        floatingContainer.setVisibility(View.VISIBLE);
+                                        toSearchLayoutFloatBTN.setVisibility(View.VISIBLE);
+                                        toResultLayoutFloatBTN.setVisibility(View.VISIBLE);
+                                        detailLayout.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .playOn(detailLayout);
+                    }
+                })
+                .playOn(loadingLayout);
+    }
+
+    public void detailToResultLayout(){
+        YoYo.with(Techniques.SlideOutRight)
+                .duration(150)
+                .repeat(0)
+                .onEnd(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        floatingContainer.setVisibility(View.VISIBLE);
+                        toSearchLayoutFloatBTN.setVisibility(View.VISIBLE);
+                        toResultLayoutFloatBTN.setVisibility(View.GONE);
+                        floatingContainer.animate();
+                        detailLayout.setVisibility(View.GONE);
+                        YoYo.with(Techniques.SlideInLeft)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        resultLayout.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .playOn(resultLayout);
+                    }
+                })
+                .playOn(detailLayout);
     }
 
     public int getScreenWidthInDPs() {

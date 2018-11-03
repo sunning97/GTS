@@ -174,7 +174,7 @@
             android:textColor="@color/white" />
     </LinearLayout>
     <LinearLayout
-        android:layout_below="@+id/gts_logo"
+        android:layout_below="@+id/search_toolbar"
         android:id="@+id/loading_layout"
         android:visibility="gone"
         android:orientation="vertical"
@@ -191,7 +191,7 @@
     </LinearLayout>
     <LinearLayout
         android:gravity="center"
-        android:layout_below="@+id/gts_logo"
+        android:layout_below="@+id/search_toolbar"
         android:id="@+id/result_layout"
         android:visibility="gone"
         android:orientation="vertical"
@@ -239,6 +239,36 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/search_toolbar"
+        android:id="@+id/detail_layout"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary">
+            <android.support.design.widget.TabLayout
+                android:layout_marginTop="15dp"
+                android:id="@+id/student_detail_tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="scrollable"
+                app:tabIndicatorColor="@color/white"
+                app:tabIndicatorHeight="5dp"
+                app:tabSelectedTextColor="@color/white"
+                app:tabTextColor="@color/white"
+                app:tabTextAppearance="@style/capfale">
+            </android.support.design.widget.TabLayout>
+        </RelativeLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/student_detail_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+    </LinearLayout>
     <com.github.clans.fab.FloatingActionMenu
         android:visibility="gone"
         android:id="@+id/floating_container"
@@ -271,7 +301,7 @@
             android:id="@+id/to_result_layout_float_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_my_location_white_24dp"
+            android:src="@drawable/ic_arrow_back_white_24dp"
             app:fab_label="Về trang kết quả"
             app:fab_size="mini"
             app:fab_colorNormal="@color/colorPrimary"
