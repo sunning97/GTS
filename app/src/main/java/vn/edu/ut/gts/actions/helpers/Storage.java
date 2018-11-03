@@ -7,12 +7,14 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
 import org.jsoup.Connection;
+import org.jsoup.UncheckedIOException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.SocketException;
 
 import vn.edu.ut.gts.views.login.LoginActivity;
 
@@ -60,6 +62,10 @@ public class Storage {
             fileOutputStream.write(resultImageResponse.bodyAsBytes());
             fileOutputStream.close();
             result = true;
+        } catch (UncheckedIOException e) {
+            e.printStackTrace();
+        } catch (SocketException e) {
+            e.printStackTrace();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -81,7 +87,7 @@ public class Storage {
 
     public boolean isImageExist(Context context) {
         File image = new File(context.getFilesDir(), "student_portrait.jpg");
-        return  image.exists();
+        return image.exists();
     }
 
     public boolean deleteAllsharedPreferences(Context context) {
@@ -97,26 +103,26 @@ public class Storage {
             if (!TextUtils.isEmpty(pass)) {
                 editor.putString("password", pass);
             }
-            editor.putString("is_auto_login",String.valueOf(true));
+            editor.putString("is_auto_login", String.valueOf(true));
         }
-        if(LoginActivity.isAutoLogin && LoginActivity.isLogout){
+        if (LoginActivity.isAutoLogin && LoginActivity.isLogout) {
             File image = new File(context.getFilesDir(), "student_portrait.jpg");
             if (image.exists()) image.delete();
             String id = this.getString("last_student_login");
             editor.clear();
-            editor.putString("last_student_login",id);
-            editor.putString("is_auto_login",String.valueOf(false));
+            editor.putString("last_student_login", id);
+            editor.putString("is_auto_login", String.valueOf(false));
         }
 
-        if(!LoginActivity.isAutoLogin && (!LoginActivity.isLogout || LoginActivity.isLogout)){
+        if (!LoginActivity.isAutoLogin && (!LoginActivity.isLogout || LoginActivity.isLogout)) {
             File image = new File(context.getFilesDir(), "student_portrait.jpg");
             if (image.exists()) image.delete();
             String id = this.getString("last_student_login");
             editor.clear();
-            if(!TextUtils.isEmpty(id)){
-                editor.putString("last_student_login",id);
+            if (!TextUtils.isEmpty(id)) {
+                editor.putString("last_student_login", id);
             }
-            editor.putString("is_auto_login",String.valueOf(false));
+            editor.putString("is_auto_login", String.valueOf(false));
         }
         return editor.commit();
     }

@@ -7,6 +7,13 @@
     android:background="@color/white"
     android:orientation="vertical"
     tools:context=".views.search.StudentSearchActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="@color/white"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
     <ImageView
         android:layout_width="88dp"
         android:layout_height="124dp"
@@ -47,7 +54,7 @@
                 <EditText
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    android:id="@+id/search_by_student_id_edt"
+                    android:id="@+id/input_student_id"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/input_bg_primary_color"
@@ -66,17 +73,41 @@
                 android:id="@+id/layout_search_by_birth_date"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:visibility="gone">
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:text="Chọn ngày"
+                    android:id="@+id/birth_date_tv"
+                    android:layout_width="100dp"
+                    android:layout_height="25dp"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+                <ImageButton
+                    android:background="@drawable/circlebackgroundbluedark"
+                    android:id="@+id/pick_date"
+                    android:src="@drawable/ic_perm_contact_calendar_white_24dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_search_by_class"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="gone">
 
                 <EditText
+                    android:id="@+id/input_class"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/input_bg_primary_color"
                     android:cursorVisible="true"
-                    android:hint="DD-MM-YYYY"
+                    android:hint="Tên lớp..."
                     android:inputType="text"
                     android:paddingLeft="15dp"
                     android:paddingTop="5dp"
@@ -94,6 +125,7 @@
                 android:visibility="gone">
 
                 <EditText
+                    android:id="@+id/input_first_name"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:layout_width="match_parent"
@@ -101,6 +133,7 @@
                     android:background="@drawable/input_bg_primary_color"
                     android:hint="Họ đệm..."
                     android:paddingLeft="15dp"
+                    android:inputType="text"
                     android:paddingTop="5dp"
                     android:paddingRight="15dp"
                     android:paddingBottom="5dp"
@@ -108,6 +141,7 @@
                     android:textSize="17sp" />
 
                 <EditText
+                    android:id="@+id/input_last_name"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:layout_width="match_parent"
@@ -115,6 +149,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/input_bg_primary_color"
                     android:hint="Tên..."
+                    android:inputType="text"
                     android:paddingLeft="15dp"
                     android:paddingTop="5dp"
                     android:paddingRight="15dp"
