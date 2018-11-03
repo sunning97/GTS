@@ -17,6 +17,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,12 +199,39 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                             .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"))
                             .execute();
 
-
                     document = res.parse();
-                    JSONObject info = parseInfo(document,jsonObject.getString("studentName"));
+                    JSONObject info = parseInfo(document, jsonObject.getString("studentName"));
                     JSONObject studyResult = parseStudyResult(document);
                     result.put(info);
                     result.put(studyResult);
+
+                    res = Jsoup.connect(Helper.BASE_URL + jsonObject.getString("urlViewDebt"))
+                            .userAgent(Helper.USER_AGENT)
+                            .method(Connection.Method.GET)
+                            .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"))
+                            .execute();
+                    document = res.parse();
+
+                    JSONArray data = new JSONArray();
+                    Elements table = document.getElementsByClass("grid-color2");
+                    Elements trs = table.get(0).select("tr");
+                    Elements ths = trs.get(0).select("th");
+                    JSONArray keys = new JSONArray();
+                    for (int i = 2; i < ths.size(); i++) {
+                        String keyTmp = Helper.toSlug(ths.get(i).text().trim());
+                        keys.put(keyTmp);
+                    }
+                    for (int i = 1; i < trs.size() - 1; i++) {
+                        Elements tds = trs.get(i).select("td");
+                        JSONObject subject = new JSONObject();
+                        for (int j = 2; j < tds.size(); j++) {
+                            String tmp = tds.get(j).text().trim();
+                            subject.put(keys.getString(j - 2), tmp);
+                        }
+                        data.put(subject);
+                    }
+
+                    result.put(data);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -227,10 +256,10 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
         asyncTask.execute();
     }
 
-    private JSONObject parseInfo(Document document,String name) {
+    private JSONObject parseInfo(Document document, String name) {
         JSONObject info = new JSONObject();
         try {
-            info.put("student_name",name);
+            info.put("student_name", name);
             Elements tables = document.getElementsByTag("table");
             Element infoTable = tables.get(7);
             Elements tds = infoTable.select("td");
@@ -262,16 +291,16 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
         return info;
     }
 
-    private JSONObject parseStudyResult(Document document){
+    private JSONObject parseStudyResult(Document document) {
         JSONObject result = new JSONObject();
         JSONArray allQuater = new JSONArray();
         try {
             Elements tableResult = document.select("table.grid.grid-color2.tblKetQuaHocTap");
             Element table1 = tableResult.get(0);
 
-            result.put("tong_tin_chi",tableResult.get(1).getElementById("ctl00_ContentPlaceHolder_ucThongTinTotNghiepTinChi1_lblTongTinChi").text());
-            result.put("trung_binh_tich_luy",tableResult.get(1).getElementById("ctl00_ContentPlaceHolder_ucThongTinTotNghiepTinChi1_lblTBCTL").text());
-            result.put("ti_le_no",tableResult.get(1).getElementById("ctl00_ContentPlaceHolder_ucThongTinTotNghiepTinChi1_lblSoTCNo").text());
+            result.put("tong_tin_chi", tableResult.get(1).getElementById("ctl00_ContentPlaceHolder_ucThongTinTotNghiepTinChi1_lblTongTinChi").text());
+            result.put("trung_binh_tich_luy", tableResult.get(1).getElementById("ctl00_ContentPlaceHolder_ucThongTinTotNghiepTinChi1_lblTBCTL").text());
+            result.put("ti_le_no", tableResult.get(1).getElementById("ctl00_ContentPlaceHolder_ucThongTinTotNghiepTinChi1_lblSoTCNo").text());
 
 
             //header
@@ -302,33 +331,33 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                 }
                 JSONArray quater = new JSONArray();
 
-                if(i == indexs.size() - 1){
+                if (i == indexs.size() - 1) {
                     for (int j = indexs.get(i) + 1; j < trs.size(); j++) {
                         Element tr = trs.get(j);
                         if (!TextUtils.isEmpty(tr.text())) {
                             JSONObject subject = new JSONObject();
                             Elements tds = tr.getElementsByTag("td");
-                            subject.put("courseCode",tds.get(1).text());
-                            subject.put("courseName",tds.get(2).text());
-                            subject.put("courseClass",tds.get(3).text());
-                            subject.put("courseCredits",tds.get(4).text());
+                            subject.put("courseCode", tds.get(1).text());
+                            subject.put("courseName", tds.get(2).text());
+                            subject.put("courseClass", tds.get(3).text());
+                            subject.put("courseCredits", tds.get(4).text());
 
-                            if(tds.size() == 14){
-                                subject.put("processScore",0);
-                                subject.put("testScores",tds.get(7).text());
-                                subject.put("scoresOf10",tds.get(9).text());
-                                subject.put("scoresOf4",tds.get(10).text());
-                                subject.put("scoresString",tds.get(11).text());
-                                subject.put("classification",tds.get(12).text());
-                                subject.put("note",tds.get(13).text());
+                            if (tds.size() == 14) {
+                                subject.put("processScore", 0);
+                                subject.put("testScores", tds.get(7).text());
+                                subject.put("scoresOf10", tds.get(9).text());
+                                subject.put("scoresOf4", tds.get(10).text());
+                                subject.put("scoresString", tds.get(11).text());
+                                subject.put("classification", tds.get(12).text());
+                                subject.put("note", tds.get(13).text());
                             } else {
-                                subject.put("processScore",tds.get(6).text());
-                                subject.put("testScores",tds.get(10).text());
-                                subject.put("scoresOf10",tds.get(12).text());
-                                subject.put("scoresOf4",tds.get(13).text());
-                                subject.put("scoresString",tds.get(14).text());
-                                subject.put("classification",tds.get(15).text());
-                                subject.put("note",tds.get(16).text());
+                                subject.put("processScore", tds.get(6).text());
+                                subject.put("testScores", tds.get(10).text());
+                                subject.put("scoresOf10", tds.get(12).text());
+                                subject.put("scoresOf4", tds.get(13).text());
+                                subject.put("scoresString", tds.get(14).text());
+                                subject.put("classification", tds.get(15).text());
+                                subject.put("note", tds.get(16).text());
                             }
                             quater.put(subject);
                         }
@@ -344,27 +373,27 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                         if (!TextUtils.isEmpty(tr.text())) {
                             JSONObject subject = new JSONObject();
                             Elements tds = tr.getElementsByTag("td");
-                            subject.put("courseCode",tds.get(1).text());
-                            subject.put("courseName",tds.get(2).text());
-                            subject.put("courseClass",tds.get(3).text());
-                            subject.put("courseCredits",tds.get(4).text());
+                            subject.put("courseCode", tds.get(1).text());
+                            subject.put("courseName", tds.get(2).text());
+                            subject.put("courseClass", tds.get(3).text());
+                            subject.put("courseCredits", tds.get(4).text());
 
-                            if(tds.size() == 14){
-                                subject.put("processScore",0);
-                                subject.put("testScores",tds.get(7).text());
-                                subject.put("scoresOf10",tds.get(9).text());
-                                subject.put("scoresOf4",tds.get(10).text());
-                                subject.put("scoresString",tds.get(11).text());
-                                subject.put("classification",tds.get(12).text());
-                                subject.put("note",tds.get(13).text());
+                            if (tds.size() == 14) {
+                                subject.put("processScore", 0);
+                                subject.put("testScores", tds.get(7).text());
+                                subject.put("scoresOf10", tds.get(9).text());
+                                subject.put("scoresOf4", tds.get(10).text());
+                                subject.put("scoresString", tds.get(11).text());
+                                subject.put("classification", tds.get(12).text());
+                                subject.put("note", tds.get(13).text());
                             } else {
-                                subject.put("processScore",tds.get(6).text());
-                                subject.put("testScores",tds.get(10).text());
-                                subject.put("scoresOf10",tds.get(12).text());
-                                subject.put("scoresOf4",tds.get(13).text());
-                                subject.put("scoresString",tds.get(14).text());
-                                subject.put("classification",tds.get(15).text());
-                                subject.put("note",tds.get(16).text());
+                                subject.put("processScore", tds.get(6).text());
+                                subject.put("testScores", tds.get(10).text());
+                                subject.put("scoresOf10", tds.get(12).text());
+                                subject.put("scoresOf4", tds.get(13).text());
+                                subject.put("scoresString", tds.get(14).text());
+                                subject.put("classification", tds.get(15).text());
+                                subject.put("note", tds.get(16).text());
                             }
                             quater.put(subject);
                         }
@@ -377,10 +406,10 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                 }
                 allQuater.put(jsonObject);
             }
-            result.put("all_semester",allQuater);
-        } catch (IndexOutOfBoundsException e){
+            result.put("all_semester", allQuater);
+        } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
-        }catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return result;
