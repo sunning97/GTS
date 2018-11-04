@@ -22,19 +22,19 @@
                 android:layout_gravity="center"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content">
+                <com.github.ybq.android.spinkit.SpinKitView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/spin_kit"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_gravity="center"
+                    app:SpinKit_Color="@color/colorPrimary"
+                    app:indicatorColor="@color/colorPrimary" />
                 <ImageView
                     android:layout_gravity="center"
                     android:src="@drawable/ic_logo_gts"
                     android:layout_width="30dp"
                     android:layout_height="30dp" />
-                <com.wang.avi.AVLoadingIndicatorView
-                    android:layout_gravity="center"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    style="@style/AVLoadingIndicatorView.Large"
-                    android:visibility="visible"
-                    app:indicatorName="BallSpinFadeLoaderIndicator"
-                    app:indicatorColor="@color/colorPrimary"/>
             </FrameLayout>
         </LinearLayout>
 </RelativeLayout>

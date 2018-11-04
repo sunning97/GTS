@@ -34,6 +34,8 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.github.ybq.android.spinkit.SpinKitView;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.viethoa.DialogUtils;
 
@@ -111,7 +113,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     LinearLayout noInternetLayout;
     @BindView(R.id.retry_text)
     TextView retryText;
-
+    @BindView(R.id.spin_kit)
+    SpinKitView loadingIcon;
     @BindView(R.id.student_search_tablayout)
     TabLayout studentSearchTablayout;
     @BindView(R.id.student_search_view_pager)
@@ -149,6 +152,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         studentSearchPresenter = new StudentSearchPresenter(this, StudentSearchActivity.this);
         studentSearchPresenter.getDataSearch();
         searchToolbar.setTitle("Tìm kiếm sinh viên");
+        ThreeBounce threeBounce = new ThreeBounce();
+        loadingIcon.setIndeterminateDrawable(threeBounce);
         setSupportActionBar(searchToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

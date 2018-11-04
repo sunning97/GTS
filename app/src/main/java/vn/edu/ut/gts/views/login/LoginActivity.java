@@ -21,6 +21,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.github.ybq.android.spinkit.SpinKitView;
+import com.github.ybq.android.spinkit.style.CubeGrid;
+import com.github.ybq.android.spinkit.style.FadingCircle;
+import com.github.ybq.android.spinkit.style.FoldingCube;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
+import com.github.ybq.android.spinkit.style.Wave;
+
 import net.igenius.customcheckbox.CustomCheckBox;
 
 import java.util.ArrayList;
@@ -61,7 +68,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     LinearLayout layoutAutoLogin;
     @BindView(R.id.layout_login)
     RelativeLayout layoutLogin;
-
+    @BindView(R.id.spin_kit)
+    SpinKitView loadingIcon;
     public static Boolean isAutoLogin = false;
     public static Boolean isLogout = false;
     private LoginProcess loginProcess;
@@ -77,7 +85,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
+        Wave wave = new Wave();
+        loadingIcon.setIndeterminateDrawable(wave);
         this.requestPermission();
         this.init();
         this.validate();

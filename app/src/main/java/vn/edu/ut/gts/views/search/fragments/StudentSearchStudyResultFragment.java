@@ -47,8 +47,6 @@ public class StudentSearchStudyResultFragment extends Fragment {
     TableLayout studyResultTableHeader;
     @BindView(R.id.loaded_layout)
     LinearLayout loadedLayout;
-    @BindView(R.id.semester_select_tv)
-    TextView semesterSelectTV;
     private List<String> headerText;
     private static List<String> dataSpinner;
     private JSONObject data;
@@ -70,7 +68,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_student_search_study_result, container, false);
         ButterKnife.bind(this, view);
         d = getContext().getResources().getDisplayMetrics().density;
-
+        studyResultSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         Bundle bundle = getArguments();
         try {
             JSONObject data = new JSONObject(bundle.getString("data"));
@@ -204,7 +202,6 @@ public class StudentSearchStudyResultFragment extends Fragment {
     }
 
     public void showAllComponent() {
-        semesterSelectTV.setVisibility(View.VISIBLE);
         studyResultSpinner.setVisibility(View.VISIBLE);
         loadedLayout.setVisibility(View.VISIBLE);
     }

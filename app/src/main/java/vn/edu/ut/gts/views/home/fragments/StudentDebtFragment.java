@@ -54,8 +54,6 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     TextView studentTotalDebt;
     @BindView(R.id.student_debt_table_header)
     TableLayout studentDebtTableHeader;
-    @BindView(R.id.semester_select_tv)
-    TextView semesterSelectTV;
     @BindView(R.id.total_debt_layout)
     LinearLayout totalDebtLayout;
     @BindView(R.id.loaded_layout)
@@ -247,7 +245,6 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
 
     @Override
     public void hideAllComponent() {
-        semesterSelectTV.setVisibility(View.GONE);
         studentDebtSpinner.setVisibility(View.GONE);
         totalDebtLayout.setVisibility(View.GONE);
         loadedLayout.setVisibility(View.GONE);
@@ -257,7 +254,6 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     public void showAllComponent() {
         noInternetLayout.setVisibility(View.GONE);
         retyIcon.hide();
-        semesterSelectTV.setVisibility(View.VISIBLE);
         studentDebtSpinner.setEnabled(true);
         studentDebtSpinner.setVisibility(View.VISIBLE);
         totalDebtLayout.setVisibility(View.VISIBLE);

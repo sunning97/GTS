@@ -66,8 +66,8 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     AVLoadingIndicatorView retryIcon;
     @BindView(R.id.retry_text)
     TextView retryText;
-    @BindView(R.id.semester_select_tv)
-    TextView semesterSelectTV;
+//    @BindView(R.id.semester_select_tv)
+//    TextView semesterSelectTV;
 
     public static int currentPos = 0;
     private StudentStudyResultFragmentPresenter studentStudyResultFragmentPresenter;
@@ -90,14 +90,14 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
     @Override
     public void showAllComponent() {
-        semesterSelectTV.setVisibility(View.VISIBLE);
+//        semesterSelectTV.setVisibility(View.VISIBLE);
         studyResultSpinner.setVisibility(View.VISIBLE);
         loadedLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideAllComponent() {
-        semesterSelectTV.setVisibility(View.GONE);
+//        semesterSelectTV.setVisibility(View.GONE);
         studyResultSpinner.setVisibility(View.GONE);
         loadedLayout.setVisibility(View.GONE);
     }

@@ -58,8 +58,6 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
     MaterialSpinner frameProgramSpinner;
     @BindView(R.id.retry_text)
     TextView retryText;
-    @BindView(R.id.semester_select_tv)
-    TextView semesterSelectTV;
     @BindView(R.id.loaded_layout)
     LinearLayout loadedLayout;
     @BindView(R.id.no_internet_layout)
@@ -94,7 +92,6 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
 
     @Override
     public void showAllComponent() {
-        semesterSelectTV.setVisibility(View.VISIBLE);
         frameProgramSpinner.setVisibility(View.VISIBLE);
         loadedLayout.setVisibility(View.VISIBLE);
         noInternetLayout.setVisibility(View.GONE);
@@ -102,7 +99,6 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
 
     @Override
     public void hideAllComponent() {
-        semesterSelectTV.setVisibility(View.GONE);
         frameProgramSpinner.setVisibility(View.GONE);
         loadedLayout.setVisibility(View.GONE);
     }

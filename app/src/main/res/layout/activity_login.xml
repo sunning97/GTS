@@ -194,13 +194,12 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_logo_gts" />
-        <com.wang.avi.AVLoadingIndicatorView
+        <com.github.ybq.android.spinkit.SpinKitView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spin_kit"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            style="@style/AVLoadingIndicatorView.Large"
-            android:visibility="visible"
-            app:indicatorName="SquareSpinIndicator"
-            app:indicatorColor="@color/white"/>
+            app:indicatorColor="@color/white" />
     </LinearLayout>
 </RelativeLayout>

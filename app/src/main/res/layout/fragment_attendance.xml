@@ -7,27 +7,15 @@
     android:orientation="vertical"
     tools:context=".views.home.fragments.AttendanceFragment">
 
-    <TextView
-        android:visibility="invisible"
-        android:id="@+id/semester_select_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
-        android:text="Chọn học kì:"
-        android:textColor="@color/grayDark"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
     <com.jaredrummler.materialspinner.MaterialSpinner
         android:visibility="invisible"
+        android:textSize="16sp"
         android:id="@+id/student_attendance_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        app:ms_dropdown_max_height="300dp"
+        app:ms_background_color="@color/grayLight"
+        app:ms_text_color="@color/colorPrimary"/>
 
     <LinearLayout
         android:visibility="invisible"

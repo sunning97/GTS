@@ -68,8 +68,6 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     TextView retryText;
     @BindView(R.id.total_halt_day_layout)
     LinearLayout totalHaltDayLayout;
-    @BindView(R.id.semester_select_tv)
-    TextView semesterSelectTV;
 
     private AttendanceFragmentPresenter attendanceFragmentPresenter;
     private float d;
@@ -262,7 +260,6 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
 
     @Override
     public void showLoadedLayout() {
-        semesterSelectTV.setVisibility(View.VISIBLE);
         studentAttendanceSpinner.setVisibility(View.VISIBLE);
         totalHaltDayLayout.setVisibility(View.VISIBLE);
         loadedLayout.setVisibility(View.VISIBLE);
@@ -304,14 +301,12 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     @Override
     public void hideAllComponent(){
         loadedLayout.setVisibility(View.GONE);
-        semesterSelectTV.setVisibility(View.GONE);
         studentAttendanceSpinner.setVisibility(View.GONE);
         totalHaltDayLayout.setVisibility(View.GONE);
     }
     @Override
     public void showAllComponent(){
         loadedLayout.setVisibility(View.VISIBLE);
-        semesterSelectTV.setVisibility(View.VISIBLE);
         studentAttendanceSpinner.setVisibility(View.VISIBLE);
         totalHaltDayLayout.setVisibility(View.VISIBLE);
     }

@@ -181,13 +181,14 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.wang.avi.AVLoadingIndicatorView
-            android:layout_gravity="center"
+        <com.github.ybq.android.spinkit.SpinKitView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spin_kit"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            style="@style/AVLoadingIndicatorView.Large"
-            app:indicatorName="SquareSpinIndicator"
-            app:indicatorColor="@color/colorPrimary"/>
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorPrimary"
+            app:indicatorColor="@color/white" />
     </LinearLayout>
     <LinearLayout
         android:gravity="center"

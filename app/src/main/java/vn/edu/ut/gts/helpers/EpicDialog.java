@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.ybq.android.spinkit.SpinKitView;
+import com.github.ybq.android.spinkit.style.FadingCircle;
+
 import org.w3c.dom.Text;
 
 import vn.edu.ut.gts.R;
@@ -152,6 +155,9 @@ public class EpicDialog {
     }
     public void initLoadingDialog(){
         this.epicDialog.setContentView(R.layout.custom_loading_dialog);
+        SpinKitView loading = epicDialog.findViewById(R.id.spin_kit);
+        FadingCircle fadingCircle = new FadingCircle();
+        loading.setIndeterminateDrawable(fadingCircle);
         this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(false);
     }
