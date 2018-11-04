@@ -48,19 +48,15 @@ public class StudentSearchStudyResultFragment extends Fragment {
     @BindView(R.id.loaded_layout)
     LinearLayout loadedLayout;
     private List<String> headerText;
-    private static List<String> dataSpinner;
     private JSONObject data;
     private float d;
+
     public StudentSearchStudyResultFragment() {
-        dataSpinner = new ArrayList<>();
         headerText = new ArrayList<>();
         headerText.add("Học phần");
         headerText.add("Điểm 10");
         headerText.add("Điểm 4");
         headerText.add("Điểm chữ");
-    }
-    public static void clearDataSpinner(){
-        StudentSearchStudyResultFragment.dataSpinner = new ArrayList<>();
     }
 
     @Override
@@ -76,7 +72,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        spinnerInit();
+        spinnerInit(createNewDataSpinner());
         generateTableContent(0);
         showAllComponent();
         return view;
@@ -177,7 +173,8 @@ public class StudentSearchStudyResultFragment extends Fragment {
         return linearLayout;
     }
 
-    public void spinnerInit() {
+    public void spinnerInit(List<String> dataSpinner) {
+        dataSpinner.clear();
         try {
             JSONArray allSemester = data.getJSONArray("all_semester");
             for (int i = 0; i < allSemester.length(); i++) {
@@ -192,12 +189,11 @@ public class StudentSearchStudyResultFragment extends Fragment {
                     generateTableContent(position);
                 }
             });
-        }catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
-        }catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-
         studyResultTableHeader.addView(this.generateTableHeader());
     }
 
@@ -248,5 +244,10 @@ public class StudentSearchStudyResultFragment extends Fragment {
         if (simpleDialog != null && !simpleDialog.isShowing()) {
             simpleDialog.show();
         }
+    }
+
+    private List<String> createNewDataSpinner() {
+        List<String> a = new ArrayList<>();
+        return a;
     }
 }

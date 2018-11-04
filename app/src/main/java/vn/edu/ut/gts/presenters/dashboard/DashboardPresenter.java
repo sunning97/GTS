@@ -92,11 +92,13 @@ public class DashboardPresenter implements IDashboardPresenter {
                     switch (DashboardPresenter.currentStatus) {
                         case 400: {
                             iDashboardActivity.disableAll();
+                            iDashboardActivity.setDefaultPortrait();
                             iDashboardActivity.enableSwipeRefresh();
                             break;
                         }
                         case 500: {
                             iDashboardActivity.disableAll();
+                            iDashboardActivity.setDefaultPortrait();
                             iDashboardActivity.enableSwipeRefresh();
                             break;
                         }

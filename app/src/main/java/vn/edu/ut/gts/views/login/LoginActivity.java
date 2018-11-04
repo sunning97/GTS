@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
+import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,10 +23,6 @@ import android.widget.TextView;
 
 
 import com.github.ybq.android.spinkit.SpinKitView;
-import com.github.ybq.android.spinkit.style.CubeGrid;
-import com.github.ybq.android.spinkit.style.FadingCircle;
-import com.github.ybq.android.spinkit.style.FoldingCube;
-import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.github.ybq.android.spinkit.style.Wave;
 
 import net.igenius.customcheckbox.CustomCheckBox;
@@ -45,6 +42,7 @@ import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.helpers.TextInputValidator;
 import vn.edu.ut.gts.presenters.login.LoginProcess;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
+import vn.edu.ut.gts.views.search.StudentSearchActivity;
 
 public class LoginActivity extends AppCompatActivity implements ILoginView {
 
@@ -70,6 +68,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     RelativeLayout layoutLogin;
     @BindView(R.id.spin_kit)
     SpinKitView loadingIcon;
+    @BindView(R.id.search_student_tv)
+    TextView searchStudentTV;
+
+
     public static Boolean isAutoLogin = false;
     public static Boolean isLogout = false;
     private LoginProcess loginProcess;
@@ -87,6 +89,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         ButterKnife.bind(this);
         Wave wave = new Wave();
         loadingIcon.setIndeterminateDrawable(wave);
+        searchStudentTV.setPaintFlags(searchStudentTV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         this.requestPermission();
         this.init();
         this.validate();
@@ -108,6 +111,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     }
 
+    @OnClick(R.id.search_student_tv)
+    public void goSearchActivity(){
+        startActivity(new Intent(LoginActivity.this,StudentSearchActivity.class));
+
+    }
     @Override
     public void revertLoadingButton() {
         this.btnLogin.revertAnimation();
@@ -160,6 +168,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void showTimeoutDialog() {
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
         enableInput();
         new SweetAlertDialog(this)
                 .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))

@@ -11,7 +11,7 @@
 
     <RelativeLayout
         android:id="@+id/layout_login"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -36,22 +36,10 @@
             android:animateLayoutChanges="true"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/tv_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Đăng nhập"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="20dp"/>
-
             <LinearLayout
                 android:id="@+id/input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_login"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
@@ -179,9 +167,22 @@
                 app:finalCornerAngle="25dp"
                 app:initialCornerAngle="20dp"
                 android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/search_student_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:gravity="center_vertical"
+                android:layout_below="@+id/btn_login"
+                android:layout_alignEnd="@+id/input"
+                android:layout_marginTop="50dp"
+                android:text="Tra cứu thông tin sinh viên"
+                android:textColor="@color/white"
+                android:textStyle="italic" />
         </RelativeLayout>
     </RelativeLayout>
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/layout_auto_login"
         android:orientation="vertical"
         android:gravity="center"

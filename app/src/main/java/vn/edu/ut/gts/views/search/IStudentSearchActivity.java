@@ -17,4 +17,10 @@ public interface IStudentSearchActivity {
     void showNoResultLayout();
     void loadToNoInternetLayout(int from);
     void setStudentDetailData(JSONArray data);
+    void showLoadingDialog();
+    void dismissLoadingDialog();
+    void showTimeoutDialog();
+    void showNoInternetDialog();
+    void searchToRetryBtn();
+    void retryToSearchBtn();
 }

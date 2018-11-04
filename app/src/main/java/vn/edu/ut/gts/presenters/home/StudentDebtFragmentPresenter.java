@@ -108,8 +108,7 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                                 dataSnpinner.add(jsonObject.getString("text"));
                             }
                         } catch (Exception e){}
-                        iStudentDebtFragment.initAttendanceSpiner(dataSnpinner);
-
+                        iStudentDebtFragment.initDebtSpinner(dataSnpinner);
                         getStudentDebt(StudentDebtFragment.currentPos);
                     }
                 }
@@ -129,21 +128,21 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
             protected JSONArray doInBackground(Void... voids) {
                 JSONArray data = new JSONArray();
                 try {
-                    JSONObject dataDiemDanh = new JSONObject(storage.getString("dataDebt"));
+                    JSONObject dataDiemDebt = new JSONObject(storage.getString("dataDebt"));
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "CongNoSinhVien.aspx")
                             .method(Connection.Method.POST)
                             .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
-                            .data("__EVENTTARGET", dataDiemDanh.getString("eventTarget"))
-                            .data("__EVENTARGUMENT", dataDiemDanh.getString("eventArgument"))
-                            .data("__LASTFOCUS", dataDiemDanh.getString("lastFocus"))
-                            .data("__VIEWSTATE", dataDiemDanh.getString("viewState"))
-                            .data("__VIEWSTATEGENERATOR", dataDiemDanh.getString("viewStartGenerator"))
-                            .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataDiemDanh.getString("radioBtnList"))
-                            .data("ctl00$DdListMenu", dataDiemDanh.getString("eventTarget"))
-                            .data("ctl00$ContentPlaceHolder$cboHocKy", dataDiemDanh.getJSONArray("semesters").getJSONObject(pos).getString("key"))
-                            .data("ctl00$ContentPlaceHolder$btnLoc", dataDiemDanh.getString("ctl00$ContentPlaceHolder$btnLoc"))
+                            .data("__EVENTTARGET", dataDiemDebt.getString("eventTarget"))
+                            .data("__EVENTARGUMENT", dataDiemDebt.getString("eventArgument"))
+                            .data("__LASTFOCUS", dataDiemDebt.getString("lastFocus"))
+                            .data("__VIEWSTATE", dataDiemDebt.getString("viewState"))
+                            .data("__VIEWSTATEGENERATOR", dataDiemDebt.getString("viewStartGenerator"))
+                            .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataDiemDebt.getString("radioBtnList"))
+                            .data("ctl00$DdListMenu", dataDiemDebt.getString("eventTarget"))
+                            .data("ctl00$ContentPlaceHolder$cboHocKy", dataDiemDebt.getJSONArray("semesters").getJSONObject(pos).getString("key"))
+                            .data("ctl00$ContentPlaceHolder$btnLoc", dataDiemDebt.getString("ctl00$ContentPlaceHolder$btnLoc"))
                             .execute();
                     Document document = res.parse();
                     Elements table = document.getElementsByClass("grid-color2");

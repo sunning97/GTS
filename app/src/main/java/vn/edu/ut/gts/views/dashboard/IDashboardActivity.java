@@ -30,4 +30,6 @@ public interface IDashboardActivity {
     void hideLoaderTextView();
 
     void showLoaderTextView();
+
+    void setDefaultPortrait();
 }

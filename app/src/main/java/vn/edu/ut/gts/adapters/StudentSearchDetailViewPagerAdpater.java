@@ -38,7 +38,7 @@ public class StudentSearchDetailViewPagerAdpater extends FragmentStatePagerAdapt
         this.fragmentTitle = new ArrayList<>();
         this.fragmentTitle.add("Thông tin sinh viên");
         this.fragmentTitle.add("Kết quả học tập");
-//        this.fragmentTitle.add("Công nợ");
+        this.fragmentTitle.add("Công nợ");
     }
 
     public void setData(JSONArray data) {
@@ -73,8 +73,9 @@ public class StudentSearchDetailViewPagerAdpater extends FragmentStatePagerAdapt
                     break;
                 case 2:
                     fragment = new StudentSearchDebtFragment();
+                    JSONObject debtData = data.getJSONObject(2);
                     bundle = new Bundle();
-                    bundle.putString("data", data.getJSONArray(3).toString());
+                    bundle.putString("data", debtData.toString());
                     fragment.setArguments(bundle);
                     break;
                 default:

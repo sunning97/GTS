@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -37,7 +36,6 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.jaredrummler.materialspinner.MaterialSpinner;
-import com.viethoa.DialogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,10 +51,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.adapters.StudentSearchDetailViewPagerAdpater;
+import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.search.StudentSearchPresenter;
+import vn.edu.ut.gts.views.search.fragments.StudentSearchStudyResultFragment;
 
 public class StudentSearchActivity extends AppCompatActivity implements IStudentSearchActivity, CalendarDatePickerDialogFragment.OnDateSetListener {
     @BindView(R.id.type_search_spinner)
@@ -121,10 +120,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     ViewPager studentSearchViewPager;
 
     public static final int SEARCH_LAYOUT = 1;
-    public static final int LOAD_LAYOUT = 2;
     public static final int RESULT_LAYOUT = 3;
-    public static final int DETAIL_LAYOUT = 3;
-    public static final int NO_INTERNET_LAYOUT = 4;
 
 
     private int fromLayout = 0;
@@ -140,7 +136,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     private String[] searchResultHeaderData = {"MSSV", "Họ tên", "Ngày sinh"};
     private float d;
     private StudentSearchDetailViewPagerAdpater studentSearchDetailViewPagerAdpater;
-    Storage storage;
+    private Storage storage;
+    private EpicDialog epicDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +145,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         setContentView(R.layout.activity_student_search);
         ButterKnife.bind(this);
         d = getResources().getDisplayMetrics().density;
+        epicDialog = new EpicDialog(StudentSearchActivity.this);
+        epicDialog.initLoadingDialog();
         storage = new Storage(StudentSearchActivity.this);
         studentSearchPresenter = new StudentSearchPresenter(this, StudentSearchActivity.this);
         studentSearchPresenter.getDataSearch();
@@ -240,41 +239,45 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
 
     @OnClick(R.id.btn_search)
     public void search(View view) {
-        this.validateInput();
-        if (isNoInputFailed) {
-            searchToLoadLayout();
+        if(StudentSearchPresenter.currentStatus !=0){
+            studentSearchPresenter.getDataSearch();
+        } else {
+            this.validateInput();
+            if (isNoInputFailed) {
+                searchToLoadLayout();
 
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    int position = typeSearchSpinner.getSelectedIndex();
-                    Bundle bundle;
-                    switch (position) {
-                        case 0:
-                            bundle = new Bundle();
-                            bundle.putString("mssv", inputStudentID.getText().toString().trim());
-                            studentSearchPresenter.searchStudent(0, bundle);
-                            break;
-                        case 1:
-                            bundle = new Bundle();
-                            bundle.putString("first_name", (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim());
-                            bundle.putString("last_name", inputLastName.getText().toString().trim());
-                            studentSearchPresenter.searchStudent(1, bundle);
-                            break;
-                        case 2:
-                            bundle = new Bundle();
-                            bundle.putString("birth_date", birthDateTV.getText().toString());
-                            studentSearchPresenter.searchStudent(2, bundle);
-                            break;
-                        case 3:
-                            bundle = new Bundle();
-                            bundle.putString("class", inputClass.getText().toString().trim());
-                            studentSearchPresenter.searchStudent(3, bundle);
-                            break;
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        int position = typeSearchSpinner.getSelectedIndex();
+                        Bundle bundle;
+                        switch (position) {
+                            case 0:
+                                bundle = new Bundle();
+                                bundle.putString("mssv", inputStudentID.getText().toString().trim());
+                                studentSearchPresenter.searchStudent(0, bundle);
+                                break;
+                            case 1:
+                                bundle = new Bundle();
+                                bundle.putString("first_name", (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim());
+                                bundle.putString("last_name", inputLastName.getText().toString().trim());
+                                studentSearchPresenter.searchStudent(1, bundle);
+                                break;
+                            case 2:
+                                bundle = new Bundle();
+                                bundle.putString("birth_date", birthDateTV.getText().toString());
+                                studentSearchPresenter.searchStudent(2, bundle);
+                                break;
+                            case 3:
+                                bundle = new Bundle();
+                                bundle.putString("class", inputClass.getText().toString().trim());
+                                studentSearchPresenter.searchStudent(3, bundle);
+                                break;
+                        }
                     }
-                }
-            }, 1000);
+                }, 1000);
+            }
         }
     }
 
@@ -903,9 +906,61 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     }
 
     @Override
+    public void showLoadingDialog() {
+        if (!epicDialog.isShowing()) epicDialog.showLoadingDialog();
+    }
+
+    @Override
+    public void dismissLoadingDialog() {
+        if(epicDialog.isShowing()) epicDialog.dismisPopup();
+    }
+
+    @Override
     public void showNoResultLayout() {
         noResultLayout.setVisibility(View.VISIBLE);
         searchResultTableHeader.setVisibility(View.GONE);
         resultLayoutScroll.setVisibility(View.GONE);
     }
+
+    @Override
+    public void showTimeoutDialog() {
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
+        disableInput();
+        new SweetAlertDialog(this)
+                .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
+                .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
+                .show();
+    }
+
+    @Override
+    public void showNoInternetDialog() {
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
+        disableInput();
+        new SweetAlertDialog(this)
+                .setTitleText(getResources().getString(R.string.no_internet_access_title))
+                .setContentText(getResources().getString(R.string.no_internet_access_content))
+                .show();
+    }
+
+    @Override
+    public void searchToRetryBtn() {
+        btnSearch.setText("Thử lại");
+    }
+
+    @Override
+    public void retryToSearchBtn() {
+        btnSearch.setText("Tìm kiếm");
+        enableInput();
+    }
+
+    private void enableInput(){
+        typeSearchSpinner.setEnabled(true);
+        inputStudentID.setEnabled(true);
+    }
+    private void disableInput(){
+        typeSearchSpinner.setEnabled(false);
+        inputStudentID.setEnabled(false);
+    }
+
+
 }

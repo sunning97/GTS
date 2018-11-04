@@ -13,7 +13,7 @@ public interface IStudentDebtFragment {
 
     void dismissLoadingDialog();
 
-    void initAttendanceSpiner(List<String> dataSnpinner);
+    void initDebtSpinner(List<String> dataSpinner);
 
     void generateTableContent(JSONArray data);
 

@@ -45,22 +45,6 @@ public class EpicDialog {
         duong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                PackageManager pm = context.getPackageManager();
-//                Uri uri = null;
-//
-//                try {
-//                    ApplicationInfo applicationInfo = pm.getApplicationInfo("com.facebook.katana", 0);
-//                    if (applicationInfo.enabled) {
-//                        uri = Uri.parse("fb://facewebmodal/f?href=" + "https://www.facebook.com/duongrom.it.305");
-//                    }
-//                }
-//
-//                catch (PackageManager.NameNotFoundException ignored) {
-//                    Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-//                context.startActivity(intent);
 
                 try {
                     Uri webpage = Uri.parse("https://www.facebook.com/duongrom.it.305");
@@ -75,22 +59,6 @@ public class EpicDialog {
         giang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                PackageManager pm = context.getPackageManager();
-//                Uri uri = null;
-//
-//                try {
-//                    ApplicationInfo applicationInfo = pm.getApplicationInfo("com.facebook.katana", 0);
-//                    if (applicationInfo.enabled) {
-//                        uri = Uri.parse("fb://facewebmodal/f?href=" + "https://www.facebook.com/kuro.neko.sora.ni.tobu");
-//                    }
-//                }
-//
-//                catch (PackageManager.NameNotFoundException ignored) {
-//                    Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-//                context.startActivity(intent);
                 try {
                     Uri webpage = Uri.parse("https://www.facebook.com/kuro.neko.sora.ni.tobu");
                     Intent myIntent = new Intent(Intent.ACTION_VIEW, webpage);

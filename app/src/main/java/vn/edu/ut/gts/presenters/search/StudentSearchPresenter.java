@@ -44,25 +44,37 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
     public void getDataSearch() {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
             @Override
+            protected void onPreExecute() {
+                iStudentSearchActivity.showLoadingDialog();
+            }
+
+            @Override
             protected JSONObject doInBackground(Void... voids) {
                 JSONObject result = new JSONObject();
                 try {
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "TraCuuThongTin.aspx")
                             .userAgent(Helper.USER_AGENT)
                             .method(Connection.Method.GET)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .execute();
 
                     Document document = res.parse();
-                    try {
-                        result.put("__VIEWSTATE", document.select("input[name=__VIEWSTATE]").val());
-                        result.put("__VIEWSTATEGENERATOR", document.select("input[name=__VIEWSTATEGENERATOR]").val());
-                        result.put("ctl00$ContentPlaceHolder$btnTraCuuThongTin", document.select("input[name=ctl00$ContentPlaceHolder$btnTraCuuThongTin]").val());
-                        result.put("cookie", res.cookie("ASP.NET_SessionId"));
-                        result.put("ctl00$ContentPlaceHolder$txtSercurityCode1", createConfirmImage(res.cookie("ASP.NET_SessionId")));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+
+                    result.put("__VIEWSTATE", document.select("input[name=__VIEWSTATE]").val());
+                    result.put("__VIEWSTATEGENERATOR", document.select("input[name=__VIEWSTATEGENERATOR]").val());
+                    result.put("ctl00$ContentPlaceHolder$btnTraCuuThongTin", document.select("input[name=ctl00$ContentPlaceHolder$btnTraCuuThongTin]").val());
+                    result.put("cookie", res.cookie("ASP.NET_SessionId"));
+                    result.put("ctl00$ContentPlaceHolder$txtSercurityCode1", createConfirmImage(res.cookie("ASP.NET_SessionId")));
+                    currentStatus = 0;
+                } catch (SocketTimeoutException e) {
+                    e.printStackTrace();
+                    currentStatus = Helper.TIMEOUT;
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                    currentStatus = Helper.NO_CONNECTION;
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 return result;
@@ -70,7 +82,23 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
 
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
-                storage.putString("search_data", jsonObject.toString());
+                switch (currentStatus) {
+                    case 400: {
+                        iStudentSearchActivity.showNoInternetDialog();
+                        iStudentSearchActivity.searchToRetryBtn();
+                        break;
+                    }
+                    case 500: {
+                        iStudentSearchActivity.showTimeoutDialog();
+                        iStudentSearchActivity.searchToRetryBtn();
+                        break;
+                    }
+                    default:{
+                        storage.putString("search_data", jsonObject.toString());
+                        iStudentSearchActivity.retryToSearchBtn();
+                        iStudentSearchActivity.dismissLoadingDialog();
+                    }
+                }
             }
         };
         asyncTask.execute();
@@ -181,11 +209,10 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
 
             @Override
             protected void onPostExecute(ArrayList<JSONObject> jsonObjects) {
-                if(currentStatus == Helper.NO_CONNECTION || currentStatus == Helper.TIMEOUT){
+                if (currentStatus == Helper.NO_CONNECTION || currentStatus == Helper.TIMEOUT) {
                     iStudentSearchActivity.loadToNoInternetLayout(StudentSearchActivity.SEARCH_LAYOUT);
                 } else {
                     if (jsonObjects.size() != 0) {
-                        StudentSearchStudyResultFragment.clearDataSpinner();
                         iStudentSearchActivity.generateTableSearchResult(jsonObjects);
                         iStudentSearchActivity.loadToResultLayout(false);
                     } else {
@@ -220,34 +247,55 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                     result.put(info);
                     result.put(studyResult);
 
+
                     res = Jsoup.connect(Helper.BASE_URL + jsonObject.getString("urlViewDebt"))
-                            .userAgent(Helper.USER_AGENT)
                             .method(Connection.Method.GET)
-                            .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"))
-                            .timeout(Helper.TIMEOUT_VALUE)
+                            .userAgent(Helper.USER_AGENT)
                             .execute();
                     document = res.parse();
+                    JSONObject dataSearchDebt = new JSONObject();
+                    dataSearchDebt.put("cookie", dataSearch.getString("cookie"));
+                    dataSearchDebt.put("eventTarget", document.select("input[name=\"__EVENTTARGET\"]").val());
+                    dataSearchDebt.put("eventArgument", document.select("input[name=\"__EVENTARGUMENT\"]").val());
+                    dataSearchDebt.put("lastFocus", document.select("input[name=\"__LASTFOCUS\"]").val());
+                    dataSearchDebt.put("viewState", document.select("input[name=\"__VIEWSTATE\"]").val());
+                    dataSearchDebt.put("viewStartGenerator", document.select("input[name=\"__VIEWSTATEGENERATOR\"]").val());
+                    dataSearchDebt.put("radioBtnList", document.select("input[name=\"ctl00$ucPhieuKhaoSat1$RadioButtonList1\"][checked=\"checked\"]").val());
+                    dataSearchDebt.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
+                    JSONArray semesters = new JSONArray();
+                    Elements options = document.select("select[name=\"ctl00$ContentPlaceHolder$cboHocKy\"]>option");
+                    for(Element option : options) {
+                        if (option.val().equals("-1")) continue;
+                        JSONObject tmp = new JSONObject();
+                        tmp.put("key", option.val());
+                        tmp.put("text", option.text().trim());
+                        semesters.put(tmp);
+                    }
+
+                    dataSearchDebt.put("semesters", semesters);
+                    storage.putString("data_searchdebt",dataSearchDebt.toString());
 
                     JSONArray data = new JSONArray();
-                    Elements table = document.getElementsByClass("grid-color2");
-                    Elements trs = table.get(0).select("tr");
-                    Elements ths = trs.get(0).select("th");
+                    Element table = document.getElementById("tblDetail");
                     JSONArray keys = new JSONArray();
-                    for (int i = 2; i < ths.size(); i++) {
-                        String keyTmp = Helper.toSlug(ths.get(i).text().trim());
+                    Elements ths = table.select("tr").first().select("th");
+                    for(int i = 1; i < ths.size(); i++) {
+                        String keyTmp = Helper.toSlug(ths.get(i).text());
                         keys.put(keyTmp);
                     }
-                    for (int i = 1; i < trs.size() - 1; i++) {
+                    Elements trs = table.select("tr");
+                    for(int i = 1; i < trs.size()-1; i++) {
+                        JSONObject tmp = new JSONObject();
                         Elements tds = trs.get(i).select("td");
-                        JSONObject subject = new JSONObject();
-                        for (int j = 2; j < tds.size(); j++) {
-                            String tmp = tds.get(j).text().trim();
-                            subject.put(keys.getString(j - 2), tmp);
+                        for(int j = 1; j < tds.size(); j++) {
+                            tmp.put(keys.getString(j-1), tds.get(j).text().trim());
                         }
-                        data.put(subject);
+                        data.put(tmp);
                     }
+                    dataSearchDebt.put("init_semester",data.toString());
+                    dataSearchDebt.put("urlViewDebt",jsonObject.getString("urlViewDebt"));
+                    result.put(dataSearchDebt);
 
-                    result.put(data);
                 } catch (SocketTimeoutException e) {
                     currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
@@ -266,7 +314,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                if(currentStatus == Helper.NO_CONNECTION || currentStatus == Helper.TIMEOUT){
+                if (currentStatus == Helper.NO_CONNECTION || currentStatus == Helper.TIMEOUT) {
                     iStudentSearchActivity.loadToNoInternetLayout(StudentSearchActivity.RESULT_LAYOUT);
                 } else {
                     try {

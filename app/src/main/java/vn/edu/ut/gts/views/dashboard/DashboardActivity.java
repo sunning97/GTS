@@ -6,18 +6,23 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.elyeproj.loaderviewlibrary.LoaderImageView;
 import com.elyeproj.loaderviewlibrary.LoaderTextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +63,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     LoaderTextView studentNameTextLoading;
     @BindView(R.id.swipe_refresh_dashboard)
     SwipeRefreshLayout swipeRefreshDashboard;
+    @BindView(R.id.dashboard_scroll)
+    NestedScrollView dashboardScroll;
 
     private Storage storage;
     private DashboardPresenter dashboardPresenter;
@@ -93,6 +100,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
         setSupportActionBar(dashboardToolbar);
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+        dashboardScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(scrollY == 0 && DashboardPresenter.currentStatus != 0){
+                    swipeRefreshDashboard.setEnabled(true);
+                } else swipeRefreshDashboard.setEnabled(false);
+            }
+        });
     }
 
     @Override
@@ -265,6 +280,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void showLoaderTextView() {
         studentNameTextLoading.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setDefaultPortrait() {
+        profileImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_user_deafult_100));
+        profileImage.setVisibility(View.VISIBLE);
+        profileImageLoading.setVisibility(View.INVISIBLE);
     }
 
 

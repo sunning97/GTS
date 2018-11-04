@@ -281,8 +281,8 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     }
 
     @Override
-    public void initAttendanceSpiner(List<String> dataSnpinner) {
-        studentDebtSpinner.setItems(dataSnpinner);
+    public void initDebtSpinner(List<String> dataSpinner) {
+        studentDebtSpinner.setItems(dataSpinner);
         studentDebtSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
