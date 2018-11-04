@@ -1,17 +1,21 @@
 package vn.edu.ut.gts.views.search;
 
 import android.animation.Animator;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,6 +35,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.viethoa.DialogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,8 +51,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
-import vn.edu.ut.gts.adapters.StudentInfoViewPagerAdapter;
 import vn.edu.ut.gts.adapters.StudentSearchDetailViewPagerAdpater;
 import vn.edu.ut.gts.presenters.search.StudentSearchPresenter;
 
@@ -89,7 +94,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     @BindView(R.id.search_result_table_body)
     TableLayout searchResultTableBody;
     @BindView(R.id.result_layout_scroll)
-    ScrollView resultLayoutScroll;
+    NestedScrollView resultLayoutScroll;
     @BindView(R.id.gts_logo)
     ImageView gtsLogo;
     @BindView(R.id.floating_container)
@@ -102,13 +107,25 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     LinearLayout noResultLayout;
     @BindView(R.id.detail_layout)
     LinearLayout detailLayout;
+    @BindView(R.id.no_internet_layout)
+    LinearLayout noInternetLayout;
+    @BindView(R.id.retry_text)
+    TextView retryText;
 
     @BindView(R.id.student_search_tablayout)
     TabLayout studentSearchTablayout;
     @BindView(R.id.student_search_view_pager)
     ViewPager studentSearchViewPager;
 
+    public static final int SEARCH_LAYOUT = 1;
+    public static final int LOAD_LAYOUT = 2;
+    public static final int RESULT_LAYOUT = 3;
+    public static final int DETAIL_LAYOUT = 3;
+    public static final int NO_INTERNET_LAYOUT = 4;
 
+
+    private int fromLayout = 0;
+    private JSONObject currentStudentClick = null;
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private final String DATE_REGEX = "(.*)-(.*)-(.*)";
     private StudentSearchPresenter studentSearchPresenter;
@@ -185,6 +202,22 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 }
             }
         });
+
+        resultLayoutScroll.setSmoothScrollingEnabled(true);
+        resultLayoutScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY) {
+                    floatingContainer.hideMenu(true);
+                }
+                if (scrollY < oldScrollY) {
+                    floatingContainer.showMenu(true);
+                }
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    floatingContainer.hideMenu(true);
+                }
+            }
+        });
     }
 
     @OnClick(R.id.pick_date)
@@ -215,24 +248,24 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                     switch (position) {
                         case 0:
                             bundle = new Bundle();
-                            bundle.putString("mssv",inputStudentID.getText().toString().trim());
-                            studentSearchPresenter.searchStudent(0,bundle);
+                            bundle.putString("mssv", inputStudentID.getText().toString().trim());
+                            studentSearchPresenter.searchStudent(0, bundle);
                             break;
                         case 1:
                             bundle = new Bundle();
-                            bundle.putString("first_name",(TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim());
-                            bundle.putString("last_name",inputLastName.getText().toString().trim());
-                            studentSearchPresenter.searchStudent(1,bundle);
+                            bundle.putString("first_name", (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim());
+                            bundle.putString("last_name", inputLastName.getText().toString().trim());
+                            studentSearchPresenter.searchStudent(1, bundle);
                             break;
                         case 2:
                             bundle = new Bundle();
-                            bundle.putString("birth_date",birthDateTV.getText().toString());
-                            studentSearchPresenter.searchStudent(2,bundle);
+                            bundle.putString("birth_date", birthDateTV.getText().toString());
+                            studentSearchPresenter.searchStudent(2, bundle);
                             break;
                         case 3:
                             bundle = new Bundle();
-                            bundle.putString("class",inputClass.getText().toString().trim());
-                            studentSearchPresenter.searchStudent(3,bundle);
+                            bundle.putString("class", inputClass.getText().toString().trim());
+                            studentSearchPresenter.searchStudent(3, bundle);
                             break;
                     }
                 }
@@ -243,21 +276,26 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     @OnClick(R.id.to_search_layout_float_btn)
     public void returnSearchLayout() {
         floatingContainer.close(true);
-        resultToSearchLayout();
+        if (fromLayout != 0 && StudentSearchPresenter.currentStatus != 0)
+            noInternetToSearchLayout();
+        else {
+            if (detailLayout.isShown())
+                detailReturnSearchLayout();
+            else resultReturnSearchLayout();
+        }
+        StudentSearchPresenter.currentStatus = 0;
     }
 
     @OnClick(R.id.to_result_layout_float_btn)
-    public void returnResultLayout(){
+    public void returnResultLayout() {
         floatingContainer.close(true);
-        detailToResultLayout();
+        if (fromLayout != 0 && StudentSearchPresenter.currentStatus != 0)
+            noInternetToResultLayout();
+        else detailReturnResultLayout();
+        StudentSearchPresenter.currentStatus = 0;
     }
 
-    @OnClick(R.id.to_search_layout_float_btn)
-    public void returnSearchLayoutFromDetail(){
-        floatingContainer.close(true);
-        detailToSearchLayout();
-    }
-    public void viewStudentDetail(final JSONObject jsonObject){
+    public void viewStudentDetail(final JSONObject jsonObject) {
         resultToLoadLayout();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -266,6 +304,60 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 studentSearchPresenter.getStudentDetail(jsonObject);
             }
         }, 1000);
+    }
+
+    @OnClick(R.id.retry_text)
+    public void retry(View view) {
+        StudentSearchPresenter.currentStatus = 0;
+        noInternetToLoadLayout();
+        if (fromLayout == StudentSearchActivity.SEARCH_LAYOUT) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    int position = typeSearchSpinner.getSelectedIndex();
+                    Bundle bundle;
+                    switch (position) {
+                        case 0:
+                            bundle = new Bundle();
+                            bundle.putString("mssv", inputStudentID.getText().toString().trim());
+                            studentSearchPresenter.searchStudent(0, bundle);
+                            break;
+                        case 1:
+                            bundle = new Bundle();
+                            bundle.putString("first_name", (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim());
+                            bundle.putString("last_name", inputLastName.getText().toString().trim());
+                            studentSearchPresenter.searchStudent(1, bundle);
+                            break;
+                        case 2:
+                            bundle = new Bundle();
+                            bundle.putString("birth_date", birthDateTV.getText().toString());
+                            studentSearchPresenter.searchStudent(2, bundle);
+                            break;
+                        case 3:
+                            bundle = new Bundle();
+                            bundle.putString("class", inputClass.getText().toString().trim());
+                            studentSearchPresenter.searchStudent(3, bundle);
+                            break;
+                    }
+                }
+            }, 1000);
+        }
+        if (fromLayout == StudentSearchActivity.RESULT_LAYOUT) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            studentSearchPresenter.getStudentDetail(currentStudentClick);
+                        }
+                    }, 1000);
+                }
+            }, 1000);
+        }
     }
 
     @Override
@@ -340,6 +432,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        currentStudentClick = subject;
                         viewStudentDetail(subject);
                     }
                 });
@@ -426,16 +519,17 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         birthDateTV.setText(date);
     }
 
+
     public void searchToLoadLayout() {
         YoYo.with(Techniques.SlideOutLeft)
-                .duration(250)
+                .duration(150)
                 .repeat(0)
                 .onEnd(new YoYo.AnimatorCallback() {
                     @Override
                     public void call(Animator animator) {
                         searchLayout.setVisibility(View.GONE);
                         YoYo.with(Techniques.SlideInRight)
-                                .duration(250)
+                                .duration(150)
                                 .repeat(0)
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
@@ -448,7 +542,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 })
                 .playOn(searchLayout);
         YoYo.with(Techniques.SlideOutLeft)
-                .duration(250)
+                .duration(150)
                 .repeat(0)
                 .onEnd(new YoYo.AnimatorCallback() {
                     @Override
@@ -459,13 +553,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 .playOn(gtsLogo);
     }
 
-
-    @Override
-    public void showNoResultLayout() {
-        searchResultTableHeader.setVisibility(View.GONE);
-        resultLayoutScroll.setVisibility(View.GONE);
-        noResultLayout.setVisibility(View.VISIBLE);
-    }
 
     @Override
     public void loadToResultLayout(final Boolean isNoResult) {
@@ -482,10 +569,15 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
                                     public void call(Animator animator) {
-                                        if(isNoResult) resultLayout.setGravity(Gravity.CENTER); else resultLayout.setGravity(Gravity.TOP);
-                                        searchResultTableHeader.setVisibility(View.VISIBLE);
-                                        resultLayoutScroll.setVisibility(View.VISIBLE);
+                                        if (isNoResult) {
+                                            resultLayout.setGravity(Gravity.CENTER);
+                                        } else {
+                                            resultLayout.setGravity(Gravity.TOP);
+                                            searchResultTableHeader.setVisibility(View.VISIBLE);
+                                            resultLayoutScroll.setVisibility(View.VISIBLE);
+                                        }
                                         gtsLogo.setVisibility(View.GONE);
+                                        floatingContainer.close(true);
                                         floatingContainer.setVisibility(View.VISIBLE);
                                         toSearchLayoutFloatBTN.setVisibility(View.VISIBLE);
                                         floatingContainer.animate();
@@ -499,7 +591,134 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 .playOn(findViewById(R.id.loading_layout));
     }
 
-    public void resultToSearchLayout() {
+    @Override
+    public void loadToNoInternetLayout(final int from) {
+        YoYo.with(Techniques.SlideOutLeft)
+                .duration(150)
+                .repeat(0)
+                .onEnd(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        loadingLayout.setVisibility(View.GONE);
+                        YoYo.with(Techniques.SlideInRight)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        fromLayout = from;
+                                        if (fromLayout == StudentSearchActivity.RESULT_LAYOUT) {
+                                            toResultLayoutFloatBTN.setVisibility(View.VISIBLE);
+                                        } else toResultLayoutFloatBTN.setVisibility(View.GONE);
+                                        toSearchLayoutFloatBTN.setVisibility(View.VISIBLE);
+                                        floatingContainer.setVisibility(View.VISIBLE);
+                                        noInternetLayout.setVisibility(View.VISIBLE);
+                                        searchToolbar.setTitle("");
+                                    }
+                                })
+                                .playOn(noInternetLayout);
+                    }
+                })
+                .playOn(loadingLayout);
+    }
+
+    public void noInternetToSearchLayout() {
+        YoYo.with(Techniques.SlideOutRight)
+                .duration(150)
+                .repeat(0)
+                .onEnd(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        floatingContainer.setVisibility(View.GONE);
+                        floatingContainer.animate();
+                        noInternetLayout.setVisibility(View.GONE);
+
+                        YoYo.with(Techniques.SlideInLeft)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        searchToolbar.setTitle("Tìm kiếm sinh viên");
+                                        searchLayout.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .playOn(searchLayout);
+                        YoYo.with(Techniques.SlideInLeft)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        gtsLogo.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .playOn(gtsLogo);
+                    }
+                })
+                .playOn(noInternetLayout);
+    }
+
+    public void noInternetToResultLayout() {
+        YoYo.with(Techniques.SlideOutRight)
+                .duration(150)
+                .repeat(0)
+                .onEnd(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        floatingContainer.setVisibility(View.GONE);
+                        floatingContainer.animate();
+                        noInternetLayout.setVisibility(View.GONE);
+
+                        YoYo.with(Techniques.SlideInLeft)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        searchToolbar.setTitle("Kết quả tìm kiếm:");
+                                        resultLayout.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .playOn(resultLayout);
+                    }
+                })
+                .playOn(noInternetLayout);
+    }
+
+    public void noInternetToLoadLayout() {
+        YoYo.with(Techniques.SlideOutLeft)
+                .duration(150)
+                .repeat(0)
+                .onStart(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        floatingContainer.setVisibility(View.GONE);
+                        toSearchLayoutFloatBTN.setVisibility(View.GONE);
+                        toResultLayoutFloatBTN.setVisibility(View.GONE);
+                    }
+                })
+                .onEnd(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        noInternetLayout.setVisibility(View.GONE);
+                        YoYo.with(Techniques.SlideInRight)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        loadingLayout.setVisibility(View.VISIBLE);
+                                        searchToolbar.setTitle("");
+                                    }
+                                })
+                                .playOn(loadingLayout);
+                    }
+                })
+                .playOn(noInternetLayout);
+    }
+
+    public void resultReturnSearchLayout() {
         YoYo.with(Techniques.SlideOutRight)
                 .duration(150)
                 .repeat(0)
@@ -508,6 +727,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                     public void call(Animator animator) {
                         floatingContainer.setVisibility(View.GONE);
                         toSearchLayoutFloatBTN.setVisibility(View.GONE);
+                        toResultLayoutFloatBTN.setVisibility(View.GONE);
                         floatingContainer.animate();
                         resultLayout.setVisibility(View.GONE);
                         noResultLayout.setVisibility(View.GONE);
@@ -523,7 +743,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                                 })
                                 .playOn(searchLayout);
                         YoYo.with(Techniques.SlideInLeft)
-                                .duration(250)
+                                .duration(150)
                                 .repeat(0)
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
@@ -568,7 +788,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     }
 
     @Override
-    public void loadToDetailLayout(final String name){
+    public void loadToDetailLayout(final String name) {
         YoYo.with(Techniques.SlideOutLeft)
                 .duration(150)
                 .repeat(0)
@@ -582,6 +802,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
                                     public void call(Animator animator) {
+                                        floatingContainer.close(true);
                                         floatingContainer.setVisibility(View.VISIBLE);
                                         toSearchLayoutFloatBTN.setVisibility(View.VISIBLE);
                                         toResultLayoutFloatBTN.setVisibility(View.VISIBLE);
@@ -595,7 +816,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 .playOn(loadingLayout);
     }
 
-    public void detailToResultLayout(){
+    public void detailReturnResultLayout() {
         YoYo.with(Techniques.SlideOutRight)
                 .duration(150)
                 .repeat(0)
@@ -623,7 +844,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 .playOn(detailLayout);
     }
 
-    public void detailToSearchLayout(){
+    public void detailReturnSearchLayout() {
         YoYo.with(Techniques.SlideOutRight)
                 .duration(150)
                 .repeat(0)
@@ -631,11 +852,10 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                     @Override
                     public void call(Animator animator) {
                         floatingContainer.setVisibility(View.GONE);
-                        toSearchLayoutFloatBTN.setVisibility(View.GONE);
                         toResultLayoutFloatBTN.setVisibility(View.GONE);
+                        toSearchLayoutFloatBTN.setVisibility(View.GONE);
                         floatingContainer.animate();
                         detailLayout.setVisibility(View.GONE);
-                        resultLayout.setVisibility(View.GONE);
                         YoYo.with(Techniques.SlideInLeft)
                                 .duration(150)
                                 .repeat(0)
@@ -646,7 +866,17 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                                         searchLayout.setVisibility(View.VISIBLE);
                                     }
                                 })
-                                .playOn(resultLayout);
+                                .playOn(searchLayout);
+                        YoYo.with(Techniques.SlideInLeft)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        gtsLogo.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .playOn(gtsLogo);
                     }
                 })
                 .playOn(detailLayout);
@@ -660,10 +890,17 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         return screenWidth;
     }
 
-    public void setStudentDetailData(JSONArray data){
+    public void setStudentDetailData(JSONArray data) {
         this.studentSearchDetailViewPagerAdpater.setData(data);
         this.studentSearchDetailViewPagerAdpater.notifyDataSetChanged();
         this.studentSearchTablayout.setScrollPosition(0, 0f, true);
         this.studentSearchViewPager.setCurrentItem(0);
+    }
+
+    @Override
+    public void showNoResultLayout() {
+        noResultLayout.setVisibility(View.VISIBLE);
+        searchResultTableHeader.setVisibility(View.GONE);
+        resultLayoutScroll.setVisibility(View.GONE);
     }
 }

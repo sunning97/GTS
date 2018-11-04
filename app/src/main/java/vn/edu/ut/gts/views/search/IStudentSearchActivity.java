@@ -15,6 +15,6 @@ public interface IStudentSearchActivity {
     void loadToResultLayout(Boolean isNoResult);
     void loadToDetailLayout(String name);
     void showNoResultLayout();
-
+    void loadToNoInternetLayout(int from);
     void setStudentDetailData(JSONArray data);
 }

@@ -200,7 +200,7 @@
             android:layout_height="45dp"
             style="@style/AVLoadingIndicatorView.Large"
             android:visibility="visible"
-            app:indicatorName="PacmanIndicator"
+            app:indicatorName="SquareSpinIndicator"
             app:indicatorColor="@color/white"/>
     </LinearLayout>
 </RelativeLayout>

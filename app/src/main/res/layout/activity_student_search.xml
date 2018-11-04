@@ -183,10 +183,10 @@
         android:layout_height="match_parent">
         <com.wang.avi.AVLoadingIndicatorView
             android:layout_gravity="center"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             style="@style/AVLoadingIndicatorView.Large"
-            app:indicatorName="PacmanIndicator"
+            app:indicatorName="SquareSpinIndicator"
             app:indicatorColor="@color/colorPrimary"/>
     </LinearLayout>
     <LinearLayout
@@ -204,7 +204,7 @@
             android:layout_height="wrap_content"
             android:stretchColumns="1">
         </TableLayout>
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:id="@+id/result_layout_scroll"
             android:visibility="gone"
             android:layout_width="match_parent"
@@ -215,7 +215,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </TableLayout>
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
         <LinearLayout
             android:visibility="gone"
             android:id="@+id/no_result_layout"
@@ -273,6 +273,43 @@
             android:layout_height="match_parent">
 
         </android.support.v4.view.ViewPager>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/no_internet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/no_connection_clound" />
+        <TextView
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/gray2"
+            android:layout_gravity="center"
+            android:text="@string/cant_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/retry_text"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chạm để thử lại"
+                android:textColor="@color/gray2"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </FrameLayout>
     </LinearLayout>
     <com.github.clans.fab.FloatingActionMenu
         android:visibility="gone"

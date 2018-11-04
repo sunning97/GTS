@@ -26,8 +26,11 @@ import vn.edu.ut.gts.actions.helpers.Curl;
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.search.IStudentSearchActivity;
+import vn.edu.ut.gts.views.search.StudentSearchActivity;
+import vn.edu.ut.gts.views.search.fragments.StudentSearchStudyResultFragment;
 
 public class StudentSearchPresenter implements IStudentSearchPresenter {
+    public static int currentStatus = 0;
     private IStudentSearchActivity iStudentSearchActivity;
     private Context context;
     private Storage storage;
@@ -118,18 +121,19 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                         }
                         case 1: {
                             res.data("ctl00$ContentPlaceHolder$txtMaSoSV", "")
-                                    .data("ctl00$ContentPlaceHolder$txtMaLop", "")
                                     .data("ctl00$ContentPlaceHolder$txtHoDem", bundle.getString("first_name"))
                                     .data("ctl00$ContentPlaceHolder$txtHoTen", bundle.getString("last_name"))
-                                    .data("ctl00$ContentPlaceHolder$objNgaySinh", "");
+                                    .data("ctl00$ContentPlaceHolder$objNgaySinh", "")
+                                    .data("ctl00$ContentPlaceHolder$txtMaLop", "");
+
                             break;
                         }
                         case 2: {
                             res.data("ctl00$ContentPlaceHolder$txtMaSoSV", "")
+                                    .data("ctl00$ContentPlaceHolder$objNgaySinh", bundle.getString("birth_date"))
                                     .data("ctl00$ContentPlaceHolder$txtMaLop", "")
                                     .data("ctl00$ContentPlaceHolder$txtHoDem", "")
-                                    .data("ctl00$ContentPlaceHolder$txtHoTen", "")
-                                    .data("ctl00$ContentPlaceHolder$objNgaySinh", bundle.getString("birth_date"));
+                                    .data("ctl00$ContentPlaceHolder$txtHoTen", "");
                             break;
                         }
                         case 3: {
@@ -141,7 +145,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                             break;
                         }
                     }
-                    res.execute();
+                    res.timeout(Helper.TIMEOUT_VALUE).execute();
 
                     Document document = res.get();
                     Elements trs = document.select("#TblDanhSachSinhVien tr");
@@ -159,6 +163,12 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                             students.add(student);
                         }
                     }
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
                 } catch (NullPointerException | IndexOutOfBoundsException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -171,18 +181,22 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
 
             @Override
             protected void onPostExecute(ArrayList<JSONObject> jsonObjects) {
-                if (jsonObjects.size() != 0) {
-                    iStudentSearchActivity.generateTableSearchResult(jsonObjects);
-                    iStudentSearchActivity.loadToResultLayout(false);
+                if(currentStatus == Helper.NO_CONNECTION || currentStatus == Helper.TIMEOUT){
+                    iStudentSearchActivity.loadToNoInternetLayout(StudentSearchActivity.SEARCH_LAYOUT);
                 } else {
-                    iStudentSearchActivity.showNoResultLayout();
-                    iStudentSearchActivity.loadToResultLayout(true);
+                    if (jsonObjects.size() != 0) {
+                        StudentSearchStudyResultFragment.clearDataSpinner();
+                        iStudentSearchActivity.generateTableSearchResult(jsonObjects);
+                        iStudentSearchActivity.loadToResultLayout(false);
+                    } else {
+                        iStudentSearchActivity.showNoResultLayout();
+                        iStudentSearchActivity.loadToResultLayout(true);
+                    }
                 }
             }
         };
         asyncTask.execute();
     }
-
 
     public void getStudentDetail(final JSONObject jsonObject) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
@@ -197,6 +211,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                             .userAgent(Helper.USER_AGENT)
                             .method(Connection.Method.GET)
                             .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"))
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .execute();
 
                     document = res.parse();
@@ -209,6 +224,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                             .userAgent(Helper.USER_AGENT)
                             .method(Connection.Method.GET)
                             .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"))
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .execute();
                     document = res.parse();
 
@@ -232,6 +248,12 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                     }
 
                     result.put(data);
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -244,12 +266,16 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                try {
-                    JSONObject info = jsonArray.getJSONObject(0);
-                    iStudentSearchActivity.setStudentDetailData(jsonArray);
-                    iStudentSearchActivity.loadToDetailLayout(info.getString("student_name"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(currentStatus == Helper.NO_CONNECTION || currentStatus == Helper.TIMEOUT){
+                    iStudentSearchActivity.loadToNoInternetLayout(StudentSearchActivity.RESULT_LAYOUT);
+                } else {
+                    try {
+                        JSONObject info = jsonArray.getJSONObject(0);
+                        iStudentSearchActivity.setStudentDetailData(jsonArray);
+                        iStudentSearchActivity.loadToDetailLayout(info.getString("student_name"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };

@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.views.search.fragments;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.viethoa.DialogUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
@@ -31,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.views.home.fragments.StudentStudyResultFragment;
+import vn.edu.ut.gts.views.search.StudentSearchActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +62,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
         headerText.add("Điểm chữ");
     }
     public static void clearDataSpinner(){
-        dataSpinner.clear();
+        StudentSearchStudyResultFragment.dataSpinner = new ArrayList<>();
     }
 
     @Override
@@ -142,6 +145,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
         row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                studyResultDetailShow(data);
             }
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
@@ -192,7 +196,6 @@ public class StudentSearchStudyResultFragment extends Fragment {
             });
         }catch (IndexOutOfBoundsException e){
             e.printStackTrace();
-            Log.d("AAA","AAAAAA");
         }catch (JSONException e) {
             e.printStackTrace();
         }
@@ -212,5 +215,41 @@ public class StudentSearchStudyResultFragment extends Fragment {
         windowManager.getDefaultDisplay().getMetrics(dm);
         int screenWidth = dm.widthPixels;
         return screenWidth;
+    }
+
+    public void studyResultDetailShow(JSONObject jsonObject) {
+        LayoutInflater factory = getLayoutInflater();
+        View view = factory.inflate(R.layout.student_study_result_detail_dialog, null);
+        TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
+        TextView hocPhan = view.findViewById(R.id.hoc_phan);
+        TextView lopHoc = view.findViewById(R.id.lop_hoc);
+        TextView tinChin = view.findViewById(R.id.tc);
+        TextView diemQuaTrinh = view.findViewById(R.id.diem_qua_trinh);
+        TextView diemKetThuc = view.findViewById(R.id.thi_ket_thuc);
+        TextView diemHe10 = view.findViewById(R.id.diem_he_10);
+        TextView diemHe4 = view.findViewById(R.id.diem_he_4);
+        TextView diemChu = view.findViewById(R.id.diem_chu);
+        TextView xepLoai = view.findViewById(R.id.xep_loai);
+        TextView ghiChu = view.findViewById(R.id.ghi_chu);
+
+        try {
+            maMonHoc.setText(jsonObject.getString("courseCode"));
+            hocPhan.setText(jsonObject.getString("courseName"));
+            lopHoc.setText(jsonObject.getString("courseClass"));
+            tinChin.setText(jsonObject.getString("courseCredits"));
+            diemQuaTrinh.setText(jsonObject.getString("processScore"));
+            diemKetThuc.setText(jsonObject.getString("testScores"));
+            diemHe10.setText(jsonObject.getString("scoresOf10"));
+            diemHe4.setText(jsonObject.getString("scoresOf4"));
+            diemChu.setText(jsonObject.getString("scoresString"));
+            xepLoai.setText(jsonObject.getString("classification"));
+            ghiChu.setText(jsonObject.getString("note"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Dialog simpleDialog = DialogUtils.createSimpleDialog(getContext(), view, true);
+        if (simpleDialog != null && !simpleDialog.isShowing()) {
+            simpleDialog.show();
+        }
     }
 }
