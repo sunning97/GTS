@@ -3,6 +3,7 @@ package vn.edu.ut.gts.views.search;
 import android.animation.Animator;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -28,6 +29,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.codetroopers.betterpickers.OnDialogDismissListener;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -58,8 +60,7 @@ import vn.edu.ut.gts.presenters.search.StudentSearchPresenter;
 import vn.edu.ut.gts.views.search.fragments.StudentSearchStudyResultFragment;
 
 public class StudentSearchActivity extends AppCompatActivity implements IStudentSearchActivity, CalendarDatePickerDialogFragment.OnDateSetListener {
-    @BindView(R.id.type_search_spinner)
-    MaterialSpinner typeSearchSpinner;
+
     @BindView(R.id.layout_search_by_name)
     LinearLayout layoutSearchByName;
     @BindView(R.id.layout_search_by_id)
@@ -163,49 +164,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         studentSearchTablayout.setTabMode(TabLayout.MODE_FIXED);
         studentSearchTablayout.setupWithViewPager(studentSearchViewPager);
 
-        typeSearchSpinner.setItems(spinnerData);
-        typeSearchSpinner.setSelectedIndex(0);
-        typeSearchSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-                typeSearchSpinner.animate();
-                switch (position) {
-                    case 0: {
-                        inputStudentID.setText("");
-                        layoutSearchByID.setVisibility(View.VISIBLE);
-                        layoutSearchByName.setVisibility(View.GONE);
-                        layoutSearchByBirthDate.setVisibility(View.GONE);
-                        layoutSearchByClass.setVisibility(View.GONE);
-                        break;
-                    }
-                    case 1: {
-                        inputFirstName.setText("");
-                        inputLastName.setText("");
-                        layoutSearchByName.setVisibility(View.VISIBLE);
-                        layoutSearchByID.setVisibility(View.GONE);
-                        layoutSearchByBirthDate.setVisibility(View.GONE);
-                        layoutSearchByClass.setVisibility(View.GONE);
-                        break;
-                    }
-                    case 2: {
-                        birthDateTV.setText("Chọn ngày:");
-                        layoutSearchByBirthDate.setVisibility(View.VISIBLE);
-                        layoutSearchByID.setVisibility(View.GONE);
-                        layoutSearchByName.setVisibility(View.GONE);
-                        layoutSearchByClass.setVisibility(View.GONE);
-                        break;
-                    }
-                    case 3: {
-                        inputClass.setText("");
-                        layoutSearchByClass.setVisibility(View.VISIBLE);
-                        layoutSearchByBirthDate.setVisibility(View.GONE);
-                        layoutSearchByID.setVisibility(View.GONE);
-                        layoutSearchByName.setVisibility(View.GONE);
-                        break;
-                    }
-                }
-            }
-        });
 
         resultLayoutScroll.setSmoothScrollingEnabled(true);
         resultLayoutScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -239,7 +197,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
 
     @OnClick(R.id.btn_search)
     public void search(View view) {
-        if(StudentSearchPresenter.currentStatus !=0){
+        if (StudentSearchPresenter.currentStatus != 0) {
             studentSearchPresenter.getDataSearch();
         } else {
             this.validateInput();
@@ -250,31 +208,25 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        int position = typeSearchSpinner.getSelectedIndex();
-                        Bundle bundle;
-                        switch (position) {
-                            case 0:
-                                bundle = new Bundle();
-                                bundle.putString("mssv", inputStudentID.getText().toString().trim());
-                                studentSearchPresenter.searchStudent(0, bundle);
-                                break;
-                            case 1:
-                                bundle = new Bundle();
-                                bundle.putString("first_name", (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim());
-                                bundle.putString("last_name", inputLastName.getText().toString().trim());
-                                studentSearchPresenter.searchStudent(1, bundle);
-                                break;
-                            case 2:
-                                bundle = new Bundle();
-                                bundle.putString("birth_date", birthDateTV.getText().toString());
-                                studentSearchPresenter.searchStudent(2, bundle);
-                                break;
-                            case 3:
-                                bundle = new Bundle();
-                                bundle.putString("class", inputClass.getText().toString().trim());
-                                studentSearchPresenter.searchStudent(3, bundle);
-                                break;
-                        }
+                        Bundle bundle = new Bundle();
+                        String studentId =  (TextUtils.isEmpty(inputStudentID.getText().toString().trim())) ? "": inputStudentID.getText().toString().trim();
+                        String firstname =  (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "": inputFirstName.getText().toString().trim();
+                        String lastname =  (TextUtils.isEmpty(inputLastName.getText().toString().trim())) ? "": inputLastName.getText().toString().trim();
+
+                        Pattern pattern = null;
+                        Matcher matcher = null;
+                        pattern = Pattern.compile(DATE_REGEX);
+                        matcher = pattern.matcher(birthDateTV.getText().toString());
+                        String birthday =  (matcher.matches()) ? birthDateTV.getText().toString() : "";
+                        String classname =  (TextUtils.isEmpty(inputClass.getText().toString().trim())) ? "": inputClass.getText().toString().trim();
+
+                        bundle.putString("student_id",studentId);
+                        bundle.putString("first_name", firstname);
+                        bundle.putString("last_name", lastname);
+                        bundle.putString("birthday", birthday);
+                        bundle.putString("class_name", classname);
+
+                        studentSearchPresenter.searchStudent(bundle);
                     }
                 }, 1000);
             }
@@ -323,31 +275,13 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    int position = typeSearchSpinner.getSelectedIndex();
-                    Bundle bundle;
-                    switch (position) {
-                        case 0:
-                            bundle = new Bundle();
-                            bundle.putString("mssv", inputStudentID.getText().toString().trim());
-                            studentSearchPresenter.searchStudent(0, bundle);
-                            break;
-                        case 1:
-                            bundle = new Bundle();
-                            bundle.putString("first_name", (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim());
-                            bundle.putString("last_name", inputLastName.getText().toString().trim());
-                            studentSearchPresenter.searchStudent(1, bundle);
-                            break;
-                        case 2:
-                            bundle = new Bundle();
-                            bundle.putString("birth_date", birthDateTV.getText().toString());
-                            studentSearchPresenter.searchStudent(2, bundle);
-                            break;
-                        case 3:
-                            bundle = new Bundle();
-                            bundle.putString("class", inputClass.getText().toString().trim());
-                            studentSearchPresenter.searchStudent(3, bundle);
-                            break;
-                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putString("mssv", inputStudentID.getText().toString().trim());
+                    bundle.putString("first_name", (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim());
+                    bundle.putString("last_name", inputLastName.getText().toString().trim());
+                    bundle.putString("birth_date", birthDateTV.getText().toString());
+                    bundle.putString("class", inputClass.getText().toString().trim());
+
                 }
             }, 1000);
         }
@@ -477,43 +411,22 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
 
     private void validateInput() {
         isNoInputFailed = true;
-        int position = typeSearchSpinner.getSelectedIndex();
-        switch (position) {
-            case 0: {
-                if (TextUtils.isEmpty(inputStudentID.getText().toString())) {
-                    showInputValidateEmpty("Mã số sinh viên");
-                    isNoInputFailed = false;
-                }
-                break;
-            }
-            case 1: {
-                if (TextUtils.isEmpty(inputLastName.getText().toString().trim())) {
-                    showInputValidateEmpty("Tên");
-                    isNoInputFailed = false;
-                }
+        String studentId = inputStudentID.getText().toString().trim();
+        String lastname = inputLastName.getText().toString().trim();
+        String birthday = birthDateTV.getText().toString().trim();
+        String classname = inputClass.getText().toString().trim();
+        Pattern pattern = null;
+        Matcher matcher = null;
+        pattern = Pattern.compile(DATE_REGEX);
+        matcher = pattern.matcher(birthday);
 
-                break;
-            }
-            case 2: {
-                String date = birthDateTV.getText().toString().trim();
-                Pattern pattern = null;
-                Matcher matcher = null;
-                pattern = Pattern.compile(DATE_REGEX);
-                matcher = pattern.matcher(date);
-                if (!matcher.matches()) {
-                    showInputValidateEmpty("Ngày sinh");
-                    isNoInputFailed = false;
-                }
-                break;
-            }
-            case 3: {
-                if (TextUtils.isEmpty(inputClass.getText().toString().trim())) {
-                    showInputValidateEmpty("Lớp học");
-                    isNoInputFailed = false;
-                }
-                break;
-            }
+        if(!studentId.isEmpty() || !lastname.isEmpty() || matcher.matches() || !classname.isEmpty()){
+            isNoInputFailed = true;
+        }else{
+            showInputValidateEmpty("Thông tin tìm kiếm");
+            isNoInputFailed = false;
         }
+
     }
 
     @Override
@@ -912,7 +825,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
 
     @Override
     public void dismissLoadingDialog() {
-        if(epicDialog.isShowing()) epicDialog.dismisPopup();
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
     }
 
     @Override
@@ -953,13 +866,10 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         enableInput();
     }
 
-    private void enableInput(){
-        typeSearchSpinner.setEnabled(true);
-        inputStudentID.setEnabled(true);
+    private void enableInput() {
     }
-    private void disableInput(){
-        typeSearchSpinner.setEnabled(false);
-        inputStudentID.setEnabled(false);
+
+    private void disableInput() {
     }
 
 
