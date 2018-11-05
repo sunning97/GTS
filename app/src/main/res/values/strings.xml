@@ -34,4 +34,5 @@
     <string name="confirm_exit_app_title">Xác nhận thoát?</string>
     <string name="cancel_text">Hủy</string>
     <string name="confirm_text">Xác nhận</string>
+    <string name="login_btn">Đăng nhập</string>
 </resources>

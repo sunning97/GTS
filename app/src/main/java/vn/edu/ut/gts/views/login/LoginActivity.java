@@ -42,6 +42,7 @@ import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.helpers.TextInputValidator;
 import vn.edu.ut.gts.presenters.login.LoginProcess;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
+import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
 
 public class LoginActivity extends AppCompatActivity implements ILoginView {
@@ -190,13 +191,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     public void transferToRetryBtn() {
         if (epicDialog.isShowing()) epicDialog.dismisPopup();
         disableInput();
-        btnLogin.setText("Thử lại");
+        btnLogin.setText(getResources().getString(R.string.retry_btn));
     }
 
     @Override
     public void transferToLoginBtn() {
         enableInput();
-        btnLogin.setText("Đăng nhập");
+        btnLogin.setText(getResources().getString(R.string.login_btn));
     }
 
     @Override
@@ -229,16 +230,15 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     @Override
     public void onBackPressed() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Xác nhận thoát?")
-                .setCancelText("Ok")
-                .setConfirmText("Hủy")
+                .setTitleText(getResources().getString(R.string.confirm_exit_app_title))
+                .setCancelText(getResources().getString(R.string.cancel_text))
+                .setConfirmText(getResources().getString(R.string.confirm_text))
                 .showCancelButton(true)
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
-                        moveTaskToBack(true);
-                        android.os.Process.killProcess(android.os.Process.myPid());
-                        System.exit(1);
+                        storage.deleteAllsharedPreferences(LoginActivity.this);
+                        LoginActivity.this.finishAffinity();
                     }
                 })
                 .show();

@@ -64,7 +64,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 .method(Connection.Method.GET)
                                 .cookie("ASP.NET_Session_Id", storage.getCookie())
                                 .ignoreContentType(true)
-                                .timeout(10)
+                                .timeout(Helper.TIMEOUT_VALUE)
                                 .execute();
 
                         storage.saveImage(resultImageResponse, context);
