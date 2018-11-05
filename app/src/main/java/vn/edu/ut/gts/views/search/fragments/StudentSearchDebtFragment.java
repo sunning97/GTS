@@ -42,7 +42,7 @@ import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StudentSearchDebtFragment extends Fragment implements IStudentSearchDebtFragment{
+public class StudentSearchDebtFragment extends Fragment implements IStudentSearchDebtFragment {
     @BindView(R.id.student_debt_table)
     TableLayout studentDebtTable;
     @BindView(R.id.student_debt_spinner)
@@ -79,7 +79,7 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_search_debt, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         d = getContext().getResources().getDisplayMetrics().density;
         loadingDialog = new EpicDialog(getContext());
         loadingDialog.initLoadingDialog();
@@ -96,19 +96,19 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
                     JSONObject jsonObject = (JSONObject) semesters.get(i);
                     dataSnpinner.add(jsonObject.getString("text"));
                 }
-            }catch (IndexOutOfBoundsException e){
+            } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
-            }catch (Exception e){}
+            } catch (Exception e) { }
             initDebtSpinner(dataSnpinner);
-            if(StudentSearchDebtFragmentPresenter.currentStatus == 0){
+            if (StudentSearchDebtFragmentPresenter.currentStatus == 0) {
                 generateTableContent(initData);
                 showAllComponent();
             } else showNetworkErrorLayout();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        studentSearchDebtFragmentPresenter = new StudentSearchDebtFragmentPresenter(this,getContext(),data);
-        return  view;
+        studentSearchDebtFragmentPresenter = new StudentSearchDebtFragmentPresenter(this, getContext(), data);
+        return view;
     }
 
     public void initDebtSpinner(List<String> dataSpinner) {
@@ -220,6 +220,7 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
         int screenWidth = dm.widthPixels;
         return screenWidth;
     }
+
     private String numberFormat(String num) {
         String result = "";
         List<String> resultArray = new ArrayList<>();
@@ -304,7 +305,7 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
     }
 
     public void debtDetailShow(JSONObject jsonObject) {
-        Log.d("CCC",jsonObject.toString());
+        Log.d("CCC", jsonObject.toString());
         LayoutInflater factory = getLayoutInflater();
         View view = factory.inflate(R.layout.student_debt_detail_dialog, null);
         TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
@@ -339,7 +340,7 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
     }
 
     @OnClick(R.id.retry_text)
-    public void rety(View view){
+    public void rety(View view) {
         StudentSearchDebtFragmentPresenter.currentStatus = 0;
         studentSearchDebtFragmentPresenter.getStudentDebt(0);
     }
