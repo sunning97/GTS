@@ -63,14 +63,14 @@
                     android:layout_height="40dp"
                     android:background="@drawable/input_bg_primary_color"
                     android:cursorVisible="true"
-                    android:hint="Nhập MSSV..."
+                    android:hint="Nhập mã số sinh viên"
                     android:inputType="number"
                     android:paddingLeft="15dp"
                     android:paddingTop="5dp"
                     android:paddingRight="15dp"
                     android:paddingBottom="5dp"
                     android:textColor="@color/black"
-                    android:textSize="17sp" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -87,7 +87,7 @@
                     android:layout_width="100dp"
                     android:layout_height="25dp"
                     android:textColor="@color/black"
-                    android:textSize="17sp" />
+                    android:textSize="13sp" />
                 <ImageButton
                     android:background="@drawable/circlebackgroundbluedark"
                     android:id="@+id/pick_date"
@@ -118,7 +118,7 @@
                     android:paddingRight="15dp"
                     android:paddingBottom="5dp"
                     android:textColor="@color/black"
-                    android:textSize="17sp" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -142,7 +142,7 @@
                     android:paddingRight="15dp"
                     android:paddingBottom="5dp"
                     android:textColor="@color/black"
-                    android:textSize="17sp" />
+                    android:textSize="13sp" />
 
                 <EditText
                     android:id="@+id/input_last_name"
@@ -159,7 +159,7 @@
                     android:paddingRight="15dp"
                     android:paddingBottom="5dp"
                     android:textColor="@color/black"
-                    android:textSize="17sp"
+                    android:textSize="13sp"
                     android:visibility="visible" />
             </LinearLayout>
         </FrameLayout>

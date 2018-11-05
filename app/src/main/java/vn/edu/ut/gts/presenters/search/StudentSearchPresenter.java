@@ -226,7 +226,8 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
     }
 
     public void getStudentDetail(final JSONObject jsonObject) {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
+        @SuppressLint("StaticFieldLeak")
+        AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected JSONArray doInBackground(Void... voids) {
                 JSONArray result = new JSONArray();
@@ -238,7 +239,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                             .userAgent(Helper.USER_AGENT)
                             .method(Connection.Method.GET)
                             .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"))
-                            .timeout(Helper.TIMEOUT_VALUE)
+                            .timeout(20000)
                             .execute();
 
                     document = res.parse();

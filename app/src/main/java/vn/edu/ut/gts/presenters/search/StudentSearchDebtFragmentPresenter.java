@@ -84,7 +84,7 @@ public class StudentSearchDebtFragmentPresenter implements IStudentSearchDebtFra
                     e.printStackTrace();
                     currentStatus = Helper.NO_CONNECTION;
                 } catch (IndexOutOfBoundsException e){
-
+                    e.printStackTrace();
                 }catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }

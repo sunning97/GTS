@@ -98,8 +98,7 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
                 }
             } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
-            } catch (Exception e) {
-            }
+            } catch (Exception e) { }
             initDebtSpinner(dataSnpinner);
             if (StudentSearchDebtFragmentPresenter.currentStatus == 0) {
                 generateTableContent(initData);
