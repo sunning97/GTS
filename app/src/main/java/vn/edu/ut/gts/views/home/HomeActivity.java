@@ -191,7 +191,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         startActivity(dashboardIntent);
     }
 
-
     private void setHomeFragment(Intent intent) {
         Menu menu = navigationView.getMenu();
         MenuItem menuItem = null;
