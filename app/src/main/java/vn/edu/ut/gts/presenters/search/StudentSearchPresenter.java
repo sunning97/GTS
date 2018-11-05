@@ -123,7 +123,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
         return result;
     }
 
-    public void searchStudent(final int position, final Bundle bundle) {
+    public void searchStudent( final Bundle bundle) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, ArrayList<JSONObject>> asyncTask = new AsyncTask<Void, Void, ArrayList<JSONObject>>() {
             @Override
             protected ArrayList<JSONObject> doInBackground(Void... voids) {
@@ -137,42 +137,16 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                             .data("__VIEWSTATEGENERATOR", dataSearch.getString("__VIEWSTATEGENERATOR"))
                             .data("ctl00$ContentPlaceHolder$txtSercurityCode1", dataSearch.getString("ctl00$ContentPlaceHolder$txtSercurityCode1"))
                             .data("ctl00$ContentPlaceHolder$btnTraCuuThongTin", dataSearch.getString("ctl00$ContentPlaceHolder$btnTraCuuThongTin"))
-                            .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"));
-                    switch (position) {
-                        case 0: {
-                            res.data("ctl00$ContentPlaceHolder$txtMaSoSV", bundle.getString("mssv"))
-                                    .data("ctl00$ContentPlaceHolder$txtMaLop", "")
-                                    .data("ctl00$ContentPlaceHolder$txtHoDem", "")
-                                    .data("ctl00$ContentPlaceHolder$txtHoTen", "")
-                                    .data("ctl00$ContentPlaceHolder$objNgaySinh", "");
-                            break;
-                        }
-                        case 1: {
-                            res.data("ctl00$ContentPlaceHolder$txtMaSoSV", "")
-                                    .data("ctl00$ContentPlaceHolder$txtHoDem", bundle.getString("first_name"))
-                                    .data("ctl00$ContentPlaceHolder$txtHoTen", bundle.getString("last_name"))
-                                    .data("ctl00$ContentPlaceHolder$objNgaySinh", "")
-                                    .data("ctl00$ContentPlaceHolder$txtMaLop", "");
 
-                            break;
-                        }
-                        case 2: {
-                            res.data("ctl00$ContentPlaceHolder$txtMaSoSV", "")
-                                    .data("ctl00$ContentPlaceHolder$objNgaySinh", bundle.getString("birth_date"))
-                                    .data("ctl00$ContentPlaceHolder$txtMaLop", "")
-                                    .data("ctl00$ContentPlaceHolder$txtHoDem", "")
-                                    .data("ctl00$ContentPlaceHolder$txtHoTen", "");
-                            break;
-                        }
-                        case 3: {
-                            res.data("ctl00$ContentPlaceHolder$txtMaSoSV", "")
-                                    .data("ctl00$ContentPlaceHolder$txtMaLop", bundle.getString("class"))
-                                    .data("ctl00$ContentPlaceHolder$txtHoDem", "")
-                                    .data("ctl00$ContentPlaceHolder$txtHoTen", "")
-                                    .data("ctl00$ContentPlaceHolder$objNgaySinh", "");
-                            break;
-                        }
-                    }
+                            .data("ctl00$ContentPlaceHolder$txtMaSoSV", bundle.getString("student_id"))
+                            .data("ctl00$ContentPlaceHolder$txtMaLop", bundle.getString("class_name"))
+                            .data("ctl00$ContentPlaceHolder$txtHoDem", bundle.getString("first_name"))
+                            .data("ctl00$ContentPlaceHolder$txtHoTen", bundle.getString("last_name"))
+                            .data("ctl00$ContentPlaceHolder$objNgaySinh", bundle.getString("birthday"))
+                            .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"));
+
+                            Log.e("INPUT", bundle.toString());
+
                     res.timeout(Helper.TIMEOUT_VALUE).execute();
 
                     Document document = res.get();
