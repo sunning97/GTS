@@ -25,7 +25,6 @@ public class Helper {
             byte[] thedigest = digest.digest(str.getBytes());
             md5 = new String(Hex.encodeHex(thedigest));
         } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return md5;
