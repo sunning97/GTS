@@ -216,16 +216,15 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                         Pattern pattern = null;
                         Matcher matcher = null;
                         pattern = Pattern.compile(DATE_REGEX);
-                        matcher = pattern.matcher(birthDateTV.getText().toString().trim());
-                        String birthday =  (matcher.matches()) ? birthDateTV.getText().toString().trim() : "";
-
+                        matcher = pattern.matcher(birthDateTV.getText().toString());
+                        String birthday =  (matcher.matches()) ? birthDateTV.getText().toString() : "";
                         String classname =  (TextUtils.isEmpty(inputClass.getText().toString().trim())) ? "": inputClass.getText().toString().trim();
-                        bundle.putString("student_id",studentId);
 
+                        bundle.putString("student_id",studentId);
                         bundle.putString("first_name", firstname);
                         bundle.putString("last_name", lastname);
-
                         bundle.putString("birthday", birthday);
+                        bundle.putString("class_name", classname);
 
                         studentSearchPresenter.searchStudent(bundle);
                     }
