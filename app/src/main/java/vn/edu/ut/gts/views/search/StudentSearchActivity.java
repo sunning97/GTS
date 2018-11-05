@@ -61,12 +61,6 @@ import vn.edu.ut.gts.views.search.fragments.StudentSearchStudyResultFragment;
 
 public class StudentSearchActivity extends AppCompatActivity implements IStudentSearchActivity, CalendarDatePickerDialogFragment.OnDateSetListener {
 
-    @BindView(R.id.layout_search_by_name)
-    LinearLayout layoutSearchByName;
-    @BindView(R.id.layout_search_by_id)
-    LinearLayout layoutSearchByID;
-    @BindView(R.id.layout_search_by_birth_date)
-    LinearLayout layoutSearchByBirthDate;
     @BindView(R.id.input_search_layout)
     LinearLayout searchLayout;
     @BindView(R.id.loading_layout)
@@ -77,8 +71,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     LinearLayout resultLayout;
     @BindView(R.id.search_toolbar)
     Toolbar searchToolbar;
-    @BindView(R.id.layout_search_by_class)
-    LinearLayout layoutSearchByClass;
     @BindView(R.id.input_student_id)
     EditText inputStudentID;
     @BindView(R.id.birth_date_tv)
@@ -133,11 +125,9 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     private int day = 0;
     private int month = 0;
     private int year = 0;
-    private String[] spinnerData = {"Mã số sinh viên", "Họ tên", "Ngày sinh", "Lớp Học"};
     private String[] searchResultHeaderData = {"MSSV", "Họ tên", "Ngày sinh"};
     private float d;
     private StudentSearchDetailViewPagerAdpater studentSearchDetailViewPagerAdpater;
-    private Storage storage;
     private EpicDialog epicDialog;
 
     @Override
@@ -148,7 +138,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         d = getResources().getDisplayMetrics().density;
         epicDialog = new EpicDialog(StudentSearchActivity.this);
         epicDialog.initLoadingDialog();
-        storage = new Storage(StudentSearchActivity.this);
         studentSearchPresenter = new StudentSearchPresenter(this, StudentSearchActivity.this);
         studentSearchPresenter.getDataSearch();
         searchToolbar.setTitle("Tìm kiếm sinh viên");

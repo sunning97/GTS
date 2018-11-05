@@ -27,7 +27,6 @@ import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.search.IStudentSearchActivity;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
-import vn.edu.ut.gts.views.search.fragments.StudentSearchStudyResultFragment;
 
 public class StudentSearchPresenter implements IStudentSearchPresenter {
     public static int currentStatus = 0;
@@ -93,7 +92,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                         iStudentSearchActivity.searchToRetryBtn();
                         break;
                     }
-                    default:{
+                    default: {
                         storage.putString("search_data", jsonObject.toString());
                         iStudentSearchActivity.retryToSearchBtn();
                         iStudentSearchActivity.dismissLoadingDialog();
@@ -123,33 +122,31 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
         return result;
     }
 
-    public void searchStudent( final Bundle bundle) {
+    public void searchStudent(final Bundle bundle) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, ArrayList<JSONObject>> asyncTask = new AsyncTask<Void, Void, ArrayList<JSONObject>>() {
             @Override
             protected ArrayList<JSONObject> doInBackground(Void... voids) {
                 ArrayList<JSONObject> students = new ArrayList<>();
                 try {
                     JSONObject dataSearch = new JSONObject(storage.getString("search_data"));
-                    Connection res = Jsoup.connect(Helper.BASE_URL + "TraCuuThongTin.aspx")
+                    Connection.Response res = Jsoup.connect(Helper.BASE_URL + "TraCuuThongTin.aspx")
                             .method(Connection.Method.POST)
                             .userAgent(Helper.USER_AGENT)
                             .data("__VIEWSTATE", dataSearch.getString("__VIEWSTATE"))
                             .data("__VIEWSTATEGENERATOR", dataSearch.getString("__VIEWSTATEGENERATOR"))
                             .data("ctl00$ContentPlaceHolder$txtSercurityCode1", dataSearch.getString("ctl00$ContentPlaceHolder$txtSercurityCode1"))
                             .data("ctl00$ContentPlaceHolder$btnTraCuuThongTin", dataSearch.getString("ctl00$ContentPlaceHolder$btnTraCuuThongTin"))
-
                             .data("ctl00$ContentPlaceHolder$txtMaSoSV", bundle.getString("student_id"))
                             .data("ctl00$ContentPlaceHolder$txtMaLop", bundle.getString("class_name"))
                             .data("ctl00$ContentPlaceHolder$txtHoDem", bundle.getString("first_name"))
                             .data("ctl00$ContentPlaceHolder$txtHoTen", bundle.getString("last_name"))
                             .data("ctl00$ContentPlaceHolder$objNgaySinh", bundle.getString("birthday"))
-                            .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"));
+                            .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"))
+                            .timeout(Helper.TIMEOUT_VALUE).execute();
 
-                            Log.e("INPUT", bundle.toString());
+                    Log.e("INPUT", bundle.toString());
 
-                    res.timeout(Helper.TIMEOUT_VALUE).execute();
-
-                    Document document = res.get();
+                    Document document = res.parse();
                     Elements trs = document.select("#TblDanhSachSinhVien tr");
                     if (!trs.get(1).text().equals("Không tìm thấy dữ liệu!")) {
                         for (int i = 1; i < trs.size(); i++) {
@@ -213,7 +210,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                             .userAgent(Helper.USER_AGENT)
                             .method(Connection.Method.GET)
                             .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"))
-                            .timeout(20000)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .execute();
 
                     document = res.parse();
@@ -239,7 +236,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                     dataSearchDebt.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
                     JSONArray semesters = new JSONArray();
                     Elements options = document.select("select[name=\"ctl00$ContentPlaceHolder$cboHocKy\"]>option");
-                    for(Element option : options) {
+                    for (Element option : options) {
                         if (option.val().equals("-1")) continue;
                         JSONObject tmp = new JSONObject();
                         tmp.put("key", option.val());
@@ -248,27 +245,27 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                     }
 
                     dataSearchDebt.put("semesters", semesters);
-                    storage.putString("data_searchdebt",dataSearchDebt.toString());
+                    storage.putString("data_searchdebt", dataSearchDebt.toString());
 
                     JSONArray data = new JSONArray();
                     Element table = document.getElementById("tblDetail");
                     JSONArray keys = new JSONArray();
                     Elements ths = table.select("tr").first().select("th");
-                    for(int i = 1; i < ths.size(); i++) {
+                    for (int i = 1; i < ths.size(); i++) {
                         String keyTmp = Helper.toSlug(ths.get(i).text());
                         keys.put(keyTmp);
                     }
                     Elements trs = table.select("tr");
-                    for(int i = 1; i < trs.size()-1; i++) {
+                    for (int i = 1; i < trs.size() - 1; i++) {
                         JSONObject tmp = new JSONObject();
                         Elements tds = trs.get(i).select("td");
-                        for(int j = 1; j < tds.size(); j++) {
-                            tmp.put(keys.getString(j-1), tds.get(j).text().trim());
+                        for (int j = 1; j < tds.size(); j++) {
+                            tmp.put(keys.getString(j - 1), tds.get(j).text().trim());
                         }
                         data.put(tmp);
                     }
-                    dataSearchDebt.put("init_semester",data.toString());
-                    dataSearchDebt.put("urlViewDebt",jsonObject.getString("urlViewDebt"));
+                    dataSearchDebt.put("init_semester", data.toString());
+                    dataSearchDebt.put("urlViewDebt", jsonObject.getString("urlViewDebt"));
                     result.put(dataSearchDebt);
 
                 } catch (SocketTimeoutException e) {
