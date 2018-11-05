@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -246,14 +247,19 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     }
 
     public void viewStudentDetail(final JSONObject jsonObject) {
-        resultToLoadLayout();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                studentSearchPresenter.getStudentDetail(jsonObject);
-            }
-        }, 1000);
+//        resultToLoadLayout();
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                studentSearchPresenter.getStudentDetail(jsonObject);
+//            }
+//        }, 1000);
+        Bundle bundle = new Bundle();
+        bundle.putString("data",jsonObject.toString());
+        Intent intent = new Intent(StudentSearchActivity.this,StudentDetailActivity.class);
+        intent.putExtra("data",bundle);
+        startActivity(intent);
     }
 
     @OnClick(R.id.retry_text)

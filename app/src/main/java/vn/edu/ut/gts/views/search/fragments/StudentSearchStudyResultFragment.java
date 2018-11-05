@@ -65,6 +65,8 @@ public class StudentSearchStudyResultFragment extends Fragment {
         ButterKnife.bind(this, view);
         d = getContext().getResources().getDisplayMetrics().density;
         studyResultSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
+
+
         Bundle bundle = getArguments();
         try {
             JSONObject data = new JSONObject(bundle.getString("data"));

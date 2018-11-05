@@ -41,6 +41,7 @@
         <activity
             android:name=".views.search.StudentSearchActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".views.search.StudentDetailActivity"></activity>
     </application>
 
 </manifest>
