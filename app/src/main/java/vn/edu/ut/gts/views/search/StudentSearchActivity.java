@@ -129,6 +129,9 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     private float d;
     private StudentSearchDetailViewPagerAdpater studentSearchDetailViewPagerAdpater;
     private EpicDialog epicDialog;
+    private Pattern pattern = Pattern.compile(DATE_REGEX);
+    private Matcher matcher = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,18 +201,14 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                     @Override
                     public void run() {
                         Bundle bundle = new Bundle();
-                        String studentId =  (TextUtils.isEmpty(inputStudentID.getText().toString().trim())) ? "": inputStudentID.getText().toString().trim();
-                        String firstname =  (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "": inputFirstName.getText().toString().trim();
-                        String lastname =  (TextUtils.isEmpty(inputLastName.getText().toString().trim())) ? "": inputLastName.getText().toString().trim();
-
-                        Pattern pattern = null;
-                        Matcher matcher = null;
-                        pattern = Pattern.compile(DATE_REGEX);
+                        String studentId = (TextUtils.isEmpty(inputStudentID.getText().toString().trim())) ? "" : inputStudentID.getText().toString().trim();
+                        String firstname = (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim();
+                        String lastname = (TextUtils.isEmpty(inputLastName.getText().toString().trim())) ? "" : inputLastName.getText().toString().trim();
                         matcher = pattern.matcher(birthDateTV.getText().toString());
-                        String birthday =  (matcher.matches()) ? birthDateTV.getText().toString() : "";
-                        String classname =  (TextUtils.isEmpty(inputClass.getText().toString().trim())) ? "": inputClass.getText().toString().trim();
+                        String birthday = (matcher.matches()) ? birthDateTV.getText().toString() : "";
+                        String classname = (TextUtils.isEmpty(inputClass.getText().toString().trim())) ? "" : inputClass.getText().toString().trim();
 
-                        bundle.putString("student_id",studentId);
+                        bundle.putString("student_id", studentId);
                         bundle.putString("first_name", firstname);
                         bundle.putString("last_name", lastname);
                         bundle.putString("birthday", birthday);
@@ -265,12 +264,12 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 @Override
                 public void run() {
                     Bundle bundle = new Bundle();
-                    bundle.putString("mssv", inputStudentID.getText().toString().trim());
+                    bundle.putString("mssv", TextUtils.isEmpty(inputStudentID.getText().toString().trim()) ? "" : inputStudentID.getText().toString().trim());
                     bundle.putString("first_name", (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim());
-                    bundle.putString("last_name", inputLastName.getText().toString().trim());
-                    bundle.putString("birth_date", birthDateTV.getText().toString());
-                    bundle.putString("class", inputClass.getText().toString().trim());
-
+                    bundle.putString("last_name", TextUtils.isEmpty(inputLastName.getText().toString().trim()) ? "" : inputLastName.getText().toString().trim());
+                    matcher = pattern.matcher(birthDateTV.getText().toString());
+                    bundle.putString("birth_date", (matcher.matches()) ? birthDateTV.getText().toString() : "");
+                    bundle.putString("class", TextUtils.isEmpty(inputClass.getText().toString().trim()) ? "" : inputClass.getText().toString().trim());
                 }
             }, 1000);
         }
@@ -309,6 +308,21 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 .setTitleText(getResources().getString(R.string.input_validate_empty_title))
                 .setContentText(s + " " + getResources().getString(R.string.input_validate_empty_content))
                 .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (resultLayout.isShown() || noResultLayout.isShown()) {
+            resultReturnSearchLayout();
+        } else if (detailLayout.isShown()) {
+            detailReturnResultLayout();
+        } else if(noInternetLayout.isShown()){
+            if(fromLayout == StudentSearchActivity.SEARCH_LAYOUT){
+                noInternetToSearchLayout();
+            } else if(fromLayout == StudentSearchActivity.RESULT_LAYOUT){
+                noInternetToResultLayout();
+            }
+        }
     }
 
     @Override
@@ -404,14 +418,13 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         String lastname = inputLastName.getText().toString().trim();
         String birthday = birthDateTV.getText().toString().trim();
         String classname = inputClass.getText().toString().trim();
-        Pattern pattern = null;
-        Matcher matcher = null;
-        pattern = Pattern.compile(DATE_REGEX);
+
+
         matcher = pattern.matcher(birthday);
 
-        if(!studentId.isEmpty() || !lastname.isEmpty() || matcher.matches() || !classname.isEmpty()){
+        if (!studentId.isEmpty() || !lastname.isEmpty() || matcher.matches() || !classname.isEmpty()) {
             isNoInputFailed = true;
-        }else{
+        } else {
             showInputValidateEmpty("Thông tin tìm kiếm");
             isNoInputFailed = false;
         }
@@ -856,9 +869,19 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     }
 
     private void enableInput() {
+        inputStudentID.setEnabled(true);
+        inputClass.setEnabled(true);
+        inputFirstName.setEnabled(true);
+        inputLastName.setEnabled(true);
+        pickDate.setEnabled(true);
     }
 
     private void disableInput() {
+        inputStudentID.setEnabled(false);
+        inputClass.setEnabled(false);
+        inputFirstName.setEnabled(false);
+        inputLastName.setEnabled(false);
+        pickDate.setEnabled(false);
     }
 
 
