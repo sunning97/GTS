@@ -189,9 +189,11 @@ public class StudentSearchStudyResultFragment extends Fragment {
                     generateTableContent(position);
                 }
             });
-        } catch (IndexOutOfBoundsException e) {
+    } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch(Exception e){
             e.printStackTrace();
         }
         studyResultTableHeader.addView(this.generateTableHeader());

@@ -96,7 +96,9 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
                     JSONObject jsonObject = (JSONObject) semesters.get(i);
                     dataSnpinner.add(jsonObject.getString("text"));
                 }
-            } catch (Exception e){}
+            }catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+            }catch (Exception e){}
             initDebtSpinner(dataSnpinner);
             if(StudentSearchDebtFragmentPresenter.currentStatus == 0){
                 generateTableContent(initData);
