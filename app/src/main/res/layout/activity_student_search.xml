@@ -19,10 +19,11 @@
         android:layout_centerInParent="true"
         android:layout_below="@+id/search_toolbar"
         android:id="@+id/gts_logo"
-        android:layout_width="66dp"
+        android:layout_width="88dp"
         android:layout_height="100dp"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/ic_logo_gts" />
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_logo_gts"
+        tools:ignore="ContentDescription" />
     <LinearLayout
         android:layout_marginTop="30dp"
         android:layout_below="@+id/gts_logo"
@@ -43,14 +44,15 @@
                 android:layout_height="40dp"
                 android:background="@drawable/input_bg_primary_color"
                 android:cursorVisible="true"
-                android:hint="Mã số sinh viên"
+                android:hint="@string/student_id"
                 android:inputType="number"
                 android:paddingLeft="15dp"
                 android:paddingTop="5dp"
                 android:paddingRight="15dp"
                 android:paddingBottom="5dp"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="Autofill" />
 
             <EditText
                 android:layout_marginTop="10dp"
@@ -60,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/input_bg_primary_color"
-                android:hint="Họ đệm"
+                android:hint="@string/first_name"
                 android:paddingLeft="15dp"
                 android:inputType="text"
                 android:paddingTop="5dp"
@@ -77,7 +79,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_bg_primary_color"
-                android:hint="Tên"
+                android:hint="@string/last_name"
                 android:inputType="text"
                 android:paddingLeft="15dp"
                 android:paddingTop="5dp"
@@ -94,7 +96,7 @@
                 android:layout_height="40dp"
                 android:background="@drawable/input_bg_primary_color"
                 android:cursorVisible="true"
-                android:hint="Tên lớp"
+                android:hint="@string/search_class_name"
                 android:inputType="text"
                 android:paddingLeft="15dp"
                 android:paddingTop="5dp"
@@ -112,16 +114,24 @@
                 android:visibility="visible">
                 <TextView
                     android:layout_marginTop="10dp"
-                    android:text="Ngày sinh:"
+                    android:text="@string/search_birthday"
                     android:id="@+id/birth_date_tv"
                     android:layout_width="100dp"
                     android:layout_height="25dp"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
                 <ImageButton
-                    android:background="@drawable/circlebackgroundbluedark"
+                    android:background="@drawable/circle_background_blue_dark"
                     android:id="@+id/pick_date"
                     android:src="@drawable/ic_perm_contact_calendar_white_24dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="@string/search_pick_date" />
+                <ImageButton
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/circle_background_blue_dark"
+                    android:id="@+id/reset_date"
+                    android:src="@drawable/ic_reset_synchronize_white_24"
                     android:layout_width="40dp"
                     android:layout_height="40dp" />
             </LinearLayout>
@@ -133,7 +143,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/button_bg_primary_color"
-            android:text="Tìm Kiếm"
+            android:text="@string/search_btn"
             android:textStyle="bold"
             android:textColor="@color/white" />
 
@@ -187,20 +197,22 @@
             android:id="@+id/no_result_layout"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            tools:ignore="UseCompoundDrawables">
             <ImageView
                 android:layout_marginTop="30dp"
                 android:src="@drawable/empty_result"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:ignore="ContentDescription" />
             <TextView
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/gray2"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                android:text="Không tìm thấy :("
+                android:text="@string/search_no_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -252,7 +264,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/no_connection_clound" />
+            android:src="@drawable/no_connection_clound"
+            tools:ignore="ContentDescription" />
         <TextView
             android:textSize="16sp"
             android:textStyle="bold"
@@ -271,7 +284,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chạm để thử lại"
+                android:text="@string/touch_to_retry"
                 android:textColor="@color/gray2"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -284,7 +297,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_margin="10dp"
         app:menu_backgroundColor="@color/transparent"
         app:menu_fab_label=""

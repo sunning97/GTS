@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Cổng thông tin sinh viên</string>
-
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="no_internet_access_title">Không thể kết nối Internet</string>
@@ -22,4 +21,14 @@
     <string name="contact_us">All issues related to this application please contact us:</string>
     <string name="study_result">KẾT QUẢ HỌC TẬP</string>
     <string name="frame_program">CHƯƠNG TRÌNH KHUNG</string>
+    <string name="search_pick_date">Chọn ngày sinh</string>
+    <string name="touch_to_retry">Chạm để thử lại</string>
+    <string name="search_no_result">Không tìm thấy :(</string>
+    <string name="student_id">Mã số sinh viên</string>
+    <string name="first_name">Họ tên đệm</string>
+    <string name="last_name">Tên</string>
+    <string name="search_class_name">Tên lớp</string>
+    <string name="search_birthday">Ngày sinh:</string>
+    <string name="search_btn">Tìm Kiếm</string>
+    <string name="retry_btn">Thử lại</string>
 </resources>

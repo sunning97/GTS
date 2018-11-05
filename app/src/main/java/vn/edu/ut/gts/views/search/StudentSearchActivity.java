@@ -111,6 +111,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     TabLayout studentSearchTablayout;
     @BindView(R.id.student_search_view_pager)
     ViewPager studentSearchViewPager;
+    @BindView(R.id.reset_date)
+    ImageButton resetDateBtn;
 
     public static final int SEARCH_LAYOUT = 1;
     public static final int RESULT_LAYOUT = 3;
@@ -290,6 +292,11 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         }
     }
 
+    @OnClick(R.id.reset_date)
+    public void resetDateTV(View view){
+        birthDateTV.setText(getResources().getString(R.string.search_birthday));
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home)
@@ -316,10 +323,10 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
             resultReturnSearchLayout();
         } else if (detailLayout.isShown()) {
             detailReturnResultLayout();
-        } else if(noInternetLayout.isShown()){
-            if(fromLayout == StudentSearchActivity.SEARCH_LAYOUT){
+        } else if (noInternetLayout.isShown()) {
+            if (fromLayout == StudentSearchActivity.SEARCH_LAYOUT) {
                 noInternetToSearchLayout();
-            } else if(fromLayout == StudentSearchActivity.RESULT_LAYOUT){
+            } else if (fromLayout == StudentSearchActivity.RESULT_LAYOUT) {
                 noInternetToResultLayout();
             }
         }
@@ -418,7 +425,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         String lastname = inputLastName.getText().toString().trim();
         String birthday = birthDateTV.getText().toString().trim();
         String classname = inputClass.getText().toString().trim();
-
 
         matcher = pattern.matcher(birthday);
 
@@ -859,12 +865,12 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
 
     @Override
     public void searchToRetryBtn() {
-        btnSearch.setText("Thử lại");
+        btnSearch.setText(getResources().getString(R.string.retry_btn));
     }
 
     @Override
     public void retryToSearchBtn() {
-        btnSearch.setText("Tìm kiếm");
+        btnSearch.setText(getResources().getString(R.string.search_btn));
         enableInput();
     }
 
@@ -874,6 +880,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         inputFirstName.setEnabled(true);
         inputLastName.setEnabled(true);
         pickDate.setEnabled(true);
+        resetDateBtn.setEnabled(true);
     }
 
     private void disableInput() {
@@ -882,6 +889,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         inputFirstName.setEnabled(false);
         inputLastName.setEnabled(false);
         pickDate.setEnabled(false);
+        resetDateBtn.setEnabled(false);
     }
 
 
