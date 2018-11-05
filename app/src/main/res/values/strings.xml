@@ -14,7 +14,7 @@
     <string name="no_internet_access_error_dialog_title">Oops...</string>
     <string name="no_internet_access_error_dialog_content">Ứng dụng cần internet để lấy dữ liệu, vui lòng bật dữ liệu mạng hoặc Wifi</string>
     <string name="input_validate_empty_title">Oops...</string>
-    <string name="input_validate_empty_content">không được để\n trống</string>
+    <string name="input_validate_empty_content">không được để trống</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="app_full_name">Cổng thông tin sinh viên \n GTVT</string>
     <string name="app_version">1.0.0</string>
@@ -31,4 +31,7 @@
     <string name="search_birthday">Ngày sinh:</string>
     <string name="search_btn">Tìm Kiếm</string>
     <string name="retry_btn">Thử lại</string>
+    <string name="confirm_exit_app_title">Xác nhận thoát?</string>
+    <string name="cancel_text">Hủy</string>
+    <string name="confirm_text">Xác nhận</string>
 </resources>

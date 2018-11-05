@@ -27,6 +27,7 @@ import vn.edu.ut.gts.views.dashboard.IDashboardActivity;
 import vn.edu.ut.gts.views.home.HomeActivity;
 
 public class DashboardPresenter implements IDashboardPresenter {
+    public static boolean isFirst = false;
     public static int currentStatus = 0;
     private IDashboardActivity iDashboardActivity;
     private Storage storage;
@@ -63,7 +64,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 .method(Connection.Method.GET)
                                 .cookie("ASP.NET_Session_Id", storage.getCookie())
                                 .ignoreContentType(true)
-                                .timeout(Helper.TIMEOUT_VALUE)
+                                .timeout(10)
                                 .execute();
 
                         storage.saveImage(resultImageResponse, context);
@@ -91,14 +92,22 @@ public class DashboardPresenter implements IDashboardPresenter {
                 protected void onPostExecute(JSONObject jsonObject) {
                     switch (DashboardPresenter.currentStatus) {
                         case 400: {
+                            if(!DashboardPresenter.isFirst)
+                                iDashboardActivity.showErrorDialog();
                             iDashboardActivity.disableAll();
                             iDashboardActivity.setDefaultPortrait();
+                            iDashboardActivity.hideLoaderTextView();
+                            iDashboardActivity.setRefreshingSwipe(false);
                             iDashboardActivity.enableSwipeRefresh();
                             break;
                         }
                         case 500: {
+                            if(!DashboardPresenter.isFirst)
+                                iDashboardActivity.showTimeOutDialog();
                             iDashboardActivity.disableAll();
                             iDashboardActivity.setDefaultPortrait();
+                            iDashboardActivity.hideLoaderTextView();
+                            iDashboardActivity.setRefreshingSwipe(false);
                             iDashboardActivity.enableSwipeRefresh();
                             break;
                         }
@@ -204,7 +213,7 @@ public class DashboardPresenter implements IDashboardPresenter {
         return image;
     }
 
-    public String getStudentNameFromStorate() {
+    public String getStudentNameFromStorage() {
         JSONObject jsonObject = null;
         String studentName = null;
         try {

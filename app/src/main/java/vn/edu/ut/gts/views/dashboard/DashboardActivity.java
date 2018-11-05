@@ -68,13 +68,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private Storage storage;
     private DashboardPresenter dashboardPresenter;
-    private SweetAlertDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
+        DashboardPresenter.isFirst = true;
         storage = new Storage(DashboardActivity.this);
         dashboardToolbar.setTitle("");
         collapsingToolbarLayout.setTitle("");
@@ -83,10 +83,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         swipeRefreshDashboard.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(DashboardPresenter.currentStatus !=0){
-                    swipeRefreshDashboard.setRefreshing(true);
-                    dashboardPresenter.go();
-                }
+                DashboardPresenter.isFirst = false;
+                swipeRefreshDashboard.setRefreshing(true);
+                DashboardPresenter.currentStatus = 0;
+                dashboardPresenter.go();
             }
         });
         if (!storage.isImageExist(getApplicationContext()) || TextUtils.isEmpty(storage.getString("student_info"))) {
@@ -96,14 +96,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             hideLoaderTextView();
             disableSwipeRefresh();
             setStudentPortrait(dashboardPresenter.getStudentPortraitFromStorage());
-            setToolbarTitle(dashboardPresenter.getStudentNameFromStorate());
+            setToolbarTitle(dashboardPresenter.getStudentNameFromStorage());
         }
         setSupportActionBar(dashboardToolbar);
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         dashboardScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if(scrollY == 0 && DashboardPresenter.currentStatus != 0){
+                if (scrollY == 0 && DashboardPresenter.currentStatus != 0) {
                     swipeRefreshDashboard.setEnabled(true);
                 } else swipeRefreshDashboard.setEnabled(false);
             }
@@ -174,9 +174,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onBackPressed() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Xác nhận thoát?")
-                .setCancelText("Hủy")
-                .setConfirmText("Xác nhận")
+                .setTitleText(getResources().getString(R.string.confirm_exit_app_title))
+                .setCancelText(getResources().getString(R.string.cancel_text))
+                .setConfirmText(getResources().getString(R.string.confirm_text))
                 .showCancelButton(true)
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
@@ -203,12 +203,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void showLoadingDialog() {
-        loadingDialog.show();
+
     }
 
     @Override
     public void dismisLoadingDialog() {
-        loadingDialog.dismiss();
+
     }
 
     @Override
@@ -289,5 +289,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         profileImageLoading.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    public void setRefreshingSwipe(boolean value) {
+        swipeRefreshDashboard.setRefreshing(value);
+    }
 
 }

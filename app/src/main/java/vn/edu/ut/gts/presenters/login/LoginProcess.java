@@ -211,8 +211,6 @@ public class LoginProcess implements ILoginProcess {
         };
         asyncTask.execute();
     }
-
-
     private void saveLastLoginID(String ID) {
         this.storage.putString("last_student_login", ID);
     }

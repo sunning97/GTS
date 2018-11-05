@@ -32,4 +32,6 @@ public interface IDashboardActivity {
     void showLoaderTextView();
 
     void setDefaultPortrait();
+
+    void setRefreshingSwipe(boolean value);
 }
