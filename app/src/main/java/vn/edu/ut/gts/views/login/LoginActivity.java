@@ -42,7 +42,6 @@ import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.helpers.TextInputValidator;
 import vn.edu.ut.gts.presenters.login.LoginProcess;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;
-import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
 
 public class LoginActivity extends AppCompatActivity implements ILoginView {
@@ -280,8 +279,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             handler.postDelayed(runnable, 1500);
             handler.postDelayed(runnable2, 2000);
         }
-
-
+        storage.deleteString("search_student_id");
+        storage.deleteImage(LoginActivity.this, "search_student_portrait.jpg");
     }
 
     @OnClick(R.id.tv_auto_login)

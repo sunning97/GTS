@@ -89,7 +89,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 dashboardPresenter.go();
             }
         });
-        if (!storage.isImageExist(getApplicationContext()) || TextUtils.isEmpty(storage.getString("student_info"))) {
+        if (!storage.isImageExist(getApplicationContext(),"student_portrait.jpg") || TextUtils.isEmpty(storage.getString("student_info"))) {
             profileImage.setVisibility(View.INVISIBLE);
             dashboardPresenter.go();
         } else {

@@ -52,13 +52,13 @@ public class Storage {
         return editor.commit();
     }
 
-    public boolean saveImage(Connection.Response resultImageResponse, Context context) {
+    public boolean saveImage(Connection.Response resultImageResponse, Context context,String fileName) {
         boolean result = false;
-        File image = new File(context.getFilesDir(), "student_portrait.jpg");
+        File image = new File(context.getFilesDir(), fileName);
         if (image.exists()) image.delete();
         try {
             FileOutputStream fileOutputStream = null;
-            fileOutputStream = context.openFileOutput("student_portrait.jpg", Context.MODE_PRIVATE);
+            fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             fileOutputStream.write(resultImageResponse.bodyAsBytes());
             fileOutputStream.close();
             result = true;
@@ -74,10 +74,19 @@ public class Storage {
         return result;
     }
 
-    public Bitmap getImageFromStorage(Context context) {
+    public boolean deleteImage(Context context,String fileName){
+        File image = new File(context.getFilesDir(), fileName);
+        if (image.exists()){
+            image.delete();
+            return true;
+        }
+        return false;
+    }
+
+    public Bitmap getImageFromStorage(Context context,String fileName) {
         Bitmap b = null;
         try {
-            File f = new File(context.getFilesDir(), "student_portrait.jpg");
+            File f = new File(context.getFilesDir(), fileName);
             b = BitmapFactory.decodeStream(new FileInputStream(f));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -85,13 +94,12 @@ public class Storage {
         return b;
     }
 
-    public boolean isImageExist(Context context) {
-        File image = new File(context.getFilesDir(), "student_portrait.jpg");
+    public boolean isImageExist(Context context,String fileName) {
+        File image = new File(context.getFilesDir(), fileName);
         return image.exists();
     }
 
     public boolean deleteAllsharedPreferences(Context context) {
-
         SharedPreferences.Editor editor = this.sharedPreferences.edit();
         if (LoginActivity.isAutoLogin && !LoginActivity.isLogout) {
             String id = this.getString("last_student_login");
@@ -124,6 +132,9 @@ public class Storage {
             }
             editor.putString("is_auto_login", String.valueOf(false));
         }
+        File image1 = new File(context.getFilesDir(), "search_student_portrait.jpg");
+        if (image1.exists()) image1.delete();
+
         return editor.commit();
     }
 }

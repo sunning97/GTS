@@ -504,7 +504,7 @@ public class Student {
                     .cookie("ASP.NET_Session_Id", storage.getCookie())
                     .ignoreContentType(true).execute();
 
-            storage.saveImage(resultImageResponse, context);
+            storage.saveImage(resultImageResponse, context,"student_portrait.jpg");
 
         } catch (Exception e) {
             e.printStackTrace();

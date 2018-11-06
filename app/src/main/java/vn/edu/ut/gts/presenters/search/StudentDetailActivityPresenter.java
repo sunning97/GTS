@@ -2,6 +2,7 @@ package vn.edu.ut.gts.presenters.search;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
@@ -35,6 +36,51 @@ public class StudentDetailActivityPresenter {
         this.iStudentDetailActivity = iStudentDetailActivity;
         this.context = context;
         this.storage = new Storage(this.context);
+    }
+
+    public void getStudentPortrait() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                iStudentDetailActivity.showLoadingDialog();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    JSONObject dataSearch = new JSONObject(storage.getString("search_data"));
+                    String studentID = storage.getString("search_student_id");
+                    Connection.Response resultImageResponse;
+                    resultImageResponse = Jsoup.connect(Helper.BASE_URL + "GetImage.aspx?MSSV=" + studentID)
+                            .userAgent(Helper.USER_AGENT)
+                            .method(Connection.Method.GET)
+                            .cookie("ASP.NET_Session_Id", dataSearch.getString("cookie"))
+                            .ignoreContentType(true)
+                            .timeout(Helper.TIMEOUT_VALUE)
+                            .execute();
+
+                    storage.saveImage(resultImageResponse, context,"search_student_portrait.jpg");
+                } catch (SocketTimeoutException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                iStudentDetailActivity.showStudentPortraitDialog(storage.getString("search_student_id"));
+            }
+        };
+        asyncTask.execute();
+    }
+
+    public Bitmap getStudentPortraitFromStorage(){
+        Bitmap image = storage.getImageFromStorage(context,"search_student_portrait.jpg");
+        return image;
     }
 
     public void getStudentDetail(final JSONObject jsonObject) {
@@ -146,6 +192,8 @@ public class StudentDetailActivityPresenter {
     private JSONObject parseInfo(Document document, String name) {
         JSONObject info = new JSONObject();
         try {
+            String[] mssv = document.getElementsByClass("ma-sinhvien").first().text().split(":");
+            storage.putString("search_student_id",mssv[1].trim());
             info.put("student_name", name);
             Elements tables = document.getElementsByTag("table");
             Element infoTable = tables.get(7);

@@ -10,4 +10,5 @@ public interface IStudentDetailActivity {
     void hideLoadingDialog();
     void showNoInternetLayout();
     void hideNoInternetLayout();
+    void showStudentPortraitDialog(String studentId);
 }

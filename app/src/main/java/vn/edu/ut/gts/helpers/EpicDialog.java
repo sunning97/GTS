@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
@@ -24,18 +25,15 @@ import org.w3c.dom.Text;
 import vn.edu.ut.gts.R;
 
 public class EpicDialog {
-    public static int POSITIVE = 1;
-    public static int NEGATIVE = 0;
-    public static int ABOUT_APP = 3;
     private Dialog epicDialog;
     private Context context;
 
-    public EpicDialog(Context context){
+    public EpicDialog(Context context) {
         this.context = context;
         this.epicDialog = new Dialog(this.context);
     }
 
-    public void showAboutDialog(){
+    public void showAboutDialog() {
         this.epicDialog.setContentView(R.layout.about_app_dialog_layout);
         TextView duong = this.epicDialog.findViewById(R.id.dev_duong);
         TextView giang = this.epicDialog.findViewById(R.id.dev_giang);
@@ -79,12 +77,14 @@ public class EpicDialog {
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();
     }
-    public void dismisPopup(){
-        if(this.epicDialog.isShowing()){
+
+    public void dismisPopup() {
+        if (this.epicDialog.isShowing()) {
             this.epicDialog.dismiss();
         }
     }
-    public void showFrameProgramInfoDialog(String param1,String param2){
+
+    public void showFrameProgramInfoDialog(String param1, String param2) {
         this.epicDialog.setContentView(R.layout.student_frame_program_info_dialog);
         TextView title1 = this.epicDialog.findViewById(R.id.title_1);
         TextView title2 = this.epicDialog.findViewById(R.id.title_2);
@@ -101,7 +101,8 @@ public class EpicDialog {
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();
     }
-    public void showStudyResultInfoDialog(String averageCumulative,String totalCredit,String debtCredits){
+
+    public void showStudyResultInfoDialog(String averageCumulative, String totalCredit, String debtCredits) {
         this.epicDialog.setContentView(R.layout.student_study_result_info_dialog);
         TextView averageCumulativeValue = this.epicDialog.findViewById(R.id.average_cumulative);
         TextView totalCreditValue = this.epicDialog.findViewById(R.id.total_credit);
@@ -121,7 +122,8 @@ public class EpicDialog {
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();
     }
-    public void initLoadingDialog(){
+
+    public void initLoadingDialog() {
         this.epicDialog.setContentView(R.layout.custom_loading_dialog);
         SpinKitView loading = epicDialog.findViewById(R.id.spin_kit);
         FadingCircle fadingCircle = new FadingCircle();
@@ -129,13 +131,26 @@ public class EpicDialog {
         this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(false);
     }
-    public void showLoadingDialog(){
-        if(this.epicDialog.isShowing()){
+
+    public void showLoadingDialog() {
+        if (this.epicDialog.isShowing()) {
             this.epicDialog.dismiss();
         }
         this.epicDialog.show();
     }
-    public boolean isShowing(){
+
+    public void showSearchStudentPortraitDialog(Bitmap bitmap, String studentId) {
+        this.epicDialog.setContentView(R.layout.search_student_portrait_dialog);
+        ImageView imageView = this.epicDialog.findViewById(R.id.student_portrait);
+        TextView textView = this.epicDialog.findViewById(R.id.student_id);
+        imageView.setImageBitmap(bitmap);
+        textView.setText("MSSV: " + studentId);
+        this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        this.epicDialog.setCancelable(true);
+        this.epicDialog.show();
+    }
+
+    public boolean isShowing() {
         return this.epicDialog.isShowing();
     }
 }

@@ -1,11 +1,13 @@
 package vn.edu.ut.gts.views.search;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -23,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.adapters.StudentSearchDetailViewPagerAdpater;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.search.StudentDetailActivityPresenter;
@@ -50,11 +53,14 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
     private StudentDetailActivityPresenter studentDetailActivityPresenter;
     private EpicDialog epicDialog;
     private JSONObject data;
+    private Storage storage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_detail);
         ButterKnife.bind(this);
+        storage = new Storage(StudentDetailActivity.this);
         epicDialog = new EpicDialog(StudentDetailActivity.this);
         epicDialog.initLoadingDialog();
         studentDetailActivityPresenter = new StudentDetailActivityPresenter(this, this);
@@ -99,6 +105,13 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_student_detail_menu, menu);
+        return true;
+    }
+
+
+    @Override
     public void showAllComponent() {
         tablayoutContainer.setVisibility(View.VISIBLE);
         studentSearchViewPager.setVisibility(View.VISIBLE);
@@ -112,12 +125,12 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
 
     @Override
     public void showLoadingDialog() {
-        if(!epicDialog.isShowing()) epicDialog.showLoadingDialog();
+        if (!epicDialog.isShowing()) epicDialog.showLoadingDialog();
     }
 
     @Override
     public void hideLoadingDialog() {
-        if(epicDialog.isShowing()) epicDialog.dismisPopup();
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
     }
 
     @Override
@@ -131,9 +144,38 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
     }
 
     @Override
+    public void showStudentPortraitDialog(String studentId) {
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
+        Bitmap bitmap = storage.getImageFromStorage(StudentDetailActivity.this, "search_student_portrait.jpg");
+        epicDialog.showSearchStudentPortraitDialog(bitmap, studentId);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home)
-            finish();
+        if(StudentDetailActivityPresenter.currentStatus ==0){
+            switch (item.getItemId()) {
+                case R.id.student_portrait: {
+                    if (storage.isImageExist(StudentDetailActivity.this, "search_student_portrait.jpg")) {
+                        epicDialog.showSearchStudentPortraitDialog(studentDetailActivityPresenter.getStudentPortraitFromStorage(), storage.getString("search_student_id"));
+                    } else
+                        studentDetailActivityPresenter.getStudentPortrait();
+                    break;
+                }
+                case android.R.id.home: {
+                    storage.deleteString("search_student_id");
+                    storage.deleteImage(StudentDetailActivity.this, "search_student_portrait.jpg");
+                    finish();
+                    break;
+                }
+            }
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        storage.deleteString("search_student_id");
+        storage.deleteImage(StudentDetailActivity.this, "search_student_portrait.jpg");
+        finish();
     }
 }

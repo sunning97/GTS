@@ -67,7 +67,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 .timeout(Helper.TIMEOUT_VALUE)
                                 .execute();
 
-                        storage.saveImage(resultImageResponse, context);
+                        storage.saveImage(resultImageResponse, context,"student_portrait.jpg");
 
                         Document document = Jsoup.connect(Helper.BASE_URL + "HoSoSinhVien.aspx")
                                 .method(Connection.Method.GET)
@@ -114,7 +114,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                         default: {
                             storage.putString("student_info", jsonObject.toString());
                             iDashboardActivity.hideLoaderTextView();
-                            Bitmap image = storage.getImageFromStorage(context);
+                            Bitmap image = storage.getImageFromStorage(context,"student_portrait.jpg");
                             String studentName = null;
                             try {
                                 studentName = jsonObject.getString("student_name");
@@ -197,10 +197,10 @@ public class DashboardPresenter implements IDashboardPresenter {
                     .method(Connection.Method.GET)
                     .cookie("ASP.NET_Session_Id", storage.getCookie())
                     .ignoreContentType(true)
-                    .timeout(500)
+                    .timeout(Helper.TIMEOUT_VALUE)
                     .execute();
 
-            storage.saveImage(resultImageResponse, context);
+            storage.saveImage(resultImageResponse, context,"student_portrait.jpg");
         } catch (SocketTimeoutException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -209,7 +209,7 @@ public class DashboardPresenter implements IDashboardPresenter {
     }
 
     public Bitmap getStudentPortraitFromStorage() {
-        Bitmap image = storage.getImageFromStorage(context);
+        Bitmap image = storage.getImageFromStorage(context,"student_portrait.jpg");
         return image;
     }
 

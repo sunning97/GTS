@@ -81,7 +81,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHomeFragment(intent);
         navigationView.setNavigationItemSelectedListener(this);
-        profileImage.setImageBitmap(storage.getImageFromStorage(HomeActivity.this));
+        profileImage.setImageBitmap(storage.getImageFromStorage(HomeActivity.this,"student_portrait.jpg"));
         try {
             studentFullName.setText(studentInfo.getString("student_name"));
         } catch (JSONException e) {
