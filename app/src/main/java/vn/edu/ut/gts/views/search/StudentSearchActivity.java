@@ -164,10 +164,10 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         resultLayoutScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY > oldScrollY) {
+                if (scrollY - oldScrollY > 50) {
                     floatingContainer.hideMenu(true);
                 }
-                if (scrollY < oldScrollY) {
+                if (oldScrollY - scrollY > 50) {
                     floatingContainer.showMenu(true);
                 }
                 if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
