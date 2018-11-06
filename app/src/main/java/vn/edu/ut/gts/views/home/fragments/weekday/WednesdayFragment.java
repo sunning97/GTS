@@ -73,7 +73,7 @@ public class WednesdayFragment extends Fragment {
     private void bindData(JSONObject jsonObject, LinearLayout layout) {
 
         try {
-            dayTV.setText(data.getString("date"));
+            dayTV.setText("Thứ 4:" +data.getString("date"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

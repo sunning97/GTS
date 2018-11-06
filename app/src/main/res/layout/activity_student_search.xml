@@ -131,7 +131,7 @@
                     android:layout_marginStart="10dp"
                     android:background="@drawable/circle_background_blue_dark"
                     android:id="@+id/reset_date"
-                    android:src="@drawable/ic_reset_synchronize_white_24"
+                    android:src="@drawable/ic_autorenew_white_48dp"
                     android:layout_width="40dp"
                     android:layout_height="40dp" />
             </LinearLayout>

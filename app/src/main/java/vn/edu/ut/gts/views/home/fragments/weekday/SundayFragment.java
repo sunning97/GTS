@@ -68,7 +68,7 @@ public class SundayFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void bindData(JSONObject jsonObject, LinearLayout layout) {
         try {
-            dayTV.setText(data.getString("date"));
+            dayTV.setText("Chủ nhật: "+data.getString("date"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
