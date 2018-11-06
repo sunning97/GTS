@@ -116,6 +116,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frame_program, container, false);
         ButterKnife.bind(this, view);
+        frameProgramSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         init();
         d = getContext().getResources().getDisplayMetrics().density;
         FrameProgramFragmentPresenter.currentStatus = 0;

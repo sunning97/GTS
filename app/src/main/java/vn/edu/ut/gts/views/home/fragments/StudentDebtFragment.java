@@ -84,6 +84,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_debt, container, false);
         ButterKnife.bind(this, view);
+        studentDebtSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         studentDebtFragmentPresenter = new StudentDebtFragmentPresenter(this, getContext());
         init();
         d = getContext().getResources().getDisplayMetrics().density;

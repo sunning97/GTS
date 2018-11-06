@@ -194,6 +194,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     }
 
     private void init() {
+
         loadingDialog = new EpicDialog(getContext());
         loadingDialog.initLoadingDialog();
     }

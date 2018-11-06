@@ -8,12 +8,12 @@
     tools:context=".views.home.fragments.AttendanceFragment">
 
     <com.jaredrummler.materialspinner.MaterialSpinner
+        app:ms_dropdown_max_height="300dp"
         android:visibility="invisible"
         android:textSize="16sp"
         android:id="@+id/student_attendance_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:ms_dropdown_max_height="300dp"
         app:ms_background_color="@color/grayLight"
         app:ms_text_color="@color/colorPrimary"/>
 

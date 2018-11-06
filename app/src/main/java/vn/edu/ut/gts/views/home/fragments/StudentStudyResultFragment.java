@@ -66,8 +66,6 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     AVLoadingIndicatorView retryIcon;
     @BindView(R.id.retry_text)
     TextView retryText;
-//    @BindView(R.id.semester_select_tv)
-//    TextView semesterSelectTV;
 
     public static int currentPos = 0;
     private StudentStudyResultFragmentPresenter studentStudyResultFragmentPresenter;
@@ -90,14 +88,12 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
     @Override
     public void showAllComponent() {
-//        semesterSelectTV.setVisibility(View.VISIBLE);
         studyResultSpinner.setVisibility(View.VISIBLE);
         loadedLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideAllComponent() {
-//        semesterSelectTV.setVisibility(View.GONE);
         studyResultSpinner.setVisibility(View.GONE);
         loadedLayout.setVisibility(View.GONE);
     }
@@ -116,6 +112,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         View view = inflater.inflate(R.layout.fragment_student_study_result, container, false);
         ButterKnife.bind(this, view);
         d = getContext().getResources().getDisplayMetrics().density;
+        studyResultSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         init();
         StudentStudyResultFragment.currentPos = 0;
         StudentStudyResultFragmentPresenter.currentStatus = 0;
