@@ -85,11 +85,13 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                 if (m.find()) {
                     schedule.put("date", m.group());
                 }
-                //Get morning
+                //Get
                 JSONObject objMorning = new JSONObject();
                 JSONObject objAfternoon = new JSONObject();
                 JSONObject objEvening = new JSONObject();
                 if (trMorning.get(i).select(".div-LichHoc").text().trim().length() > 0) {
+                    if(trMorning.get(i).select(".div-TamNgung").size() > 0) objMorning.put("is_postpone",String.valueOf(true));
+                    else objMorning.put("is_postpone",String.valueOf(false));
                     Elements spanDisplay = trMorning.get(i).children().select(".span-display");
                     objMorning.put("subjectId", spanDisplay.get(0).text().trim().length() > 0 ? spanDisplay.get(0).text().trim() : "");
                     objMorning.put("subjectName", spanDisplay.get(1).text().trim().length() > 0 ? spanDisplay.get(1).text().trim() : "");
@@ -98,6 +100,8 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                     objMorning.put("subjectRoom", spanDisplay.get(4).text().trim().length() > 0 ? spanDisplay.get(4).text().trim() : "");
                 }
                 if (trAfternoon.get(i).select(".div-LichHoc").text().trim().length() > 0) {
+                    if(trAfternoon.get(i).select(".div-TamNgung").size() > 0) objAfternoon.put("is_postpone",String.valueOf(true));
+                    else objAfternoon.put("is_postpone",String.valueOf(false));
                     Elements spanDisplay1 = trAfternoon.get(i).children().select(".span-display");
                     objAfternoon.put("subjectId", spanDisplay1.get(0).text().trim().length() > 0 ? spanDisplay1.get(0).text().trim() : "");
                     objAfternoon.put("subjectName", spanDisplay1.get(1).text().trim().length() > 0 ? spanDisplay1.get(1).text().trim() : "");
@@ -106,6 +110,8 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                     objAfternoon.put("subjectRoom", spanDisplay1.get(4).text().trim().length() > 0 ? spanDisplay1.get(4).text().trim() : "");
                 }
                 if (trEvening.get(i).select(".div-LichHoc").text().trim().length() > 0) {
+                    if(trEvening.get(i).select(".div-TamNgung").size() > 0) objEvening.put("is_postpone",String.valueOf(true));
+                    else objEvening.put("is_postpone",String.valueOf(false));
                     Elements spanDisplay1 = trAfternoon.get(i).children().select(".span-display");
                     objAfternoon.put("subjectId", spanDisplay1.get(0).text().trim().length() > 0 ? spanDisplay1.get(0).text().trim() : "");
                     objAfternoon.put("subjectName", spanDisplay1.get(1).text().trim().length() > 0 ? spanDisplay1.get(1).text().trim() : "");

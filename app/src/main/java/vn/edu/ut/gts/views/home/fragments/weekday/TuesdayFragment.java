@@ -3,6 +3,7 @@ package vn.edu.ut.gts.views.home.fragments.weekday;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,8 @@ public class TuesdayFragment extends Fragment {
     LinearLayout afternoonLayout;
     @BindView(R.id.evening)
     LinearLayout eveningLayout;
-
+    @BindView(R.id.day_tv)
+    TextView dayTV;
     private JSONObject data;
 
     public TuesdayFragment() {
@@ -67,6 +69,11 @@ public class TuesdayFragment extends Fragment {
     }
 
     private void bindData(JSONObject jsonObject, LinearLayout layout) {
+        try {
+            dayTV.setText(data.getString("date"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         TextView subjectID = (TextView) layout.getChildAt(0);
         View line = layout.getChildAt(1);
         TextView subjectName = (TextView) layout.getChildAt(2);
@@ -76,8 +83,10 @@ public class TuesdayFragment extends Fragment {
 
         if (jsonObject.length() > 0) {
             try {
+                if (Boolean.valueOf(jsonObject.getString("is_postpone")))
+                    subjectID.setText(Html.fromHtml(jsonObject.getString("subjectId") + "<font color=\"#FF0000\">" + " (Tạm ngưng) " + "</font>"));
+                else subjectID.setText(jsonObject.getString("subjectId"));
                 line.setVisibility(View.VISIBLE);
-                subjectID.setText(jsonObject.getString("subjectId"));
                 subjectName.setText(jsonObject.getString("subjectName"));
                 subjectTime.setText("Tiết: " + jsonObject.getString("subjectTime"));
                 subjectLecturer.setText("GV: " + jsonObject.getString("subjectLecturer"));
