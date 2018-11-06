@@ -111,13 +111,13 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
     }
 
     @Override
-    public void showLoadingLayout() {
-        loadingLayout.setVisibility(View.VISIBLE);
+    public void showLoadingDialog() {
+        if(!epicDialog.isShowing()) epicDialog.showLoadingDialog();
     }
 
     @Override
-    public void hideLoadingLayout() {
-        loadingLayout.setVisibility(View.GONE);
+    public void hideLoadingDialog() {
+        if(epicDialog.isShowing()) epicDialog.dismisPopup();
     }
 
     @Override

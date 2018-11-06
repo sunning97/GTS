@@ -16,7 +16,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
     <LinearLayout
         android:id="@+id/loading_layout"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical"
         android:gravity="center"
         android:layout_width="match_parent"

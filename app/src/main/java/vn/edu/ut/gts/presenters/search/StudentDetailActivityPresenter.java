@@ -42,7 +42,7 @@ public class StudentDetailActivityPresenter {
         AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
-                iStudentDetailActivity.showLoadingLayout();
+                iStudentDetailActivity.showLoadingDialog();
                 iStudentDetailActivity.hideAllComponent();
             }
 
@@ -131,12 +131,12 @@ public class StudentDetailActivityPresenter {
             protected void onPostExecute(JSONArray jsonArray) {
                 if (StudentDetailActivityPresenter.currentStatus == Helper.NO_CONNECTION || StudentDetailActivityPresenter.currentStatus == Helper.TIMEOUT) {
                     iStudentDetailActivity.showNoInternetLayout();
-                    iStudentDetailActivity.hideLoadingLayout();
+                    iStudentDetailActivity.hideLoadingDialog();
                 } else {
                     iStudentDetailActivity.setStudentDetailData(jsonArray);
                     iStudentDetailActivity.showAllComponent();
                     iStudentDetailActivity.hideNoInternetLayout();
-                    iStudentDetailActivity.hideLoadingLayout();
+                    iStudentDetailActivity.hideLoadingDialog();
                 }
             }
         };
