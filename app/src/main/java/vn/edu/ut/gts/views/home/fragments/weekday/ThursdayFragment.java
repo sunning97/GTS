@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.views.home.fragments.weekday;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -63,6 +64,7 @@ public class ThursdayFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void bindData(JSONObject jsonObject, LinearLayout layout) {
         try {
             dayTV.setText(data.getString("date"));
