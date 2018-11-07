@@ -10,6 +10,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -32,6 +35,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 import vn.edu.ut.gts.views.home.fragments.StudentStudyResultFragment;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
 
@@ -50,6 +55,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
     private List<String> headerText;
     private JSONObject data;
     private float d;
+    private EpicDialog epicDialog;
 
     public StudentSearchStudyResultFragment() {
         headerText = new ArrayList<>();
@@ -65,8 +71,8 @@ public class StudentSearchStudyResultFragment extends Fragment {
         ButterKnife.bind(this, view);
         d = getContext().getResources().getDisplayMetrics().density;
         studyResultSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
-
-
+        epicDialog = new EpicDialog(getContext());
+        setHasOptionsMenu(true);
         Bundle bundle = getArguments();
         try {
             JSONObject data = new JSONObject(bundle.getString("data"));
@@ -80,7 +86,29 @@ public class StudentSearchStudyResultFragment extends Fragment {
         return view;
     }
 
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.study_result_program_toolbar_menu, menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.infor: {
+                try {
+                    if (StudentStudyResultFragmentPresenter.currentStatus == 0) {
+                        epicDialog.showStudyResultInfoDialog(
+                                data.getString("trung_binh_tich_luy"),
+                                data.getString("tong_tin_chi"),
+                                data.getString("ti_le_no"));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+        return true;
+    }
     private TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));

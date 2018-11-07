@@ -162,8 +162,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         studentSearchTablayout.setTabGravity(TabLayout.GRAVITY_FILL);
         studentSearchTablayout.setTabMode(TabLayout.MODE_FIXED);
         studentSearchTablayout.setupWithViewPager(studentSearchViewPager);
-
-
         resultLayoutScroll.setSmoothScrollingEnabled(true);
         resultLayoutScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
