@@ -21,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -309,6 +311,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
 
     @OnClick(R.id.reset_date)
     public void resetDateTV(View view){
+        Animation animation = AnimationUtils.loadAnimation(this,R.anim.rotate_360_1ts);
+        view.startAnimation(animation);
         birthDateTV.setText(getResources().getString(R.string.search_birthday));
     }
 
