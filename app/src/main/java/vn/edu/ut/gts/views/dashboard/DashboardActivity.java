@@ -108,6 +108,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 } else swipeRefreshDashboard.setEnabled(false);
             }
         });
+
+        dashboardPresenter.mail();
     }
 
     @Override
