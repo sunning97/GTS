@@ -2,6 +2,7 @@ package vn.edu.ut.gts.views.login;
 
 import android.Manifest;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -14,7 +15,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -116,6 +119,15 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         startActivity(new Intent(LoginActivity.this,StudentSearchActivity.class));
 
     }
+
+    @OnClick(R.id.layout_login)
+    public void layoutLoginClick(View view){
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
     @Override
     public void revertLoadingButton() {
         this.btnLogin.revertAnimation();
@@ -311,12 +323,12 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     }
 
-    private void disableInput() {
+    public void disableInput() {
         inputPassword.setEnabled(false);
         inputStudentId.setEnabled(false);
     }
 
-    private void enableInput() {
+    public void enableInput() {
         inputPassword.setEnabled(true);
         inputStudentId.setEnabled(true);
     }

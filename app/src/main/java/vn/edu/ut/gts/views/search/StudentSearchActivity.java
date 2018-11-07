@@ -21,11 +21,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -114,6 +116,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     ViewPager studentSearchViewPager;
     @BindView(R.id.reset_date)
     ImageButton resetDateBtn;
+    @BindView(R.id.layout_container)
+    RelativeLayout layoutContainer;
 
     public static final int SEARCH_LAYOUT = 1;
     public static final int RESULT_LAYOUT = 3;
@@ -177,6 +181,13 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         });
     }
 
+    @OnClick(R.id.layout_container)
+    public void containerLayoutClick(View view){
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
     @OnClick(R.id.pick_date)
     public void datePicker() {
         CalendarDatePickerDialogFragment datePicker = new CalendarDatePickerDialogFragment()

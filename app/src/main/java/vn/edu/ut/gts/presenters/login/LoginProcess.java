@@ -50,8 +50,10 @@ public class LoginProcess implements ILoginProcess {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Integer> asyncTask = new AsyncTask<Void, Void, Integer>() {
             @Override
             protected void onPreExecute() {
-                if (!isAuto)
+                if (!isAuto){
+                    iLoginView.disableInput();
                     iLoginView.showLoadingDialog();
+                }
             }
 
             @Override

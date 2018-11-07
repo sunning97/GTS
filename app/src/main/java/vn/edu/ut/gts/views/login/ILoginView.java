@@ -30,4 +30,7 @@ public interface ILoginView {
     void showAutoLoginLayout();
 
     void showLoginAutoErrorDialog();
+
+    void disableInput();
+    void enableInput();
 }

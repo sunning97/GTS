@@ -152,23 +152,25 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(StudentDetailActivityPresenter.currentStatus ==0){
-            switch (item.getItemId()) {
-                case R.id.student_portrait: {
+
+        switch (item.getItemId()) {
+            case R.id.student_portrait: {
+                if(StudentDetailActivityPresenter.currentStatus ==0) {
                     if (storage.isImageExist(StudentDetailActivity.this, "search_student_portrait.jpg")) {
                         epicDialog.showSearchStudentPortraitDialog(studentDetailActivityPresenter.getStudentPortraitFromStorage(), storage.getString("search_student_id"));
                     } else
                         studentDetailActivityPresenter.getStudentPortrait();
-                    break;
                 }
-                case android.R.id.home: {
-                    storage.deleteString("search_student_id");
-                    storage.deleteImage(StudentDetailActivity.this, "search_student_portrait.jpg");
-                    finish();
-                    break;
-                }
+                break;
+            }
+            case android.R.id.home: {
+                storage.deleteString("search_student_id");
+                storage.deleteImage(StudentDetailActivity.this, "search_student_portrait.jpg");
+                finish();
+                break;
             }
         }
+
         return super.onOptionsItemSelected(item);
     }
 

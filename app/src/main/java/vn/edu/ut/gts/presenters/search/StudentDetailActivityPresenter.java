@@ -62,9 +62,9 @@ public class StudentDetailActivityPresenter {
                     storage.saveImage(resultImageResponse, context,"search_student_portrait.jpg");
                 } catch (SocketTimeoutException e) {
                     e.printStackTrace();
-                } catch (IOException e) {
+                } catch (UnknownHostException e) {
                     e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (NullPointerException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return null;
