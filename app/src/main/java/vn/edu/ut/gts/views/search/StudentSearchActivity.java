@@ -182,12 +182,13 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     }
 
     @OnClick(R.id.layout_container)
-    public void containerLayoutClick(View view){
+    public void containerLayoutClick(View view) {
         if (view != null) {
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
+
     @OnClick(R.id.pick_date)
     public void datePicker() {
         CalendarDatePickerDialogFragment datePicker = new CalendarDatePickerDialogFragment()
@@ -267,9 +268,9 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
 //            }
 //        }, 1000);
         Bundle bundle = new Bundle();
-        bundle.putString("data",jsonObject.toString());
-        Intent intent = new Intent(StudentSearchActivity.this,StudentDetailActivity.class);
-        intent.putExtra("data",bundle);
+        bundle.putString("data", jsonObject.toString());
+        Intent intent = new Intent(StudentSearchActivity.this, StudentDetailActivity.class);
+        intent.putExtra("data", bundle);
         startActivity(intent);
     }
 
@@ -283,12 +284,19 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 @Override
                 public void run() {
                     Bundle bundle = new Bundle();
-                    bundle.putString("mssv", TextUtils.isEmpty(inputStudentID.getText().toString().trim()) ? "" : inputStudentID.getText().toString().trim());
-                    bundle.putString("first_name", (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim());
-                    bundle.putString("last_name", TextUtils.isEmpty(inputLastName.getText().toString().trim()) ? "" : inputLastName.getText().toString().trim());
+                    String studentId = (TextUtils.isEmpty(inputStudentID.getText().toString().trim())) ? "" : inputStudentID.getText().toString().trim();
+                    String firstname = (TextUtils.isEmpty(inputFirstName.getText().toString().trim())) ? "" : inputFirstName.getText().toString().trim();
+                    String lastname = (TextUtils.isEmpty(inputLastName.getText().toString().trim())) ? "" : inputLastName.getText().toString().trim();
                     matcher = pattern.matcher(birthDateTV.getText().toString());
-                    bundle.putString("birth_date", (matcher.matches()) ? birthDateTV.getText().toString() : "");
-                    bundle.putString("class", TextUtils.isEmpty(inputClass.getText().toString().trim()) ? "" : inputClass.getText().toString().trim());
+                    String birthday = (matcher.matches()) ? birthDateTV.getText().toString() : "";
+                    String classname = (TextUtils.isEmpty(inputClass.getText().toString().trim())) ? "" : inputClass.getText().toString().trim();
+
+                    bundle.putString("student_id", studentId);
+                    bundle.putString("first_name", firstname);
+                    bundle.putString("last_name", lastname);
+                    bundle.putString("birthday", birthday);
+                    bundle.putString("class_name", classname);
+                    studentSearchPresenter.searchStudent(bundle);
                 }
             }, 1000);
         }
@@ -310,8 +318,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     }
 
     @OnClick(R.id.reset_date)
-    public void resetDateTV(View view){
-        Animation animation = AnimationUtils.loadAnimation(this,R.anim.rotate_360_1ts);
+    public void resetDateTV(View view) {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate_360_1ts);
         view.startAnimation(animation);
         birthDateTV.setText(getResources().getString(R.string.search_birthday));
     }
@@ -348,6 +356,8 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
             } else if (fromLayout == StudentSearchActivity.RESULT_LAYOUT) {
                 noInternetToResultLayout();
             }
+        } else if (searchLayout.isShown()) {
+            finish();
         }
     }
 

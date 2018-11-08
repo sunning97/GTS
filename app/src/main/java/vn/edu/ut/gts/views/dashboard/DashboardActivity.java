@@ -35,6 +35,7 @@ import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.presenters.dashboard.DashboardPresenter;
 import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.login.LoginActivity;
+import vn.edu.ut.gts.views.mail.MailActivity;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, IDashboardActivity {
     @BindView(R.id.dashboard_toolbar)
@@ -89,7 +90,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 dashboardPresenter.go();
             }
         });
-        if (!storage.isImageExist(getApplicationContext(),"student_portrait.jpg") || TextUtils.isEmpty(storage.getString("student_info"))) {
+        if (!storage.isImageExist(getApplicationContext(), "student_portrait.jpg") || TextUtils.isEmpty(storage.getString("student_info"))) {
             profileImage.setVisibility(View.INVISIBLE);
             dashboardPresenter.go();
         } else {
@@ -137,7 +138,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             R.id.frame_program_card,
             R.id.student_debt_card,
             R.id.schedule_by_week_card,
-            R.id.attendance_card
+            R.id.attendance_card,
     })
     @Override
     public void onClick(View v) {
