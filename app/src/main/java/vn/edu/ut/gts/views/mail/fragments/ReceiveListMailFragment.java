@@ -3,10 +3,12 @@ package vn.edu.ut.gts.views.mail.fragments;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +37,7 @@ import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.adapters.MailRecyclerViewAdapter;
 import vn.edu.ut.gts.helpers.EpicDialog;
@@ -61,6 +64,8 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     private OnItemClickListener onItemClickListener;
     private FadingCircle fadingCircle;
     private EpicDialog epicDialog;
+    private AlertDialog alertDialog;
+
     @SuppressLint("ValidFragment")
 
     public ReceiveListMailFragment(OnItemClickListener onItemClickListener) {
@@ -87,7 +92,25 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
             setupData(data);
             showAllComponent();
         }
+
         return view;
+    }
+
+    @OnClick(R.id.new_mail)
+    public void newMail(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Oops...");
+        builder.setMessage("Chức năng đang trong quá trình phát triển. Sẽ hoàn thiện sớm trong tương lai :)");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
     }
 
     @Override

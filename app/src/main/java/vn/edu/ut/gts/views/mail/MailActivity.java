@@ -1,5 +1,6 @@
 package vn.edu.ut.gts.views.mail;
 
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -7,14 +8,17 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,6 +51,7 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Storage storage;
     private  ReceiveListMailFragment receiveListMailFragment;
+    private AlertDialog alertDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +90,11 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        item.setChecked(true);
+
         drawerLayout.closeDrawers();
         switch (item.getItemId()){
             case R.id.receive_mail:{
+                item.setChecked(true);
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.mail_fragment_container);
                 if(currentFragment instanceof ReceiveListMailFragment) break;
                 else {
@@ -101,6 +107,20 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
                 break;
             }
             case R.id.sent_mail:{
+                item.setChecked(false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Oops...");
+                builder.setMessage("Chức năng đang trong quá trình phát triển. Sẽ hoàn thiện sớm trong tương lai :)");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog = builder.create();
+                alertDialog.show();
+                alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
                 break;
             }
         }

@@ -33,7 +33,7 @@
             android:title="Xem lịch tuần" />
         <item
             android:id="@+id/test_schedule"
-            android:icon="@drawable/ic_attendance_filled_white_96"
+            android:icon="@drawable/ic_test_black_96"
             android:title="Lịch thi" />
         <item
             android:id="@+id/attendance"
