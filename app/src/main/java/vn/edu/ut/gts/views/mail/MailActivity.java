@@ -1,5 +1,6 @@
 package vn.edu.ut.gts.views.mail;
 
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -49,6 +50,9 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mail);
         ButterKnife.bind(this);
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
         receiveListMailFragment = new ReceiveListMailFragment(this);
         this.storage = new Storage(MailActivity.this);
         setSupportActionBar(mailToolbar);
@@ -71,7 +75,7 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
                 R.id.mail_fragment_container,
                 receiveListMailFragment
         ).commit();
-        setTitle("Thông tin nội bộ");
+        setTitle("Tin nội bộ sinh viên");
     }
 
     @Override
