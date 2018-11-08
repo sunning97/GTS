@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
     <item android:title="Tất cả nhãn">
-        <menu>
+        <group android:checkableBehavior="single">
             <item
                 android:id="@+id/receive_mail"
                 android:icon="@drawable/ic_star_filled_filled_black48"
                 android:title="Hộp thư đến" />
             <item
-                android:id="@+id/seny_mail"
+                android:id="@+id/sent_mail"
                 android:icon="@drawable/ic_sent_blsck_48"
                 android:title="Hộp thư đã gửi" />
-        </menu>
+        </group>
     </item>
 </menu>

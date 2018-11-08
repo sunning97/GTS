@@ -35,6 +35,10 @@
             android:id="@+id/attendance"
             android:icon="@drawable/ic_attendance_filled_white_96"
             android:title="Thông tin điểm danh" />
+        <item
+            android:id="@+id/mail_box"
+            android:icon="@drawable/ic_mail_outline_black_24dp"
+            android:title="Tin nội bộ" />
     </group>
     <item android:title="Thêm">
         <menu>
