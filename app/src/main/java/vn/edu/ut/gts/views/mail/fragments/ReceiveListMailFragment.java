@@ -1,7 +1,9 @@
 package vn.edu.ut.gts.views.mail.fragments;
 
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
@@ -21,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.style.FadingCircle;
@@ -33,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.adapters.MailRecyclerViewAdapter;
+import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 import vn.edu.ut.gts.presenters.mail.MailActivityPresenter;
 import vn.edu.ut.gts.presenters.mail.ReceiveListMailFragmentPresenter;
@@ -40,7 +45,7 @@ import vn.edu.ut.gts.presenters.mail.ReceiveListMailFragmentPresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ReceiveListMailFragment extends Fragment implements IReceiveListMailFragment,OnItemClickListener{
+public class ReceiveListMailFragment extends Fragment implements IReceiveListMailFragment, OnItemClickListener, OnBottomReachedListener {
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.new_mail)
@@ -55,10 +60,12 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     private JSONArray data;
     private OnItemClickListener onItemClickListener;
     private FadingCircle fadingCircle;
+    private EpicDialog epicDialog;
     @SuppressLint("ValidFragment")
 
     public ReceiveListMailFragment(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+        ReceiveListMailFragmentPresenter.currentPage = 2;
     }
 
     public ReceiveListMailFragment() {
@@ -67,11 +74,14 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_receive_list_mail, container, false);
-        ButterKnife.bind(this,view);
-        receiveListMailFragmentPresenter = new ReceiveListMailFragmentPresenter(this,getContext());
+        ButterKnife.bind(this, view);
+        receiveListMailFragmentPresenter = new ReceiveListMailFragmentPresenter(this, getContext());
         fadingCircle = new FadingCircle();
         loadingIcon.setIndeterminateDrawable(fadingCircle);
-        if(this.data == null){
+        epicDialog = new EpicDialog(getContext());
+        epicDialog.initLoadingDialog();
+
+        if (this.data == null) {
             receiveListMailFragmentPresenter.mail();
         } else {
             setupData(data);
@@ -83,7 +93,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     @Override
     public void setupData(JSONArray data) {
         this.data = data;
-        mRcvAdapter = new MailRecyclerViewAdapter(data,this);
+        mRcvAdapter = new MailRecyclerViewAdapter(data, this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -113,9 +123,31 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     }
 
     @Override
-    public void onItemClick(View view, int position,JSONObject data) {
+    public void showLoadingDialog() {
+        if(!epicDialog.isShowing()) epicDialog.showLoadingDialog();
+    }
+
+    @Override
+    public void dismissLoadingDialog() {
+        if(epicDialog.isShowing()) epicDialog.dismisPopup();
+    }
+
+    @Override
+    public void updateDataListMail(JSONArray data) {
+        this.data = data;
+        mRcvAdapter.setData(data);
+        mRcvAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(View view, int position, JSONObject data) {
         Toolbar toolbar = getActivity().findViewById(R.id.mail_toolbar);
         toolbar.setTitle("");
-        this.onItemClickListener.onItemClick(view,position,data);
+        this.onItemClickListener.onItemClick(view, position, data);
+    }
+
+    @Override
+    public void onBottomReached(int position) {
+        receiveListMailFragmentPresenter.getMailByPage(ReceiveListMailFragmentPresenter.currentPage,data);
     }
 }

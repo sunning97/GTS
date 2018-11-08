@@ -1,5 +1,6 @@
 package vn.edu.ut.gts.views.mail;
 
+import android.graphics.drawable.Drawable;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -114,9 +115,10 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
 
     @Override
     public void onItemClick(View view, int position,JSONObject data) {
+        TextView textView = view.findViewById(R.id.mail_circle);
         getSupportFragmentManager().beginTransaction().replace(
                 R.id.mail_fragment_container,
-                new MailDetailFragment(data,MailActivity.this)
+                new MailDetailFragment(data,MailActivity.this,textView.getBackground())
         ).commit();
         setTitle("");
     }

@@ -4,6 +4,7 @@ package vn.edu.ut.gts.views.mail.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -54,11 +55,14 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment 
     private JSONObject dataDetail;
     private MailDetailFragmentPresenter mailDetailFragmentPresenter;
     private Context context;
+    private Drawable drawable;
+
     @SuppressLint("ValidFragment")
 
-    public MailDetailFragment(JSONObject data, Context context) {
+    public MailDetailFragment(JSONObject data, Context context, Drawable drawable) {
         this.context = context;
         this.data = data;
+        this.drawable = drawable;
     }
 
     public MailDetailFragment() {
@@ -77,9 +81,9 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment 
     @OnClick(R.id.attach_file_card_view)
     public void goDownloadFile(View view) {
         try {
-            String url = "http://tnbsv.ut.edu.vn/tnb_sv/"+dataDetail.getString("file_dinh_kem_url");
+            String url = "http://tnbsv.ut.edu.vn/tnb_sv/" + dataDetail.getString("file_dinh_kem_url");
             String fileName = dataDetail.getString("file_dinh_kem");
-            mailDetailFragmentPresenter.downLoadFile(url,fileName);
+            mailDetailFragmentPresenter.downLoadFile(url, fileName);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -93,6 +97,7 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment 
             sender.setText(jsonObject.getString("nguoi_gui"));
             sentTime.setText(jsonObject.getString("ngay_gui"));
             mailContent.setText(Html.fromHtml(jsonObject.getString("noi_dung")));
+            mailCircle.setBackground(drawable);
             mailCircle.setText(String.valueOf(jsonObject.getString("nguoi_gui").charAt(0)));
             mailContent.setClickable(true);
             mailContent.setMovementMethod(LinkMovementMethod.getInstance());

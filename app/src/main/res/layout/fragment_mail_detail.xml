@@ -16,16 +16,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
             <TextView
-                android:layout_margin="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:id="@+id/mail_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="18sp" />
-
+                android:textSize="20sp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -122,7 +123,7 @@
                         android:id="@+id/attach_file_name"
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold"
-                        android:text="[CN16A] - 010112203403 - Lập trình thiết bị di dộng - GK.xlsx"
+                        android:text=""
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
