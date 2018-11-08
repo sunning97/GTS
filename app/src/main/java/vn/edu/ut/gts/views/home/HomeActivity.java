@@ -31,6 +31,7 @@ import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentInfoRootFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentStudyResultFragment;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.views.home.fragments.TestScheduleFragment;
 import vn.edu.ut.gts.views.home.fragments.WeekSchedule;
 import vn.edu.ut.gts.views.login.LoginActivity;
 import vn.edu.ut.gts.views.mail.MailActivity;
@@ -101,10 +102,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        item.setChecked(true);
         drawerLayout.closeDrawers();
         switch (item.getItemId()) {
             case R.id.student_profile: {
+                item.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new StudentInfoRootFragment()
@@ -113,6 +114,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.student_study_result: {
+                item.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new StudentStudyResultFragment()
@@ -121,9 +123,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.schedule_by_week: {
+                item.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new WeekSchedule()
+                ).commit();
+                setTitle(item.getTitle());
+                break;
+            }
+            case R.id.test_schedule: {
+                item.setChecked(true);
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new TestScheduleFragment()
                 ).commit();
                 setTitle(item.getTitle());
                 break;
@@ -134,6 +146,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.frame_program: {
+                item.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new FrameProgramFragment()
@@ -142,6 +155,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.student_debt: {
+                item.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new StudentDebtFragment()
@@ -150,6 +164,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.attendance: {
+                item.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new AttendanceFragment()
@@ -158,8 +173,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.mail_box:{
-                Intent intent = new Intent(HomeActivity.this, MailActivity.class);
-                startActivity(intent);
+                item.setChecked(false);
+                startActivity(new Intent(HomeActivity.this, MailActivity.class));
                 break;
             }
             case R.id.student_search: {
@@ -168,9 +183,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case R.id.about_app:{
+                item.setChecked(false);
                 EpicDialog epicDialog = new EpicDialog(HomeActivity.this);
                 epicDialog.showAboutDialog();
-                item.setChecked(false);
                 break;
             }
             case R.id.logout: {

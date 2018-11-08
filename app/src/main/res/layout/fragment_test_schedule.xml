@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".views.home.fragments.TestScheduleFragment">
+
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/test_schedule_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:ms_background_color="@color/grayLight"
+        app:ms_dropdown_max_height="300dp"
+        app:ms_text_color="@color/colorPrimary" />
+
+    <LinearLayout
+        android:id="@+id/loaded_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TableLayout
+            android:id="@+id/test_schedule_table_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TableLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grayLight">
+
+            <TableLayout
+                android:id="@+id/test_schedule_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TableLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_internet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/no_connection_clound" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/cant_connect"
+            android:textColor="@color/gray2"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/retry_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Chạm để thử lại"
+            android:textColor="@color/gray2"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

@@ -32,16 +32,21 @@
             android:icon="@drawable/ic_health_calendar_white_96"
             android:title="Xem lịch tuần" />
         <item
+            android:id="@+id/test_schedule"
+            android:icon="@drawable/ic_attendance_filled_white_96"
+            android:title="Lịch thi" />
+        <item
             android:id="@+id/attendance"
             android:icon="@drawable/ic_attendance_filled_white_96"
             android:title="Thông tin điểm danh" />
-        <item
-            android:id="@+id/mail_box"
-            android:icon="@drawable/ic_mail_outline_black_24dp"
-            android:title="Tin nội bộ" />
+
     </group>
     <item android:title="Thêm">
         <menu>
+            <item
+                android:id="@+id/mail_box"
+                android:icon="@drawable/ic_mail_outline_black_24dp"
+                android:title="Tin nội bộ" />
             <item
                 android:id="@+id/student_search"
                 android:icon="@drawable/ic_search_black_48dp"
