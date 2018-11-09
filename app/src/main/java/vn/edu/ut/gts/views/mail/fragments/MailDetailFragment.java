@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -31,13 +32,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.FrameProgramFragmentPresenter;
 import vn.edu.ut.gts.presenters.mail.MailDetailFragmentPresenter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MailDetailFragment extends Fragment implements IMailDetailFragment,OnMailDeleteClick {
+public class MailDetailFragment extends Fragment implements IMailDetailFragment, OnMailDeleteClick {
     @BindView(R.id.mail_detail)
     NestedScrollView mailDetail;
     @BindView(R.id.mail_title)
@@ -56,6 +58,11 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
     CardView attachFileCardView;
     @BindView(R.id.attach_file_name)
     TextView attachFileName;
+    @BindView(R.id.no_internet_layout)
+    LinearLayout noInternetLayout;
+    @BindView(R.id.retry_text)
+    TextView retryText;
+
 
     private JSONObject data;
     private JSONObject dataDetail;
@@ -65,9 +72,11 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
     private Drawable drawable;
     private int position;
     private AlertDialog alertDialog;
+    EpicDialog epicDialog;
+
     @SuppressLint("ValidFragment")
 
-    public MailDetailFragment(OnMailDeleteClick onMailDeleteClick,JSONObject data, Context context, Drawable drawable,int position) {
+    public MailDetailFragment(OnMailDeleteClick onMailDeleteClick, JSONObject data, Context context, Drawable drawable, int position) {
         this.context = context;
         this.data = data;
         this.drawable = drawable;
@@ -82,10 +91,18 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail_detail, container, false);
         ButterKnife.bind(this, view);
+        epicDialog = new EpicDialog(context);
+        epicDialog.initLoadingDialog();
         mailDetailFragmentPresenter = new MailDetailFragmentPresenter(this, this.context);
         mailDetailFragmentPresenter.getDetailMail(data);
         setHasOptionsMenu(true);
         return view;
+    }
+
+    @OnClick(R.id.retry_text)
+    public void retry(View view) {
+        MailDetailFragmentPresenter.currentStatus = 0;
+        mailDetailFragmentPresenter.getDetailMail(data);
     }
 
     @Override
@@ -98,7 +115,8 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_mail: {
-                onClickDelete(position);
+                if (MailDetailFragmentPresenter.currentStatus == 0)
+                    onClickDelete(position);
                 break;
             }
         }
@@ -153,6 +171,26 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
     }
 
     @Override
+    public void showNoInternetLayout() {
+        noInternetLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoInternetLayout() {
+        noInternetLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        epicDialog.showLoadingDialog();
+    }
+
+    @Override
+    public void hideLoadingDialog() {
+        epicDialog.dismisPopup();
+    }
+
+    @Override
     public void onClickDelete(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Xác nhận xóa");
@@ -165,7 +203,7 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
                 alertDialog.dismiss();
             }
         });
-        builder.setNegativeButton("Hủy",new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 alertDialog.dismiss();

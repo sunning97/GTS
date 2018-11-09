@@ -6,4 +6,8 @@ public interface IMailDetailFragment {
     void setMailDetailContent(JSONObject jsonObject);
     void hideAllComponent();
     void showAllComponent();
+    void showNoInternetLayout();
+    void hideNoInternetLayout();
+    void showLoadingDialog();
+    void hideLoadingDialog();
 }
