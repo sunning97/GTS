@@ -16,6 +16,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,7 @@ import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.mail.fragments.IReceiveListMailFragment;
 
 public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmentPresenter {
+    public static int currentStatus = 0;
     public static int currentPage = 2;
     private IReceiveListMailFragment iReceiveListMailFragment;
     private Context context;
@@ -43,6 +45,7 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
             @Override
             protected void onPreExecute() {
                 iReceiveListMailFragment.hideAllComponent();
+                iReceiveListMailFragment.hideNoInternetLayout();
                 iReceiveListMailFragment.showLoadingLayout();
             }
 
@@ -71,17 +74,17 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                     Elements select = document.select("select[name=\"select\"]");
                     pattern = Pattern.compile(REGEX);
                     matcher = pattern.matcher(select.first().attr("onchange"));
-                    if(matcher.matches()) {
-                        dataMailBox.put("page_url",matcher.group(1));
+                    if (matcher.matches()) {
+                        dataMailBox.put("page_url", matcher.group(1));
                     }
 
                     JSONArray page = new JSONArray();
-                    for (int i = 0;i< select.select("option").size();i++){
+                    for (int i = 0; i < select.select("option").size(); i++) {
                         Element option = select.select("option").get(i);
                         page.put(option.attr("value"));
                     }
-                    dataMailBox.put("all_page",page);
-                    storage.putString("data_mail",dataMailBox.toString());
+                    dataMailBox.put("all_page", page);
+                    storage.putString("data_mail", dataMailBox.toString());
 
                     Elements trs = form.getElementsByTag("tr");
                     Element trHeader = trs.get(0);
@@ -110,11 +113,15 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                         mail.put((String) header.get(1), tdSender.text());
                         mail.put((String) header.get(2), tdDaySend.text());
                         mails.put(mail);
-                        storage.putString("list_mail",mails.toString());
+                        storage.putString("list_mail", mails.toString());
                     }
                 } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
-                } catch (Exception e) {
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return mails;
@@ -122,18 +129,34 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                iReceiveListMailFragment.setupData(jsonArray);
-                iReceiveListMailFragment.hideLoadingLayout();
-                iReceiveListMailFragment.showAllComponent();
+                switch (ReceiveListMailFragmentPresenter.currentStatus) {
+                    case 400: {
+                        iReceiveListMailFragment.showNoInternetLayout();
+                        iReceiveListMailFragment.hideLoadingLayout();
+                        break;
+                    }
+                    case 500: {
+                        iReceiveListMailFragment.showNoInternetLayout();
+                        iReceiveListMailFragment.hideLoadingLayout();
+                        break;
+                    }
+                    default: {
+                        iReceiveListMailFragment.setupData(jsonArray);
+                        iReceiveListMailFragment.hideNoInternetLayout();
+                        iReceiveListMailFragment.hideLoadingLayout();
+                        iReceiveListMailFragment.showAllComponent();
+                    }
+                }
             }
         };
         asyncTask.execute();
     }
 
-    public void getMailByPage(final int page,final JSONArray prevMail){
+    public void getMailByPage(final int page, final JSONArray prevMail) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
+                ReceiveListMailFragmentPresenter.currentStatus = 0;
                 iReceiveListMailFragment.showLoadingDialog();
             }
 
@@ -142,13 +165,13 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                 JSONArray mails = new JSONArray();
 
                 try {
-                    for (int i = 0;i< prevMail.length();i++){
+                    for (int i = 0; i < prevMail.length(); i++) {
                         mails.put(prevMail.getJSONObject(i));
                     }
 
                     JSONObject dataMailBox = new JSONObject(storage.getString("data_mail"));
 
-                    Connection.Response ress = Jsoup.connect("http://tnbsv.ut.edu.vn/tnb_sv/main.php"+dataMailBox.getString("page_url")+page)
+                    Connection.Response ress = Jsoup.connect("http://tnbsv.ut.edu.vn/tnb_sv/main.php" + dataMailBox.getString("page_url") + page)
                             .userAgent(Helper.USER_AGENT)
                             .method(Connection.Method.GET)
                             .timeout(Helper.TIMEOUT_VALUE)
@@ -159,17 +182,17 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                     Elements select = document.select("select[name=\"select\"]");
                     pattern = Pattern.compile(REGEX);
                     matcher = pattern.matcher(select.first().attr("onchange"));
-                    if(matcher.matches()) {
-                        dataMailBox.put("page_url",matcher.group(1));
+                    if (matcher.matches()) {
+                        dataMailBox.put("page_url", matcher.group(1));
                     }
 
                     JSONArray page = new JSONArray();
-                    for (int i = 0;i< select.select("option").size();i++){
+                    for (int i = 0; i < select.select("option").size(); i++) {
                         Element option = select.select("option").get(i);
                         page.put(option.attr("value"));
                     }
-                    dataMailBox.put("all_page",page);
-                    storage.putString("data_mail",dataMailBox.toString());
+                    dataMailBox.put("all_page", page);
+                    storage.putString("data_mail", dataMailBox.toString());
 
                     Elements trs = form.getElementsByTag("tr");
                     Element trHeader = trs.get(0);
@@ -198,11 +221,15 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                         mail.put((String) header.get(1), tdSender.text());
                         mail.put((String) header.get(2), tdDaySend.text());
                         mails.put(mail);
-                        storage.putString("list_mail",mails.toString());
+                        storage.putString("list_mail", mails.toString());
                     }
                 } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
-                } catch (Exception e) {
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return mails;
@@ -210,15 +237,27 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                ReceiveListMailFragmentPresenter.currentPage++;
-                iReceiveListMailFragment.updateDataListMail(jsonArray);
-                iReceiveListMailFragment.dismissLoadingDialog();
+                switch (ReceiveListMailFragmentPresenter.currentStatus) {
+                    case 400: {
+                        iReceiveListMailFragment.dismissLoadingDialog();
+                        break;
+                    }
+                    case 500: {
+                        iReceiveListMailFragment.dismissLoadingDialog();
+                        break;
+                    }
+                    default: {
+                        ReceiveListMailFragmentPresenter.currentPage++;
+                        iReceiveListMailFragment.updateDataListMail(jsonArray);
+                        iReceiveListMailFragment.dismissLoadingDialog();
+                    }
+                }
             }
         };
         try {
             JSONObject dataMail = new JSONObject(storage.getString("data_mail"));
             JSONArray pages = dataMail.getJSONArray("all_page");
-            if(page <= Integer.parseInt(String.valueOf(pages.get(pages.length()-1)))){
+            if (page <= Integer.parseInt(String.valueOf(pages.get(pages.length() - 1)))) {
                 asyncTask.execute();
             }
         } catch (JSONException e) {
@@ -226,4 +265,58 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
         }
     }
 
+    public void deleteMail(JSONObject jsonObject, final int position) {
+        String urlDelete = "";
+        String regex = "\\?mod=mes_view&id=(.*)&t=0";
+        Pattern pattern = null;
+        Matcher matcher = null;
+        pattern = Pattern.compile(regex);
+        try {
+            matcher = pattern.matcher(jsonObject.getString("url"));
+            if (matcher.matches()) {
+                urlDelete = "?mod=mes_inbox_del&id=" + matcher.group(1);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final String finalUrlDelete = urlDelete;
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Boolean> asyncTask = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected void onPreExecute() {
+                iReceiveListMailFragment.showLoadingInMailActivity();
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                Boolean result = false;
+                try {
+                    Connection.Response ress = Jsoup.connect("http://tnbsv.ut.edu.vn/tnb_sv/main.php" + finalUrlDelete)
+                            .userAgent(Helper.USER_AGENT)
+                            .method(Connection.Method.GET)
+                            .timeout(Helper.TIMEOUT_VALUE)
+                            .cookie("PHPSESSID", storage.getString("PHPSESSID"))
+                            .execute();
+
+                    Document document = ress.parse();
+                    Elements success = document.getElementsByClass("style1");
+                    if (success.size() > 0) {
+                        result = true;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                iReceiveListMailFragment.dismissLoadingInMailActivity();
+                if (result) {
+                    iReceiveListMailFragment.updateDataAfterDelete(position);
+                } else
+                    iReceiveListMailFragment.showDeleteFailedInMainActivity();
+            }
+        };
+        asyncTask.execute();
+    }
 }

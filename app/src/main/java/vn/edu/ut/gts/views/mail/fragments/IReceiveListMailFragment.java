@@ -11,4 +11,10 @@ public interface IReceiveListMailFragment {
     void showLoadingDialog();
     void dismissLoadingDialog();
     void updateDataListMail(JSONArray data);
+    void updateDataAfterDelete(int position);
+    void showLoadingInMailActivity();
+    void dismissLoadingInMailActivity();
+    void showDeleteFailedInMainActivity();
+    void showNoInternetLayout();
+    void hideNoInternetLayout();
 }

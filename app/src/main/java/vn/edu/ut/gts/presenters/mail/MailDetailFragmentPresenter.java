@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +38,7 @@ import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.mail.fragments.IMailDetailFragment;
 
 public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter {
+    public static int currentStatus = 0;
     private IMailDetailFragment iMailDetailFragment;
     private Context context;
     private Storage storage;
@@ -51,6 +53,7 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
             @Override
             protected void onPreExecute() {
+                iMailDetailFragment.showLoadingDialog();
                 iMailDetailFragment.hideAllComponent();
             }
 
@@ -96,9 +99,13 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
                     } else mailDetail.put("has_attach_file", "false");
 
 
-                } catch (IOException e) {
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return mailDetail;
@@ -106,15 +113,29 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
 
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
-                iMailDetailFragment.setMailDetailContent(jsonObject);
-                iMailDetailFragment.showAllComponent();
+                switch (MailDetailFragmentPresenter.currentStatus) {
+                    case 400: {
+                        iMailDetailFragment.showNoInternetLayout();
+                        break;
+                    }
+                    case 500: {
+                        iMailDetailFragment.showNoInternetLayout();
+                        break;
+                    }
+                    default: {
+                        iMailDetailFragment.setMailDetailContent(jsonObject);
+                        iMailDetailFragment.hideNoInternetLayout();
+                        iMailDetailFragment.showAllComponent();
+                    }
+                }
+                iMailDetailFragment.hideLoadingDialog();
             }
         };
         asyncTask.execute();
     }
 
-    public void downLoadFile(final String url,final String fileName){
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+    public void downLoadFile(final String url, final String fileName) {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
@@ -125,7 +146,7 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
                         .setAutoCancel(false);
                 Notification notification = builder.build();
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(1,notification);
+                notificationManager.notify(1, notification);
             }
 
             @Override
@@ -143,7 +164,7 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
                     File file;
                     FileOutputStream outputStream;
                     try {
-                        file = new File(Environment.getExternalStorageDirectory()+"/Download", fileName);
+                        file = new File(Environment.getExternalStorageDirectory() + "/Download", fileName);
                         Log.d("MainActivity", Environment.getExternalStorageDirectory().getAbsolutePath());
                         outputStream = new FileOutputStream(file);
                         outputStream.write(resultImageResponse.bodyAsBytes());
@@ -169,7 +190,7 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
                 Notification notification = builder.build();
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(1);
-                notificationManager.notify(2,notification);
+                notificationManager.notify(2, notification);
                 try {
                     String a = fileName;
                     String[] b = a.split("\\.(?=[^\\.]+$)");
@@ -180,13 +201,11 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
                     intent.setDataAndType(Uri.fromFile(file), mimeType);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     context.startActivity(intent);
-                }catch (ActivityNotFoundException e){
-                    Toast.makeText(context,"Không tìm thấy ứng dụng phù hợp để mở",Toast.LENGTH_SHORT).show();
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_SHORT).show();
                 }
             }
         };
         asyncTask.execute();
     }
-
-
 }

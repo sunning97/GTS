@@ -56,6 +56,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
         try {
             JSONObject jsonObject = data.getJSONObject(position);
             if (!jsonObject.getBoolean("readed")) {
+                Log.d("AAAA", "asdasddasdas");
                 holder.txtSendTitle.setTypeface(holder.txtSendTitle.getTypeface(), Typeface.BOLD);
                 holder.txtSender.setTypeface(holder.txtSender.getTypeface(), Typeface.BOLD);
                 holder.txtSendDay.setTypeface(holder.txtSendDay.getTypeface(), Typeface.BOLD);
@@ -80,10 +81,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
             if (charGray.contains(firstChar))
                 holder.txtMailCircle.setBackgroundDrawable(holder.itemView.getResources().getDrawable(R.drawable.circle_background_gray));
             holder.txtMailCircle.setText(String.valueOf(jsonObject.getString("nguoi_gui").trim().charAt(0)));
-        } catch (
-                JSONException e)
-
-        {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         holder.itemView.setOnClickListener(new View.OnClickListener()
@@ -92,6 +90,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
             @Override
             public void onClick(View v) {
                 try {
+                    data.getJSONObject(position).put("readed","true");
                     mOnItemClickListener.onItemClick(v, position, data.getJSONObject(position));
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
@@ -44,6 +46,7 @@ import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 import vn.edu.ut.gts.presenters.mail.MailActivityPresenter;
 import vn.edu.ut.gts.presenters.mail.ReceiveListMailFragmentPresenter;
+import vn.edu.ut.gts.views.mail.IMailActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,19 +60,28 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     LinearLayout loadingLayout;
     @BindView(R.id.spin_kit)
     SpinKitView loadingIcon;
+    @BindView(R.id.no_internet_layout)
+    LinearLayout noInternetLayout;
+    @BindView(R.id.retry_text)
+    TextView retryText;
+
 
     private MailRecyclerViewAdapter mRcvAdapter;
     private ReceiveListMailFragmentPresenter receiveListMailFragmentPresenter;
     private JSONArray data;
     private OnItemClickListener onItemClickListener;
+    private OnDeleteSuccess onDeleteSuccess;
+    private IMailActivity iMailActivity;
     private FadingCircle fadingCircle;
     private EpicDialog epicDialog;
     private AlertDialog alertDialog;
 
     @SuppressLint("ValidFragment")
 
-    public ReceiveListMailFragment(OnItemClickListener onItemClickListener) {
+    public ReceiveListMailFragment(OnItemClickListener onItemClickListener, OnDeleteSuccess onDeleteSuccess, IMailActivity iMailActivity) {
         this.onItemClickListener = onItemClickListener;
+        this.onDeleteSuccess = onDeleteSuccess;
+        this.iMailActivity = iMailActivity;
         ReceiveListMailFragmentPresenter.currentPage = 2;
     }
 
@@ -80,6 +92,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_receive_list_mail, container, false);
         ButterKnife.bind(this, view);
+        ReceiveListMailFragmentPresenter.currentStatus = 0;
         receiveListMailFragmentPresenter = new ReceiveListMailFragmentPresenter(this, getContext());
         fadingCircle = new FadingCircle();
         loadingIcon.setIndeterminateDrawable(fadingCircle);
@@ -97,7 +110,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     }
 
     @OnClick(R.id.new_mail)
-    public void newMail(View view){
+    public void newMail(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Oops...");
         builder.setMessage("Chức năng đang trong quá trình phát triển. Sẽ hoàn thiện sớm trong tương lai :)");
@@ -111,6 +124,12 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
         alertDialog = builder.create();
         alertDialog.show();
         alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+    }
+
+    @OnClick(R.id.retry_text)
+    public void retry(View view) {
+        ReceiveListMailFragmentPresenter.currentStatus = 0;
+        receiveListMailFragmentPresenter.mail();
     }
 
     @Override
@@ -147,12 +166,12 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
 
     @Override
     public void showLoadingDialog() {
-        if(!epicDialog.isShowing()) epicDialog.showLoadingDialog();
+        if (!epicDialog.isShowing()) epicDialog.showLoadingDialog();
     }
 
     @Override
     public void dismissLoadingDialog() {
-        if(epicDialog.isShowing()) epicDialog.dismisPopup();
+        if (epicDialog.isShowing()) epicDialog.dismisPopup();
     }
 
     @Override
@@ -160,6 +179,46 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
         this.data = data;
         mRcvAdapter.setData(data);
         mRcvAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateDataAfterDelete(int position) {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < this.data.length(); i++) {
+            if (i == position) continue;
+            try {
+                jsonArray.put(this.data.get(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        updateDataListMail(jsonArray);
+        onDeleteSuccess.onDeleteSuccess();
+    }
+
+    @Override
+    public void showLoadingInMailActivity() {
+        iMailActivity.showLoadingDialog();
+    }
+
+    @Override
+    public void dismissLoadingInMailActivity() {
+        iMailActivity.dismissLoadingDialog();
+    }
+
+    @Override
+    public void showDeleteFailedInMainActivity() {
+        iMailActivity.showDeleteFailDialog();
+    }
+
+    @Override
+    public void showNoInternetLayout() {
+        noInternetLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoInternetLayout() {
+        noInternetLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -171,6 +230,16 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
 
     @Override
     public void onBottomReached(int position) {
-        receiveListMailFragmentPresenter.getMailByPage(ReceiveListMailFragmentPresenter.currentPage,data);
+        receiveListMailFragmentPresenter.getMailByPage(ReceiveListMailFragmentPresenter.currentPage, data);
     }
+
+    public void deleteAt(int position) {
+        try {
+            receiveListMailFragmentPresenter.deleteMail(this.data.getJSONObject(position), position);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
