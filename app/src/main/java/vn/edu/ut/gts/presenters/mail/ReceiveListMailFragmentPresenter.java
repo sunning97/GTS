@@ -226,4 +226,29 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
         }
     }
 
+    public void deleteMail(JSONObject jsonObject, final int position){
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                iReceiveListMailFragment.showLoadingInMailActivity();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                iReceiveListMailFragment.dismissLoadingInMailActivity();
+                iReceiveListMailFragment.updateDataAfterDelete(position);
+            }
+        };
+        asyncTask.execute();
+    }
 }

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,12 +29,15 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.mail.MailActivityPresenter;
 import vn.edu.ut.gts.views.mail.fragments.MailDetailFragment;
+import vn.edu.ut.gts.views.mail.fragments.OnDeleteSuccess;
 import vn.edu.ut.gts.views.mail.fragments.OnItemClickListener;
+import vn.edu.ut.gts.views.mail.fragments.OnMailDeleteClick;
 import vn.edu.ut.gts.views.mail.fragments.ReceiveListMailFragment;
 
-public class MailActivity extends AppCompatActivity implements IMailActivity,NavigationView.OnNavigationItemSelectedListener,OnItemClickListener {
+public class MailActivity extends AppCompatActivity implements IMailActivity,NavigationView.OnNavigationItemSelectedListener,OnItemClickListener,OnMailDeleteClick,OnDeleteSuccess {
     @BindView(R.id.mail_toolbar)
     Toolbar mailToolbar;
     @BindView(R.id.mail_drawerlayout)
@@ -52,16 +56,17 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
     private Storage storage;
     private  ReceiveListMailFragment receiveListMailFragment;
     private AlertDialog alertDialog;
+    private EpicDialog epicDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mail);
         ButterKnife.bind(this);
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
+        epicDialog = new EpicDialog(this);
+        epicDialog.initLoadingDialog();
 
-        receiveListMailFragment = new ReceiveListMailFragment(this);
+        receiveListMailFragment = new ReceiveListMailFragment(this,this,this);
         this.storage = new Storage(MailActivity.this);
         setSupportActionBar(mailToolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
@@ -139,7 +144,7 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
         TextView textView = view.findViewById(R.id.mail_circle);
         getSupportFragmentManager().beginTransaction().replace(
                 R.id.mail_fragment_container,
-                new MailDetailFragment(data,MailActivity.this,textView.getBackground())
+                new MailDetailFragment(this,data,this,textView.getBackground(),position)
         ).commit();
         setTitle("");
     }
@@ -159,5 +164,27 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
             ).commit();
             setTitle("Thông tin nội bộ");
         }
+    }
+
+    @Override
+    public void onClickDelete(int position) {
+        receiveListMailFragment.deleteAt(position);
+    }
+
+    @Override
+    public void onDeleteSuccess() {
+        onBackPressed();
+        View parentLayout = findViewById(R.id.mail_fragment_container);
+        Snackbar.make(parentLayout,"Đã xóa!",Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        epicDialog.showLoadingDialog();
+    }
+
+    @Override
+    public void dismissLoadingDialog() {
+        epicDialog.dismisPopup();
     }
 }

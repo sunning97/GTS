@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
@@ -44,6 +45,7 @@ import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 import vn.edu.ut.gts.presenters.mail.MailActivityPresenter;
 import vn.edu.ut.gts.presenters.mail.ReceiveListMailFragmentPresenter;
+import vn.edu.ut.gts.views.mail.IMailActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,14 +64,18 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     private ReceiveListMailFragmentPresenter receiveListMailFragmentPresenter;
     private JSONArray data;
     private OnItemClickListener onItemClickListener;
+    private OnDeleteSuccess onDeleteSuccess;
+    private IMailActivity iMailActivity;
     private FadingCircle fadingCircle;
     private EpicDialog epicDialog;
     private AlertDialog alertDialog;
 
     @SuppressLint("ValidFragment")
 
-    public ReceiveListMailFragment(OnItemClickListener onItemClickListener) {
+    public ReceiveListMailFragment(OnItemClickListener onItemClickListener,OnDeleteSuccess onDeleteSuccess,IMailActivity iMailActivity) {
         this.onItemClickListener = onItemClickListener;
+        this.onDeleteSuccess = onDeleteSuccess;
+        this.iMailActivity = iMailActivity;
         ReceiveListMailFragmentPresenter.currentPage = 2;
     }
 
@@ -163,6 +169,31 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     }
 
     @Override
+    public void updateDataAfterDelete(int position) {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0;i< this.data.length();i++){
+            if(i == position) continue;
+            try {
+                jsonArray.put(this.data.get(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        updateDataListMail(jsonArray);
+        onDeleteSuccess.onDeleteSuccess();
+    }
+
+    @Override
+    public void showLoadingInMailActivity() {
+        iMailActivity.showLoadingDialog();
+    }
+
+    @Override
+    public void dismissLoadingInMailActivity() {
+        iMailActivity.dismissLoadingDialog();
+    }
+
+    @Override
     public void onItemClick(View view, int position, JSONObject data) {
         Toolbar toolbar = getActivity().findViewById(R.id.mail_toolbar);
         toolbar.setTitle("");
@@ -173,4 +204,14 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     public void onBottomReached(int position) {
         receiveListMailFragmentPresenter.getMailByPage(ReceiveListMailFragmentPresenter.currentPage,data);
     }
+
+    public void deleteAt(int position){
+        try {
+            receiveListMailFragmentPresenter.deleteMail(this.data.getJSONObject(position),position);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

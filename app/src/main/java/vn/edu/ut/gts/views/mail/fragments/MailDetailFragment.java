@@ -3,17 +3,22 @@ package vn.edu.ut.gts.views.mail.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,12 +31,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.presenters.home.FrameProgramFragmentPresenter;
 import vn.edu.ut.gts.presenters.mail.MailDetailFragmentPresenter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MailDetailFragment extends Fragment implements IMailDetailFragment {
+public class MailDetailFragment extends Fragment implements IMailDetailFragment,OnMailDeleteClick {
     @BindView(R.id.mail_detail)
     NestedScrollView mailDetail;
     @BindView(R.id.mail_title)
@@ -54,19 +60,22 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment 
     private JSONObject data;
     private JSONObject dataDetail;
     private MailDetailFragmentPresenter mailDetailFragmentPresenter;
+    private OnMailDeleteClick onMailDeleteClick;
     private Context context;
     private Drawable drawable;
-
+    private int position;
+    private AlertDialog alertDialog;
     @SuppressLint("ValidFragment")
 
-    public MailDetailFragment(JSONObject data, Context context, Drawable drawable) {
+    public MailDetailFragment(OnMailDeleteClick onMailDeleteClick,JSONObject data, Context context, Drawable drawable,int position) {
         this.context = context;
         this.data = data;
         this.drawable = drawable;
+        this.position = position;
+        this.onMailDeleteClick = onMailDeleteClick;
     }
 
     public MailDetailFragment() {
-
     }
 
     @Override
@@ -75,7 +84,25 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment 
         ButterKnife.bind(this, view);
         mailDetailFragmentPresenter = new MailDetailFragmentPresenter(this, this.context);
         mailDetailFragmentPresenter.getDetailMail(data);
+        setHasOptionsMenu(true);
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_mail_detail_toolbar_menu, menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_mail: {
+                onClickDelete(position);
+                break;
+            }
+        }
+        return true;
     }
 
     @OnClick(R.id.attach_file_card_view)
@@ -123,5 +150,30 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment 
     @Override
     public void showAllComponent() {
         mailDetail.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClickDelete(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Xác nhận xóa");
+        builder.setMessage("Bạn muốn xóa thư này?");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                onMailDeleteClick.onClickDelete(position);
+                alertDialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Hủy",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+        alertDialog.getButton(alertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.black));
     }
 }
