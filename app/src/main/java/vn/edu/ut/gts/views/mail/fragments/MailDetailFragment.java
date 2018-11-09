@@ -157,7 +157,7 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Xác nhận xóa");
         builder.setMessage("Bạn muốn xóa thư này?");
-        builder.setCancelable(false);
+        builder.setCancelable(true);
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

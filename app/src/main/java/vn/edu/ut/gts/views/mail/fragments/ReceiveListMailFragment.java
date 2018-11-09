@@ -194,6 +194,11 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     }
 
     @Override
+    public void showDeleteFailedInMainActivity() {
+        iMailActivity.showDeleteFailDialog();
+    }
+
+    @Override
     public void onItemClick(View view, int position, JSONObject data) {
         Toolbar toolbar = getActivity().findViewById(R.id.mail_toolbar);
         toolbar.setTitle("");

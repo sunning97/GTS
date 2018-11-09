@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.helpers.Storage;
@@ -187,4 +188,13 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
     public void dismissLoadingDialog() {
         epicDialog.dismisPopup();
     }
+
+    @Override
+    public void showDeleteFailDialog() {
+        new SweetAlertDialog(this)
+                .setTitleText(getResources().getString(R.string.delete_mail_failed_title))
+                .setContentText(getResources().getString(R.string.delete_mail_failed_content))
+                .show();
+    }
+
 }

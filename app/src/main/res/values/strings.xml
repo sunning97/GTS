@@ -35,4 +35,6 @@
     <string name="cancel_text">Hủy</string>
     <string name="confirm_text">Xác nhận</string>
     <string name="login_btn">Đăng nhập</string>
+    <string name="delete_mail_failed_title">Oops...</string>
+    <string name="delete_mail_failed_content">Xóa không thành công :(\n Thử lại sau nha :)</string>
 </resources>

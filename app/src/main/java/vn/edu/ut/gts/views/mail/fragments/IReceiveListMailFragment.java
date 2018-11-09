@@ -14,4 +14,5 @@ public interface IReceiveListMailFragment {
     void updateDataAfterDelete(int position);
     void showLoadingInMailActivity();
     void dismissLoadingInMailActivity();
+    void showDeleteFailedInMainActivity();
 }

@@ -187,6 +187,4 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
         };
         asyncTask.execute();
     }
-
-
 }
