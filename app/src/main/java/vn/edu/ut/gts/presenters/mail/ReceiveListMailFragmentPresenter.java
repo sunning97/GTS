@@ -16,6 +16,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,7 @@ import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.mail.fragments.IReceiveListMailFragment;
 
 public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmentPresenter {
+    public static int currentStatus = 0;
     public static int currentPage = 2;
     private IReceiveListMailFragment iReceiveListMailFragment;
     private Context context;
@@ -43,6 +45,7 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
             @Override
             protected void onPreExecute() {
                 iReceiveListMailFragment.hideAllComponent();
+                iReceiveListMailFragment.hideNoInternetLayout();
                 iReceiveListMailFragment.showLoadingLayout();
             }
 
@@ -113,8 +116,12 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                         storage.putString("list_mail", mails.toString());
                     }
                 } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
-                } catch (Exception e) {
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return mails;
@@ -122,9 +129,24 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                iReceiveListMailFragment.setupData(jsonArray);
-                iReceiveListMailFragment.hideLoadingLayout();
-                iReceiveListMailFragment.showAllComponent();
+                switch (ReceiveListMailFragmentPresenter.currentStatus) {
+                    case 400: {
+                        iReceiveListMailFragment.showNoInternetLayout();
+                        iReceiveListMailFragment.hideLoadingLayout();
+                        break;
+                    }
+                    case 500: {
+                        iReceiveListMailFragment.showNoInternetLayout();
+                        iReceiveListMailFragment.hideLoadingLayout();
+                        break;
+                    }
+                    default: {
+                        iReceiveListMailFragment.setupData(jsonArray);
+                        iReceiveListMailFragment.hideNoInternetLayout();
+                        iReceiveListMailFragment.hideLoadingLayout();
+                        iReceiveListMailFragment.showAllComponent();
+                    }
+                }
             }
         };
         asyncTask.execute();
@@ -134,6 +156,7 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
+                ReceiveListMailFragmentPresenter.currentStatus = 0;
                 iReceiveListMailFragment.showLoadingDialog();
             }
 
@@ -201,8 +224,12 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                         storage.putString("list_mail", mails.toString());
                     }
                 } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
-                } catch (Exception e) {
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return mails;
@@ -210,9 +237,21 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                ReceiveListMailFragmentPresenter.currentPage++;
-                iReceiveListMailFragment.updateDataListMail(jsonArray);
-                iReceiveListMailFragment.dismissLoadingDialog();
+                switch (ReceiveListMailFragmentPresenter.currentStatus) {
+                    case 400: {
+                        iReceiveListMailFragment.dismissLoadingDialog();
+                        break;
+                    }
+                    case 500: {
+                        iReceiveListMailFragment.dismissLoadingDialog();
+                        break;
+                    }
+                    default: {
+                        ReceiveListMailFragmentPresenter.currentPage++;
+                        iReceiveListMailFragment.updateDataListMail(jsonArray);
+                        iReceiveListMailFragment.dismissLoadingDialog();
+                    }
+                }
             }
         };
         try {

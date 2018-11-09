@@ -15,4 +15,6 @@ public interface IReceiveListMailFragment {
     void showLoadingInMailActivity();
     void dismissLoadingInMailActivity();
     void showDeleteFailedInMainActivity();
+    void showNoInternetLayout();
+    void hideNoInternetLayout();
 }
