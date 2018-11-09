@@ -8,6 +8,7 @@
     tools:context=".views.home.fragments.TestScheduleFragment">
 
     <com.jaredrummler.materialspinner.MaterialSpinner
+        android:foreground="?android:attr/selectableItemBackground"
         android:id="@+id/test_schedule_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -180,7 +180,7 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
                 showTestScheduleDetail(jsonObject);
             }
         });
-        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
+        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
             row.addView(generateTableCell(jsonObject.getString("mon_thi"), false, (int) (getScreenWidthInDPs(getContext()) * 0.3)));
             row.addView(generateTableCell(jsonObject.getString("ngay_thi"), false, (int) (getScreenWidthInDPs(getContext()) * 0.3)));

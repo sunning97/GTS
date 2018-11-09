@@ -4,6 +4,7 @@ package vn.edu.ut.gts.views.home.fragments;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -122,6 +123,10 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
 
     public TableRow generateTableRow(final JSONObject jsonObject, boolean changeBG) {
         TableRow row = new TableRow(getContext());
+        int[] attrs = new int[]{R.attr.selectableItemBackground};
+        TypedArray typedArray = getActivity().obtainStyledAttributes(attrs);
+        int backgroundResource = typedArray.getResourceId(0, 0);
+        row.setBackgroundResource(backgroundResource);
         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
         row.setMinimumHeight((int) d * 50);
         row.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +135,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
                 attendanceDetailShow(jsonObject);
             }
         });
-        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
+        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
             row.addView(generateTableCell(jsonObject.getString("ten_mon_hoc"), false, (int) (getScreenWidthInDPs(getContext()) * 0.4)));
             row.addView(generateTableCell(jsonObject.getString("dvht"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));

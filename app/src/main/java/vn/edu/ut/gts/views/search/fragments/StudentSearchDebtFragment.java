@@ -148,7 +148,7 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
                 debtDetailShow(jsonObject);
             }
         });
-        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
+        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
             row.addView(generateTableCell(jsonObject.getString("noi_dung_thu"), false, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (getScreenWidthInDPs(getContext()) * 0.4)));
             row.addView(generateTableCell(jsonObject.getString("tin_chi"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (getScreenWidthInDPs(getContext()) * 0.2)));

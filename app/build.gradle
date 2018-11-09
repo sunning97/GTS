@@ -7,7 +7,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -20,11 +20,16 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleDependency
     implementation 'com.android.support:appcompat-v7:28.0.0-alpha1'
+    //noinspection GradleDependency
     implementation 'com.android.support:design:28.0.0-alpha1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    //noinspection GradleDependency
     implementation 'com.android.support:support-v4:28.0.0-alpha1'
+    //noinspection GradleDependency
     implementation 'com.android.support:cardview-v7:28.0.0-alpha1'
+    //noinspection GradleDependency
     implementation 'com.android.support:recyclerview-v7:28.0.0-alpha1'
     // Loading Button
     implementation 'br.com.simplepass:loading-button-android:1.14.0'
@@ -65,6 +70,7 @@ dependencies {
     implementation 'com.omjoonkim.library:skeleton-loading-view:0.1.3'
 
     //animation
+    //noinspection GradleDependency
     implementation 'com.android.support:support-compat:28.0.0-alpha1'
     implementation 'com.daimajia.easing:library:2.0@aar'
     implementation 'com.daimajia.androidanimations:library:2.3@aar'

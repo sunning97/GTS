@@ -8,6 +8,7 @@
     tools:context=".views.home.fragments.AttendanceFragment">
 
     <com.jaredrummler.materialspinner.MaterialSpinner
+        android:foreground="?android:attr/selectableItemBackground"
         app:ms_dropdown_max_height="300dp"
         android:visibility="invisible"
         android:textSize="16sp"

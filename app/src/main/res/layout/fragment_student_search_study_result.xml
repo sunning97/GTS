@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context=".views.home.fragments.StudentStudyResultFragment">
     <com.jaredrummler.materialspinner.MaterialSpinner
+        android:foreground="?android:attr/selectableItemBackground"
         android:visibility="invisible"
         app:ms_dropdown_max_height="300dp"
         app:ms_background_color="@color/grayLight"

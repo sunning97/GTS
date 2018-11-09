@@ -417,7 +417,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                         viewStudentDetail(subject);
                     }
                 });
-                if (i % 2 != 0) row.setBackgroundColor(getResources().getColor(R.color.gray));
+                if (i % 2 != 0) row.setBackgroundColor(getResources().getColor(R.color.gray3));
                 row.addView(generateTableCell(subject.getString("studentCode"), true, (int) (getScreenWidthInDPs() * 0.3)));
                 row.addView(generateTableCell(subject.getString("studentName"), false, (int) (getScreenWidthInDPs() * 0.4)));
                 row.addView(generateTableCell(subject.getString("birthday"), true, (int) (getScreenWidthInDPs() * 0.3)));

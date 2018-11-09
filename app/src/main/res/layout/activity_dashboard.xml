@@ -83,7 +83,8 @@
                         android:id="@+id/student_info_card"
                         android:layout_width="160dp"
                         android:layout_height="190dp"
-                        android:layout_margin="10dp">
+                        android:layout_margin="10dp"
+                        android:foreground="?android:attr/selectableItemBackground">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -95,10 +96,11 @@
                                 android:layout_width="64dp"
                                 android:layout_height="64dp"
                                 android:background="@drawable/circle_background_green"
-                                android:padding="15dp"
+                                android:padding="10dp"
                                 android:src="@drawable/ic_info_outline_white_24dp" />
 
                             <TextView
+                                android:textSize="16sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
@@ -112,7 +114,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="10dp"
                                 android:layout_marginBottom="10dp"
-                                android:background="@color/gray" />
+                                android:background="@color/gray3" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -129,7 +131,8 @@
                         android:id="@+id/student_study_result_card"
                         android:layout_width="160dp"
                         android:layout_height="190dp"
-                        android:layout_margin="10dp">
+                        android:layout_margin="10dp"
+                        android:foreground="?android:attr/selectableItemBackground">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -145,6 +148,7 @@
                                 android:src="@drawable/ic_school_white_24dp" />
 
                             <TextView
+                                android:textSize="16sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
@@ -158,7 +162,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="10dp"
                                 android:layout_marginBottom="10dp"
-                                android:background="@color/gray" />
+                                android:background="@color/gray3" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -183,7 +187,8 @@
                         android:id="@+id/frame_program_card"
                         android:layout_width="160dp"
                         android:layout_height="190dp"
-                        android:layout_margin="10dp">
+                        android:layout_margin="10dp"
+                        android:foreground="?android:attr/selectableItemBackground">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -199,6 +204,7 @@
                                 android:src="@drawable/ic_calendar_white_filled_96" />
 
                             <TextView
+                                android:textSize="16sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
@@ -212,7 +218,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="10dp"
                                 android:layout_marginBottom="10dp"
-                                android:background="@color/gray" />
+                                android:background="@color/gray3" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -229,7 +235,8 @@
                         android:id="@+id/student_debt_card"
                         android:layout_width="160dp"
                         android:layout_height="190dp"
-                        android:layout_margin="10dp">
+                        android:layout_margin="10dp"
+                        android:foreground="?android:attr/selectableItemBackground">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -245,6 +252,7 @@
                                 android:src="@drawable/ic_cash_white_96" />
 
                             <TextView
+                                android:textSize="16sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
@@ -258,7 +266,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="10dp"
                                 android:layout_marginBottom="10dp"
-                                android:background="@color/gray" />
+                                android:background="@color/gray3" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -283,7 +291,8 @@
                         android:id="@+id/schedule_by_week_card"
                         android:layout_width="160dp"
                         android:layout_height="190dp"
-                        android:layout_margin="10dp">
+                        android:layout_margin="10dp"
+                        android:foreground="?android:attr/selectableItemBackground">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -299,6 +308,7 @@
                                 android:src="@drawable/ic_health_calendar_white_96" />
 
                             <TextView
+                                android:textSize="16sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
@@ -312,7 +322,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="10dp"
                                 android:layout_marginBottom="10dp"
-                                android:background="@color/gray" />
+                                android:background="@color/gray3" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -329,7 +339,8 @@
                         android:id="@+id/attendance_card"
                         android:layout_width="160dp"
                         android:layout_height="190dp"
-                        android:layout_margin="10dp">
+                        android:layout_margin="10dp"
+                        android:foreground="?android:attr/selectableItemBackground">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -345,6 +356,7 @@
                                 android:src="@drawable/ic_attendance_filled_white_96" />
 
                             <TextView
+                                android:textSize="16sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
@@ -358,7 +370,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="10dp"
                                 android:layout_marginBottom="10dp"
-                                android:background="@color/gray" />
+                                android:background="@color/gray3" />
 
                             <TextView
                                 android:layout_width="wrap_content"

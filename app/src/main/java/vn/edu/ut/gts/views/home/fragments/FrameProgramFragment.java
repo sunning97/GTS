@@ -260,7 +260,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
                 frameDetailShow(jsonArray);
             }
         });
-        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
+        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
             row.addView(generateTableCell(jsonArray.get(1).toString(), false, (int) (getScreenWidthInDPs(getContext()) * 0.6)));
             row.addView(generateTableCell(jsonArray.get(4).toString(), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
