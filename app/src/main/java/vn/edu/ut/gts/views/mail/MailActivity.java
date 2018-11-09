@@ -52,6 +52,7 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
     private Storage storage;
     private  ReceiveListMailFragment receiveListMailFragment;
     private AlertDialog alertDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
