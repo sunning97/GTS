@@ -172,7 +172,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
                 studyResultDetailShow(data);
             }
         });
-        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray));
+        if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
             row.addView(generateTableCell(data.getString("courseName"), false, (int) (getScreenWidthInDPs(getContext()) * 0.4)));
             row.addView(generateTableCell(data.getString("scoresOf10"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));

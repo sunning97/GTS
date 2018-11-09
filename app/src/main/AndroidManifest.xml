@@ -44,7 +44,8 @@
         <activity
             android:name=".views.search.StudentDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".views.mail.MailActivity"></activity>
+        <activity android:name=".views.mail.MailActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -101,6 +101,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         }
         setSupportActionBar(dashboardToolbar);
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+        dashboardScroll.setSmoothScrollingEnabled(true);
         dashboardScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
