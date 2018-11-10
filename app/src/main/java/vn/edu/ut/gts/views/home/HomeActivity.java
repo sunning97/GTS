@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -103,18 +104,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         drawerLayout.closeDrawers();
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
         switch (item.getItemId()) {
             case R.id.student_profile: {
                 item.setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(
-                        R.id.home_fragment_container,
-                        new StudentInfoRootFragment()
-                ).commit();
+                if(!(currentFragment instanceof StudentInfoRootFragment)){
+                    getSupportFragmentManager().beginTransaction().replace(
+                            R.id.home_fragment_container,
+                            new StudentInfoRootFragment()
+                    ).commit();
+                }
                 setTitle(item.getTitle());
                 break;
             }
             case R.id.student_study_result: {
                 item.setChecked(true);
+                if(!(currentFragment instanceof  StudentStudyResultFragment))
                 getSupportFragmentManager().beginTransaction().replace(
                         R.id.home_fragment_container,
                         new StudentStudyResultFragment()
@@ -124,19 +129,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.schedule_by_week: {
                 item.setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(
-                        R.id.home_fragment_container,
-                        new WeekSchedule()
-                ).commit();
+                if(!(currentFragment instanceof  WeekSchedule)){
+                    getSupportFragmentManager().beginTransaction().replace(
+                            R.id.home_fragment_container,
+                            new WeekSchedule()
+                    ).commit();
+                }
                 setTitle(item.getTitle());
                 break;
             }
             case R.id.test_schedule: {
                 item.setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(
-                        R.id.home_fragment_container,
-                        new TestScheduleFragment()
-                ).commit();
+                if(!(currentFragment instanceof TestScheduleFragment)){
+                    getSupportFragmentManager().beginTransaction().replace(
+                            R.id.home_fragment_container,
+                            new TestScheduleFragment()
+                    ).commit();
+                }
                 setTitle(item.getTitle());
                 break;
             }
@@ -147,28 +156,34 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.frame_program: {
                 item.setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(
-                        R.id.home_fragment_container,
-                        new FrameProgramFragment()
-                ).commit();
+                if(!(currentFragment instanceof FrameProgramFragment)){
+                    getSupportFragmentManager().beginTransaction().replace(
+                            R.id.home_fragment_container,
+                            new FrameProgramFragment()
+                    ).commit();
+                }
                 setTitle(item.getTitle());
                 break;
             }
             case R.id.student_debt: {
                 item.setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(
-                        R.id.home_fragment_container,
-                        new StudentDebtFragment()
-                ).commit();
+                if(!(currentFragment instanceof StudentDebtFragment)){
+                    getSupportFragmentManager().beginTransaction().replace(
+                            R.id.home_fragment_container,
+                            new StudentDebtFragment()
+                    ).commit();
+                }
                 setTitle(item.getTitle());
                 break;
             }
             case R.id.attendance: {
                 item.setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(
-                        R.id.home_fragment_container,
-                        new AttendanceFragment()
-                ).commit();
+                if(!(currentFragment instanceof AttendanceFragment)) {
+                    getSupportFragmentManager().beginTransaction().replace(
+                            R.id.home_fragment_container,
+                            new AttendanceFragment()
+                    ).commit();
+                }
                 setTitle(item.getTitle());
                 break;
             }
