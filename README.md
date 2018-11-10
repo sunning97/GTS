@@ -8,7 +8,7 @@ Developed by [***duongrom.it.305***](https://www.facebook.com/duongrom.it.305) &
 
 All issues related to this project please comment or contact us at **duongrom.it.305@gmail.com** or **mrcatbro97@gmail.com**.
 
-If you are student of ***Ho Chi Minh University Of Transport*** and use andoid phone with android version 5.1 or higher, download for your phone [***HERE***](https://drive.google.com/open?id=1oXcs3mX9wfCzICWhgnk2BozXSJs4EW1F).
+If you are student of ***Ho Chi Minh University Of Transport*** and use andoid phone with android version 5.1 or higher, download for your phone [***HERE***](https://drive.google.com/open?id=1oQdTORG5yOzhIPgMGfqKEzCENrsIXrQn).
 
 
 Thanks you!! :smile:
