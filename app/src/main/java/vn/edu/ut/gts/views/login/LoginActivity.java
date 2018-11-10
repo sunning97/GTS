@@ -326,11 +326,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     public void disableInput() {
         inputPassword.setEnabled(false);
         inputStudentId.setEnabled(false);
+        searchStudentTV.setEnabled(false);
     }
 
     public void enableInput() {
         inputPassword.setEnabled(true);
         inputStudentId.setEnabled(true);
+        searchStudentTV.setEnabled(true);
     }
 
     private void requestPermission() {
