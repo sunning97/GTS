@@ -116,13 +116,16 @@ public class DashboardPresenter implements IDashboardPresenter {
                             iDashboardActivity.hideLoaderTextView();
                             Bitmap image = storage.getImageFromStorage(context,"student_portrait.jpg");
                             String studentName = null;
+                            String studentID = null;
                             try {
+                                studentID = storage.getString("last_student_login");
                                 studentName = jsonObject.getString("student_name");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                             iDashboardActivity.setToolbarTitle(studentName);
                             iDashboardActivity.setStudentPortrait(image);
+                            iDashboardActivity.setUpNavigationData(image,studentName,studentID);
                             iDashboardActivity.enableAll();
                             iDashboardActivity.disableSwipeRefresh();
                         }
@@ -223,6 +226,10 @@ public class DashboardPresenter implements IDashboardPresenter {
             e.printStackTrace();
         }
         return studentName;
+    }
+
+    public String getStudentIDFromStorage(){
+        return storage.getString("last_student_login");
     }
 
     private JSONObject parseData(Document document) {

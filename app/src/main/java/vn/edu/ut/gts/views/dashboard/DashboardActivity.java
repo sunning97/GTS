@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -17,12 +22,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.elyeproj.loaderviewlibrary.LoaderImageView;
 import com.elyeproj.loaderviewlibrary.LoaderTextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,18 +38,31 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.presenters.dashboard.DashboardPresenter;
 import vn.edu.ut.gts.views.home.HomeActivity;
+import vn.edu.ut.gts.views.home.fragments.AttendanceFragment;
+import vn.edu.ut.gts.views.home.fragments.FrameProgramFragment;
+import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
+import vn.edu.ut.gts.views.home.fragments.StudentInfoRootFragment;
+import vn.edu.ut.gts.views.home.fragments.StudentStudyResultFragment;
+import vn.edu.ut.gts.views.home.fragments.TestScheduleFragment;
+import vn.edu.ut.gts.views.home.fragments.WeekSchedule;
 import vn.edu.ut.gts.views.login.LoginActivity;
 import vn.edu.ut.gts.views.mail.MailActivity;
+import vn.edu.ut.gts.views.search.StudentSearchActivity;
 
-public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, IDashboardActivity {
+public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, IDashboardActivity,NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.dashboard_toolbar)
     Toolbar dashboardToolbar;
+    @BindView(R.id.dashboard_drawerlayout)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.dashboard_navigation_view)
+    NavigationView navigationView;
     @BindView(R.id.dashboard_appbar_layout)
     AppBarLayout dashboardAppbarLayout;
-    @BindView(R.id.dashboard_collapsing_toolbar_alyout)
+    @BindView(R.id.dashboard_collapsing_toolbar_layout)
     CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.student_info_card)
     CardView studentInfoCard;
@@ -58,17 +78,25 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     CardView attendanceCard;
     @BindView(R.id.profile_image_loading)
     LoaderImageView profileImageLoading;
-    @BindView(R.id.profile_image)
-    CircleImageView profileImage;
+    @BindView(R.id.dashboard_profile_image)
+    CircleImageView dashboardProfileImage;
     @BindView(R.id.student_name_text_loading)
     LoaderTextView studentNameTextLoading;
     @BindView(R.id.swipe_refresh_dashboard)
     SwipeRefreshLayout swipeRefreshDashboard;
     @BindView(R.id.dashboard_scroll)
     NestedScrollView dashboardScroll;
+    @BindView(R.id.student_name)
+    TextView navigationStudentFullName;
+    @BindView(R.id.profile_image)
+    CircleImageView navigationProfileImage;
+    @BindView(R.id.student_id)
+    TextView navigationStudentID;
+
 
     private Storage storage;
     private DashboardPresenter dashboardPresenter;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +108,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         dashboardToolbar.setTitle("");
         collapsingToolbarLayout.setTitle("");
         dashboardPresenter = new DashboardPresenter(this, this);
+
+        setSupportActionBar(dashboardToolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,dashboardToolbar, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(this);
         swipeRefreshDashboard.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         swipeRefreshDashboard.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -90,17 +126,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 dashboardPresenter.go();
             }
         });
-        if (!storage.isImageExist(getApplicationContext(), "student_portrait.jpg") || TextUtils.isEmpty(storage.getString("student_info"))) {
-            profileImage.setVisibility(View.INVISIBLE);
-            dashboardPresenter.go();
-        } else {
-            hideLoaderTextView();
-            disableSwipeRefresh();
-            setStudentPortrait(dashboardPresenter.getStudentPortraitFromStorage());
-            setToolbarTitle(dashboardPresenter.getStudentNameFromStorage());
-        }
-        setSupportActionBar(dashboardToolbar);
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+
+        Menu menu = navigationView.getMenu();
+        MenuItem menuItem = menu.findItem(R.id.home_dashboard);
+        menuItem.setChecked(true);
+
         dashboardScroll.setSmoothScrollingEnabled(true);
         dashboardScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -110,27 +140,17 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 } else swipeRefreshDashboard.setEnabled(false);
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.home_toolbar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logout: {
-                LoginActivity.isLogout = true;
-                LoginActivity.isAutoLogin = false;
-                HomeActivity.isLogin = false;
-                storage.deleteAllsharedPreferences(DashboardActivity.this);
-                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-                break;
-            }
+        if (!storage.isImageExist(getApplicationContext(), "student_portrait.jpg") || TextUtils.isEmpty(storage.getString("student_info"))) {
+            dashboardProfileImage.setVisibility(View.INVISIBLE);
+            dashboardPresenter.go();
+        } else {
+            hideLoaderTextView();
+            disableSwipeRefresh();
+            setStudentPortrait(dashboardPresenter.getStudentPortraitFromStorage());
+            setToolbarTitle(dashboardPresenter.getStudentNameFromStorage());
+            setUpNavigationData(dashboardPresenter.getStudentPortraitFromStorage(),dashboardPresenter.getStudentNameFromStorage(),dashboardPresenter.getStudentIDFromStorage());
         }
-        return true;
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     @OnClick({
@@ -160,7 +180,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 startActivity(HomeActivity.SCHEDULE_BY_WEEK);
                 break;
             case R.id.attendance_card:
-                startActivity(HomeActivity.ATTENDACE);
+                startActivity(HomeActivity.ATTENDANCE);
                 break;
             default:
                 return;
@@ -198,9 +218,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void setStudentPortrait(Bitmap studentPortrait) {
-        profileImage.setImageBitmap(studentPortrait);
+        dashboardProfileImage.setImageBitmap(studentPortrait);
         profileImageLoading.setVisibility(View.INVISIBLE);
-        profileImage.setVisibility(View.VISIBLE);
+        dashboardProfileImage.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -232,7 +252,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         scheduleByWeekCard.setEnabled(false);
         attendanceCard.setEnabled(false);
     }
-
 
     @Override
     public void showErrorDialog() {
@@ -286,8 +305,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void setDefaultPortrait() {
-        profileImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_user_deafult_100));
-        profileImage.setVisibility(View.VISIBLE);
+        dashboardProfileImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_user_deafult_100));
+        dashboardProfileImage.setVisibility(View.VISIBLE);
         profileImageLoading.setVisibility(View.INVISIBLE);
     }
 
@@ -296,4 +315,78 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         swipeRefreshDashboard.setRefreshing(value);
     }
 
+    @Override
+    public void setUpNavigationData(Bitmap image,String name,String ID) {
+        navigationProfileImage.setImageBitmap(image);
+        navigationStudentFullName.setText(name);
+        navigationStudentID.setText(ID);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        drawerLayout.closeDrawers();
+        item.setChecked(false);
+        switch (item.getItemId()) {
+            case R.id.student_profile: {
+                startActivity(HomeActivity.STUDENT_INFO);
+                break;
+            }
+            case R.id.student_study_result: {
+                startActivity(HomeActivity.STUDENT_STUDY_RESULT);
+                break;
+            }
+            case R.id.schedule_by_week: {
+                startActivity(HomeActivity.SCHEDULE_BY_WEEK);
+                break;
+            }
+            case R.id.test_schedule: {
+                startActivity(HomeActivity.TEST_SCHEDULE);
+                break;
+            }
+            case R.id.frame_program: {
+                startActivity(HomeActivity.FRAME_PROGRAM);
+                break;
+            }
+            case R.id.student_debt: {
+                startActivity(HomeActivity.STUDENT_DEBT);
+                break;
+            }
+            case R.id.attendance: {
+                startActivity(HomeActivity.ATTENDANCE);
+                break;
+            }
+            case R.id.mail_box:{
+                startActivity(new Intent(DashboardActivity.this, MailActivity.class));
+                break;
+            }
+            case R.id.student_search: {
+                startActivity(new Intent(DashboardActivity.this,StudentSearchActivity.class));
+                break;
+            }
+            case R.id.about_app:{
+                EpicDialog epicDialog = new EpicDialog(DashboardActivity.this);
+                epicDialog.showAboutDialog();
+                break;
+            }
+            case R.id.logout: {
+                LoginActivity.isLogout = true;
+                LoginActivity.isAutoLogin = false;
+                HomeActivity.isLogin = false;
+                storage.deleteAllsharedPreferences(DashboardActivity.this);
+                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                break;
+            }
+            case R.id.exit: {
+                LoginActivity.isLogout = false;
+                storage.deleteAllsharedPreferences(DashboardActivity.this);
+                DashboardActivity.this.finishAffinity();
+                break;
+            }
+            case R.id.home_dashboard:{
+                item.setChecked(true);
+                break;
+            }
+        }
+        return true;
+    }
 }

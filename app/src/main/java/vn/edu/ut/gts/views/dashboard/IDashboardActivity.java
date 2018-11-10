@@ -34,4 +34,6 @@ public interface IDashboardActivity {
     void setDefaultPortrait();
 
     void setRefreshingSwipe(boolean value);
+
+    void setUpNavigationData(Bitmap image,String name,String ID);
 }

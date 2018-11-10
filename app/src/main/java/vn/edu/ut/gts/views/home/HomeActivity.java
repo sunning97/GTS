@@ -18,6 +18,8 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -44,7 +46,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static final int FRAME_PROGRAM = 3;
     public static final int STUDENT_DEBT = 4;
     public static final int SCHEDULE_BY_WEEK = 5;
-    public static final int ATTENDACE = 6;
+    public static final int ATTENDANCE = 6;
+    public static final int TEST_SCHEDULE = 7;
     public static Boolean isLogin = false;
 
     @BindView(R.id.home_toolbar)
@@ -62,7 +65,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private Storage storage;
     private JSONObject studentInfo = null;
-    ActionBarDrawerToggle actionBarDrawerToggle;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +81,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setHomeFragment(intent);
         navigationView.setNavigationItemSelectedListener(this);
+        setHomeFragment(intent);
         profileImage.setImageBitmap(storage.getImageFromStorage(HomeActivity.this,"student_portrait.jpg"));
         try {
             studentFullName.setText(studentInfo.getString("student_name"));
@@ -91,7 +94,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
         studentID.setText(storage.getString("last_student_login"));
-
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
@@ -281,7 +283,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 setTitle("Công nợ Sinh viên");
                 break;
             }
-            case HomeActivity.ATTENDACE: {
+            case HomeActivity.ATTENDANCE: {
                 menuItem = menu.findItem(R.id.attendance);
                 menuItem.setChecked(true);
                 getSupportFragmentManager().beginTransaction().replace(
@@ -289,6 +291,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         new AttendanceFragment()
                 ).commit();
                 setTitle("Thông tin điểm danh");
+                break;
+            }
+            case HomeActivity.TEST_SCHEDULE: {
+                menuItem = menu.findItem(R.id.test_schedule);
+                menuItem.setChecked(true);
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new TestScheduleFragment()
+                ).commit();
+                setTitle("Lịch thi");
                 break;
             }
         }

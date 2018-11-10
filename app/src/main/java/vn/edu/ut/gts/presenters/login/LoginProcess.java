@@ -37,13 +37,11 @@ public class LoginProcess implements ILoginProcess {
     private ILoginView iLoginView;
     private Context context;
     private Storage storage;
-    private Student student;
 
     public LoginProcess(ILoginView iLoginView, Context context) {
         this.iLoginView = iLoginView;
         this.context = context;
         this.storage = new Storage(this.context);
-        student = new Student(this.context);
     }
 
     public void initData(final boolean isAuto) {
