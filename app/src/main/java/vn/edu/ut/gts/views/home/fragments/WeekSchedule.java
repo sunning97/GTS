@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,6 @@ import vn.edu.ut.gts.presenters.home.WeekSchedulePresenter;
  * A simple {@link Fragment} subclass.
  */
 public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener, IWeekSchedule {
-
     @BindView(R.id.week_schedule_tablayout)
     TabLayout tabLayout;
     @BindView(R.id.week_schedule_view_pager)
