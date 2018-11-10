@@ -113,8 +113,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,dashboardToolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         actionBarDrawerToggle.syncState();
-
         navigationView.setNavigationItemSelectedListener(this);
         swipeRefreshDashboard.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         swipeRefreshDashboard.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -323,70 +323,78 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
+    public void setDefaultNavigationImage() {
+        navigationProfileImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_user_deafult_100));
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        drawerLayout.closeDrawers();
-        item.setChecked(false);
-        switch (item.getItemId()) {
-            case R.id.student_profile: {
-                startActivity(HomeActivity.STUDENT_INFO);
-                break;
+        if(DashboardPresenter.currentStatus == 0){
+            drawerLayout.closeDrawers();
+            item.setChecked(false);
+            switch (item.getItemId()) {
+                case R.id.student_profile: {
+                    startActivity(HomeActivity.STUDENT_INFO);
+                    break;
+                }
+                case R.id.student_study_result: {
+                    startActivity(HomeActivity.STUDENT_STUDY_RESULT);
+                    break;
+                }
+                case R.id.schedule_by_week: {
+                    startActivity(HomeActivity.SCHEDULE_BY_WEEK);
+                    break;
+                }
+                case R.id.test_schedule: {
+                    startActivity(HomeActivity.TEST_SCHEDULE);
+                    break;
+                }
+                case R.id.frame_program: {
+                    startActivity(HomeActivity.FRAME_PROGRAM);
+                    break;
+                }
+                case R.id.student_debt: {
+                    startActivity(HomeActivity.STUDENT_DEBT);
+                    break;
+                }
+                case R.id.attendance: {
+                    startActivity(HomeActivity.ATTENDANCE);
+                    break;
+                }
+                case R.id.mail_box:{
+                    startActivity(new Intent(DashboardActivity.this, MailActivity.class));
+                    break;
+                }
+                case R.id.student_search: {
+                    startActivity(new Intent(DashboardActivity.this,StudentSearchActivity.class));
+                    break;
+                }
+                case R.id.about_app:{
+                    EpicDialog epicDialog = new EpicDialog(DashboardActivity.this);
+                    epicDialog.showAboutDialog();
+                    break;
+                }
+                case R.id.logout: {
+                    LoginActivity.isLogout = true;
+                    LoginActivity.isAutoLogin = false;
+                    HomeActivity.isLogin = false;
+                    storage.deleteAllsharedPreferences(DashboardActivity.this);
+                    startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                    break;
+                }
+                case R.id.exit: {
+                    LoginActivity.isLogout = false;
+                    storage.deleteAllsharedPreferences(DashboardActivity.this);
+                    DashboardActivity.this.finishAffinity();
+                    break;
+                }
+                case R.id.home_dashboard:{
+                    item.setChecked(true);
+                    break;
+                }
             }
-            case R.id.student_study_result: {
-                startActivity(HomeActivity.STUDENT_STUDY_RESULT);
-                break;
-            }
-            case R.id.schedule_by_week: {
-                startActivity(HomeActivity.SCHEDULE_BY_WEEK);
-                break;
-            }
-            case R.id.test_schedule: {
-                startActivity(HomeActivity.TEST_SCHEDULE);
-                break;
-            }
-            case R.id.frame_program: {
-                startActivity(HomeActivity.FRAME_PROGRAM);
-                break;
-            }
-            case R.id.student_debt: {
-                startActivity(HomeActivity.STUDENT_DEBT);
-                break;
-            }
-            case R.id.attendance: {
-                startActivity(HomeActivity.ATTENDANCE);
-                break;
-            }
-            case R.id.mail_box:{
-                startActivity(new Intent(DashboardActivity.this, MailActivity.class));
-                break;
-            }
-            case R.id.student_search: {
-                startActivity(new Intent(DashboardActivity.this,StudentSearchActivity.class));
-                break;
-            }
-            case R.id.about_app:{
-                EpicDialog epicDialog = new EpicDialog(DashboardActivity.this);
-                epicDialog.showAboutDialog();
-                break;
-            }
-            case R.id.logout: {
-                LoginActivity.isLogout = true;
-                LoginActivity.isAutoLogin = false;
-                HomeActivity.isLogin = false;
-                storage.deleteAllsharedPreferences(DashboardActivity.this);
-                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-                break;
-            }
-            case R.id.exit: {
-                LoginActivity.isLogout = false;
-                storage.deleteAllsharedPreferences(DashboardActivity.this);
-                DashboardActivity.this.finishAffinity();
-                break;
-            }
-            case R.id.home_dashboard:{
-                item.setChecked(true);
-                break;
-            }
+            return true;
         }
-        return true;
+         return false;
     }
 }

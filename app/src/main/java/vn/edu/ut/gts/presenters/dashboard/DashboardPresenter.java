@@ -64,7 +64,6 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 .method(Connection.Method.GET)
                                 .cookie("ASP.NET_Session_Id", storage.getCookie())
                                 .ignoreContentType(true)
-                                .timeout(Helper.TIMEOUT_VALUE)
                                 .execute();
 
                         storage.saveImage(resultImageResponse, context,"student_portrait.jpg");
@@ -74,7 +73,6 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 .timeout(Helper.TIMEOUT_VALUE)
                                 .userAgent(Helper.USER_AGENT)
                                 .cookie("ASP.NET_SessionId", storage.getCookie())
-                                .timeout(Helper.TIMEOUT_VALUE)
                                 .get();
 
                         info = parseData(document);
@@ -96,6 +94,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 iDashboardActivity.showErrorDialog();
                             iDashboardActivity.disableAll();
                             iDashboardActivity.setDefaultPortrait();
+                            iDashboardActivity.setDefaultNavigationImage();
                             iDashboardActivity.hideLoaderTextView();
                             iDashboardActivity.setRefreshingSwipe(false);
                             iDashboardActivity.enableSwipeRefresh();
@@ -106,6 +105,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                                 iDashboardActivity.showTimeOutDialog();
                             iDashboardActivity.disableAll();
                             iDashboardActivity.setDefaultPortrait();
+                            iDashboardActivity.setDefaultNavigationImage();
                             iDashboardActivity.hideLoaderTextView();
                             iDashboardActivity.setRefreshingSwipe(false);
                             iDashboardActivity.enableSwipeRefresh();
@@ -133,81 +133,6 @@ public class DashboardPresenter implements IDashboardPresenter {
                 }
             };
             asyncTask.execute();
-        }
-    }
-
-    @Override
-    public JSONObject getStudentInfoData() {
-        JSONObject info = new JSONObject();
-        try {
-            Document document = Jsoup.connect(Helper.BASE_URL + "HoSoSinhVien.aspx")
-                    .method(Connection.Method.GET)
-                    .userAgent(Helper.USER_AGENT)
-                    .cookie("ASP.NET_SessionId", storage.getCookie())
-                    .get();
-            Element bodyGroup = document.getElementsByClass("body-group").first();
-            Elements tds = bodyGroup.select("td");
-            JSONArray studentInfo = new JSONArray();
-            for (Element td : tds) {
-                JSONObject prop = new JSONObject();
-                String key = Helper.toSlug(td.text().split(":")[0]);
-                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
-                prop.put("key", key);
-                prop.put("value", value);
-                studentInfo.put(prop);
-            }
-            info.put("studentInfo", studentInfo);
-            Element bodyGroup1 = document.getElementsByClass("body-group").get(1);
-            Elements tds1 = bodyGroup1.select("td");
-            JSONArray studentDetail = new JSONArray();
-            for (Element td : tds1) {
-                JSONObject prop = new JSONObject();
-                String key = Helper.toSlug(td.text().split(":")[0]);
-                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
-                prop.put("key", key);
-                prop.put("value", value);
-                studentDetail.put(prop);
-            }
-            info.put("studentDetail", studentDetail);
-
-            Element bodyGroup2 = document.getElementsByClass("body-group").get(2);
-            Elements tds2 = bodyGroup2.select("td");
-            JSONArray studentFamily = new JSONArray();
-            for (Element td : tds2) {
-                JSONObject prop = new JSONObject();
-                String key = Helper.toSlug(td.text().split(":")[0]);
-                String value = td.text().split(":").length > 1 ? td.text().split(":")[1].trim() : "Không";
-                prop.put("key", key);
-                prop.put("value", value);
-                studentFamily.put(prop);
-            }
-            info.put("studentFamily", studentFamily);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return info;
-    }
-
-    @Override
-    public void getStudentPortrait() {
-        try {
-            String studentID = storage.getString("last_student_login");
-            Connection.Response resultImageResponse;
-            resultImageResponse = Jsoup.connect(Helper.BASE_URL + "GetImage.aspx?MSSV=" + studentID)
-                    .userAgent(Helper.USER_AGENT)
-                    .method(Connection.Method.GET)
-                    .cookie("ASP.NET_Session_Id", storage.getCookie())
-                    .ignoreContentType(true)
-                    .timeout(Helper.TIMEOUT_VALUE)
-                    .execute();
-
-            storage.saveImage(resultImageResponse, context,"student_portrait.jpg");
-        } catch (SocketTimeoutException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

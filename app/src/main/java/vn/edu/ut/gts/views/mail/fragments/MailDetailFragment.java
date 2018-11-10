@@ -126,6 +126,7 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
     @OnClick(R.id.attach_file_card_view)
     public void goDownloadFile(View view) {
         try {
+            MailDetailFragmentPresenter.currentStatus = 0;
             String url = "http://tnbsv.ut.edu.vn/tnb_sv/" + dataDetail.getString("file_dinh_kem_url");
             String fileName = dataDetail.getString("file_dinh_kem");
             mailDetailFragmentPresenter.downLoadFile(url, fileName);

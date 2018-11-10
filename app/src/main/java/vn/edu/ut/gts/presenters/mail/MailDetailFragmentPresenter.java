@@ -172,7 +172,11 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } catch (SocketTimeoutException e) {
+                }catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -182,27 +186,39 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-                builder.setSmallIcon(R.drawable.ic_check_white_24dp)
-                        .setContentTitle("Đã tải xong")
-                        .setContentText(fileName)
-                        .setAutoCancel(true);
-                Notification notification = builder.build();
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(1);
-                notificationManager.notify(2, notification);
-                try {
-                    String a = fileName;
-                    String[] b = a.split("\\.(?=[^\\.]+$)");
-                    File file = new File(Environment.getExternalStorageDirectory() + "/Download/" + fileName);
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    MimeTypeMap myMime = MimeTypeMap.getSingleton();
-                    String mimeType = myMime.getMimeTypeFromExtension(b[1]);
-                    intent.setDataAndType(Uri.fromFile(file), mimeType);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    context.startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_SHORT).show();
+                if(currentStatus == Helper.TIMEOUT || currentStatus == Helper.NO_CONNECTION){
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+                    builder.setSmallIcon(R.drawable.ic_close_white_24dp)
+                            .setContentTitle("Tải xuống không thành công :(")
+                            .setContentText("Kiểm tra kết nối Internet")
+                            .setAutoCancel(true);
+                    Notification notification = builder.build();
+                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(1);
+                    notificationManager.notify(2, notification);
+                } else {
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+                    builder.setSmallIcon(R.drawable.ic_check_white_24dp)
+                            .setContentTitle("Đã tải xong")
+                            .setContentText(fileName)
+                            .setAutoCancel(true);
+                    Notification notification = builder.build();
+                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(1);
+                    notificationManager.notify(2, notification);
+                    try {
+                        String a = fileName;
+                        String[] b = a.split("\\.(?=[^\\.]+$)");
+                        File file = new File(Environment.getExternalStorageDirectory() + "/Download/" + fileName);
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        MimeTypeMap myMime = MimeTypeMap.getSingleton();
+                        String mimeType = myMime.getMimeTypeFromExtension(b[1]);
+                        intent.setDataAndType(Uri.fromFile(file), mimeType);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        context.startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         };
