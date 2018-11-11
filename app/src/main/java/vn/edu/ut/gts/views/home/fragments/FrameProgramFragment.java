@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -118,7 +119,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         ButterKnife.bind(this, view);
         frameProgramSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         init();
-        d = getContext().getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
         FrameProgramFragmentPresenter.currentStatus = 0;
         frameProgramFragmentPresenter = new FrameProgramFragmentPresenter(this, getContext());
         setHasOptionsMenu(true);
@@ -145,15 +146,15 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
                     if(FrameProgramFragmentPresenter.currentStatus == 0){
                         String titleAll = data.getString("info");
                         String[] parts = titleAll.split("-");
-                        String title1 = "";
+                        StringBuilder title1 = new StringBuilder();
                         for (int i = 0; i <= parts.length - 3; i++) {
                             if (i == parts.length - 3) {
-                                title1 += parts[i].trim();
+                                title1.append(parts[i].trim());
                                 break;
                             }
-                            title1 += parts[i].trim() + " - ";
+                            title1.append(parts[i].trim()).append(" - ");
                         }
-                        epicDialog.showFrameProgramInfoDialog(title1.trim(), parts[parts.length - 2].trim() + " - " + parts[parts.length - 1].trim());
+                        epicDialog.showFrameProgramInfoDialog(title1.toString().trim(), parts[parts.length - 2].trim() + " - " + parts[parts.length - 1].trim());
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -344,8 +345,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        return screenWidth;
+        return dm.widthPixels;
     }
 
     @Override

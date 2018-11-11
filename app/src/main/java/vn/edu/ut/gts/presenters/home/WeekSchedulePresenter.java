@@ -30,13 +30,11 @@ import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 public class WeekSchedulePresenter implements IWeekSchedulePresenter {
     public static int currentStatus = 0;
     private IWeekSchedule iWeekSchedule;
-    private Context context;
     private Storage storage;
 
     public WeekSchedulePresenter(IWeekSchedule iWeekSchedule, Context context) {
         this.iWeekSchedule = iWeekSchedule;
-        this.context = context;
-        this.storage = new Storage(this.context);
+        this.storage = new Storage(context);
     }
 
     private void getDataSchedules(Document document) {
@@ -178,7 +176,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                     default: {
                         currentStatus = 0;
                         iWeekSchedule.setDateToDate(jsonArray);
-                        iWeekSchedule.modifyDataOnfirst(jsonArray);
+                        iWeekSchedule.modifyDataOnFirst(jsonArray);
                         iWeekSchedule.showAllComponent();
                         iWeekSchedule.dismissLoadingDialog();
                     }
@@ -229,9 +227,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return data;
@@ -300,9 +296,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return data;
@@ -372,9 +366,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return data;
@@ -392,7 +384,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                     default: {
                         currentStatus = 0;
                         iWeekSchedule.setDateToDate(jsonArray);
-                        iWeekSchedule.modifyDataOnfirst(jsonArray);
+                        iWeekSchedule.modifyDataOnFirst(jsonArray);
                         iWeekSchedule.showAllComponent();
                         iWeekSchedule.dismissLoadingDialog();
                     }
@@ -444,9 +436,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return data;
@@ -464,7 +454,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                     default: {
                         currentStatus = 0;
                         iWeekSchedule.setDateToDate(jsonArray);
-                        iWeekSchedule.modifyDataOnfirst(jsonArray);
+                        iWeekSchedule.modifyDataOnFirst(jsonArray);
                         iWeekSchedule.showAllComponent();
                         iWeekSchedule.dismissLoadingDialog();
                     }

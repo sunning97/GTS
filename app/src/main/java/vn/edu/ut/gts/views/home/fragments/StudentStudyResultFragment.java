@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,7 +112,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_study_result, container, false);
         ButterKnife.bind(this, view);
-        d = getContext().getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
         studyResultSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         init();
         StudentStudyResultFragment.currentPos = 0;
@@ -162,7 +163,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
             if (i == 0) {
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.4);
+                layoutParams.width = (int) (getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
             } else {
                 layoutParams.gravity = Gravity.CENTER;
                 layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.2);
@@ -192,14 +193,10 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
             JSONArray subjects = semester.getJSONArray("subjects");
             for (int i = 0; i < subjects.length(); i++) {
                 JSONObject subject = (JSONObject) subjects.get(i);
-                try {
-                    if ((i + 1) % 2 != 0) {
-                        studyResultTable.addView(generateTableRow(subject, true));
-                    } else studyResultTable.addView(generateTableRow(subject, false));
+                if ((i + 1) % 2 != 0) {
+                    studyResultTable.addView(generateTableRow(subject, true));
+                } else studyResultTable.addView(generateTableRow(subject, false));
 
-                } catch (Exception e) {
-
-                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -220,7 +217,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
 
     @OnClick(R.id.retry_text)
-    public void retry(View view) {
+    public void retry() {
         if (StudentStudyResultFragmentPresenter.currentStatus == Helper.TIMEOUT) {
             retryIcon.smoothToShow();
             retryText.setVisibility(View.INVISIBLE);
@@ -296,8 +293,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        return screenWidth;
+        return dm.widthPixels;
     }
 
     private float getStudentSemesterSverage(JSONArray subjects) {

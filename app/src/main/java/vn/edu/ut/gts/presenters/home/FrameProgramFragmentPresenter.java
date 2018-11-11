@@ -30,13 +30,11 @@ import vn.edu.ut.gts.views.home.fragments.IFrameProgramFragment;
 public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPresenter {
     public static int currentStatus = 0;
     private IFrameProgramFragment iFrameProgramFragment;
-    private Context context;
     private Storage storage;
 
     public FrameProgramFragmentPresenter(IFrameProgramFragment iFrameProgramFragment, Context context) {
         this.iFrameProgramFragment = iFrameProgramFragment;
-        this.context = context;
-        this.storage = new Storage(this.context);
+        this.storage = new Storage(context);
     }
     @Override
     public void getDataFrameProgram() {

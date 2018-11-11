@@ -1,11 +1,13 @@
 package vn.edu.ut.gts.views.home.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -30,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,13 +84,13 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_debt, container, false);
         ButterKnife.bind(this, view);
         studentDebtSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         studentDebtFragmentPresenter = new StudentDebtFragmentPresenter(this, getContext());
         init();
-        d = getContext().getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
         StudentDebtFragment.currentPos = 0;
         StudentDebtFragmentPresenter.currentStatus = 0;
         studentDebtFragmentPresenter.getDataDebtSpinner();
@@ -96,7 +99,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
 
 
     @OnClick(R.id.retry_text)
-    public void rety(View view){
+    public void retry(){
         StudentDebtFragmentPresenter.currentStatus = 0;
         studentDebtFragmentPresenter.getDataDebtSpinner();
     }
@@ -199,6 +202,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         loadingDialog.initLoadingDialog();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void debtDetailShow(JSONObject jsonObject) {
         LayoutInflater factory = getLayoutInflater();
@@ -265,8 +269,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        return screenWidth;
+        return dm.widthPixels;
     }
 
     @Override
@@ -294,36 +297,34 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     }
 
     private String numberFormat(String num) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         List<String> resultArray = new ArrayList<>();
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         int counter = 0;
         for (int i = num.length() - 1; i >= 0; i--) {
-            temp += num.charAt(i);
+            temp.append(num.charAt(i));
             counter++;
             if (counter == 3) {
-                resultArray.add(temp);
+                resultArray.add(temp.toString());
                 counter = 0;
-                temp = "";
+                temp = new StringBuilder();
             }
         }
-        ;
         if (counter > 0) {
-            resultArray.add(temp);
+            resultArray.add(temp.toString());
         }
 
         for (int i = resultArray.size() - 1; i >= 0; i--) {
             String resTemp = resultArray.get(i);
             for (int j = resTemp.length() - 1; j >= 0; j--) {
-                result += resTemp.charAt(j);
+                result.append(resTemp.charAt(j));
             }
             ;
             if (i > 0) {
-                result += ',';
+                result.append(',');
             }
         }
-        ;
-        return result;
+        return result.toString();
     }
 
     private int getTotalDeb(JSONArray data) {

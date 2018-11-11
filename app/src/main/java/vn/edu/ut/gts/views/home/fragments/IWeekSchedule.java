@@ -9,7 +9,7 @@ public interface IWeekSchedule {
 
     void setDateToDate(JSONArray jsonArray);
 
-    void modifyDataOnfirst(JSONArray jsonArray);
+    void modifyDataOnFirst(JSONArray jsonArray);
 
     void modifyDataChange(JSONArray jsonArray);
 

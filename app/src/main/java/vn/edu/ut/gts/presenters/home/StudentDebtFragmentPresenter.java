@@ -3,7 +3,6 @@ package vn.edu.ut.gts.presenters.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,21 +21,17 @@ import java.util.List;
 
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
-import vn.edu.ut.gts.views.home.fragments.AttendanceFragment;
 import vn.edu.ut.gts.views.home.fragments.IStudentDebtFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 
 public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresenter{
     public static int currentStatus = 0;
-    public static boolean isNotFirst = false;
     private IStudentDebtFragment iStudentDebtFragment;
-    private Context context;
     private Storage storage;
 
     public StudentDebtFragmentPresenter(IStudentDebtFragment iStudentDebtFragment,Context context){
         this.iStudentDebtFragment = iStudentDebtFragment;
-        this.context = context;
-        this.storage = new Storage(this.context);
+        this.storage = new Storage(context);
     }
     @Override
     public void getDataDebtSpinner() {
@@ -100,15 +95,16 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                         break;
                     default: {
                         currentStatus = 0;
-                        isNotFirst = false;
-                        List<String> dataSnpinner = new ArrayList<>();
+                        List<String> dataSpinner = new ArrayList<>();
                         try {
                             for (int i = 0; i < semesters.length(); i++) {
                                 JSONObject jsonObject = (JSONObject) semesters.get(i);
-                                dataSnpinner.add(jsonObject.getString("text"));
+                                dataSpinner.add(jsonObject.getString("text"));
                             }
-                        } catch (Exception e){}
-                        iStudentDebtFragment.initDebtSpinner(dataSnpinner);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        iStudentDebtFragment.initDebtSpinner(dataSpinner);
                         getStudentDebt(StudentDebtFragment.currentPos);
                     }
                 }
@@ -168,9 +164,7 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IndexOutOfBoundsException e){
-
-                }catch (IOException | JSONException e) {
+                } catch (IndexOutOfBoundsException | IOException | JSONException e){
                     e.printStackTrace();
                 }
                 return data;
@@ -187,7 +181,6 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                         break;
                     default: {
                         currentStatus = 0;
-                        isNotFirst = false;
                         iStudentDebtFragment.generateTableContent(jsonArray);
                         iStudentDebtFragment.showAllComponent();
                         iStudentDebtFragment.dismissLoadingDialog();

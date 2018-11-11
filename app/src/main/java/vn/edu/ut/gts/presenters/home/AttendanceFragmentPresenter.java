@@ -30,13 +30,11 @@ import vn.edu.ut.gts.views.home.fragments.IAttendanceFragment;
 public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter {
     public static int currentStatus = 0;
     private IAttendanceFragment iAttendanceFragment;
-    private Context context;
     private Storage storage;
 
     public AttendanceFragmentPresenter(IAttendanceFragment iAttendanceFragment, Context context) {
         this.iAttendanceFragment = iAttendanceFragment;
-        this.context = context;
-        this.storage = new Storage(this.context);
+        this.storage = new Storage(context);
     }
 
     @Override

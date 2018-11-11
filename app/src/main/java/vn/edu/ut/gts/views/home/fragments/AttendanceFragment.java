@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,7 +92,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         ButterKnife.bind(this, view);
         this.attendanceFragmentPresenter = new AttendanceFragmentPresenter(this, getContext());
         this.init();
-        d = getContext().getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
         AttendanceFragment.currentPos = 0;
         AttendanceFragmentPresenter.currentStatus = 0;
         attendanceFragmentPresenter.getDataAttendanceSpinner();
@@ -124,7 +125,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     public TableRow generateTableRow(final JSONObject jsonObject, boolean changeBG) {
         TableRow row = new TableRow(getContext());
         int[] attrs = new int[]{R.attr.selectableItemBackground};
-        TypedArray typedArray = getActivity().obtainStyledAttributes(attrs);
+        TypedArray typedArray = Objects.requireNonNull(getActivity()).obtainStyledAttributes(attrs);
         int backgroundResource = typedArray.getResourceId(0, 0);
         row.setBackgroundResource(backgroundResource);
         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -295,8 +296,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        return screenWidth;
+        return dm.widthPixels;
     }
 
     private void removeAllSpinnerItem(){

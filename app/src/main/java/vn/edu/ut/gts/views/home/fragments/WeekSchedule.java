@@ -143,7 +143,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     }
 
     @Override
-    public void modifyDataOnfirst(JSONArray jsonArray) {
+    public void modifyDataOnFirst(JSONArray jsonArray) {
         weekScheduleTablayoutAdapter = new WeekScheduleTablayoutAdapter(getFragmentManager(), jsonArray);
         viewPager.setAdapter(weekScheduleTablayoutAdapter);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,7 +76,7 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_test_schedule, container, false);
         ButterKnife.bind(this, view);
-        storage = new Storage(getContext());
+        storage = new Storage(Objects.requireNonNull(getContext()));
         epicDialog = new EpicDialog(getContext());
         epicDialog.initLoadingDialog();
         d = getContext().getResources().getDisplayMetrics().density;
@@ -132,8 +133,7 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        return screenWidth;
+        return dm.widthPixels;
     }
 
     public void generateTableContent(JSONArray data) {

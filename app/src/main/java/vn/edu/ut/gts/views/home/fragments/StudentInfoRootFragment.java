@@ -29,12 +29,13 @@ import vn.edu.ut.gts.views.home.fragments.student_info.StudentPersonalInfoFragme
  */
 public class StudentInfoRootFragment extends Fragment {
 
-    private StudentInfoViewPagerAdapter studentInfoViewPagerAdapter;
     @BindView(R.id.student_info_tablayout)
     TabLayout tabLayout;
     @BindView(R.id.student_info_view_pager)
     ViewPager viewPager;
     private Storage storage;
+    private StudentInfoViewPagerAdapter studentInfoViewPagerAdapter;
+
     public StudentInfoRootFragment() {
     }
 
