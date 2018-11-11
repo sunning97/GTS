@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -70,8 +68,6 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     private int day = 0;
     private int month = 0;
     private int year = 0;
-    private float x1, x2;
-    static final int MIN_DISTANCE = 150;
 
     private EpicDialog loadingDialog;
     private WeekScheduleTablayoutAdapter weekScheduleTablayoutAdapter;
