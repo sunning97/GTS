@@ -39,7 +39,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
         this.storage = new Storage(this.context);
     }
 
-    private void getDataScedules(Document document) {
+    private void getDataSchedules(Document document) {
         JSONObject dataWeek = new JSONObject();
         try {
             dataWeek.put("eventTarget", document.select("input[name=\"__EVENTTARGET\"]").val());
@@ -149,7 +149,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
-                    getDataScedules(document);
+                    getDataSchedules(document);
 
                     schedules = parseWeekData(document);
 
@@ -219,7 +219,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             .data("ctl00$ContentPlaceHolder$txtDate", dataWeek.getString("txtDate"))
                             .execute();
                     Document document = res.parse();
-                    getDataScedules(document);
+                    getDataSchedules(document);
 
                     data = parseWeekData(document);
 
@@ -249,7 +249,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                     default: {
                         currentStatus = 0;
                         iWeekSchedule.setDateToDate(jsonArray);
-                        iWeekSchedule.modifyDataOnfirst(jsonArray);
+                        iWeekSchedule.modifyDataChange(jsonArray);
                         iWeekSchedule.showAllComponent();
                         iWeekSchedule.dismissLoadingDialog();
                     }
@@ -290,7 +290,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             .data("ctl00$ContentPlaceHolder$txtDate", dataWeek.getString("txtDate"))
                             .execute();
                     Document document = res.parse();
-                    getDataScedules(document);
+                    getDataSchedules(document);
 
                     data = parseWeekData(document);
 
@@ -320,7 +320,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                     default: {
                         currentStatus = 0;
                         iWeekSchedule.setDateToDate(jsonArray);
-                        iWeekSchedule.modifyDataOnfirst(jsonArray);
+                        iWeekSchedule.modifyDataChange(jsonArray);
                         iWeekSchedule.showAllComponent();
                         iWeekSchedule.dismissLoadingDialog();
                     }
@@ -362,7 +362,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             .data("ctl00$ContentPlaceHolder$txtDate", dataWeek.getString("txtDate"))
                             .execute();
                     Document document = res.parse();
-                    getDataScedules(document);
+                    getDataSchedules(document);
 
                     data = parseWeekData(document);
 
@@ -434,7 +434,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             .data("ctl00$ContentPlaceHolder$txtDate", date)
                             .execute();
                     Document document = res.parse();
-                    getDataScedules(document);
+                    getDataSchedules(document);
 
                     data = parseWeekData(document);
 

@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.custom_views.CustomViewPager;
 import vn.edu.ut.gts.adapters.WeekScheduleTablayoutAdapter;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.WeekSchedulePresenter;
@@ -37,11 +37,11 @@ import vn.edu.ut.gts.presenters.home.WeekSchedulePresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener, IWeekSchedule {
+public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener, IWeekSchedule,OnSwipeOutListener {
     @BindView(R.id.week_schedule_tablayout)
     TabLayout tabLayout;
     @BindView(R.id.week_schedule_view_pager)
-    ViewPager viewPager;
+    CustomViewPager viewPager;
     @BindView(R.id.date_to_date)
     TextView dateToDate;
     @BindView(R.id.next_week)
@@ -79,6 +79,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_week_schedule, container, false);
         ButterKnife.bind(this, view);
+        viewPager.setOnSwipeOutListener(this);
         init();
         WeekSchedulePresenter.currentStatus = 0;
         weekSchedulePresenter = new WeekSchedulePresenter(this, getContext());
@@ -156,6 +157,8 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     public void modifyDataChange(JSONArray jsonArray) {
         weekScheduleTablayoutAdapter.setData(jsonArray);
         weekScheduleTablayoutAdapter.notifyDataSetChanged();
+        tabLayout.setScrollPosition(getCurrentDate(jsonArray), 0f, true);
+        viewPager.setCurrentItem(getCurrentDate(jsonArray));
     }
 
     @Override
@@ -221,5 +224,15 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     public void dismissLoadingDialog() {
         if (loadingDialog.isShowing())
             loadingDialog.dismisPopup();
+    }
+
+    @Override
+    public void onSwipeOutAtEnd() {
+        weekSchedulePresenter.getNextSchedulesWeek();
+    }
+
+    @Override
+    public void onSwipeOutAtStart() {
+        weekSchedulePresenter.getPrevSchedulesWeek();
     }
 }
