@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
@@ -88,7 +89,7 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mail_detail, container, false);
         ButterKnife.bind(this, view);
         epicDialog = new EpicDialog(context);
@@ -100,7 +101,7 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
     }
 
     @OnClick(R.id.retry_text)
-    public void retry(View view) {
+    public void retry() {
         MailDetailFragmentPresenter.currentStatus = 0;
         mailDetailFragmentPresenter.getDetailMail(data);
     }
@@ -124,7 +125,7 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
     }
 
     @OnClick(R.id.attach_file_card_view)
-    public void goDownloadFile(View view) {
+    public void goDownloadFile() {
         try {
             MailDetailFragmentPresenter.currentStatus = 0;
             String url = "http://tnbsv.ut.edu.vn/tnb_sv/" + dataDetail.getString("file_dinh_kem_url");

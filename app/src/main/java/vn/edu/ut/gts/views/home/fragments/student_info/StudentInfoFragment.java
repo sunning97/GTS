@@ -3,6 +3,7 @@ package vn.edu.ut.gts.views.home.fragments.student_info;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,7 +51,7 @@ public class StudentInfoFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_info, container, false);
 
         ButterKnife.bind(this,view);
@@ -59,8 +60,11 @@ public class StudentInfoFragment extends Fragment {
 
         Bundle bundle = getArguments();
         try {
-            JSONArray data = new JSONArray(bundle.getString("data"));
-            generateStudentInfo(data);
+            JSONArray data = null;
+            if (bundle != null) {
+                data = new JSONArray(bundle.getString("data"));
+                generateStudentInfo(data);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

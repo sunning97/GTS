@@ -183,7 +183,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 startActivity(HomeActivity.ATTENDANCE);
                 break;
             default:
-                return;
         }
     }
 

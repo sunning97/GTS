@@ -844,8 +844,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        return screenWidth;
+        return dm.widthPixels;
     }
 
     public void setStudentDetailData(JSONArray data) {

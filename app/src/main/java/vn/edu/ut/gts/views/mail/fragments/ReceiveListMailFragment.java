@@ -37,6 +37,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -72,7 +74,6 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     private OnItemClickListener onItemClickListener;
     private OnDeleteSuccess onDeleteSuccess;
     private IMailActivity iMailActivity;
-    private FadingCircle fadingCircle;
     private EpicDialog epicDialog;
     private AlertDialog alertDialog;
 
@@ -89,12 +90,12 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_receive_list_mail, container, false);
         ButterKnife.bind(this, view);
         ReceiveListMailFragmentPresenter.currentStatus = 0;
         receiveListMailFragmentPresenter = new ReceiveListMailFragmentPresenter(this, getContext());
-        fadingCircle = new FadingCircle();
+        FadingCircle fadingCircle = new FadingCircle();
         loadingIcon.setIndeterminateDrawable(fadingCircle);
         epicDialog = new EpicDialog(getContext());
         epicDialog.initLoadingDialog();
@@ -111,7 +112,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
 
     @OnClick(R.id.new_mail)
     public void newMail(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
         builder.setTitle("Oops...");
         builder.setMessage("Chức năng đang trong quá trình phát triển. Sẽ hoàn thiện sớm trong tương lai :)");
         builder.setCancelable(false);
@@ -127,7 +128,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     }
 
     @OnClick(R.id.retry_text)
-    public void retry(View view) {
+    public void retry() {
         ReceiveListMailFragmentPresenter.currentStatus = 0;
         receiveListMailFragmentPresenter.mail();
     }
@@ -223,7 +224,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
 
     @Override
     public void onItemClick(View view, int position, JSONObject data) {
-        Toolbar toolbar = getActivity().findViewById(R.id.mail_toolbar);
+        Toolbar toolbar = Objects.requireNonNull(getActivity()).findViewById(R.id.mail_toolbar);
         toolbar.setTitle("");
         this.onItemClickListener.onItemClick(view, position, data);
     }

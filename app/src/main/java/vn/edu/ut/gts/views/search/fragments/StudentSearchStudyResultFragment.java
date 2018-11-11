@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -31,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,23 +68,25 @@ public class StudentSearchStudyResultFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_search_study_result, container, false);
         ButterKnife.bind(this, view);
-        d = getContext().getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
         studyResultSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         epicDialog = new EpicDialog(getContext());
         setHasOptionsMenu(true);
         Bundle bundle = getArguments();
         try {
-            JSONObject data = new JSONObject(bundle.getString("data"));
-            this.data = data;
+            if (bundle != null) {
+                JSONObject data = new JSONObject(bundle.getString("data"));
+                this.data = data;
+                spinnerInit(createNewDataSpinner());
+                generateTableContent(0);
+                showAllComponent();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        spinnerInit(createNewDataSpinner());
-        generateTableContent(0);
-        showAllComponent();
         return view;
     }
 
@@ -90,6 +94,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.study_result_program_toolbar_menu, menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -109,6 +114,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
         }
         return true;
     }
+
     private TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
         header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -119,7 +125,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
             if (i == 0) {
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.4);
+                layoutParams.width = (int) (getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
             } else {
                 layoutParams.gravity = Gravity.CENTER;
                 layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.2);
@@ -148,14 +154,9 @@ public class StudentSearchStudyResultFragment extends Fragment {
             JSONArray subjects = semester.getJSONArray("subjects");
             for (int i = 0; i < subjects.length(); i++) {
                 JSONObject subject = (JSONObject) subjects.get(i);
-                try {
-                    if ((i + 1) % 2 != 0) {
-                        studyResultTable.addView(generateTableRow(subject, true));
-                    } else studyResultTable.addView(generateTableRow(subject, false));
-
-                } catch (Exception e) {
-
-                }
+                if ((i + 1) % 2 != 0) {
+                    studyResultTable.addView(generateTableRow(subject, true));
+                } else studyResultTable.addView(generateTableRow(subject, false));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -219,11 +220,9 @@ public class StudentSearchStudyResultFragment extends Fragment {
                     generateTableContent(position);
                 }
             });
-    } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException | JSONException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         studyResultTableHeader.addView(this.generateTableHeader());
@@ -238,8 +237,7 @@ public class StudentSearchStudyResultFragment extends Fragment {
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        return screenWidth;
+        return dm.widthPixels;
     }
 
     public void studyResultDetailShow(JSONObject jsonObject) {

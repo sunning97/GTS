@@ -3,6 +3,7 @@ package vn.edu.ut.gts.views.home.fragments.weekday;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -41,13 +42,15 @@ public class TuesdayFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_tuesday, container, false);
         ButterKnife.bind(this,view);
         Bundle bundle = getArguments();
         try {
-            data = new JSONObject(bundle.getString("data"));
-            go();
+            if (bundle != null) {
+                data = new JSONObject(bundle.getString("data"));
+                go();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

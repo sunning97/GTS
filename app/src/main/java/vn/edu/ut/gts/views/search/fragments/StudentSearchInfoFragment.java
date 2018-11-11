@@ -2,6 +2,7 @@ package vn.edu.ut.gts.views.search.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +58,7 @@ public class StudentSearchInfoFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_search_info, container, false);
         ButterKnife.bind(this, view);
 
@@ -65,8 +66,11 @@ public class StudentSearchInfoFragment extends Fragment {
 
         Bundle bundle = getArguments();
         try {
-            JSONArray data = new JSONArray(bundle.getString("data"));
-            generateStudentInfo(data);
+            if (bundle != null) {
+                JSONArray data = new JSONArray(bundle.getString("data"));
+                generateStudentInfo(data);
+
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -1,10 +1,12 @@
 package vn.edu.ut.gts.views.search.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -28,6 +30,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,37 +80,35 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_search_debt, container, false);
         ButterKnife.bind(this, view);
-        d = getContext().getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
         loadingDialog = new EpicDialog(getContext());
         loadingDialog.initLoadingDialog();
         Bundle bundle = getArguments();
         try {
-            JSONObject data = new JSONObject(bundle.getString("data"));
-            this.data = data;
-            JSONArray initData = new JSONArray(data.getString("init_semester"));
-            List<String> dataSnpinner = new ArrayList<>();
-            dataSnpinner.clear();
-            try {
+            if (bundle != null) {
+                JSONObject data = new JSONObject(bundle.getString("data"));
+                this.data = data;
+                JSONArray initData = new JSONArray(data.getString("init_semester"));
+                List<String> dataSnpinner = new ArrayList<>();
+                dataSnpinner.clear();
                 JSONArray semesters = new JSONArray(data.getString("semesters"));
                 for (int i = 0; i < semesters.length(); i++) {
                     JSONObject jsonObject = (JSONObject) semesters.get(i);
                     dataSnpinner.add(jsonObject.getString("text"));
                 }
                 initDebtSpinner(dataSnpinner);
-            } catch (IndexOutOfBoundsException e) {
-                e.printStackTrace();
-            } catch (Exception e) { }
-            if (StudentSearchDebtFragmentPresenter.currentStatus == 0) {
-                generateTableContent(initData);
-                showAllComponent();
-            } else showNetworkErrorLayout();
-        } catch (JSONException e) {
+                if (StudentSearchDebtFragmentPresenter.currentStatus == 0) {
+                    generateTableContent(initData);
+                    showAllComponent();
+                } else showNetworkErrorLayout();
+                studentSearchDebtFragmentPresenter = new StudentSearchDebtFragmentPresenter(this, getContext(), data);
+            }
+        } catch (IndexOutOfBoundsException | JSONException e) {
             e.printStackTrace();
         }
-        studentSearchDebtFragmentPresenter = new StudentSearchDebtFragmentPresenter(this, getContext(), data);
         return view;
     }
 
@@ -217,41 +218,37 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        return screenWidth;
+        return dm.widthPixels;
     }
 
     private String numberFormat(String num) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         List<String> resultArray = new ArrayList<>();
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         int counter = 0;
         for (int i = num.length() - 1; i >= 0; i--) {
-            temp += num.charAt(i);
+            temp.append(num.charAt(i));
             counter++;
             if (counter == 3) {
-                resultArray.add(temp);
+                resultArray.add(temp.toString());
                 counter = 0;
-                temp = "";
+                temp = new StringBuilder();
             }
         }
-        ;
         if (counter > 0) {
-            resultArray.add(temp);
+            resultArray.add(temp.toString());
         }
 
         for (int i = resultArray.size() - 1; i >= 0; i--) {
             String resTemp = resultArray.get(i);
             for (int j = resTemp.length() - 1; j >= 0; j--) {
-                result += resTemp.charAt(j);
+                result.append(resTemp.charAt(j));
             }
-            ;
             if (i > 0) {
-                result += ',';
+                result.append(',');
             }
         }
-        ;
-        return result;
+        return result.toString();
     }
 
     private int getTotalDeb(JSONArray data) {
@@ -304,6 +301,7 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
         noInternetLayout.setVisibility(View.VISIBLE);
     }
 
+    @SuppressLint("SetTextI18n")
     public void debtDetailShow(JSONObject jsonObject) {
         Log.d("CCC", jsonObject.toString());
         LayoutInflater factory = getLayoutInflater();
@@ -340,7 +338,7 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
     }
 
     @OnClick(R.id.retry_text)
-    public void rety(View view) {
+    public void retry() {
         StudentSearchDebtFragmentPresenter.currentStatus = 0;
         studentSearchDebtFragmentPresenter.getStudentDebt(0);
     }
