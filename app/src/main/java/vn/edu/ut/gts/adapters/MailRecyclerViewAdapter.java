@@ -18,13 +18,14 @@ import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.views.mail.fragments.OnBottomReachedListener;
 import vn.edu.ut.gts.views.mail.fragments.OnItemClickListener;
+import vn.edu.ut.gts.views.mail.fragments.OnTopReachedListener;
 
 public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerViewAdapter.RecyclerViewHolder> {
 
     private JSONArray data;
-    private Random random = new Random();
     private OnItemClickListener mOnItemClickListener;
     private OnBottomReachedListener onBottomReachedListener;
+    private OnTopReachedListener onTopReachedListener;
     private final String charBlue = "abc";
     private final String charBlueDark = "def";
     private final String charGray = "ghi";
@@ -33,11 +34,11 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
     private final String charPink = "pqrs";
     private final String charViolet = "tuvwxyz";
 
-    public MailRecyclerViewAdapter(JSONArray data, OnItemClickListener mOnItemClickListener, OnBottomReachedListener onBottomReachedListener) {
+    public MailRecyclerViewAdapter(JSONArray data, OnItemClickListener mOnItemClickListener, OnBottomReachedListener onBottomReachedListener, OnTopReachedListener onTopReachedListener) {
         this.data = data;
         this.mOnItemClickListener = mOnItemClickListener;
         this.onBottomReachedListener = onBottomReachedListener;
-
+        this.onTopReachedListener = onTopReachedListener;
     }
 
     public void setData(JSONArray data) {
@@ -56,7 +57,6 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
         try {
             JSONObject jsonObject = data.getJSONObject(position);
             if (!jsonObject.getBoolean("readed")) {
-                Log.d("AAAA", "asdasddasdas");
                 holder.txtSendTitle.setTypeface(holder.txtSendTitle.getTypeface(), Typeface.BOLD);
                 holder.txtSender.setTypeface(holder.txtSender.getTypeface(), Typeface.BOLD);
                 holder.txtSendDay.setTypeface(holder.txtSendDay.getTypeface(), Typeface.BOLD);
@@ -90,7 +90,7 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
             @Override
             public void onClick(View v) {
                 try {
-                    data.getJSONObject(position).put("readed","true");
+                    data.getJSONObject(position).put("readed", "true");
                     mOnItemClickListener.onItemClick(v, position, data.getJSONObject(position));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -98,10 +98,13 @@ public class MailRecyclerViewAdapter extends RecyclerView.Adapter<MailRecyclerVi
             }
         });
 
-        if (position == data.length() - 1)
-
-        {
+        if (position == data.length() - 1) {
             onBottomReachedListener.onBottomReached(position);
+        }
+        if (position == 0) {
+            onTopReachedListener.onTopReached();
+        } else {
+            //onTopReachedListener.onScrollToBottom();
         }
     }
 

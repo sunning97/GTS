@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.views.mail.fragments.IReceiveListMailFragment;
+import vn.edu.ut.gts.views.mail.fragments.ReceiveListMailFragment;
 
 public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmentPresenter {
     public static int currentStatus = 0;
@@ -44,9 +45,11 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
-                iReceiveListMailFragment.hideAllComponent();
-                iReceiveListMailFragment.hideNoInternetLayout();
-                iReceiveListMailFragment.showLoadingLayout();
+                if(!ReceiveListMailFragment.isReferesh){
+                    iReceiveListMailFragment.hideNoInternetLayout();
+                    iReceiveListMailFragment.hideAllComponent();
+                    iReceiveListMailFragment.showLoadingLayout();
+                }
             }
 
             @Override
@@ -131,16 +134,33 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (ReceiveListMailFragmentPresenter.currentStatus) {
                     case 400: {
-                        iReceiveListMailFragment.showNoInternetLayout();
-                        iReceiveListMailFragment.hideLoadingLayout();
+                        if(ReceiveListMailFragment.isReferesh) {
+                            iReceiveListMailFragment.refreshComplete();
+                            ReceiveListMailFragment.isReferesh = false;
+                        } else {
+                            iReceiveListMailFragment.showNoInternetLayout();
+                            iReceiveListMailFragment.hideLoadingLayout();
+                            iReceiveListMailFragment.disableRefresh();
+                        }
                         break;
                     }
                     case 500: {
-                        iReceiveListMailFragment.showNoInternetLayout();
-                        iReceiveListMailFragment.hideLoadingLayout();
+                        if(ReceiveListMailFragment.isReferesh) {
+                            iReceiveListMailFragment.refreshComplete();
+                            ReceiveListMailFragment.isReferesh = false;
+                        } else {
+                            iReceiveListMailFragment.showNoInternetLayout();
+                            iReceiveListMailFragment.hideLoadingLayout();
+                            iReceiveListMailFragment.disableRefresh();
+                        }
                         break;
                     }
                     default: {
+                        if(ReceiveListMailFragment.isReferesh) {
+                            iReceiveListMailFragment.refreshComplete();
+                            ReceiveListMailFragment.isReferesh = false;
+                        }
+                        iReceiveListMailFragment.enableRefresh();
                         iReceiveListMailFragment.setupData(jsonArray);
                         iReceiveListMailFragment.hideNoInternetLayout();
                         iReceiveListMailFragment.hideLoadingLayout();
@@ -221,7 +241,6 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                         mail.put((String) header.get(1), tdSender.text());
                         mail.put((String) header.get(2), tdDaySend.text());
                         mails.put(mail);
-                        storage.putString("list_mail", mails.toString());
                     }
                 } catch (SocketTimeoutException e) {
                     currentStatus = Helper.TIMEOUT;

@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,6 +46,7 @@ import butterknife.OnClick;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.adapters.MailRecyclerViewAdapter;
 import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.presenters.dashboard.DashboardPresenter;
 import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 import vn.edu.ut.gts.presenters.mail.MailActivityPresenter;
 import vn.edu.ut.gts.presenters.mail.ReceiveListMailFragmentPresenter;
@@ -53,7 +55,7 @@ import vn.edu.ut.gts.views.mail.IMailActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ReceiveListMailFragment extends Fragment implements IReceiveListMailFragment, OnItemClickListener, OnBottomReachedListener {
+public class ReceiveListMailFragment extends Fragment implements IReceiveListMailFragment, OnItemClickListener, OnBottomReachedListener,OnTopReachedListener{
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.new_mail)
@@ -66,8 +68,10 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     LinearLayout noInternetLayout;
     @BindView(R.id.retry_text)
     TextView retryText;
+    @BindView(R.id.receive_list_mail_swipe_refresh)
+    SwipeRefreshLayout receiveListMailSwipeRefresh;
 
-
+    public static Boolean isReferesh = false;
     private MailRecyclerViewAdapter mRcvAdapter;
     private ReceiveListMailFragmentPresenter receiveListMailFragmentPresenter;
     private JSONArray data;
@@ -99,13 +103,22 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
         loadingIcon.setIndeterminateDrawable(fadingCircle);
         epicDialog = new EpicDialog(getContext());
         epicDialog.initLoadingDialog();
-
+        receiveListMailSwipeRefresh.setEnabled(true);
         if (this.data == null) {
             receiveListMailFragmentPresenter.mail();
         } else {
             setupData(data);
             showAllComponent();
         }
+        receiveListMailSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                isReferesh = true;
+                ReceiveListMailFragmentPresenter.currentPage = 2;
+                receiveListMailSwipeRefresh.setRefreshing(true);
+                receiveListMailFragmentPresenter.mail();
+            }
+        });
 
         return view;
     }
@@ -136,7 +149,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     @Override
     public void setupData(JSONArray data) {
         this.data = data;
-        mRcvAdapter = new MailRecyclerViewAdapter(data, this, this);
+        mRcvAdapter = new MailRecyclerViewAdapter(data, this, this,this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -223,6 +236,21 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     }
 
     @Override
+    public void refreshComplete() {
+        receiveListMailSwipeRefresh.setRefreshing(false);
+    }
+
+    @Override
+    public void disableRefresh() {
+        receiveListMailSwipeRefresh.setEnabled(false);
+    }
+
+    @Override
+    public void enableRefresh() {
+        receiveListMailSwipeRefresh.setEnabled(true);
+    }
+
+    @Override
     public void onItemClick(View view, int position, JSONObject data) {
         Toolbar toolbar = Objects.requireNonNull(getActivity()).findViewById(R.id.mail_toolbar);
         toolbar.setTitle("");
@@ -243,4 +271,13 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     }
 
 
+    @Override
+    public void onTopReached() {
+        receiveListMailSwipeRefresh.setEnabled(true);
+    }
+
+    @Override
+    public void onScrollToBottom() {
+        receiveListMailSwipeRefresh.setEnabled(false);
+    }
 }

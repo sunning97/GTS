@@ -2,7 +2,7 @@ package vn.edu.ut.gts.views.mail.fragments;
 
 import org.json.JSONArray;
 
-public interface IReceiveListMailFragment {
+public interface ISentListMailFragment {
     void setupData(JSONArray data);
     void hideAllComponent();
     void showAllComponent();
@@ -10,14 +10,6 @@ public interface IReceiveListMailFragment {
     void showLoadingLayout();
     void showLoadingDialog();
     void dismissLoadingDialog();
-    void updateDataListMail(JSONArray data);
-    void updateDataAfterDelete(int position);
-    void showLoadingInMailActivity();
-    void dismissLoadingInMailActivity();
-    void showDeleteFailedInMainActivity();
     void showNoInternetLayout();
     void hideNoInternetLayout();
-    void refreshComplete();
-    void disableRefresh();
-    void enableRefresh();
 }

@@ -39,6 +39,7 @@ import vn.edu.ut.gts.views.mail.fragments.OnDeleteSuccess;
 import vn.edu.ut.gts.views.mail.fragments.OnItemClickListener;
 import vn.edu.ut.gts.views.mail.fragments.OnMailDeleteClick;
 import vn.edu.ut.gts.views.mail.fragments.ReceiveListMailFragment;
+import vn.edu.ut.gts.views.mail.fragments.SentListMailFragment;
 
 public class MailActivity extends AppCompatActivity implements IMailActivity,NavigationView.OnNavigationItemSelectedListener,OnItemClickListener,OnMailDeleteClick,OnDeleteSuccess {
     @BindView(R.id.mail_toolbar)
@@ -58,6 +59,7 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Storage storage;
     private  ReceiveListMailFragment receiveListMailFragment;
+    private SentListMailFragment sentListMailFragment;
     private AlertDialog alertDialog;
     private EpicDialog epicDialog;
 
@@ -70,6 +72,7 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
         epicDialog.initLoadingDialog();
 
         receiveListMailFragment = new ReceiveListMailFragment(this,this,this);
+        sentListMailFragment = new SentListMailFragment();
         this.storage = new Storage(MailActivity.this);
         setSupportActionBar(mailToolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
@@ -99,7 +102,6 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         drawerLayout.closeDrawers();
         switch (item.getItemId()){
             case R.id.receive_mail:{
@@ -116,20 +118,30 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
                 break;
             }
             case R.id.sent_mail:{
-                item.setChecked(false);
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Oops...");
-                builder.setMessage("Chức năng đang trong quá trình phát triển. Sẽ hoàn thiện sớm trong tương lai :)");
-                builder.setCancelable(false);
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog = builder.create();
-                alertDialog.show();
-                alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+                item.setChecked(true);
+                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.mail_fragment_container);
+                if(currentFragment instanceof SentListMailFragment) break;
+                else {
+                    getSupportFragmentManager().beginTransaction().replace(
+                            R.id.mail_fragment_container,
+                            sentListMailFragment
+                    ).commit();
+                    setTitle("Thông tin nội bộ");
+                }
+//                item.setChecked(false);
+//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                builder.setTitle("Oops...");
+//                builder.setMessage("Chức năng đang trong quá trình phát triển. Sẽ hoàn thiện sớm trong tương lai :)");
+//                builder.setCancelable(false);
+//                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        alertDialog.dismiss();
+//                    }
+//                });
+//                alertDialog = builder.create();
+//                alertDialog.show();
+//                alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
                 break;
             }
         }
@@ -155,7 +167,7 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
     @Override
     public void onBackPressed() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.mail_fragment_container);
-        if(currentFragment instanceof ReceiveListMailFragment){
+        if(currentFragment instanceof ReceiveListMailFragment || currentFragment instanceof SentListMailFragment){
             super.onBackPressed();
         } else {
             Menu menu = navigationView.getMenu();
