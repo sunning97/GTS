@@ -2,6 +2,7 @@ package vn.edu.ut.gts.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.views.mail.fragments.OnItemClickListener;
 
 public class MailSentRecyclerViewAdapter extends RecyclerView.Adapter<MailSentRecyclerViewAdapter.MailSentRecyclerViewHolder>{
     private JSONArray data;
+    private OnItemClickListener onItemClickListener;
 
-    public MailSentRecyclerViewAdapter(JSONArray data){
+    public MailSentRecyclerViewAdapter(JSONArray data,OnItemClickListener onItemClickListener){
         this.data  = data;
+        this.onItemClickListener = onItemClickListener;
     }
 
     public MailSentRecyclerViewAdapter(){
@@ -40,7 +44,7 @@ public class MailSentRecyclerViewAdapter extends RecyclerView.Adapter<MailSentRe
 
 
     @Override
-    public void onBindViewHolder(@NonNull MailSentRecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MailSentRecyclerViewHolder holder, final int position) {
         try {
             JSONObject jsonObject = data.getJSONObject(position);
             holder.txtSendTitle.setText(jsonObject.getString("tieu_de"));
@@ -49,6 +53,17 @@ public class MailSentRecyclerViewAdapter extends RecyclerView.Adapter<MailSentRe
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    onItemClickListener.onSentMailItemCLick(v,position,data.getJSONObject(position));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 

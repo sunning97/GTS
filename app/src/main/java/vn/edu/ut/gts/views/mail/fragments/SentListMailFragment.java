@@ -1,6 +1,7 @@
 package vn.edu.ut.gts.views.mail.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +10,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.style.FadingCircle;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Objects;
 
@@ -34,7 +38,7 @@ import vn.edu.ut.gts.presenters.mail.SentListMailFragmentPresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SentListMailFragment extends Fragment implements ISentListMailFragment{
+public class SentListMailFragment extends Fragment implements ISentListMailFragment,OnItemClickListener{
     @BindView(R.id.sent_list_mail_swipe_refresh)
     SwipeRefreshLayout sentListMailSwipeRefresh;
     @BindView(R.id.recycler_view)
@@ -55,11 +59,15 @@ public class SentListMailFragment extends Fragment implements ISentListMailFragm
     private JSONArray data;
     private EpicDialog epicDialog;
     private AlertDialog alertDialog;
+    private OnItemClickListener onItemClickListener;
 
     public SentListMailFragment() {
 
     }
-
+    @SuppressLint("ValidFragment")
+    public SentListMailFragment(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -107,7 +115,7 @@ public class SentListMailFragment extends Fragment implements ISentListMailFragm
     @Override
     public void setupData(JSONArray data) {
         this.data = data;
-        mailSentRecyclerViewAdapter = new MailSentRecyclerViewAdapter(data);
+        mailSentRecyclerViewAdapter = new MailSentRecyclerViewAdapter(data,this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
@@ -154,5 +162,17 @@ public class SentListMailFragment extends Fragment implements ISentListMailFragm
     @Override
     public void hideNoInternetLayout() {
         noInternetLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onItemClick(View view, int position, JSONObject data) {
+
+    }
+
+    @Override
+    public void onSentMailItemCLick(View view, int position, JSONObject data) {
+        Toolbar toolbar = Objects.requireNonNull(getActivity()).findViewById(R.id.mail_toolbar);
+        toolbar.setTitle("");
+        this.onItemClickListener.onSentMailItemCLick(view,position,data);
     }
 }

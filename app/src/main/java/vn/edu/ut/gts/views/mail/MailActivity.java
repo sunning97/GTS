@@ -35,6 +35,7 @@ import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.mail.MailActivityPresenter;
 import vn.edu.ut.gts.views.mail.fragments.MailDetailFragment;
+import vn.edu.ut.gts.views.mail.fragments.MailSentDetailFragment;
 import vn.edu.ut.gts.views.mail.fragments.OnDeleteSuccess;
 import vn.edu.ut.gts.views.mail.fragments.OnItemClickListener;
 import vn.edu.ut.gts.views.mail.fragments.OnMailDeleteClick;
@@ -72,7 +73,7 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
         epicDialog.initLoadingDialog();
 
         receiveListMailFragment = new ReceiveListMailFragment(this,this,this);
-        sentListMailFragment = new SentListMailFragment();
+        sentListMailFragment = new SentListMailFragment(this);
         this.storage = new Storage(MailActivity.this);
         setSupportActionBar(mailToolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
@@ -165,19 +166,40 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
     }
 
     @Override
+    public void onSentMailItemCLick(View view, int position, JSONObject data) {
+        TextView textView = view.findViewById(R.id.mail_circle);
+        getSupportFragmentManager().beginTransaction().replace(
+                R.id.mail_fragment_container,
+                new MailSentDetailFragment(data,this,textView.getBackground(),position)
+        ).commit();
+        setTitle("");
+    }
+
+    @Override
     public void onBackPressed() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.mail_fragment_container);
         if(currentFragment instanceof ReceiveListMailFragment || currentFragment instanceof SentListMailFragment){
             super.onBackPressed();
         } else {
             Menu menu = navigationView.getMenu();
-            MenuItem menuItem = menu.findItem(R.id.receive_mail);
-            menuItem.setChecked(true);
-            getSupportFragmentManager().beginTransaction().replace(
-                    R.id.mail_fragment_container,
-                    receiveListMailFragment
-            ).commit();
-            setTitle("Thông tin nội bộ");
+            if(currentFragment instanceof  MailSentDetailFragment){
+                MenuItem menuItem = menu.findItem(R.id.sent_mail);
+                menuItem.setChecked(true);
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.mail_fragment_container,
+                        sentListMailFragment
+                ).commit();
+                setTitle("Thông tin nội bộ");
+            } else if (currentFragment instanceof MailDetailFragment){
+                MenuItem menuItem = menu.findItem(R.id.receive_mail);
+                menuItem.setChecked(true);
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.mail_fragment_container,
+                        receiveListMailFragment
+                ).commit();
+                setTitle("Thông tin nội bộ");
+            }
+
         }
     }
 

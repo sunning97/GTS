@@ -258,6 +258,11 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     }
 
     @Override
+    public void onSentMailItemCLick(View view, int position, JSONObject data) {
+
+    }
+
+    @Override
     public void onBottomReached(int position) {
         receiveListMailFragmentPresenter.getMailByPage(ReceiveListMailFragmentPresenter.currentPage, data);
     }

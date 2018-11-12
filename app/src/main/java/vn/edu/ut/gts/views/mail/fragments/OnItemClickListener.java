@@ -6,4 +6,5 @@ import org.json.JSONObject;
 
 public interface OnItemClickListener {
     void onItemClick(View view, int position,JSONObject data);
+    void onSentMailItemCLick(View view, int position,JSONObject data);
 }
