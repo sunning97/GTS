@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.mail.MailSentDetailFragmentPresenter;
@@ -87,7 +88,11 @@ public class MailSentDetailFragment extends Fragment implements IMailSentDetailF
         return  view;
     }
 
-
+    @OnClick(R.id.retry_text)
+    public void retry() {
+        MailSentDetailFragmentPresenter.currentStatus = 0;
+        mailSentDetailFragmentPresenter.getDetailMail(data);
+    }
     @SuppressLint("SetTextI18n")
     @Override
     public void setMailDetailContent(JSONObject jsonObject) {
