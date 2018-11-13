@@ -129,20 +129,7 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
                     ).commit();
                     setTitle("Thông tin nội bộ");
                 }
-//                item.setChecked(false);
-//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                builder.setTitle("Oops...");
-//                builder.setMessage("Chức năng đang trong quá trình phát triển. Sẽ hoàn thiện sớm trong tương lai :)");
-//                builder.setCancelable(false);
-//                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        alertDialog.dismiss();
-//                    }
-//                });
-//                alertDialog = builder.create();
-//                alertDialog.show();
-//                alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+
                 break;
             }
         }

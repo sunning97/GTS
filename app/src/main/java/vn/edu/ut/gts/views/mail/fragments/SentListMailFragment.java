@@ -73,6 +73,7 @@ public class SentListMailFragment extends Fragment implements ISentListMailFragm
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sent_list_mail, container, false);
         ButterKnife.bind(this,view);
+        sentListMailSwipeRefresh.setEnabled(false);
         SentListMailFragmentPresenter.currentStatus = 0;
         sentListMailFragmentPresenter = new SentListMailFragmentPresenter(this,getContext());
         FadingCircle fadingCircle = new FadingCircle();
