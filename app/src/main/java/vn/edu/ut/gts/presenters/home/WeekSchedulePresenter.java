@@ -117,7 +117,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                 schedule.put("evening", objEvening);
                 data.put(schedule);
             }
-        } catch (Exception e) {
+        } catch (IndexOutOfBoundsException | NullPointerException | JSONException e) {
             e.printStackTrace();
         }
         return data;

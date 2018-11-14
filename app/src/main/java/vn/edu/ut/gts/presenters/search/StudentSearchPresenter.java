@@ -31,13 +31,11 @@ import vn.edu.ut.gts.views.search.StudentSearchActivity;
 public class StudentSearchPresenter implements IStudentSearchPresenter {
     public static int currentStatus = 0;
     private IStudentSearchActivity iStudentSearchActivity;
-    private Context context;
     private Storage storage;
 
     public StudentSearchPresenter(IStudentSearchActivity iStudentSearchActivity, Context context) {
         this.iStudentSearchActivity = iStudentSearchActivity;
-        this.context = context;
-        storage = new Storage(this.context);
+        storage = new Storage(context);
     }
 
     public void getDataSearch() {
@@ -71,9 +69,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                     currentStatus = Helper.NO_CONNECTION;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return result;
@@ -144,8 +140,6 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                             .cookie("ASP.NET_SessionId", dataSearch.getString("cookie"))
                             .timeout(Helper.TIMEOUT_VALUE).execute();
 
-                    Log.e("INPUT", bundle.toString());
-
                     Document document = res.parse();
                     Elements trs = document.select("#TblDanhSachSinhVien tr");
                     if (!trs.get(1).text().equals("Không tìm thấy dữ liệu!")) {
@@ -168,11 +162,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (NullPointerException | IndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (NullPointerException | IndexOutOfBoundsException | JSONException | IOException e) {
                     e.printStackTrace();
                 }
                 return students;
@@ -274,11 +264,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (IndexOutOfBoundsException | NullPointerException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return result;
@@ -331,7 +317,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                 studentDetail.put(prop);
             }
             info.put("learnDetail", studentDetail);
-        } catch (JSONException e) {
+        } catch (NullPointerException | IndexOutOfBoundsException | JSONException e) {
             e.printStackTrace();
         }
         return info;
@@ -453,9 +439,7 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                 allQuater.put(jsonObject);
             }
             result.put("all_semester", allQuater);
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IndexOutOfBoundsException | NullPointerException | JSONException e) {
             e.printStackTrace();
         }
         return result;

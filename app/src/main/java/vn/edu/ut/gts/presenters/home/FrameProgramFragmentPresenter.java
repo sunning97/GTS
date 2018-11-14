@@ -235,9 +235,9 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException e) {
+                } catch (IndexOutOfBoundsException | NullPointerException e) {
                     e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return returnData;

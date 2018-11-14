@@ -23,14 +23,12 @@ import vn.edu.ut.gts.views.search.fragments.IStudentSearchDebtFragment;
 public class StudentSearchDebtFragmentPresenter implements IStudentSearchDebtFragmentPresenter{
     public static int currentStatus = 0;
     private IStudentSearchDebtFragment iStudentSearchDebtFragment;
-    private Context context;
     private Storage storage;
     private JSONObject data;
     public StudentSearchDebtFragmentPresenter(IStudentSearchDebtFragment iStudentSearchDebtFragment,Context context,JSONObject data){
         this.iStudentSearchDebtFragment = iStudentSearchDebtFragment;
-        this.context = context;
         this.data = data;
-        this.storage = new Storage(this.context);
+        this.storage = new Storage(context);
     }
 
     public void getStudentDebt(final int pos) {
@@ -82,9 +80,7 @@ public class StudentSearchDebtFragmentPresenter implements IStudentSearchDebtFra
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                     currentStatus = Helper.NO_CONNECTION;
-                } catch (IndexOutOfBoundsException e){
-                    e.printStackTrace();
-                }catch (IOException | JSONException e) {
+                } catch (NullPointerException | IndexOutOfBoundsException |IOException | JSONException e){
                     e.printStackTrace();
                 }
                 return result;

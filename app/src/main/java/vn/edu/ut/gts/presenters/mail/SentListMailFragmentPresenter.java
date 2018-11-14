@@ -37,7 +37,7 @@ public class SentListMailFragmentPresenter implements ISentListMailFragmentPrese
         this.storage = new Storage(context);
     }
 
-    public void mail() {
+    public void getListMail() {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
@@ -115,7 +115,7 @@ public class SentListMailFragmentPresenter implements ISentListMailFragmentPrese
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException | JSONException e) {
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return mails;

@@ -105,7 +105,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
         epicDialog.initLoadingDialog();
         receiveListMailSwipeRefresh.setEnabled(true);
         if (this.data == null) {
-            receiveListMailFragmentPresenter.mail();
+            receiveListMailFragmentPresenter.getListmail();
         } else {
             setupData(data);
             showAllComponent();
@@ -116,7 +116,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
                 isReferesh = true;
                 ReceiveListMailFragmentPresenter.currentPage = 2;
                 receiveListMailSwipeRefresh.setRefreshing(true);
-                receiveListMailFragmentPresenter.mail();
+                receiveListMailFragmentPresenter.getListmail();
             }
         });
 
@@ -143,7 +143,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     @OnClick(R.id.retry_text)
     public void retry() {
         ReceiveListMailFragmentPresenter.currentStatus = 0;
-        receiveListMailFragmentPresenter.mail();
+        receiveListMailFragmentPresenter.getListmail();
     }
 
     @Override
@@ -264,7 +264,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
 
     @Override
     public void onBottomReached(int position) {
-        receiveListMailFragmentPresenter.getMailByPage(ReceiveListMailFragmentPresenter.currentPage, data);
+        receiveListMailFragmentPresenter.getListmail(ReceiveListMailFragmentPresenter.currentPage, data);
     }
 
     public void deleteAt(int position) {

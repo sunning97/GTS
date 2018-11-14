@@ -40,7 +40,7 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
         this.storage = new Storage(this.context);
     }
 
-    public void mail() {
+    public void getListmail() {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
@@ -123,7 +123,7 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException | JSONException e) {
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return mails;
@@ -171,7 +171,7 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
         asyncTask.execute();
     }
 
-    public void getMailByPage(final int page, final JSONArray prevMail) {
+    public void getListmail(final int page, final JSONArray prevMail) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
@@ -247,7 +247,7 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException | JSONException e) {
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return mails;
@@ -320,7 +320,13 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
                     if (success.size() > 0) {
                         result = true;
                     }
-                } catch (IOException e) {
+                } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
+                    e.printStackTrace();
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException e) {
                     e.printStackTrace();
                 }
                 return result;

@@ -82,7 +82,7 @@ public class SentListMailFragment extends Fragment implements ISentListMailFragm
         epicDialog.initLoadingDialog();
 
         if (this.data == null) {
-            sentListMailFragmentPresenter.mail();
+            sentListMailFragmentPresenter.getListMail();
         } else {
             setupData(data);
             showAllComponent();
@@ -110,7 +110,7 @@ public class SentListMailFragment extends Fragment implements ISentListMailFragm
     @OnClick(R.id.retry_text)
     public void retry() {
         SentListMailFragmentPresenter.currentStatus = 0;
-        sentListMailFragmentPresenter.mail();
+        sentListMailFragmentPresenter.getListMail();
     }
 
     @Override

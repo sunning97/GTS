@@ -164,7 +164,7 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IndexOutOfBoundsException | IOException | JSONException e){
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException | JSONException e){
                     e.printStackTrace();
                 }
                 return data;

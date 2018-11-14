@@ -31,13 +31,11 @@ public class LoginProcess implements ILoginProcess {
     public static int currentStatus = LOGIN_FAILED;
 
     private ILoginView iLoginView;
-    private Context context;
     private Storage storage;
 
     public LoginProcess(ILoginView iLoginView, Context context) {
         this.iLoginView = iLoginView;
-        this.context = context;
-        this.storage = new Storage(this.context);
+        this.storage = new Storage(context);
     }
 
     public void initData(final boolean isAuto) {
@@ -78,9 +76,7 @@ public class LoginProcess implements ILoginProcess {
                 } catch (UnknownHostException e) {
                     result = LoginProcess.NO_INTERNET;
                     currentStatus = result;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (JSONException | IOException e) {
                     e.printStackTrace();
                 }
 
@@ -158,13 +154,15 @@ public class LoginProcess implements ILoginProcess {
 
                     if (Helper.checkLogin(storage.getCookie())) result = LoginProcess.LOGIN_SUCCESS;
 
-                } catch (SocketTimeoutException connTimeout) {
-                    result = LoginProcess.TIMEOUT;
-                } catch (NullPointerException e) {
-                    result = LoginProcess.NO_INTERNET;
-                } catch (JSONException e) {
+                } catch (SocketTimeoutException e) {
                     e.printStackTrace();
-                } catch (IOException e) {
+                    result = LoginProcess.TIMEOUT;
+                } catch (UnknownHostException e){
+                    e.printStackTrace();
+                    result = LoginProcess.NO_INTERNET;
+                } catch (NullPointerException | IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                } catch (JSONException | IOException e) {
                     e.printStackTrace();
                 }
 
@@ -222,20 +220,26 @@ public class LoginProcess implements ILoginProcess {
             res = res.replace(";/*", "");
             JSONArray ar = new JSONArray(res);
             return Helper.decryptMd5(ar.getString(1));
-        } catch (JSONException e) {
+
+        } catch (NullPointerException | IndexOutOfBoundsException | JSONException e) {
             e.printStackTrace();
         }
         return "";
     }
     private String getPrivateKey(String studentId) {
-        String res = Curl.connect(Helper.BASE_URL + "ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx")
-                .method("POST")
-                .userAgent(Helper.USER_AGENT)
-                .header("X-AjaxPro-Method", "GetPrivateKey")
-                .setStringCookie(this.storage.getCookie())
-                .dataString("{\"salt\":\"" + studentId + "\"}")
-                .execute();
-        if (res != null) return res.substring(1, 33);
-        return null;
+        String result = null;
+        try {
+            String res = Curl.connect(Helper.BASE_URL + "ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx")
+                    .method("POST")
+                    .userAgent(Helper.USER_AGENT)
+                    .header("X-AjaxPro-Method", "GetPrivateKey")
+                    .setStringCookie(this.storage.getCookie())
+                    .dataString("{\"salt\":\"" + studentId + "\"}")
+                    .execute();
+            if (res != null) result =  res.substring(1, 33);
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

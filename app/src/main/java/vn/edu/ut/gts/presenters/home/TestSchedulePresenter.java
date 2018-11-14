@@ -82,7 +82,7 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IndexOutOfBoundsException e) {
+                } catch (IndexOutOfBoundsException | NullPointerException e) {
                     e.printStackTrace();
                 } catch (IOException | JSONException e) {
                     currentStatus = Helper.NO_CONNECTION;
@@ -160,9 +160,7 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                } catch (NullPointerException e) {
+                } catch (IndexOutOfBoundsException | NullPointerException e) {
                     e.printStackTrace();
                 } catch (IOException | JSONException e) {
                     currentStatus = Helper.NO_CONNECTION;
@@ -225,11 +223,7 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
                 result.put(subject);
             }
 
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IndexOutOfBoundsException | NullPointerException | JSONException e) {
             e.printStackTrace();
         }
         return result;

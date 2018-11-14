@@ -173,9 +173,9 @@ public class StudentStudyResultFragmentPresenter implements IStudentStudyResultF
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException e) {
+                } catch (IndexOutOfBoundsException | JSONException e) {
                     e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
                 return result;

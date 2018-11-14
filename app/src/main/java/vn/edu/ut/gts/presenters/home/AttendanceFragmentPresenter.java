@@ -165,7 +165,7 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IndexOutOfBoundsException e) {
+                } catch (IndexOutOfBoundsException | NullPointerException e) {
                     e.printStackTrace();
                 } catch (IOException | JSONException e) {
                     currentStatus = Helper.NO_CONNECTION;

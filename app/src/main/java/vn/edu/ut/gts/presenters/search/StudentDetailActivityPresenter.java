@@ -166,7 +166,7 @@ public class StudentDetailActivityPresenter {
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (NullPointerException | IOException | JSONException e) {
+                } catch (IndexOutOfBoundsException | NullPointerException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return result;
@@ -219,7 +219,7 @@ public class StudentDetailActivityPresenter {
                 studentDetail.put(prop);
             }
             info.put("learnDetail", studentDetail);
-        } catch (JSONException e) {
+        } catch (IndexOutOfBoundsException | NullPointerException | JSONException e) {
             e.printStackTrace();
         }
         return info;
@@ -341,9 +341,7 @@ public class StudentDetailActivityPresenter {
                 allQuater.put(jsonObject);
             }
             result.put("all_semester", allQuater);
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (NullPointerException | IndexOutOfBoundsException | JSONException e) {
             e.printStackTrace();
         }
         return result;

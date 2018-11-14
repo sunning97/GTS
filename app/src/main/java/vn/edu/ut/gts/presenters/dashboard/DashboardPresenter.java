@@ -76,7 +76,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                     } catch (SocketTimeoutException e) {
                         DashboardPresenter.currentStatus = Helper.TIMEOUT;
                     } catch (UnknownHostException e) {
-                        currentStatus = Helper.NO_CONNECTION;
+                        DashboardPresenter.currentStatus = Helper.NO_CONNECTION;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -198,7 +198,7 @@ public class DashboardPresenter implements IDashboardPresenter {
                 studentFamily.put(prop);
             }
             info.put("studentFamily", studentFamily);
-        } catch (JSONException e) {
+        } catch (NullPointerException | IndexOutOfBoundsException | JSONException e) {
             e.printStackTrace();
         }
         return info;

@@ -79,7 +79,7 @@ public class MailSentDetailFragmentPresenter implements IMailSentDetailFragmentP
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException | JSONException e) {
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return mailDetail;

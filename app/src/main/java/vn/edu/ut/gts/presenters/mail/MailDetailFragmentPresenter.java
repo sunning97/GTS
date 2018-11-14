@@ -103,7 +103,7 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
                 } catch (UnknownHostException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
-                } catch (IOException | JSONException e) {
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return mailDetail;
@@ -161,15 +161,10 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
 
                     File file;
                     FileOutputStream outputStream;
-                    try {
                         file = new File(Environment.getExternalStorageDirectory() + "/Download", fileName);
-                        Log.d("MainActivity", Environment.getExternalStorageDirectory().getAbsolutePath());
                         outputStream = new FileOutputStream(file);
                         outputStream.write(resultImageResponse.bodyAsBytes());
                         outputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }catch (SocketTimeoutException e) {
                     currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
@@ -204,6 +199,7 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
                     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(1);
                     notificationManager.notify(2, notification);
+                    Toast.makeText(context, "Tải file thành công vào thư mực "+Environment.getExternalStorageDirectory() + "/Download", Toast.LENGTH_LONG).show();
                     try {
                         String a = fileName;
                         String[] b = a.split("\\.(?=[^\\.]+$)");
@@ -215,7 +211,7 @@ public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter
                         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         context.startActivity(intent);
                     } catch (ActivityNotFoundException e) {
-                        Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Không tìm thấy ứng dụng phù hợp để mở", Toast.LENGTH_LONG).show();
                     }
                 }
             }
