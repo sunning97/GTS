@@ -1,6 +1,5 @@
 package vn.edu.ut.gts.views.home;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,10 +9,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -23,9 +20,8 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.views.dashboard.DashboardActivity;

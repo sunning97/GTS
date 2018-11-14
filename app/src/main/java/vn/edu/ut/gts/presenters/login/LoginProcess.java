@@ -3,7 +3,6 @@ package vn.edu.ut.gts.presenters.login;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,18 +10,15 @@ import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
-import vn.edu.ut.gts.actions.Login;
-import vn.edu.ut.gts.actions.Student;
-import vn.edu.ut.gts.actions.helpers.Aes;
-import vn.edu.ut.gts.actions.helpers.Curl;
-import vn.edu.ut.gts.actions.helpers.Helper;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Aes;
+import vn.edu.ut.gts.helpers.Curl;
+import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.login.ILoginView;
 

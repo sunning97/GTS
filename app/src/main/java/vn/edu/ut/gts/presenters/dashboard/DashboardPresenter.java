@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,10 +18,8 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
-import vn.edu.ut.gts.actions.helpers.Helper;
-import vn.edu.ut.gts.actions.helpers.Storage;
-import vn.edu.ut.gts.presenters.login.LoginProcess;
-import vn.edu.ut.gts.views.dashboard.DashboardActivity;
+import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.views.dashboard.IDashboardActivity;
 import vn.edu.ut.gts.views.home.HomeActivity;
 

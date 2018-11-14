@@ -4,13 +4,11 @@ package vn.edu.ut.gts.views.home.fragments;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.elyeproj.loaderviewlibrary.LoaderTextView;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.viethoa.DialogUtils;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -37,12 +34,10 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Helper;
+import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.StudentDebtFragmentPresenter;
-import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 
 /**
  * A simple {@link Fragment} subclass.

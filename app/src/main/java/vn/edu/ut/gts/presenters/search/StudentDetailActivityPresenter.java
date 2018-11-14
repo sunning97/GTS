@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,8 +21,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.edu.ut.gts.actions.helpers.Helper;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.views.search.IStudentDetailActivity;
 
 public class StudentDetailActivityPresenter {

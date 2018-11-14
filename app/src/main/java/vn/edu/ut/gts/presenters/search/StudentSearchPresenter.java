@@ -22,9 +22,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.edu.ut.gts.actions.helpers.Curl;
-import vn.edu.ut.gts.actions.helpers.Helper;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Curl;
+import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.views.search.IStudentSearchActivity;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
 

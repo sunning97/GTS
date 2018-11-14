@@ -3,14 +3,12 @@ package vn.edu.ut.gts.presenters.mail;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -33,8 +31,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Helper;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.views.mail.fragments.IMailDetailFragment;
 
 public class MailDetailFragmentPresenter implements IMailDetailFragmentPresenter {

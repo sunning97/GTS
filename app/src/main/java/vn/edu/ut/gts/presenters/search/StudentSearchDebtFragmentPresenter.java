@@ -3,7 +3,6 @@ package vn.edu.ut.gts.presenters.search;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,8 +16,8 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
-import vn.edu.ut.gts.actions.helpers.Helper;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.views.search.fragments.IStudentSearchDebtFragment;
 
 public class StudentSearchDebtFragmentPresenter implements IStudentSearchDebtFragmentPresenter{

@@ -1,4 +1,4 @@
-package vn.edu.ut.gts.actions.helpers;
+package vn.edu.ut.gts.helpers;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;

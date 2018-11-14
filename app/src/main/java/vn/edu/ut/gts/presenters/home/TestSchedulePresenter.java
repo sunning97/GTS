@@ -3,6 +3,7 @@ package vn.edu.ut.gts.presenters.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,22 +20,20 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.edu.ut.gts.actions.helpers.Helper;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.views.home.fragments.ITestScheduleFragment;
+import vn.edu.ut.gts.views.home.fragments.TestScheduleFragment;
 
 public class TestSchedulePresenter implements ITestSchedulePresenter {
     public static int currentStatus = 0;
     private ITestScheduleFragment iTestScheduleFragment;
-    private Context context;
     private Storage storage;
 
     public TestSchedulePresenter(ITestScheduleFragment iTestScheduleFragment, Context context) {
         this.iTestScheduleFragment = iTestScheduleFragment;
-        this.context = context;
-        this.storage = new Storage(this.context);
+        this.storage = new Storage(context);
     }
-
 
     public void getDataTestSchedule() {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
@@ -45,7 +44,6 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
 
             @Override
             protected JSONObject doInBackground(Void... voids) {
-                JSONObject result = new JSONObject();
                 JSONObject dataInit = new JSONObject();
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "XemLichThi.aspx")
@@ -77,12 +75,7 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
                         semester.put(jsonObject);
                     }
                     dataInit.put("semester", semester);
-
-                    storage.putString("data_test_schedule", dataInit.toString());
-
-                    JSONArray data = parseData(document);
-                    result.put("semester", semester);
-                    result.put("data", data);
+                    storage.putString("data_test_schedule",dataInit.toString());
                 } catch (SocketTimeoutException e) {
                     currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
@@ -90,12 +83,12 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
                 } catch (IndexOutOfBoundsException e) {
-
+                    e.printStackTrace();
                 } catch (IOException | JSONException e) {
                     currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
                 }
-                return result;
+                return dataInit;
             }
 
             @Override
@@ -115,13 +108,9 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
                     }
                     default: {
                         try {
-                            JSONArray data = jsonObject.getJSONArray("data");
                             JSONArray semester = jsonObject.getJSONArray("semester");
                             iTestScheduleFragment.setupDataSpiner(semester);
-                            iTestScheduleFragment.generateTableContent(data);
-                            iTestScheduleFragment.hideNoInternetLayout();
-                            iTestScheduleFragment.showAllComponent();
-                            iTestScheduleFragment.dismissLoadingDialog();
+                            getDataTestSchedule(TestScheduleFragment.currentPos);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

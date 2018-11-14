@@ -19,7 +19,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Storage;
 
 /**
  * A simple {@link Fragment} subclass.

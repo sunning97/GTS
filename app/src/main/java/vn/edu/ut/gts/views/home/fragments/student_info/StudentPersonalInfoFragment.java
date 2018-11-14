@@ -1,11 +1,9 @@
 package vn.edu.ut.gts.views.home.fragments.student_info;
 
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +19,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.Student;
-import vn.edu.ut.gts.actions.helpers.Storage;
 
 /**
  * A simple {@link Fragment} subclass.

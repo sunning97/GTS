@@ -36,9 +36,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Helper;
+import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.helpers.EpicDialog;
-import vn.edu.ut.gts.presenters.home.StudentDebtFragmentPresenter;
 import vn.edu.ut.gts.presenters.search.StudentSearchDebtFragmentPresenter;
 import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 

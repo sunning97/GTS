@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.viethoa.DialogUtils;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.TestSchedulePresenter;
 
@@ -62,7 +61,7 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
     private float d;
     private List<String> headerText = new ArrayList<>();
     private List<String> spinnerData = new ArrayList<>();
-    private int currenPos = 0;
+    public static int currentPos = 0;
     private Storage storage;
 
     public TestScheduleFragment() {
@@ -94,17 +93,19 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
         if (TextUtils.isEmpty(storage.getString("data_test_schedule"))) {
             testSchedulePresenter.getDataTestSchedule();
         } else
-            testSchedulePresenter.getDataTestSchedule(currenPos);
+            testSchedulePresenter.getDataTestSchedule(currentPos);
     }
 
     @Override
     public void showLoadingDialog() {
-        epicDialog.showLoadingDialog();
+        if(!epicDialog.isShowing())
+            epicDialog.showLoadingDialog();
     }
 
     @Override
     public void dismissLoadingDialog() {
-        epicDialog.dismisPopup();
+        if(epicDialog.isShowing())
+            epicDialog.dismisPopup();
     }
 
     @Override
@@ -164,7 +165,7 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
         testScheduleSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-                currenPos = position;
+                currentPos = position;
                 testSchedulePresenter.getDataTestSchedule(position);
             }
         });

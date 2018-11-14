@@ -3,8 +3,6 @@ package vn.edu.ut.gts.presenters.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.design.widget.TabLayout;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,15 +15,12 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import vn.edu.ut.gts.actions.helpers.Helper;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.views.home.fragments.IWeekSchedule;
-import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 
 public class WeekSchedulePresenter implements IWeekSchedulePresenter {
     public static int currentStatus = 0;

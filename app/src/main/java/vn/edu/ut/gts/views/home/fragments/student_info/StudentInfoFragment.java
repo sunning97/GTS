@@ -1,21 +1,17 @@
 package vn.edu.ut.gts.views.home.fragments.student_info;
 
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +19,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.Student;
-import vn.edu.ut.gts.actions.helpers.Storage;
 
 /**
  * A simple {@link Fragment} subclass.

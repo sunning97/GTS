@@ -1,8 +1,5 @@
 package vn.edu.ut.gts.views.mail;
 
-import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -13,13 +10,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +25,7 @@ import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.mail.MailActivityPresenter;
 import vn.edu.ut.gts.views.mail.fragments.MailDetailFragment;

@@ -2,7 +2,6 @@ package vn.edu.ut.gts.adapters;
 
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Random;
-
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Helper;
+import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.views.mail.fragments.OnBottomReachedListener;
 import vn.edu.ut.gts.views.mail.fragments.OnItemClickListener;
 import vn.edu.ut.gts.views.mail.fragments.OnTopReachedListener;

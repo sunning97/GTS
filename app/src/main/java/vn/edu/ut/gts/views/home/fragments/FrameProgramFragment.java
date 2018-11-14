@@ -3,13 +3,10 @@ package vn.edu.ut.gts.views.home.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.viethoa.DialogUtils;
@@ -40,10 +36,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.Student;
-import vn.edu.ut.gts.actions.helpers.Helper;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.FrameProgramFragmentPresenter;
 

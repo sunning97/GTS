@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.adapters.StudentSearchDetailViewPagerAdpater;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.search.StudentDetailActivityPresenter;

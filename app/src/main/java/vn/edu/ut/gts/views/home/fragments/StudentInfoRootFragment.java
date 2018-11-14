@@ -12,17 +12,11 @@ import android.view.ViewGroup;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.adapters.StudentInfoViewPagerAdapter;
-import vn.edu.ut.gts.views.home.fragments.student_info.StudentFamilyInfoFragment;
-import vn.edu.ut.gts.views.home.fragments.student_info.StudentInfoFragment;
-import vn.edu.ut.gts.views.home.fragments.student_info.StudentPersonalInfoFragment;
 
 /**
  * A simple {@link Fragment} subclass.

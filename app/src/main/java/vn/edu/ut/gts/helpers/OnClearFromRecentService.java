@@ -4,8 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import vn.edu.ut.gts.actions.helpers.Storage;
-
 public class OnClearFromRecentService extends Service{
 
     @Override

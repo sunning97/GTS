@@ -3,7 +3,6 @@ package vn.edu.ut.gts.presenters.mail;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,8 +16,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import vn.edu.ut.gts.actions.helpers.Helper;
-import vn.edu.ut.gts.actions.helpers.Storage;
+import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.views.mail.fragments.IMailSentDetailFragment;
 
 public class MailSentDetailFragmentPresenter implements IMailSentDetailFragmentPresenter {

@@ -1,9 +1,7 @@
 package vn.edu.ut.gts.views.search;
 
 import android.animation.Animator;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -15,9 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,7 +30,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.codetroopers.betterpickers.OnDialogDismissListener;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -42,7 +37,6 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.style.ThreeBounce;
-import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,11 +52,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
-import vn.edu.ut.gts.actions.helpers.Storage;
 import vn.edu.ut.gts.adapters.StudentSearchDetailViewPagerAdpater;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.search.StudentSearchPresenter;
-import vn.edu.ut.gts.views.search.fragments.StudentSearchStudyResultFragment;
 
 public class StudentSearchActivity extends AppCompatActivity implements IStudentSearchActivity, CalendarDatePickerDialogFragment.OnDateSetListener {
 
