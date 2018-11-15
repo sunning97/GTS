@@ -62,7 +62,7 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                     data.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
                     data.put("ctl00$ContentPlaceHolder$btnLoc", document.select("input[name=\"ctl00$ContentPlaceHolder$btnLoc\"][type=\"submit\"]").val());
 
-
+                    /* Crawl data from html */
                     Elements options = document.select("select[name=\"ctl00$ContentPlaceHolder$cboHocKy\"]>option");
                     for (Element option : options) {
                         JSONObject tmp = new JSONObject();
@@ -81,6 +81,7 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
+                /* store in sharedpreference*/
                 storage.putString("dataAttendance", data.toString());
                 return semesters;
             }
@@ -88,13 +89,13 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
             @Override
             protected void onPostExecute(JSONArray semesters) {
                 switch (currentStatus) {
-                    case 400:
+                    case 400: /* if no connection*/
                         iAttendanceFragment.showNetworkErrorLayout();
                         break;
-                    case 500:
+                    case 500: /* if connect timeout*/
                         iAttendanceFragment.showNetworkErrorLayout();
                         break;
-                    default: {
+                    default: { /* connect success*/
                         currentStatus = 0;
                         List<String> dataSnpinner = new ArrayList<>();
                         try {
@@ -102,7 +103,9 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                                 JSONObject jsonObject = (JSONObject) semesters.get(i);
                                 dataSnpinner.add(jsonObject.getString("text"));
                             }
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         iAttendanceFragment.initAttendanceSpiner(dataSnpinner);
                         getDataAttendance(AttendanceFragment.currentPos);
                     }
@@ -141,6 +144,7 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
                         .data("ctl00$ContentPlaceHolder$btnLoc", dataDiemDanh.getString("ctl00$ContentPlaceHolder$btnLoc"))
                         .execute();
 
+                    /* crawl data from html*/
                     Document document = res.parse();
                     Elements table = document.getElementsByClass("grid-color2");
                     Elements trs = table.get(0).select("tr");
@@ -177,13 +181,13 @@ public class AttendanceFragmentPresenter implements IAttendanceFragmentPresenter
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
-                    case 400:
+                    case 400: /* if no connection*/
                         iAttendanceFragment.showNetworkErrorLayout();
                         break;
-                    case 500:
+                    case 500: /* if connect timeout*/
                         iAttendanceFragment.showNetworkErrorLayout();
                         break;
-                    default: {
+                    default: { /* connect success*/
                         currentStatus = 0;
                         iAttendanceFragment.generateTableContent(jsonArray);
                         iAttendanceFragment.showLoadedLayout();

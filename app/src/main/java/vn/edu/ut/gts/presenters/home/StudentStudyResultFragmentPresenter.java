@@ -56,6 +56,7 @@ public class StudentStudyResultFragmentPresenter implements IStudentStudyResultF
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
 
+                    /*crawl data from html*/
                     Elements tableResult = document.select("table.grid.grid-color2.tblKetQuaHocTap");
                     Element table1 = tableResult.first();
 
@@ -184,13 +185,13 @@ public class StudentStudyResultFragmentPresenter implements IStudentStudyResultF
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
                 switch (currentStatus) {
-                    case 400:
+                    case 400: /*if no connection*/
                         iStudentStudyResultFragment.showNetworkErrorLayout();
                         break;
-                    case 500:
+                    case 500: /*if connect timeout*/
                         iStudentStudyResultFragment.showNetworkErrorLayout();
                         break;
-                    default: {
+                    default: { /*connect success*/
                         currentStatus = 0;
                         iStudentStudyResultFragment.setData(jsonObject);
                         iStudentStudyResultFragment.spinnerInit();

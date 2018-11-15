@@ -310,6 +310,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     public void studyResultDetailShow(JSONObject jsonObject) {
         LayoutInflater factory = getLayoutInflater();
         View view = factory.inflate(R.layout.student_study_result_detail_dialog, null);
+        /*bind view component*/
         TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
         TextView hocPhan = view.findViewById(R.id.hoc_phan);
         TextView lopHoc = view.findViewById(R.id.lop_hoc);
@@ -321,7 +322,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         TextView diemChu = view.findViewById(R.id.diem_chu);
         TextView xepLoai = view.findViewById(R.id.xep_loai);
         TextView ghiChu = view.findViewById(R.id.ghi_chu);
-
+        /*set data detail*/
         try {
             maMonHoc.setText(jsonObject.getString("courseCode"));
             hocPhan.setText(jsonObject.getString("courseName"));
@@ -337,6 +338,7 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        /*create & show dialog*/
         Dialog simpleDialog = DialogUtils.createSimpleDialog(getContext(), view, true);
         if (simpleDialog != null && !simpleDialog.isShowing()) {
             simpleDialog.show();

@@ -346,7 +346,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
 
         LayoutInflater factory = getLayoutInflater();
         View view = factory.inflate(R.layout.student_frame_program_detail_dialog, null);
-
+        /*Bind view component*/
         TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
         TextView tenMonHoc = view.findViewById(R.id.ten_mon_hoc);
         TextView maHocPhan = view.findViewById(R.id.ma_hoc_phan);
@@ -354,7 +354,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         TextView soTC = view.findViewById(R.id.so_tc_dvht);
         TextView soTietLT = view.findViewById(R.id.so_tiet_lt);
         TextView soTietTH = view.findViewById(R.id.so_tiet_th);
-
+        /* set data detail*/
         try {
             maMonHoc.setText(jsonArray.get(0).toString());
             tenMonHoc.setText(jsonArray.get(1).toString());
@@ -366,6 +366,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        /*create & show dialog*/
         Dialog simpleDialog = DialogUtils.createSimpleDialog(getContext(), view, true);
         if (simpleDialog != null && !simpleDialog.isShowing()) {
             simpleDialog.show();

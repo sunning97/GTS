@@ -33,6 +33,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
     }
 
     private void getDataSchedules(Document document) {
+        /*get data from html*/
         JSONObject dataWeek = new JSONObject();
         try {
             dataWeek.put("eventTarget", document.select("input[name=\"__EVENTTARGET\"]").val());
@@ -57,7 +58,7 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
     }
 
     private JSONArray parseWeekData(Document document) {
-
+        /*get data from html*/
         JSONArray data = new JSONArray();
         try {
             Elements table = document.select(".div-ChiTietLich>table");
@@ -142,8 +143,9 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
+                    /*get data fro weekschedule & store to sharedpreference*/
                     getDataSchedules(document);
-
+                    /*get data week*/
                     schedules = parseWeekData(document);
 
                 } catch (SocketTimeoutException e) {
@@ -162,13 +164,13 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
-                    case 400:
+                    case 400: /*if no connection*/
                         iWeekSchedule.showNetworkErrorLayout();
                         break;
-                    case 500:
+                    case 500: /*if connect timeout*/
                         iWeekSchedule.showNetworkErrorLayout();
                         break;
-                    default: {
+                    default: { /*connect success*/
                         currentStatus = 0;
                         iWeekSchedule.setDateToDate(jsonArray);
                         iWeekSchedule.modifyDataOnFirst(jsonArray);
@@ -211,9 +213,9 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             .data("ctl00$ContentPlaceHolder$btnSau", dataWeek.getString("tuanSau"))
                             .data("ctl00$ContentPlaceHolder$txtDate", dataWeek.getString("txtDate"))
                             .execute();
+
                     Document document = res.parse();
                     getDataSchedules(document);
-
                     data = parseWeekData(document);
 
                 } catch (SocketTimeoutException e) {
@@ -280,9 +282,9 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             .data("ctl00$ContentPlaceHolder$btnTruoc", dataWeek.getString("tuanTruoc"))
                             .data("ctl00$ContentPlaceHolder$txtDate", dataWeek.getString("txtDate"))
                             .execute();
+
                     Document document = res.parse();
                     getDataSchedules(document);
-
                     data = parseWeekData(document);
 
                 } catch (SocketTimeoutException e) {
@@ -350,9 +352,9 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             .data("ctl00$ContentPlaceHolder$btnHienTai", dataWeek.getString("hienTai"))
                             .data("ctl00$ContentPlaceHolder$txtDate", dataWeek.getString("txtDate"))
                             .execute();
+
                     Document document = res.parse();
                     getDataSchedules(document);
-
                     data = parseWeekData(document);
 
                 } catch (SocketTimeoutException e) {
@@ -420,9 +422,9 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             .data("ctl00$ContentPlaceHolder$btnNgayChon", dataWeek.getString("ngayChon"))
                             .data("ctl00$ContentPlaceHolder$txtDate", date)
                             .execute();
+
                     Document document = res.parse();
                     getDataSchedules(document);
-
                     data = parseWeekData(document);
 
                 } catch (SocketTimeoutException e) {

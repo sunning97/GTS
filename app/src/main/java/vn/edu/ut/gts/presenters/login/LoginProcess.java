@@ -32,6 +32,7 @@ public class LoginProcess implements ILoginProcess {
         this.storage = new Storage(context);
     }
 
+    /*get data for login & store to sharedpreference*/
     public void initData(final boolean isAuto) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -144,7 +145,10 @@ public class LoginProcess implements ILoginProcess {
                             .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
                             .execute();
 
-                    if (Helper.checkLogin(storage.getCookie())) LoginProcess.currentStatus = Helper.LOGIN_SUCCESS;
+                    /*if login success*/
+                    if (Helper.checkLogin(storage.getCookie()))
+                        LoginProcess.currentStatus = Helper.LOGIN_SUCCESS;
+                    else LoginProcess.currentStatus = Helper.LOGIN_FAILED;
 
                 } catch (SocketTimeoutException e) {
                     e.printStackTrace();
@@ -163,20 +167,20 @@ public class LoginProcess implements ILoginProcess {
             @Override
             protected void onPostExecute(Void aVoid) {
                 switch (LoginProcess.currentStatus) {
-                    case 500: {
+                    case 500: { /* if connect timeout*/
                         iLoginView.revertLoadingButton();
                         iLoginView.showLoginLayout();
                         iLoginView.showTimeoutDialog();
                         break;
                     }
-                    case 200: {
+                    case 200: { /*if login success*/
                         saveLastLoginID(studentId);
                         HomeActivity.isLogin = true;
                         iLoginView.doneLoadingButton();
                         iLoginView.loginSuccess();
                         break;
                     }
-                    case 300: {
+                    case 300: { /* if login failed*/
                         iLoginView.revertLoadingButton();
                         if (isAuto){
                             iLoginView.showLoginLayout();
@@ -185,7 +189,7 @@ public class LoginProcess implements ILoginProcess {
                         else iLoginView.loginFailed();
                         break;
                     }
-                    case 400: {
+                    case 400: { /*if no connection*/
                         iLoginView.revertLoadingButton();
                         iLoginView.showLoginLayout();
                         iLoginView.showNoInternetDialog();
@@ -196,9 +200,11 @@ public class LoginProcess implements ILoginProcess {
         };
         asyncTask.execute();
     }
+
     private void saveLastLoginID(String ID) {
         this.storage.putString("last_student_login", ID);
     }
+
     private String createConfirmImage() {
         try {
             String res = Curl.connect(Helper.BASE_URL + "ajaxpro/AjaxConfirmImage,PMT.Web.PhongDaoTao.ashx")
@@ -217,6 +223,7 @@ public class LoginProcess implements ILoginProcess {
         }
         return "";
     }
+
     private String getPrivateKey(String studentId) {
         String result = null;
         try {

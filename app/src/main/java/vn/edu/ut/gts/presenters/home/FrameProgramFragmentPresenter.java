@@ -53,6 +53,7 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
+                    /* get data for frame program & store to sharedpreference*/
                     dataFrame.put("eventTarget", document.select("input[name=\"__EVENTTARGET\"]").val());
                     dataFrame.put("eventArgument", document.select("input[name=\"__EVENTARGUMENT\"]").val());
                     dataFrame.put("lastFocus", document.select("input[name=\"__LASTFOCUS\"]").val());
@@ -79,13 +80,13 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
             @Override
             protected void onPostExecute(Void aVoid) {
                 switch (currentStatus) {
-                    case 400:
+                    case 400: /* if no connection*/
                         iFrameProgramFragment.showNetworkErrorLayout();
                         break;
-                    case 500:
+                    case 500: /* if connect timeout*/
                         iFrameProgramFragment.showNetworkErrorLayout();
                         break;
-                    default: {
+                    default: { /*connect success*/
                         currentStatus = 0;
                         getFrameProgram();
                     }
@@ -126,6 +127,8 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                             .data("ctl00$DdListMenu", dataFrame.getString("listMenu"))
                             .data("ctl00$ContentPlaceHolder$btnXem", dataFrame.getString("btnXem"))
                             .execute();
+
+                    /* crawl data from html*/
                     Document document = res.parse();
                     Elements trs = document.select("table.grid.grid-color2>tbody>tr");
 
@@ -246,13 +249,13 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
                 switch (currentStatus) {
-                    case 400:
+                    case 400: /*if no connection*/
                         iFrameProgramFragment.showNetworkErrorLayout();
                         break;
-                    case 500:
+                    case 500: /*if connect timeout*/
                         iFrameProgramFragment.showNetworkErrorLayout();
                         break;
-                    default: {
+                    default: { /*connect success*/
                         currentStatus = 0;
                         iFrameProgramFragment.setData(jsonObject);
                         iFrameProgramFragment.spinnerInit();

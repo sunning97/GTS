@@ -202,6 +202,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     public void debtDetailShow(JSONObject jsonObject) {
         LayoutInflater factory = getLayoutInflater();
         View view = factory.inflate(R.layout.student_debt_detail_dialog, null);
+        /*Bind view component*/
         TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
         TextView noiDungThu = view.findViewById(R.id.noi_dung_thu);
         TextView tinChi = view.findViewById(R.id.tin_chi);
@@ -210,7 +211,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         TextView khauTru = view.findViewById(R.id.khau_tru);
         TextView congNo = view.findViewById(R.id.cong_no);
         TextView trangThai = view.findViewById(R.id.trang_thai);
-
+        /*set data detail*/
         try {
             maMonHoc.setText(jsonObject.getString("ma"));
             noiDungThu.setText(jsonObject.getString("noi_dung_thu"));
@@ -227,6 +228,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        /* create & show dialog*/
         Dialog simpleDialog = DialogUtils.createSimpleDialog(getContext(), view, true);
         if (simpleDialog != null && !simpleDialog.isShowing()) {
             simpleDialog.show();
@@ -292,6 +294,7 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     }
 
     private String numberFormat(String num) {
+        /*format price*/
         StringBuilder result = new StringBuilder();
         List<String> resultArray = new ArrayList<>();
         StringBuilder temp = new StringBuilder();

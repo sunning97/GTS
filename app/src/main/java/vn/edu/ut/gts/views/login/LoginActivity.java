@@ -320,7 +320,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                 loginProcess.execute(getStudentId(), getPassword(), false);
             }
         }
-
     }
 
     public void disableInput() {

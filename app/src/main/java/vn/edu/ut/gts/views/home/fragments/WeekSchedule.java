@@ -63,7 +63,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     @BindView(R.id.retry_text)
     TextView retryText;
 
-    private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
+    private static final String FRAG_TAG_DATE_PICKER = "week_schedule_fragment";
     private WeekSchedulePresenter weekSchedulePresenter;
     private int day = 0;
     private int month = 0;
@@ -106,6 +106,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     }
 
     @OnClick(R.id.date_picker)
+    /*show date picker*/
     public void showDatePickerDialog(View view) {
         CalendarDatePickerDialogFragment datePicker = new CalendarDatePickerDialogFragment()
                 .setOnDateSetListener(this)
@@ -144,6 +145,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
 
     @Override
     public void modifyDataOnFirst(JSONArray jsonArray) {
+        /*set data week & set tablayout display to first tab*/
         weekScheduleTablayoutAdapter = new WeekScheduleTablayoutAdapter(getFragmentManager(), jsonArray);
         viewPager.setAdapter(weekScheduleTablayoutAdapter);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -155,6 +157,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
 
     @Override
     public void modifyDataChange(JSONArray jsonArray) {
+        /*set data week*/
         weekScheduleTablayoutAdapter.setData(jsonArray);
         weekScheduleTablayoutAdapter.notifyDataSetChanged();
         tabLayout.setScrollPosition(getCurrentDate(jsonArray), 0f, true);

@@ -53,6 +53,7 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
 
+                    /*crawl data for test schedule & store to sharedpreference*/
                     dataInit.put("__EVENTTARGET", document.select("input[name=\"__EVENTTARGET\"]").val());
                     dataInit.put("__EVENTARGUMENT", document.select("input[name=\"__EVENTARGUMENT\"]").val());
                     dataInit.put("__LASTFOCUS", document.select("input[name=\"__LASTFOCUS\"]").val());
@@ -94,19 +95,19 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
                 switch (TestSchedulePresenter.currentStatus) {
-                    case 400: {
+                    case 400: { /*if no connection*/
                         iTestScheduleFragment.hideAllComponent();
                         iTestScheduleFragment.showNoInternetLayout();
                         iTestScheduleFragment.dismissLoadingDialog();
                         break;
                     }
-                    case 500: {
+                    case 500: { /*if connect timeput*/
                         iTestScheduleFragment.hideAllComponent();
                         iTestScheduleFragment.showNoInternetLayout();
                         iTestScheduleFragment.dismissLoadingDialog();
                         break;
                     }
-                    default: {
+                    default: { /*connect success*/
                         try {
                             JSONArray semester = jsonObject.getJSONArray("semester");
                             iTestScheduleFragment.setupDataSpiner(semester);
@@ -151,6 +152,7 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
                             .data("ctl00$ContentPlaceHolder$btnSearch", dataTestScheDule.getString("ctl00$ContentPlaceHolder$SearchType"))
                             .execute();
 
+                    /*crawl data from html*/
                     Document document = res.parse();
                     JSONArray data = parseData(document);
                     result.put("data", data);
@@ -172,19 +174,19 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
                 switch (TestSchedulePresenter.currentStatus) {
-                    case 400: {
+                    case 400: { /*if no connection*/
                         iTestScheduleFragment.hideAllComponent();
                         iTestScheduleFragment.showNoInternetLayout();
                         iTestScheduleFragment.dismissLoadingDialog();
                         break;
                     }
-                    case 500: {
+                    case 500: { /*if connect timeout*/
                         iTestScheduleFragment.hideAllComponent();
                         iTestScheduleFragment.showNoInternetLayout();
                         iTestScheduleFragment.dismissLoadingDialog();
                         break;
                     }
-                    default: {
+                    default: { /* connect success*/
                         try {
                             JSONArray data = jsonObject.getJSONArray("data");
                             iTestScheduleFragment.generateTableContent(data);
@@ -201,6 +203,7 @@ public class TestSchedulePresenter implements ITestSchedulePresenter {
         asyncTask.execute();
     }
 
+    /* get data from html*/
     private JSONArray parseData(Document document) {
         JSONArray result = new JSONArray();
         try {

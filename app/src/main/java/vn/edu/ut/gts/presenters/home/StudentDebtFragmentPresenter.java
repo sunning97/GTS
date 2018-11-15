@@ -62,6 +62,7 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                     data.put("listMenu", document.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
                     data.put("ctl00$ContentPlaceHolder$btnLoc", document.select("input[name=\"ctl00$ContentPlaceHolder$btnLoc\"][type=\"submit\"]").val());
 
+                    /*crawl data from html & store to sharedpreference*/
                     Elements options = document.select("select[name=\"ctl00$ContentPlaceHolder$cboHocKy\"]>option");
                     for (Element option : options) {
                         JSONObject tmp = new JSONObject();
@@ -87,13 +88,13 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
             @Override
             protected void onPostExecute(JSONArray semesters) {
                 switch (currentStatus) {
-                    case 400:
+                    case 400: /*if no connection*/
                         iStudentDebtFragment.showNetworkErrorLayout();
                         break;
-                    case 500:
+                    case 500: /*if connect timeout*/
                         iStudentDebtFragment.showNetworkErrorLayout();
                         break;
-                    default: {
+                    default: { /* connect success*/
                         currentStatus = 0;
                         List<String> dataSpinner = new ArrayList<>();
                         try {
@@ -140,6 +141,7 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
                             .data("ctl00$ContentPlaceHolder$cboHocKy", dataDiemDebt.getJSONArray("semesters").getJSONObject(pos).getString("key"))
                             .data("ctl00$ContentPlaceHolder$btnLoc", dataDiemDebt.getString("ctl00$ContentPlaceHolder$btnLoc"))
                             .execute();
+                    /*crawl data from html*/
                     Document document = res.parse();
                     Elements table = document.getElementsByClass("grid-color2");
                     Elements trs = table.get(0).select("tr");
@@ -173,13 +175,13 @@ public class StudentDebtFragmentPresenter implements IStudentDebtFragmentPresent
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
                 switch (currentStatus) {
-                    case 400:
+                    case 400: /*if no connection*/
                         iStudentDebtFragment.showNetworkErrorLayout();
                         break;
-                    case 500:
+                    case 500: /*if connect timeout*/
                         iStudentDebtFragment.showNetworkErrorLayout();
                         break;
-                    default: {
+                    default: { /*connect success*/
                         currentStatus = 0;
                         iStudentDebtFragment.generateTableContent(jsonArray);
                         iStudentDebtFragment.showAllComponent();

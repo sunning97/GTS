@@ -73,10 +73,12 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+        /*show drawlayout icon toggle*/
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         navigationView.setNavigationItemSelectedListener(this);
-        profileImage.setImageBitmap(storage.getImageFromStorage(MailActivity.this,"student_portrait.jpg"));
 
+        /*set drawlayout header image & text*/
+        profileImage.setImageBitmap(storage.getImageFromStorage(MailActivity.this,"student_portrait.jpg"));
         try {
             JSONObject studentInfo = new JSONObject(storage.getString("student_info"));
             studentFullName.setText(studentInfo.getString("student_name"));

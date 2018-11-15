@@ -80,10 +80,15 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendance, container, false);
+        /* Bind all view component*/
         ButterKnife.bind(this, view);
+
         this.attendanceFragmentPresenter = new AttendanceFragmentPresenter(this, getContext());
+
         this.init();
+
         d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
+
         AttendanceFragment.currentPos = 0;
         AttendanceFragmentPresenter.currentStatus = 0;
         attendanceFragmentPresenter.getDataAttendanceSpinner();
@@ -101,12 +106,15 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     @Override
     public void generateTableContent(JSONArray data) {
         studentAttendanceTable.removeAllViews();
+        /*add table header*/
         studentAttendanceTable.addView(this.generateTableHeader());
         try {
             for (int i = 0; i < data.length(); i++) {
                 JSONObject subject = data.getJSONObject(i);
+                /* generate table record & add to table body*/
                 studentAttendanceTable.addView(generateTableRow(subject, ((i + 1) % 2 == 0)));
             }
+            /* show all halt day*/
             tvStudentTotalDaltDate.setText(String.valueOf(getTotalHaltDate(data)));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -115,15 +123,18 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
 
     public TableRow generateTableRow(final JSONObject jsonObject, boolean changeBG) {
         TableRow row = new TableRow(getContext());
+
         int[] attrs = new int[]{R.attr.selectableItemBackground};
         TypedArray typedArray = Objects.requireNonNull(getActivity()).obtainStyledAttributes(attrs);
         int backgroundResource = typedArray.getResourceId(0, 0);
+
         row.setBackgroundResource(backgroundResource);
         row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
         row.setMinimumHeight((int) d * 50);
         row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /* show dialog detail*/
                 attendanceDetailShow(jsonObject);
             }
         });
@@ -200,12 +211,14 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     @Override
     public void attendanceDetailShow(JSONObject jsonObject) {
         LayoutInflater factory = getLayoutInflater();
+        /* Bind view component of layout*/
         View view = factory.inflate(R.layout.student_attendance_detail_dialog, null);
         TextView maMonHoc = view.findViewById(R.id.ma_mon_hoc);
         TextView tenMonHoc = view.findViewById(R.id.ten_mon_hoc);
         TextView dvht = view.findViewById(R.id.dvht);
         TextView coPhep = view.findViewById(R.id.co_phep);
         TextView khongPhep = view.findViewById(R.id.khong_phep);
+        /* set data for detail*/
         try {
             maMonHoc.setText(jsonObject.getString("ma_mon_hoc"));
             tenMonHoc.setText(jsonObject.getString("ten_mon_hoc"));
@@ -215,6 +228,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        /* create dialog & show*/
         Dialog simpleDialog = DialogUtils.createSimpleDialog(getContext(), view, true);
         if (simpleDialog != null && !simpleDialog.isShowing()) {
             simpleDialog.show();
@@ -229,6 +243,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 currentPos = position;
+                /* get data of each item in spinner via position of item*/
                 attendanceFragmentPresenter.getDataAttendance(position);
             }
         });
