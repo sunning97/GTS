@@ -23,13 +23,7 @@ import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.login.ILoginView;
 
 public class LoginProcess implements ILoginProcess {
-    public static int TIMEOUT = 1;
-    public static int LOGIN_SUCCESS = 2;
-    public static int LOGIN_FAILED = 3;
-    public static int NO_INTERNET = 4;
-
-    public static int currentStatus = LOGIN_FAILED;
-
+    public static int currentStatus = 0;
     private ILoginView iLoginView;
     private Storage storage;
 
@@ -39,18 +33,18 @@ public class LoginProcess implements ILoginProcess {
     }
 
     public void initData(final boolean isAuto) {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Integer> asyncTask = new AsyncTask<Void, Void, Integer>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 if (!isAuto){
                     iLoginView.disableInput();
-                    iLoginView.showLoadingDialog();
+//                    iLoginView.showLoadingDialog();
+                    iLoginView.transferToLoadingBtn();
                 }
             }
 
             @Override
-            protected Integer doInBackground(Void... voids) {
-                int result = 0;
+            protected Void doInBackground(Void... voids) {
                 JSONObject data = new JSONObject();
                 try {
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL)
@@ -70,32 +64,31 @@ public class LoginProcess implements ILoginProcess {
                     data.put("btnLogin", doc.select("input[name=\"ctl00$ucRight1$btnLogin\"]").val());
                     storage.putString("dataLogin", data.toString());
 
-                } catch (SocketTimeoutException connTimeout) {
-                    result = LoginProcess.TIMEOUT;
-                    currentStatus = result;
+                } catch (SocketTimeoutException e) {
+                    e.printStackTrace();
+                    currentStatus = Helper.TIMEOUT;
                 } catch (UnknownHostException e) {
-                    result = LoginProcess.NO_INTERNET;
-                    currentStatus = result;
+                    e.printStackTrace();
+                    currentStatus = Helper.NO_CONNECTION;
                 } catch (JSONException | IOException e) {
                     e.printStackTrace();
                 }
-
-                return result;
+                return null;
             }
 
             @Override
-            protected void onPostExecute(Integer integer) {
-                switch (integer) {
-                    case 1: {
-                        iLoginView.dismisLoadingDialog();
+            protected void onPostExecute(Void aVoid) {
+                switch (LoginProcess.currentStatus) {
+                    case 500: {
+                        iLoginView.dismissLoadingDialog();
                         iLoginView.transferToRetryBtn();
                         iLoginView.showLoginLayout();
                         if (!isAuto)
                             iLoginView.showTimeoutDialog();
                         break;
                     }
-                    case 4: {
-                        iLoginView.dismisLoadingDialog();
+                    case 400: {
+                        iLoginView.dismissLoadingDialog();
                         iLoginView.transferToRetryBtn();
                         if (!isAuto){
                             iLoginView.showLoginLayout();
@@ -107,7 +100,7 @@ public class LoginProcess implements ILoginProcess {
                     }
                     default: {
                         iLoginView.transferToLoginBtn();
-                        iLoginView.dismisLoadingDialog();
+//                        iLoginView.dismissLoadingDialog();
                         currentStatus = 0;
                     }
                 }
@@ -118,7 +111,7 @@ public class LoginProcess implements ILoginProcess {
 
     @Override
     public void execute(final String studentId, final String password, final boolean isAuto) {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Integer> asyncTask = new AsyncTask<Void, Void, Integer>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 if (!isAuto)
@@ -126,8 +119,7 @@ public class LoginProcess implements ILoginProcess {
             }
 
             @Override
-            protected Integer doInBackground(Void... voids) {
-                int result = LoginProcess.LOGIN_FAILED;
+            protected Void doInBackground(Void... voids) {
                 try {
                     JSONObject dataLogin = new JSONObject(storage.getString("dataLogin"));
                     String hashPassword = Aes.encrypt(getPrivateKey(studentId), password).toBase64();
@@ -152,40 +144,39 @@ public class LoginProcess implements ILoginProcess {
                             .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
                             .execute();
 
-                    if (Helper.checkLogin(storage.getCookie())) result = LoginProcess.LOGIN_SUCCESS;
+                    if (Helper.checkLogin(storage.getCookie())) LoginProcess.currentStatus = Helper.LOGIN_SUCCESS;
 
                 } catch (SocketTimeoutException e) {
                     e.printStackTrace();
-                    result = LoginProcess.TIMEOUT;
+                    LoginProcess.currentStatus = Helper.TIMEOUT;
                 } catch (UnknownHostException e){
                     e.printStackTrace();
-                    result = LoginProcess.NO_INTERNET;
+                    LoginProcess.currentStatus = Helper.NO_CONNECTION;
                 } catch (NullPointerException | IndexOutOfBoundsException e) {
                     e.printStackTrace();
                 } catch (JSONException | IOException e) {
                     e.printStackTrace();
                 }
-
-                return result;
+                return null;
             }
 
             @Override
-            protected void onPostExecute(Integer status) {
-                switch (status) {
-                    case 1: {
+            protected void onPostExecute(Void aVoid) {
+                switch (LoginProcess.currentStatus) {
+                    case 500: {
                         iLoginView.revertLoadingButton();
                         iLoginView.showLoginLayout();
                         iLoginView.showTimeoutDialog();
                         break;
                     }
-                    case 2: {
+                    case 200: {
                         saveLastLoginID(studentId);
                         HomeActivity.isLogin = true;
                         iLoginView.doneLoadingButton();
                         iLoginView.loginSuccess();
                         break;
                     }
-                    case 3: {
+                    case 300: {
                         iLoginView.revertLoadingButton();
                         if (isAuto){
                             iLoginView.showLoginLayout();
@@ -194,7 +185,7 @@ public class LoginProcess implements ILoginProcess {
                         else iLoginView.loginFailed();
                         break;
                     }
-                    case 4: {
+                    case 400: {
                         iLoginView.revertLoadingButton();
                         iLoginView.showLoginLayout();
                         iLoginView.showNoInternetDialog();

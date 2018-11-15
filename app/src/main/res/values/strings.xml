@@ -37,4 +37,5 @@
     <string name="login_btn">Đăng nhập</string>
     <string name="delete_mail_failed_title">Oops...</string>
     <string name="delete_mail_failed_content">Xóa không thành công :(\n Thử lại sau nha :)</string>
+    <string name="loading">Loading...</string>
 </resources>

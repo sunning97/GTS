@@ -15,7 +15,7 @@ public interface ILoginView {
 
     void showLoadingDialog();
 
-    void dismisLoadingDialog();
+    void dismissLoadingDialog();
 
     void showTimeoutDialog();
 
@@ -32,5 +32,8 @@ public interface ILoginView {
     void showLoginAutoErrorDialog();
 
     void disableInput();
+
     void enableInput();
+
+    void transferToLoadingBtn();
 }

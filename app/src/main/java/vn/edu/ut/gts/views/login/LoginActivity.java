@@ -38,6 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.OnClearFromRecentService;
@@ -97,7 +98,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.validate();
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
-
 
     @Override
     public void startLoadingButton() {
@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     }
 
     @Override
-    public void dismisLoadingDialog() {
+    public void dismissLoadingDialog() {
         if (epicDialog.isShowing())
             epicDialog.dismisPopup();
     }
@@ -239,23 +239,25 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @Override
     public void onBackPressed() {
-        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(getResources().getString(R.string.confirm_exit_app_title))
-                .setCancelText(getResources().getString(R.string.cancel_text))
-                .setConfirmText(getResources().getString(R.string.confirm_text))
-                .showCancelButton(true)
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        storage.deleteAllsharedPreferences(LoginActivity.this);
-                        LoginActivity.this.finishAffinity();
-                    }
-                })
-                .show();
+        storage.deleteAllsharedPreferences(LoginActivity.this);
+        LoginActivity.this.finishAffinity();
+//        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+//                .setTitleText(getResources().getString(R.string.confirm_exit_app_title))
+//                .setCancelText(getResources().getString(R.string.cancel_text))
+//                .setConfirmText(getResources().getString(R.string.confirm_text))
+//                .showCancelButton(true)
+//                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                    @Override
+//                    public void onClick(SweetAlertDialog sDialog) {
+//
+//                    }
+//                })
+//                .show();
     }
 
     private void init() {
         storage = new Storage(this);
+        loginProcess = new LoginProcess(LoginActivity.this, LoginActivity.this);
         this.isValidateNoError = false;
         epicDialog = new EpicDialog(LoginActivity.this);
         epicDialog.initLoadingDialog();
@@ -269,7 +271,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.runnable2 = new Runnable() {
             @Override
             public void run() {
-                loginProcess = new LoginProcess(LoginActivity.this, LoginActivity.this);
                 loginProcess.initData(false);
             }
         };
@@ -279,7 +280,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             layoutAutoLogin.setVisibility(View.VISIBLE);
             String id = this.storage.getString("last_student_login");
             String pass = this.storage.getString("password");
-            loginProcess = new LoginProcess(LoginActivity.this, LoginActivity.this);
             loginProcess.initData(true);
             loginProcess.execute(id, pass, true);
         } else {
@@ -301,7 +301,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @OnClick(R.id.btn_login)
     public void submit(View view) {
-        if (LoginProcess.currentStatus == LoginProcess.TIMEOUT || LoginProcess.currentStatus == LoginProcess.NO_INTERNET) {
+        if (LoginProcess.currentStatus == Helper.TIMEOUT || LoginProcess.currentStatus == Helper.NO_CONNECTION) {
+            LoginProcess.currentStatus = 0;
             loginProcess.initData(false);
         } else {
             if (validateStudentId() && validatePassword()) {
@@ -332,6 +333,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         inputPassword.setEnabled(true);
         inputStudentId.setEnabled(true);
         searchStudentTV.setEnabled(true);
+    }
+
+    @Override
+    public void transferToLoadingBtn() {
+        btnLogin.setText(getResources().getString(R.string.loading));
     }
 
     private void requestPermission() {

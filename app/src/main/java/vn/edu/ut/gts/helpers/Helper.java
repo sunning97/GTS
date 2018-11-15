@@ -16,6 +16,8 @@ public class Helper {
     public static String BASE_URL = "https://sv.ut.edu.vn/";
     public static final int TIMEOUT = 500;
     public static final int NO_CONNECTION = 400;
+    public static final int LOGIN_SUCCESS = 200;
+    public static final int LOGIN_FAILED = 300;
     public static final int TIMEOUT_VALUE = 20000;
 
     public static String md5(String str) {
