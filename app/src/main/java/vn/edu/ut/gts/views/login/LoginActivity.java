@@ -78,7 +78,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     public static Boolean isAutoLogin = false;
     public static Boolean isLogout = false;
     private LoginProcess loginProcess;
-    private Boolean isValidateNoError;
     private Handler handler;
     private Runnable runnable;
     private Runnable runnable2;
@@ -95,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         searchStudentTV.setPaintFlags(searchStudentTV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         this.requestPermission();
         this.init();
-        this.hideErrorWhileinput();
+        this.hideErrorWhileInput();
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
@@ -246,7 +245,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private void init() {
         storage = new Storage(this);
         loginProcess = new LoginProcess(LoginActivity.this, LoginActivity.this);
-        this.isValidateNoError = false;
         epicDialog = new EpicDialog(LoginActivity.this);
         epicDialog.initLoadingDialog();
         this.handler = new Handler();
@@ -294,7 +292,9 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             LoginProcess.currentStatus = 0;
             loginProcess.initData(false);
         } else {
-            if (validateStudentId() && validatePassword()) {
+            boolean validateStudentId = validateStudentId();
+            boolean validatePassword = validatePassword();
+            if (validateStudentId && validatePassword) {
                 if (cbAutoLogin.isChecked()) {
                     /*Auto login*/
                     LoginActivity.isAutoLogin = true;
@@ -348,7 +348,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         }
     }
 
-    private void hideErrorWhileinput() {
+    private void hideErrorWhileInput() {
         this.inputStudentId.addTextChangedListener(new TextInputValidator(inputStudentId) {
             @Override
             public void validate(TextView textView, String text) {
@@ -367,30 +367,28 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     private boolean validateStudentId() {
         if (TextUtils.isEmpty(this.inputStudentId.getText().toString().trim())) {
             this.setInputError(studentIdInputErrorShow, "Mã số sinh viên không được để trống");
-            this.isValidateNoError = false;
+            return false;
         } else if (this.inputStudentId.getText().toString().trim().length() < 10) {
             this.setInputError(studentIdInputErrorShow, "Mã số sinh viên không đúng định dạng");
-            this.isValidateNoError = false;
+            return false;
         } else {
             this.unsetInputError(studentIdInputErrorShow);
-            this.isValidateNoError = true;
+            return true;
         }
-        return this.isValidateNoError;
     }
 
     /*validate password*/
     private boolean validatePassword() {
         if (TextUtils.isEmpty(this.inputPassword.getText().toString().trim())) {
             this.setInputError(passwordInputErrorShow, "Mật khẩu không được để trống");
-            this.isValidateNoError = false;
+            return false;
         } else if (this.inputPassword.getText().toString().trim().length() < 1) {
             this.setInputError(passwordInputErrorShow, "Mật khẩu phải có ít nhất 1 ký tự");
-            this.isValidateNoError = false;
+            return false;
         } else {
             this.unsetInputError(passwordInputErrorShow);
-            this.isValidateNoError = true;
+            return true;
         }
-        return this.isValidateNoError;
     }
 
     /*show input error*/
