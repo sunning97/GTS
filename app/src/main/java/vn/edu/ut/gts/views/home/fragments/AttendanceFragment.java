@@ -3,17 +3,14 @@ package vn.edu.ut.gts.views.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -36,6 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.presenters.home.AttendanceFragmentPresenter;
 
 /**
@@ -89,6 +87,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
 
         d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
 
+        /* set default position of spinner & status of connect in AttendanceFragmentPresenter*/
         AttendanceFragment.currentPos = 0;
         AttendanceFragmentPresenter.currentStatus = 0;
         attendanceFragmentPresenter.getDataAttendanceSpinner();
@@ -140,10 +139,10 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(jsonObject.getString("ten_mon_hoc"), false, (int) (getScreenWidthInDPs(getContext()) * 0.4)));
-            row.addView(generateTableCell(jsonObject.getString("dvht"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("nghi_co_phep"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("nghi_ko_phep"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonObject.getString("ten_mon_hoc"), false, (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)));
+            row.addView(generateTableCell(jsonObject.getString("dvht"), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonObject.getString("nghi_co_phep"), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonObject.getString("nghi_ko_phep"), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -181,10 +180,10 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
             if (i == 0) {
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.4);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
             } else {
                 layoutParams.gravity = Gravity.CENTER;
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.2);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2);
             }
             linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 5, 0);
             linearLayout.setLayoutParams(layoutParams);
@@ -202,7 +201,6 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     }
 
     private void init() {
-
         loadingDialog = new EpicDialog(getContext());
         loadingDialog.initLoadingDialog();
     }
@@ -297,13 +295,6 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         return result;
     }
 
-
-    public int getScreenWidthInDPs(Context context) {
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(dm);
-        return dm.widthPixels;
-    }
 
     private void removeAllSpinnerItem(){
         studentAttendanceSpinner.setItems(spinnerData);

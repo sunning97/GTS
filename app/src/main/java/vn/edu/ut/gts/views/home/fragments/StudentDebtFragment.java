@@ -3,17 +3,14 @@ package vn.edu.ut.gts.views.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -127,10 +124,10 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(jsonObject.getString("noi_dung_thu"), false, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (getScreenWidthInDPs(getContext()) * 0.4)));
-            row.addView(generateTableCell(jsonObject.getString("tin_chi"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("cong_no_vnd"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("trang_thai"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonObject.getString("noi_dung_thu"), false, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)));
+            row.addView(generateTableCell(jsonObject.getString("tin_chi"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonObject.getString("cong_no_vnd"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonObject.getString("trang_thai"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -148,10 +145,10 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
             if (i == 0) {
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.4);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
             } else {
                 layoutParams.gravity = Gravity.CENTER;
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.2);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2);
             }
             linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 5, 0);
             linearLayout.setLayoutParams(layoutParams);
@@ -260,13 +257,6 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         studentDebtSpinner.setVisibility(View.VISIBLE);
         totalDebtLayout.setVisibility(View.VISIBLE);
         loadedLayout.setVisibility(View.VISIBLE);
-    }
-
-    public int getScreenWidthInDPs(Context context) {
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(dm);
-        return dm.widthPixels;
     }
 
     @Override

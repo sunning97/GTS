@@ -2,17 +2,14 @@ package vn.edu.ut.gts.views.home.fragments;
 
 
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -33,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.home.TestSchedulePresenter;
@@ -130,13 +128,6 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
         noInternetLayout.setVisibility(View.GONE);
     }
 
-    public int getScreenWidthInDPs(Context context) {
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(dm);
-        return dm.widthPixels;
-    }
-
     public void generateTableContent(JSONArray data) {
         testScheduleTable.removeAllViews();
         testScheduleTableHeader.removeAllViews();
@@ -183,10 +174,10 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(jsonObject.getString("mon_thi"), false, (int) (getScreenWidthInDPs(getContext()) * 0.3)));
-            row.addView(generateTableCell(jsonObject.getString("ngay_thi"), false, (int) (getScreenWidthInDPs(getContext()) * 0.3)));
-            row.addView(generateTableCell(jsonObject.getString("phong_thi"), false, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("loai_thi"), false, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonObject.getString("mon_thi"), false, (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.3)));
+            row.addView(generateTableCell(jsonObject.getString("ngay_thi"), false, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.3)));
+            row.addView(generateTableCell(jsonObject.getString("phong_thi"), false, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonObject.getString("loai_thi"), false, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -203,9 +194,9 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
             if (i == 0 || i == 1) {
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.3);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.3);
             } else {
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.2);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2);
             }
             linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 5, 0);
             linearLayout.setLayoutParams(layoutParams);

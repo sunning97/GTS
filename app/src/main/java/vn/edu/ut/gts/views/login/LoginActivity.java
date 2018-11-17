@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         searchStudentTV.setPaintFlags(searchStudentTV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         this.requestPermission();
         this.init();
-        this.validate();
+        this.hideErrorWhileinput();
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
@@ -241,18 +241,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     public void onBackPressed() {
         storage.deleteAllsharedPreferences(LoginActivity.this);
         LoginActivity.this.finishAffinity();
-//        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-//                .setTitleText(getResources().getString(R.string.confirm_exit_app_title))
-//                .setCancelText(getResources().getString(R.string.cancel_text))
-//                .setConfirmText(getResources().getString(R.string.confirm_text))
-//                .showCancelButton(true)
-//                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                    @Override
-//                    public void onClick(SweetAlertDialog sDialog) {
-//
-//                    }
-//                })
-//                .show();
     }
 
     private void init() {
@@ -301,12 +289,14 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     @OnClick(R.id.btn_login)
     public void submit(View view) {
+        /* error in internet connect*/
         if (LoginProcess.currentStatus == Helper.TIMEOUT || LoginProcess.currentStatus == Helper.NO_CONNECTION) {
             LoginProcess.currentStatus = 0;
             loginProcess.initData(false);
         } else {
             if (validateStudentId() && validatePassword()) {
                 if (cbAutoLogin.isChecked()) {
+                    /*Auto login*/
                     LoginActivity.isAutoLogin = true;
                     storage.putString("password", inputPassword.getText().toString().trim());
                     storage.putString("is_auto_login", String.valueOf(true));
@@ -339,6 +329,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         btnLogin.setText(getResources().getString(R.string.loading));
     }
 
+    /*request permission need for this app if permission is not permit*/
     private void requestPermission() {
         String[] permissions = new String[]{
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -357,22 +348,22 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         }
     }
 
-    private void validate() {
+    private void hideErrorWhileinput() {
         this.inputStudentId.addTextChangedListener(new TextInputValidator(inputStudentId) {
             @Override
             public void validate(TextView textView, String text) {
-                validateStudentId();
+                unsetInputError(studentIdInputErrorShow);
             }
         });
 
         this.inputPassword.addTextChangedListener(new TextInputValidator(inputPassword) {
             @Override
             public void validate(TextView textView, String text) {
-                validatePassword();
+                unsetInputError(passwordInputErrorShow);
             }
         });
     }
-
+    /*validate student id input*/
     private boolean validateStudentId() {
         if (TextUtils.isEmpty(this.inputStudentId.getText().toString().trim())) {
             this.setInputError(studentIdInputErrorShow, "Mã số sinh viên không được để trống");
@@ -387,12 +378,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         return this.isValidateNoError;
     }
 
+    /*validate password*/
     private boolean validatePassword() {
         if (TextUtils.isEmpty(this.inputPassword.getText().toString().trim())) {
             this.setInputError(passwordInputErrorShow, "Mật khẩu không được để trống");
             this.isValidateNoError = false;
-        } else if (this.inputPassword.getText().toString().trim().length() < 5) {
-            this.setInputError(passwordInputErrorShow, "Mật khẩu phải có ít nhất 6 ký tự");
+        } else if (this.inputPassword.getText().toString().trim().length() < 1) {
+            this.setInputError(passwordInputErrorShow, "Mật khẩu phải có ít nhất 1 ký tự");
             this.isValidateNoError = false;
         } else {
             this.unsetInputError(passwordInputErrorShow);
@@ -401,18 +393,22 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         return this.isValidateNoError;
     }
 
+    /*show input error*/
     private void setInputError(TextView textView, String message) {
         textView.setText(message);
     }
 
+    /*hide input error*/
     private void unsetInputError(TextView textView) {
         textView.setText("");
     }
 
+    /*get value of student id input*/
     private String getStudentId() {
         return this.inputStudentId.getText().toString().trim();
     }
 
+    /*get value of password input*/
     private String getPassword() {
         return this.inputPassword.getText().toString().trim();
     }

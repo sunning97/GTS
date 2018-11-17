@@ -2,11 +2,9 @@ package vn.edu.ut.gts.views.home.fragments;
 
 
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -38,6 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.presenters.home.FrameProgramFragmentPresenter;
 
 /**
@@ -222,10 +220,10 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
             if (i == 0) {
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.6);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.6);
             } else {
                 layoutParams.gravity = Gravity.CENTER;
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.2);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2);
             }
             linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 5, 0);
             linearLayout.setLayoutParams(layoutParams);
@@ -256,9 +254,9 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(jsonArray.get(1).toString(), false, (int) (getScreenWidthInDPs(getContext()) * 0.6)));
-            row.addView(generateTableCell(jsonArray.get(4).toString(), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonArray.get(5).toString(), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonArray.get(1).toString(), false, (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.6)));
+            row.addView(generateTableCell(jsonArray.get(4).toString(), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(jsonArray.get(5).toString(), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -334,12 +332,6 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         });
     }
 
-    public int getScreenWidthInDPs(Context context) {
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(dm);
-        return dm.widthPixels;
-    }
 
     @Override
     public void frameDetailShow(JSONArray jsonArray) {

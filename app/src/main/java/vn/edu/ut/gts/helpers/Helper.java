@@ -1,5 +1,10 @@
 package vn.edu.ut.gts.helpers;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.WindowManager;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.jsoup.Jsoup;
@@ -46,24 +51,33 @@ public class Helper {
     }
 
     public static boolean checkLogin(String cookie) {
-
         String res = Curl.connect(BASE_URL + "ajaxpro/DangKy,PMT.Web.PhongDaoTao.ashx")
                 .method("POST")
                 .setCookie("ASP.NET_SessionId", cookie)
                 .userAgent(USER_AGENT)
                 .header("X-AjaxPro-Method", "CheckLogin")
                 .dataString("{}").execute();
+
         return Boolean.parseBoolean(res.replace(";/*", ""));
     }
+
     public static String base64Encode(String str) {
         byte[] base = Base64.decodeBase64(str);
         return new String(base);
     }
 
+    /* transfer text to slug*/
     public static String toSlug(String str){
         str = str.trim();
         String tmp = Normalizer.normalize(str, Normalizer.Form.NFD);
         Pattern p = Pattern.compile("\\p{InCOMBINING_DIACRITICAL_MARKS}+");
         return p.matcher(tmp).replaceAll("").toLowerCase().replace("đ","d").replaceAll("\\s","_").replaceAll("\\(","").replaceAll("\\)","").replaceAll(",","");
+    }
+
+    public static int getScreenWidthInDPs(Context context) {
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(dm);
+        return dm.widthPixels;
     }
 }

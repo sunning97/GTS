@@ -38,4 +38,7 @@
     <string name="delete_mail_failed_title">Oops...</string>
     <string name="delete_mail_failed_content">Xóa không thành công :(\n Thử lại sau nha :)</string>
     <string name="loading">Loading...</string>
+    <string name="giang">giangnguyen.130</string>
+    <string name="duong">duongrom.it.305</string>
+    <string name="contact_email">duongrom.it.305@gmail.com or mrcatbro97@gmail.com</string>
 </resources>

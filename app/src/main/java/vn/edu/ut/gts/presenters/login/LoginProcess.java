@@ -3,6 +3,7 @@ package vn.edu.ut.gts.presenters.login;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -145,11 +146,6 @@ public class LoginProcess implements ILoginProcess {
                             .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
                             .execute();
 
-                    /*if login success*/
-                    if (Helper.checkLogin(storage.getCookie()))
-                        LoginProcess.currentStatus = Helper.LOGIN_SUCCESS;
-                    else LoginProcess.currentStatus = Helper.LOGIN_FAILED;
-
                 } catch (SocketTimeoutException e) {
                     e.printStackTrace();
                     LoginProcess.currentStatus = Helper.TIMEOUT;
@@ -166,6 +162,60 @@ public class LoginProcess implements ILoginProcess {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                switch (LoginProcess.currentStatus) {
+                    case 500: { /* if connect timeout*/
+                        iLoginView.revertLoadingButton();
+                        iLoginView.showLoginLayout();
+                        iLoginView.showTimeoutDialog();
+                        break;
+                    }
+                    case 400: { /*if no connection*/
+                        iLoginView.revertLoadingButton();
+                        iLoginView.showLoginLayout();
+                        iLoginView.showNoInternetDialog();
+                        break;
+                    }
+                    default:{
+                        checkLogin(studentId,isAuto);
+                    }
+                }
+            }
+        };
+        asyncTask.execute();
+    }
+
+    private void checkLogin(final String studentId, final boolean isAuto){
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    Connection.Response res = Jsoup.connect(Helper.BASE_URL + "ajaxpro/DangKy,PMT.Web.PhongDaoTao.ashx")
+                            .method(Connection.Method.POST)
+                            .timeout(Helper.TIMEOUT_VALUE)
+                            .userAgent(Helper.USER_AGENT)
+                            .cookie("ASP.NET_SessionId", storage.getCookie())
+                            .header("X-AjaxPro-Method","CheckLogin")
+                            .execute();
+
+                    Document document = res.parse();
+                    if(Boolean.parseBoolean(document.select("body").text().replace(";/*", "")))
+                        currentStatus = Helper.LOGIN_SUCCESS;
+                    else currentStatus = Helper.LOGIN_FAILED;
+
+                } catch (SocketTimeoutException e) {
+                    e.printStackTrace();
+                    LoginProcess.currentStatus = Helper.TIMEOUT;
+                } catch (UnknownHostException e){
+                    e.printStackTrace();
+                    LoginProcess.currentStatus = Helper.NO_CONNECTION;
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
                 switch (LoginProcess.currentStatus) {
                     case 500: { /* if connect timeout*/
                         iLoginView.revertLoadingButton();

@@ -86,7 +86,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setHomeFragment(intent);
         profileImage.setImageBitmap(storage.getImageFromStorage(HomeActivity.this,"student_portrait.jpg"));
         try {
-            /* get student name from sharedpreference & set to drawlayouy header*/
+            /* get student name from sharedpreference & set to drawlayout header*/
             studentFullName.setText(studentInfo.getString("student_name"));
         } catch (JSONException e) {
             e.printStackTrace();
