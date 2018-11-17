@@ -30,7 +30,6 @@ public class MailSentDetailFragmentPresenter implements IMailSentDetailFragmentP
         this.storage = new Storage(context);
     }
 
-
     public void getDetailMail(final JSONObject mail) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
             @Override

@@ -40,7 +40,7 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
         this.storage = new Storage(this.context);
     }
 
-    public void getListmail() {
+    public void getListMail() {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
@@ -171,7 +171,7 @@ public class ReceiveListMailFragmentPresenter implements IReceiveListMailFragmen
         asyncTask.execute();
     }
 
-    public void getListmail(final int page, final JSONArray prevMail) {
+    public void getListMail(final int page, final JSONArray prevMail) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {

@@ -7,13 +7,10 @@ import vn.edu.ut.gts.views.mail.IMailActivity;
 
 public class MailActivityPresenter implements IMailActivityPresenter{
     private IMailActivity iMailActivity;
-    private Context context;
     private Storage storage;
 
     public MailActivityPresenter(IMailActivity iMailActivity,Context context){
         this.iMailActivity = iMailActivity;
-        this.context = context;
-        this.storage = new Storage(this.context);
+        this.storage = new Storage(context);
     }
-
 }

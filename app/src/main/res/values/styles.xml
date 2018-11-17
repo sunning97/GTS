@@ -15,6 +15,7 @@
         <item name="android:textColorPrimary">@color/white</item>
         <item name="drawerArrowStyle">@style/changeDrawerLayoutIconColor</item>
     </style>
+
     <style name="changeDrawerLayoutIconColor" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/white</item>
     </style>
