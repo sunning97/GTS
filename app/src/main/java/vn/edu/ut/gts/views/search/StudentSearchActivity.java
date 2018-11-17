@@ -292,21 +292,21 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 }
             }, 1000);
         }
-        if (fromLayout == StudentSearchActivity.RESULT_LAYOUT) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            studentSearchPresenter.getStudentDetail(currentStudentClick);
-                        }
-                    }, 1000);
-                }
-            }, 1000);
-        }
+//        if (fromLayout == StudentSearchActivity.RESULT_LAYOUT) {
+//            Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            studentSearchPresenter.getStudentDetail(currentStudentClick);
+//                        }
+//                    }, 1000);
+//                }
+//            }, 1000);
+//        }
     }
 
     @OnClick(R.id.reset_date)

@@ -267,7 +267,6 @@ public class LoginProcess implements ILoginProcess {
             res = res.replace(";/*", "");
             JSONArray ar = new JSONArray(res);
             return Helper.decryptMd5(ar.getString(1));
-
         } catch (NullPointerException | IndexOutOfBoundsException | JSONException e) {
             e.printStackTrace();
         }
