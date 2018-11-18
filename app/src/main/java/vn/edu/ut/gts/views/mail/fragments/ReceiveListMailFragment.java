@@ -80,6 +80,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     private IMailActivity iMailActivity;
     private EpicDialog epicDialog;
     private AlertDialog alertDialog;
+    private Handler handler;
 
     @SuppressLint("ValidFragment")
 
@@ -103,6 +104,7 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
         loadingIcon.setIndeterminateDrawable(fadingCircle);
         epicDialog = new EpicDialog(getContext());
         epicDialog.initLoadingDialog();
+        handler = new Handler();
         receiveListMailSwipeRefresh.setEnabled(true);
         if (this.data == null) {
             receiveListMailFragmentPresenter.getListMail();
@@ -143,7 +145,15 @@ public class ReceiveListMailFragment extends Fragment implements IReceiveListMai
     @OnClick(R.id.retry_text)
     public void retry() {
         ReceiveListMailFragmentPresenter.currentStatus = 0;
-        receiveListMailFragmentPresenter.getListMail();
+        hideNoInternetLayout();
+        hideAllComponent();
+        showLoadingLayout();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                receiveListMailFragmentPresenter.getListMail();
+            }
+        }, 1000);
     }
 
     @Override

@@ -25,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.adapters.StudentSearchDetailViewPagerAdpater;
 import vn.edu.ut.gts.helpers.EpicDialog;
@@ -64,15 +65,16 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
         epicDialog = new EpicDialog(StudentDetailActivity.this);
         epicDialog.initLoadingDialog();
         studentDetailActivityPresenter = new StudentDetailActivityPresenter(this, this);
+        ThreeBounce threeBounce = new ThreeBounce();
+        loadingIcon.setIndeterminateDrawable(threeBounce);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getBundleExtra("data");
+
         searchToolbar.setTitle("");
         setSupportActionBar(searchToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        ThreeBounce threeBounce = new ThreeBounce();
-        loadingIcon.setIndeterminateDrawable(threeBounce);
-        Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra("data");
         JSONObject data = null;
         try {
             data = new JSONObject(bundle.getString("data"));

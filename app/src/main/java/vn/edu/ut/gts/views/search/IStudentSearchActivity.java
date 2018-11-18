@@ -10,8 +10,6 @@ public interface IStudentSearchActivity {
     void showNetworkErrorLayout();
     void showInputValidateEmpty(String s);
     void generateTableSearchResult(ArrayList<JSONObject> jsonObjects);
-
-
     void loadToResultLayout(Boolean isNoResult);
     void loadToDetailLayout(String name);
     void showNoResultLayout();
@@ -21,6 +19,9 @@ public interface IStudentSearchActivity {
     void dismissLoadingDialog();
     void showTimeoutDialog();
     void showNoInternetDialog();
-    void searchToRetryBtn();
-    void retryToSearchBtn();
+    void toRetryBtn();
+    void toSearchBtn();
+    void toLoadingBtn();
+    void disableAllInput();
+    void enableAllInout();
 }

@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -95,6 +96,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         this.requestPermission();
         this.init();
         this.hideErrorWhileInput();
+        /* start service OnClearFromRecentService*/
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
@@ -290,7 +292,14 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         /* error in internet connect*/
         if (LoginProcess.currentStatus == Helper.TIMEOUT || LoginProcess.currentStatus == Helper.NO_CONNECTION) {
             LoginProcess.currentStatus = 0;
-            loginProcess.initData(false);
+            disableInput();
+            transferToLoadingBtn();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loginProcess.initData(false);
+                }
+            },1000);
         } else {
             boolean validateStudentId = validateStudentId();
             boolean validatePassword = validatePassword();

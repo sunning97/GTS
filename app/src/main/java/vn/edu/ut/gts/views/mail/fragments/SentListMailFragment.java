@@ -4,6 +4,7 @@ package vn.edu.ut.gts.views.mail.fragments;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -60,6 +61,7 @@ public class SentListMailFragment extends Fragment implements ISentListMailFragm
     private EpicDialog epicDialog;
     private AlertDialog alertDialog;
     private OnItemClickListener onItemClickListener;
+    private Handler handler;
 
     public SentListMailFragment() {
 
@@ -80,7 +82,7 @@ public class SentListMailFragment extends Fragment implements ISentListMailFragm
         loadingIcon.setIndeterminateDrawable(fadingCircle);
         epicDialog = new EpicDialog(getContext());
         epicDialog.initLoadingDialog();
-
+        handler = new Handler();
         if (this.data == null) {
             sentListMailFragmentPresenter.getListMail();
         } else {
@@ -110,7 +112,15 @@ public class SentListMailFragment extends Fragment implements ISentListMailFragm
     @OnClick(R.id.retry_text)
     public void retry() {
         SentListMailFragmentPresenter.currentStatus = 0;
-        sentListMailFragmentPresenter.getListMail();
+        hideAllComponent();
+        hideNoInternetLayout();
+        showLoadingLayout();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sentListMailFragmentPresenter.getListMail();
+            }
+        }, 1000);
     }
 
     @Override

@@ -42,7 +42,9 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> asyncTask = new AsyncTask<Void, Void, JSONObject>() {
             @Override
             protected void onPreExecute() {
-                iStudentSearchActivity.showLoadingDialog();
+                iStudentSearchActivity.disableAllInput();
+                iStudentSearchActivity.toLoadingBtn();
+//                iStudentSearchActivity.showLoadingDialog();
             }
 
             @Override
@@ -80,18 +82,21 @@ public class StudentSearchPresenter implements IStudentSearchPresenter {
                 switch (currentStatus) {
                     case 400: {
                         iStudentSearchActivity.showNoInternetDialog();
-                        iStudentSearchActivity.searchToRetryBtn();
+                        iStudentSearchActivity.disableAllInput();
+                        iStudentSearchActivity.toRetryBtn();
                         break;
                     }
                     case 500: {
                         iStudentSearchActivity.showTimeoutDialog();
-                        iStudentSearchActivity.searchToRetryBtn();
+                        iStudentSearchActivity.disableAllInput();
+                        iStudentSearchActivity.toRetryBtn();
                         break;
                     }
                     default: {
                         storage.putString("search_data", jsonObject.toString());
-                        iStudentSearchActivity.retryToSearchBtn();
-                        iStudentSearchActivity.dismissLoadingDialog();
+                        iStudentSearchActivity.toSearchBtn();
+                        iStudentSearchActivity.enableAllInout();
+//                        iStudentSearchActivity.dismissLoadingDialog();
                     }
                 }
             }

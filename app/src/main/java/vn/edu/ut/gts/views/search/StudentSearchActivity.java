@@ -54,6 +54,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.adapters.StudentSearchDetailViewPagerAdpater;
 import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.presenters.search.StudentSearchPresenter;
 
 public class StudentSearchActivity extends AppCompatActivity implements IStudentSearchActivity, CalendarDatePickerDialogFragment.OnDateSetListener {
@@ -132,7 +134,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     private EpicDialog epicDialog;
     private Pattern pattern = Pattern.compile(DATE_REGEX);
     private Matcher matcher = null;
-
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,14 +145,13 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         epicDialog = new EpicDialog(StudentSearchActivity.this);
         epicDialog.initLoadingDialog();
         studentSearchPresenter = new StudentSearchPresenter(this, StudentSearchActivity.this);
-        studentSearchPresenter.getDataSearch();
         searchToolbar.setTitle("Tìm kiếm sinh viên");
         ThreeBounce threeBounce = new ThreeBounce();
         loadingIcon.setIndeterminateDrawable(threeBounce);
         setSupportActionBar(searchToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        handler = new Handler();
         this.studentSearchDetailViewPagerAdpater = new StudentSearchDetailViewPagerAdpater(getSupportFragmentManager());
         studentSearchViewPager.setAdapter(studentSearchDetailViewPagerAdpater);
         studentSearchTablayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -171,6 +172,7 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 }
             }
         });
+        studentSearchPresenter.getDataSearch();
     }
 
     @OnClick(R.id.layout_container)
@@ -197,13 +199,19 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     @OnClick(R.id.btn_search)
     public void search(View view) {
         if (StudentSearchPresenter.currentStatus != 0) {
-            studentSearchPresenter.getDataSearch();
+            StudentSearchPresenter.currentStatus = 0;
+            disableAllInput();
+            toLoadingBtn();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    studentSearchPresenter.getDataSearch();
+                }
+            }, 1000);
         } else {
             this.validateInput();
             if (isNoInputFailed) {
                 searchToLoadLayout();
-
-                Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -370,14 +378,14 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
             switch (i) {
                 case 0:
                     layoutParams.gravity = Gravity.CENTER;
-                    layoutParams.width = (int) (getScreenWidthInDPs() * 0.3);
+                    layoutParams.width = (int) (Helper.getScreenWidthInDPs(this) * 0.3);
                     break;
                 case 1:
-                    layoutParams.width = (int) (getScreenWidthInDPs() * 0.4);
+                    layoutParams.width = (int) (Helper.getScreenWidthInDPs(this) * 0.4);
                     break;
                 case 2:
                     layoutParams.gravity = Gravity.CENTER;
-                    layoutParams.width = (int) (getScreenWidthInDPs() * 0.3);
+                    layoutParams.width = (int) (Helper.getScreenWidthInDPs(this) * 0.3);
                     break;
             }
 
@@ -410,9 +418,9 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                     }
                 });
                 if (i % 2 != 0) row.setBackgroundColor(getResources().getColor(R.color.gray3));
-                row.addView(generateTableCell(subject.getString("studentCode"), true, (int) (getScreenWidthInDPs() * 0.3)));
-                row.addView(generateTableCell(subject.getString("studentName"), false, (int) (getScreenWidthInDPs() * 0.4)));
-                row.addView(generateTableCell(subject.getString("birthday"), true, (int) (getScreenWidthInDPs() * 0.3)));
+                row.addView(generateTableCell(subject.getString("studentCode"), true, (int) (Helper.getScreenWidthInDPs(this) * 0.3)));
+                row.addView(generateTableCell(subject.getString("studentName"), false, (int) (Helper.getScreenWidthInDPs(this) * 0.4)));
+                row.addView(generateTableCell(subject.getString("birthday"), true, (int) (Helper.getScreenWidthInDPs(this) * 0.3)));
                 searchResultTableBody.addView(row);
             }
         } catch (JSONException e) {
@@ -469,7 +477,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         birthDateTV.setText(date);
     }
 
-
     public void searchToLoadLayout() {
         YoYo.with(Techniques.SlideOutLeft)
                 .duration(150)
@@ -502,7 +509,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 })
                 .playOn(gtsLogo);
     }
-
 
     @Override
     public void loadToResultLayout(final Boolean isNoResult) {
@@ -832,13 +838,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                 .playOn(detailLayout);
     }
 
-    public int getScreenWidthInDPs() {
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(dm);
-        return dm.widthPixels;
-    }
-
     public void setStudentDetailData(JSONArray data) {
         this.studentSearchDetailViewPagerAdpater.setData(data);
         this.studentSearchDetailViewPagerAdpater.notifyDataSetChanged();
@@ -866,7 +865,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     @Override
     public void showTimeoutDialog() {
         if (epicDialog.isShowing()) epicDialog.dismisPopup();
-        disableInput();
         new SweetAlertDialog(this)
                 .setTitleText(getResources().getString(R.string.connect_timeout_dialog_title))
                 .setContentText(getResources().getString(R.string.connect_timeout_dialog_content))
@@ -876,7 +874,6 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     @Override
     public void showNoInternetDialog() {
         if (epicDialog.isShowing()) epicDialog.dismisPopup();
-        disableInput();
         new SweetAlertDialog(this)
                 .setTitleText(getResources().getString(R.string.no_internet_access_title))
                 .setContentText(getResources().getString(R.string.no_internet_access_content))
@@ -884,17 +881,22 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     }
 
     @Override
-    public void searchToRetryBtn() {
+    public void toRetryBtn() {
         btnSearch.setText(getResources().getString(R.string.retry_btn));
     }
 
     @Override
-    public void retryToSearchBtn() {
+    public void toSearchBtn() {
         btnSearch.setText(getResources().getString(R.string.search_btn));
-        enableInput();
     }
 
-    private void enableInput() {
+    @Override
+    public void toLoadingBtn() {
+        btnSearch.setText("Loading...");
+    }
+
+    @Override
+    public void enableAllInout() {
         inputStudentID.setEnabled(true);
         inputClass.setEnabled(true);
         inputFirstName.setEnabled(true);
@@ -902,8 +904,9 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         pickDate.setEnabled(true);
         resetDateBtn.setEnabled(true);
     }
+    @Override
 
-    private void disableInput() {
+    public void disableAllInput() {
         inputStudentID.setEnabled(false);
         inputClass.setEnabled(false);
         inputFirstName.setEnabled(false);
@@ -911,6 +914,4 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
         pickDate.setEnabled(false);
         resetDateBtn.setEnabled(false);
     }
-
-
 }

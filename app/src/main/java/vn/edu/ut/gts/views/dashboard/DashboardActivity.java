@@ -137,7 +137,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             setToolbarTitle(dashboardPresenter.getStudentNameFromStorage());
             setUpNavigationData(dashboardPresenter.getStudentPortraitFromStorage(),dashboardPresenter.getStudentNameFromStorage(),dashboardPresenter.getStudentIDFromStorage());
         }
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     @OnClick({

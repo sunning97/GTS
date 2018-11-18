@@ -94,8 +94,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         /* ge student Id from sharedpreference & set to drawlayout header*/
         studentID.setText(storage.getString("last_student_login"));
 
-        /* start service OnClearFromRecentService*/
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     @Override

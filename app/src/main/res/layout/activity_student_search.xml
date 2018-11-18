@@ -142,7 +142,6 @@
             </LinearLayout>
         </LinearLayout>
         <Button
-            android:foreground="?android:attr/selectableItemBackground"
             android:layout_marginTop="40dp"
             android:id="@+id/btn_search"
             android:layout_width="200dp"

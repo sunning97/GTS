@@ -1,5 +1,6 @@
 package vn.edu.ut.gts.views.mail;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.helpers.OnClearFromRecentService;
 import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.presenters.mail.MailActivityPresenter;
