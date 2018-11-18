@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -76,7 +77,7 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendance, container, false);
         /* Bind all view component*/
         ButterKnife.bind(this, view);
@@ -128,7 +129,10 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         int backgroundResource = typedArray.getResourceId(0, 0);
 
         row.setBackgroundResource(backgroundResource);
-        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        row.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         row.setMinimumHeight((int) d * 50);
         row.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,10 +143,26 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(jsonObject.getString("ten_mon_hoc"), false, (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)));
-            row.addView(generateTableCell(jsonObject.getString("dvht"), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("nghi_co_phep"), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("nghi_ko_phep"), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(
+                    jsonObject.getString("ten_mon_hoc"),
+                    false,
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("dvht"),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("nghi_co_phep"),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("nghi_ko_phep"),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -152,14 +172,20 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     @Override
     public LinearLayout generateTableCell(String content, Boolean isMarginCenter, int width) {
         LinearLayout linearLayout = new LinearLayout(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.MATCH_PARENT
+        );
         layoutParams.width = width;
         linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 15, (int) d * 5);
         if (isMarginCenter) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
         if (isMarginCenter) textViewLayout.gravity = Gravity.CENTER;
         textView.setLayoutParams(textViewLayout);
         textView.setTextColor(getResources().getColor(R.color.black));
@@ -172,13 +198,19 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
     @Override
     public TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
-        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        header.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         for (int i = 0; i < headerText.size(); i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT
+            );
             if (i == 0) {
                 layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
             } else {
@@ -189,7 +221,10 @@ public class AttendanceFragment extends Fragment implements IAttendanceFragment 
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);

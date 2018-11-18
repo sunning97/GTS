@@ -6,10 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/grayLight"
     tools:context=".views.home.fragments.StudentDebtFragment">
     <com.jaredrummler.materialspinner.MaterialSpinner
         android:foreground="?android:attr/selectableItemBackground"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:ms_dropdown_max_height="300dp"
         app:ms_background_color="@color/grayLight"
         app:ms_text_color="@color/colorPrimary"
@@ -18,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <LinearLayout
-        android:visibility="invisible"
+        android:visibility="gone"
         android:id="@+id/total_debt_layout"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
@@ -38,7 +39,7 @@
             android:layout_marginLeft="3dp"
             android:textColor="@color/red"
             android:textStyle="bold"
-            android:text="loading..."
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
@@ -53,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
         <TableLayout
             android:id="@+id/student_debt_table_header"
             android:layout_width="match_parent"

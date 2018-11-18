@@ -4,6 +4,7 @@ package vn.edu.ut.gts.views.home.fragments;
 import android.app.Dialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -70,13 +71,15 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_test_schedule, container, false);
         ButterKnife.bind(this, view);
         storage = new Storage(Objects.requireNonNull(getContext()));
         epicDialog = new EpicDialog(getContext());
         epicDialog.initLoadingDialog();
-        d = getContext().getResources().getDisplayMetrics().density;
+        d = getContext().getResources()
+                .getDisplayMetrics()
+                .density;
         TestSchedulePresenter.currentStatus = 0;
         testSchedulePresenter = new TestSchedulePresenter(this, getContext());
         testSchedulePresenter.getDataTestSchedule();
@@ -164,7 +167,10 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
 
     public TableRow generateTableRow(final JSONObject jsonObject, boolean changeBG) {
         TableRow row = new TableRow(getContext());
-        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        row.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         row.setMinimumHeight((int) d * 60);
         row.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,10 +180,26 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(jsonObject.getString("mon_thi"), false, (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.3)));
-            row.addView(generateTableCell(jsonObject.getString("ngay_thi"), false, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.3)));
-            row.addView(generateTableCell(jsonObject.getString("phong_thi"), false, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("loai_thi"), false, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(
+                    jsonObject.getString("mon_thi"),
+                    false,
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.3)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("ngay_thi"),
+                    false,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.3)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("phong_thi"),
+                    false,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("loai_thi"),
+                    false,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -186,13 +208,19 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
 
     public TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
-        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        header.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         for (int i = 0; i < headerText.size(); i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT
+            );
             if (i == 0 || i == 1) {
                 layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.3);
             } else {
@@ -202,7 +230,10 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
@@ -216,14 +247,20 @@ public class TestScheduleFragment extends Fragment implements ITestScheduleFragm
 
     public LinearLayout generateTableCell(String content, Boolean isGravityCenter, int width) {
         LinearLayout linearLayout = new LinearLayout(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.MATCH_PARENT
+        );
         layoutParams.width = width;
         linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 15, (int) d * 5);
         if (isGravityCenter) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
         if (isGravityCenter) textViewLayout.gravity = Gravity.CENTER;
         textView.setLayoutParams(textViewLayout);
         textView.setTextColor(getResources().getColor(R.color.black));

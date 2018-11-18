@@ -353,7 +353,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
             }
         }
         if (!listPermissionNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this, listPermissionNeeded.toArray(new String[listPermissionNeeded.size()]), 1);
+            ActivityCompat.requestPermissions(
+                    this,
+                    listPermissionNeeded.toArray(new String[listPermissionNeeded.size()]),
+                    1
+            );
         }
     }
 

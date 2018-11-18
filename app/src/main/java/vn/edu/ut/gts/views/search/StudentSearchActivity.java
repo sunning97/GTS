@@ -368,13 +368,19 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
 
         //header
         TableRow header = new TableRow(StudentSearchActivity.this);
-        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        header.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         for (int i = 0; i < searchResultHeaderData.length; i++) {
             LinearLayout linearLayout = new LinearLayout(StudentSearchActivity.this);
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT
+            );
             switch (i) {
                 case 0:
                     layoutParams.gravity = Gravity.CENTER;
@@ -393,7 +399,10 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(StudentSearchActivity.this);
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
@@ -408,7 +417,10 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
             for (int i = 0; i < jsonObjects.size(); i++) {
                 final JSONObject subject = jsonObjects.get(i);
                 TableRow row = new TableRow(StudentSearchActivity.this);
-                row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                row.setLayoutParams(new TableRow.LayoutParams(
+                        TableRow.LayoutParams.MATCH_PARENT,
+                        TableRow.LayoutParams.WRAP_CONTENT)
+                );
                 row.setMinimumHeight((int) d * 50);
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -418,9 +430,21 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
                     }
                 });
                 if (i % 2 != 0) row.setBackgroundColor(getResources().getColor(R.color.gray3));
-                row.addView(generateTableCell(subject.getString("studentCode"), true, (int) (Helper.getScreenWidthInDPs(this) * 0.3)));
-                row.addView(generateTableCell(subject.getString("studentName"), false, (int) (Helper.getScreenWidthInDPs(this) * 0.4)));
-                row.addView(generateTableCell(subject.getString("birthday"), true, (int) (Helper.getScreenWidthInDPs(this) * 0.3)));
+                row.addView(generateTableCell(
+                        subject.getString("studentCode"),
+                        true,
+                        (int) (Helper.getScreenWidthInDPs(this) * 0.3)
+                ));
+                row.addView(generateTableCell(
+                        subject.getString("studentName"),
+                        false,
+                        (int) (Helper.getScreenWidthInDPs(this) * 0.4)
+                ));
+                row.addView(generateTableCell(
+                        subject.getString("birthday"),
+                        true,
+                        (int) (Helper.getScreenWidthInDPs(this) * 0.3)
+                ));
                 searchResultTableBody.addView(row);
             }
         } catch (JSONException e) {
@@ -430,14 +454,20 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
 
     public LinearLayout generateTableCell(String content, Boolean isGravityCenter, int width) {
         LinearLayout linearLayout = new LinearLayout(StudentSearchActivity.this);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.MATCH_PARENT
+        );
         layoutParams.width = width;
         linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 15, (int) d * 5);
         if (isGravityCenter) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         TextView textView = new TextView(StudentSearchActivity.this);
-        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
         if (isGravityCenter) textViewLayout.gravity = Gravity.CENTER;
         textView.setLayoutParams(textViewLayout);
         textView.setTextColor(getResources().getColor(R.color.black));

@@ -148,7 +148,10 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
     @Override
     public void showStudentPortraitDialog(String studentId) {
         if (epicDialog.isShowing()) epicDialog.dismisPopup();
-        Bitmap bitmap = storage.getImageFromStorage(StudentDetailActivity.this, "search_student_portrait.jpg");
+        Bitmap bitmap = storage.getImageFromStorage(
+                this,
+                "search_student_portrait.jpg"
+        );
         epicDialog.showSearchStudentPortraitDialog(bitmap, studentId);
     }
 
@@ -158,8 +161,11 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
         switch (item.getItemId()) {
             case R.id.student_portrait: {
                 if(StudentDetailActivityPresenter.currentStatus ==0) {
-                    if (storage.isImageExist(StudentDetailActivity.this, "search_student_portrait.jpg")) {
-                        epicDialog.showSearchStudentPortraitDialog(studentDetailActivityPresenter.getStudentPortraitFromStorage(), storage.getString("search_student_id"));
+                    if (storage.isImageExist(this, "search_student_portrait.jpg")) {
+                        epicDialog.showSearchStudentPortraitDialog(
+                                studentDetailActivityPresenter.getStudentPortraitFromStorage(),
+                                storage.getString("search_student_id")
+                        );
                     } else
                         studentDetailActivityPresenter.getStudentPortrait();
                 }
@@ -167,7 +173,9 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
             }
             case android.R.id.home: {
                 storage.deleteString("search_student_id");
-                storage.deleteImage(StudentDetailActivity.this, "search_student_portrait.jpg");
+                storage.deleteImage(this,
+                        "search_student_portrait.jpg"
+                );
                 finish();
                 break;
             }
@@ -179,7 +187,9 @@ public class StudentDetailActivity extends AppCompatActivity implements IStudent
     @Override
     public void onBackPressed() {
         storage.deleteString("search_student_id");
-        storage.deleteImage(StudentDetailActivity.this, "search_student_portrait.jpg");
+        storage.deleteImage(this,
+                "search_student_portrait.jpg"
+        );
         finish();
     }
 }

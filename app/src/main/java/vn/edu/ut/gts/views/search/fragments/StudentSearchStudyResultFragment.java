@@ -38,6 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.EpicDialog;
+import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.presenters.home.StudentStudyResultFragmentPresenter;
 import vn.edu.ut.gts.views.home.fragments.StudentStudyResultFragment;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
@@ -71,7 +72,10 @@ public class StudentSearchStudyResultFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_search_study_result, container, false);
         ButterKnife.bind(this, view);
-        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext())
+                .getResources()
+                .getDisplayMetrics()
+                .density;
         studyResultSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         epicDialog = new EpicDialog(getContext());
         setHasOptionsMenu(true);
@@ -117,24 +121,33 @@ public class StudentSearchStudyResultFragment extends Fragment {
 
     private TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
-        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        header.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         for (int i = 0; i < headerText.size(); i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT
+            );
             if (i == 0) {
-                layoutParams.width = (int) (getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
             } else {
                 layoutParams.gravity = Gravity.CENTER;
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.2);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.2);
             }
             linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 5, 0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
@@ -165,7 +178,10 @@ public class StudentSearchStudyResultFragment extends Fragment {
 
     private TableRow generateTableRow(final JSONObject data, boolean changeBG) {
         TableRow row = new TableRow(getContext());
-        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        row.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         row.setMinimumHeight((int) d * 50);
         row.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,10 +191,26 @@ public class StudentSearchStudyResultFragment extends Fragment {
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(data.getString("courseName"), false, (int) (getScreenWidthInDPs(getContext()) * 0.4)));
-            row.addView(generateTableCell(data.getString("scoresOf10"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(data.getString("scoresOf4"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(data.getString("scoresString"), true, (int) (getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(
+                    data.getString("courseName"),
+                    false,
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)
+            ));
+            row.addView(generateTableCell(
+                    data.getString("scoresOf10"),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    data.getString("scoresOf4"),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    data.getString("scoresString"),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.2)
+            ));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -187,14 +219,20 @@ public class StudentSearchStudyResultFragment extends Fragment {
 
     private LinearLayout generateTableCell(String data, boolean center, int width) {
         LinearLayout linearLayout = new LinearLayout(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.MATCH_PARENT
+        );
         layoutParams.width = width;
         linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 15, (int) d * 5);
         if (center) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
         if (center) textViewLayout.gravity = Gravity.CENTER;
         textView.setLayoutParams(textViewLayout);
         textView.setTextColor(getResources().getColor(R.color.black));
@@ -233,13 +271,6 @@ public class StudentSearchStudyResultFragment extends Fragment {
         loadedLayout.setVisibility(View.VISIBLE);
     }
 
-    private int getScreenWidthInDPs(Context context) {
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(dm);
-        return dm.widthPixels;
-    }
-
     public void studyResultDetailShow(JSONObject jsonObject) {
         LayoutInflater factory = getLayoutInflater();
         View view = factory.inflate(R.layout.student_study_result_detail_dialog, null);
@@ -270,14 +301,13 @@ public class StudentSearchStudyResultFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Dialog simpleDialog = DialogUtils.createSimpleDialog(getContext(), view, true);
+        Dialog simpleDialog = DialogUtils.createSimpleDialog(Objects.requireNonNull(getContext()), view, true);
         if (simpleDialog != null && !simpleDialog.isShowing()) {
             simpleDialog.show();
         }
     }
 
     private List<String> createNewDataSpinner() {
-        List<String> a = new ArrayList<>();
-        return a;
+        return new ArrayList<>();
     }
 }

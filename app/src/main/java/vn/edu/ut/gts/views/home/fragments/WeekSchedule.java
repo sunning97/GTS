@@ -3,6 +3,7 @@ package vn.edu.ut.gts.views.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -76,7 +77,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_week_schedule, container, false);
         ButterKnife.bind(this, view);
         viewPager.setOnSwipeOutListener(this);
@@ -137,7 +138,12 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
         try {
             JSONObject firstDate = jsonArray.getJSONObject(0);
             JSONObject lastDate = jsonArray.getJSONObject(jsonArray.length() - 1);
-            dateToDate.setText("Tuần: " + firstDate.getString("date") + " - " + lastDate.getString("date"));
+            dateToDate.setText(
+                    "Tuần: " +
+                    firstDate.getString("date") +
+                    " - " +
+                    lastDate.getString("date")
+            );
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -210,8 +216,14 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
         this.month = monthOfYear;
         this.year = year;
 
-        String day = (dayOfMonth < 10) ? "0" + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
-        String mounth = ((monthOfYear + 1) < 10) ? "0" + String.valueOf(monthOfYear + 1) : String.valueOf(monthOfYear + 1);
+        String day = (dayOfMonth < 10) ?
+                "0" + String.valueOf(dayOfMonth) :
+                String.valueOf(dayOfMonth);
+
+        String mounth = ((monthOfYear + 1) < 10) ?
+                "0" + String.valueOf(monthOfYear + 1) :
+                String.valueOf(monthOfYear + 1);
+
         String date = day + "-" + mounth + "-" + String.valueOf(year);
 
         weekSchedulePresenter.getSchedulesByDate(date);

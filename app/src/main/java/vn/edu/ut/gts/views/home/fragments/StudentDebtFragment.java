@@ -82,7 +82,10 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         studentDebtSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         studentDebtFragmentPresenter = new StudentDebtFragmentPresenter(this, getContext());
         init();
-        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext())
+                .getResources()
+                .getDisplayMetrics()
+                .density;
         StudentDebtFragment.currentPos = 0;
         StudentDebtFragmentPresenter.currentStatus = 0;
         studentDebtFragmentPresenter.getDataDebtSpinner();
@@ -124,10 +127,30 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(jsonObject.getString("noi_dung_thu"), false, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)));
-            row.addView(generateTableCell(jsonObject.getString("tin_chi"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("cong_no_vnd"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("trang_thai"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(
+                    jsonObject.getString("noi_dung_thu"),
+                    false,
+                    jsonObject.getString("trang_thai").equals("Chưa nộp"),
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("tin_chi"),
+                    true,
+                    jsonObject.getString("trang_thai").equals("Chưa nộp"),
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("cong_no_vnd"),
+                    true,
+                    jsonObject.getString("trang_thai").equals("Chưa nộp"),
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("trang_thai"),
+                    true,
+                    jsonObject.getString("trang_thai").equals("Chưa nộp"),
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -137,13 +160,19 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     @Override
     public TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
-        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        header.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         for (int i = 0; i < headerText.size(); i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT
+            );
             if (i == 0) {
                 layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
             } else {
@@ -154,7 +183,10 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
@@ -169,14 +201,20 @@ public class StudentDebtFragment extends Fragment implements IStudentDebtFragmen
     @Override
     public LinearLayout generateTableCell(String content, Boolean isGravityCenter, Boolean isRed, int width) {
         LinearLayout linearLayout = new LinearLayout(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.MATCH_PARENT
+        );
         layoutParams.width = width;
         linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 15, (int) d * 5);
         if (isGravityCenter) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
         if (isGravityCenter) textViewLayout.gravity = Gravity.CENTER;
         textView.setLayoutParams(textViewLayout);
         if (isRed) {

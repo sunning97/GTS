@@ -144,7 +144,12 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
         TextView textView = view.findViewById(R.id.mail_circle);
         getSupportFragmentManager().beginTransaction().replace(
                 R.id.mail_fragment_container,
-                new MailDetailFragment(this,data,this,textView.getBackground(),position)
+                new MailDetailFragment(this,
+                        data,
+                        this,
+                        textView.getBackground(),
+                        position
+                )
         ).commit();
         setTitle("");
     }
@@ -154,7 +159,12 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
         TextView textView = view.findViewById(R.id.mail_circle);
         getSupportFragmentManager().beginTransaction().replace(
                 R.id.mail_fragment_container,
-                new MailSentDetailFragment(data,this,textView.getBackground(),position)
+                new MailSentDetailFragment(
+                        data,
+                        this,
+                        textView.getBackground(),
+                        position
+                )
         ).commit();
         setTitle("");
     }

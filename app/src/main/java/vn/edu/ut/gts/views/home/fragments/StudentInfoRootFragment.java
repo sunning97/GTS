@@ -2,6 +2,7 @@ package vn.edu.ut.gts.views.home.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,14 +37,14 @@ public class StudentInfoRootFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_info_root,container,false);
         ButterKnife.bind(this,view);
         init();
         return view;
     }
     private void init(){
-        storage = new Storage(getContext());
+        storage = new Storage(Objects.requireNonNull(getContext()));
         try {
             JSONObject data = new JSONObject(storage.getString("student_info"));
             this.studentInfoViewPagerAdapter = new StudentInfoViewPagerAdapter(getChildFragmentManager(),data);

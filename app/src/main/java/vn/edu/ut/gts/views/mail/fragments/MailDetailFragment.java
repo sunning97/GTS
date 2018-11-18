@@ -213,7 +213,9 @@ public class MailDetailFragment extends Fragment implements IMailDetailFragment,
         });
         alertDialog = builder.create();
         alertDialog.show();
-        alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
-        alertDialog.getButton(alertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.black));
+        alertDialog.getButton(alertDialog.BUTTON_POSITIVE)
+                .setTextColor(getResources().getColor(R.color.colorPrimary));
+        alertDialog.getButton(alertDialog.BUTTON_NEGATIVE)
+                .setTextColor(getResources().getColor(R.color.black));
     }
 }

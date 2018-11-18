@@ -4,6 +4,7 @@ package vn.edu.ut.gts.views.home.fragments;
 import android.app.Dialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -105,12 +106,14 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frame_program, container, false);
         ButterKnife.bind(this, view);
         frameProgramSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         init();
-        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext()).getResources()
+                .getDisplayMetrics()
+                .density;
         FrameProgramFragmentPresenter.currentStatus = 0;
         frameProgramFragmentPresenter = new FrameProgramFragmentPresenter(this, getContext());
         setHasOptionsMenu(true);
@@ -212,13 +215,19 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
     @Override
     public TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
-        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        header.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         for (int i = 0; i < headerText.size(); i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT
+            );
             if (i == 0) {
                 layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.6);
             } else {
@@ -229,7 +238,10 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
@@ -254,9 +266,20 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(jsonArray.get(1).toString(), false, (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.6)));
-            row.addView(generateTableCell(jsonArray.get(4).toString(), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonArray.get(5).toString(), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(
+                    jsonArray.get(1).toString(),
+                    false,
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.6)
+            ));
+            row.addView(generateTableCell(jsonArray.get(4).toString(),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    jsonArray.get(5).toString(),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -266,14 +289,20 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
     @Override
     public LinearLayout generateTableCell(String data, boolean center, int width) {
         LinearLayout linearLayout = new LinearLayout(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.MATCH_PARENT
+        );
         layoutParams.width = width;
         linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 15, (int) d * 5);
         if (center) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
         if (center) textViewLayout.gravity = Gravity.CENTER;
         textView.setLayoutParams(textViewLayout);
         textView.setTextColor(getResources().getColor(R.color.black));
@@ -286,19 +315,28 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
     public TableRow generateSubjectGroup(String content) {
         TableRow tableRow = new TableRow(getContext());
         tableRow.setGravity(Gravity.CENTER);
-        tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        tableRow.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         tableRow.setMinimumHeight((int) d * 40);
         tableRow.setBackgroundColor(getResources().getColor(R.color.violet));
 
         // generate cell container
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setGravity(Gravity.CENTER);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT
+        );
         linearLayout.setLayoutParams(layoutParams);
 
         // generate cell's text view
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
         a.setMargins((int) d * 10, 0, (int) d, 0);
         textView.setLayoutParams(a);
         textView.setTextColor(getResources().getColor(R.color.colorPrimary));

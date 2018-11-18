@@ -9,7 +9,7 @@ public interface IDashboardActivity {
 
     void showLoadingDialog();
 
-    void dismisLoadingDialog();
+    void dismissLoadingDialog();
 
     void enableAll();
 

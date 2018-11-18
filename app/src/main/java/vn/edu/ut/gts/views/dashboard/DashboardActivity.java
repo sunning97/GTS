@@ -173,7 +173,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void startActivity(int order) {
-        Intent intent = new Intent(DashboardActivity.this, HomeActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("order", String.valueOf(order));
         startActivity(intent);
     }
@@ -214,7 +214,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void dismisLoadingDialog() {
+    public void dismissLoadingDialog() {
 
     }
 
@@ -347,15 +347,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     break;
                 }
                 case R.id.mail_box:{
-                    startActivity(new Intent(DashboardActivity.this, MailActivity.class));
+                    startActivity(new Intent(this, MailActivity.class));
                     break;
                 }
                 case R.id.student_search: {
-                    startActivity(new Intent(DashboardActivity.this,StudentSearchActivity.class));
+                    startActivity(new Intent(this,StudentSearchActivity.class));
                     break;
                 }
                 case R.id.about_app:{
-                    EpicDialog epicDialog = new EpicDialog(DashboardActivity.this);
+                    EpicDialog epicDialog = new EpicDialog(this);
                     epicDialog.showAboutDialog();
                     break;
                 }
@@ -363,14 +363,14 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     LoginActivity.isLogout = true;
                     LoginActivity.isAutoLogin = false;
                     HomeActivity.isLogin = false;
-                    storage.deleteAllsharedPreferences(DashboardActivity.this);
-                    startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                    storage.deleteAllsharedPreferences(this);
+                    startActivity(new Intent(this, LoginActivity.class));
                     break;
                 }
                 case R.id.exit: {
                     LoginActivity.isLogout = false;
-                    storage.deleteAllsharedPreferences(DashboardActivity.this);
-                    DashboardActivity.this.finishAffinity();
+                    storage.deleteAllsharedPreferences(this);
+                    this.finishAffinity();
                     break;
                 }
                 case R.id.home_dashboard:{

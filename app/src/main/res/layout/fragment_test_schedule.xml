@@ -13,10 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:visibility="invisible"
-        app:ms_background_color="@color/grayLight"
+        android:visibility="gone"
         app:ms_dropdown_max_height="300dp"
-        app:ms_text_color="@color/colorPrimary" />
+        app:ms_background_color="@color/grayLight"
+        app:ms_text_color="@color/colorPrimary"/>
 
     <LinearLayout
         android:id="@+id/loaded_layout"

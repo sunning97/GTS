@@ -82,7 +82,10 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_search_debt, container, false);
         ButterKnife.bind(this, view);
-        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext())
+                .getResources()
+                .getDisplayMetrics()
+                .density;
         loadingDialog = new EpicDialog(getContext());
         loadingDialog.initLoadingDialog();
         Bundle bundle = getArguments();
@@ -139,8 +142,11 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
     }
 
     public TableRow generateTableRow(final JSONObject jsonObject, boolean changeBG) {
-        TableRow row = new TableRow(getContext());
-        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        TableRow row = new TableRow(Objects.requireNonNull(getContext()));
+        row.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         row.setMinimumHeight((int) d * 60);
         row.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,10 +156,30 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(jsonObject.getString("noi_dung_thu"), false, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (getScreenWidthInDPs(getContext()) * 0.4)));
-            row.addView(generateTableCell(jsonObject.getString("tin_chi"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("cong_no_vnd"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(jsonObject.getString("trang_thai"), true, jsonObject.getString("trang_thai").equals("Chưa nộp"), (int) (getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(
+                    jsonObject.getString("noi_dung_thu"),
+                    false,
+                    jsonObject.getString("trang_thai").equals("Chưa nộp"),
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("tin_chi"),
+                    true,
+                    jsonObject.getString("trang_thai").equals("Chưa nộp"),
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("cong_no_vnd"),
+                    true,
+                    jsonObject.getString("trang_thai").equals("Chưa nộp"),
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    jsonObject.getString("trang_thai"),
+                    true,
+                    jsonObject.getString("trang_thai").equals("Chưa nộp"),
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -161,25 +187,34 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
     }
 
     public TableRow generateTableHeader() {
-        TableRow header = new TableRow(getContext());
-        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        TableRow header = new TableRow(Objects.requireNonNull(getContext()));
+        header.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         for (int i = 0; i < headerText.size(); i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT
+            );
             if (i == 0) {
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.4);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
             } else {
                 layoutParams.gravity = Gravity.CENTER;
-                layoutParams.width = (int) (getScreenWidthInDPs(getContext()) * 0.2);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.2);
             }
             linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 5, 0);
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
@@ -192,15 +227,21 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
     }
 
     public LinearLayout generateTableCell(String content, Boolean isGravityCenter, Boolean isRed, int width) {
-        LinearLayout linearLayout = new LinearLayout(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        LinearLayout linearLayout = new LinearLayout(Objects.requireNonNull(getContext()));
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.MATCH_PARENT
+        );
         layoutParams.width = width;
         linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 15, (int) d * 5);
         if (isGravityCenter) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
         if (isGravityCenter) textViewLayout.gravity = Gravity.CENTER;
         textView.setLayoutParams(textViewLayout);
         if (isRed) {
@@ -211,13 +252,6 @@ public class StudentSearchDebtFragment extends Fragment implements IStudentSearc
         linearLayout.addView(textView);
 
         return linearLayout;
-    }
-
-    public int getScreenWidthInDPs(Context context) {
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(dm);
-        return dm.widthPixels;
     }
 
     private String numberFormat(String num) {

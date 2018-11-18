@@ -4,6 +4,7 @@ package vn.edu.ut.gts.views.home.fragments;
 import android.app.Dialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -98,10 +99,13 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_study_result, container, false);
         ButterKnife.bind(this, view);
-        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
+        d = Objects.requireNonNull(getContext())
+                .getResources()
+                .getDisplayMetrics()
+                .density;
         studyResultSpinner.canScrollVertically(MaterialSpinner.LAYOUT_DIRECTION_INHERIT);
         init();
         StudentStudyResultFragment.currentPos = 0;
@@ -144,13 +148,19 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
     private TableRow generateTableHeader() {
         TableRow header = new TableRow(getContext());
-        header.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        header.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         for (int i = 0; i < headerText.size(); i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT
+            );
             if (i == 0) {
                 layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
             } else {
@@ -161,7 +171,10 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
             linearLayout.setLayoutParams(layoutParams);
 
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
@@ -217,7 +230,10 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
     private TableRow generateTableRow(final JSONObject data, boolean changeBG) {
         TableRow row = new TableRow(getContext());
-        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        row.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT)
+        );
         row.setMinimumHeight((int) d * 50);
         row.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,10 +243,26 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
         });
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
         try {
-            row.addView(generateTableCell(data.getString("courseName"), false, (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)));
-            row.addView(generateTableCell(data.getString("scoresOf10"), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(data.getString("scoresOf4"), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
-            row.addView(generateTableCell(data.getString("scoresString"), true, (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)));
+            row.addView(generateTableCell(
+                    data.getString("courseName"),
+                    false,
+                    (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)
+            ));
+            row.addView(generateTableCell(
+                    data.getString("scoresOf10"),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    data.getString("scoresOf4"),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
+            row.addView(generateTableCell(
+                    data.getString("scoresString"),
+                    true,
+                    (int) (Helper.getScreenWidthInDPs(getContext()) * 0.2)
+            ));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -239,14 +271,20 @@ public class StudentStudyResultFragment extends Fragment implements IStudentStud
 
     private LinearLayout generateTableCell(String data, boolean center, int width) {
         LinearLayout linearLayout = new LinearLayout(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.MATCH_PARENT
+        );
         layoutParams.width = width;
         linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 15, (int) d * 5);
         if (center) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
         TextView textView = new TextView(getContext());
-        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
         if (center) textViewLayout.gravity = Gravity.CENTER;
         textView.setLayoutParams(textViewLayout);
         textView.setTextColor(getResources().getColor(R.color.black));

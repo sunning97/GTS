@@ -84,7 +84,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         setHomeFragment(intent);
-        profileImage.setImageBitmap(storage.getImageFromStorage(HomeActivity.this,"student_portrait.jpg"));
+        profileImage.setImageBitmap(storage.getImageFromStorage(this,"student_portrait.jpg"));
         try {
             /* get student name from sharedpreference & set to drawlayout header*/
             studentFullName.setText(studentInfo.getString("student_name"));
@@ -224,7 +224,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        Intent dashboardIntent = new Intent(HomeActivity.this, DashboardActivity.class);
+        Intent dashboardIntent = new Intent(this, DashboardActivity.class);
         startActivity(dashboardIntent);
     }
 
