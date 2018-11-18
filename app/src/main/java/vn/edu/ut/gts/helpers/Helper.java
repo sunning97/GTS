@@ -50,17 +50,6 @@ public class Helper {
         return "";
     }
 
-    public static boolean checkLogin(String cookie) {
-        String res = Curl.connect(BASE_URL + "ajaxpro/DangKy,PMT.Web.PhongDaoTao.ashx")
-                .method("POST")
-                .setCookie("ASP.NET_SessionId", cookie)
-                .userAgent(USER_AGENT)
-                .header("X-AjaxPro-Method", "CheckLogin")
-                .dataString("{}").execute();
-
-        return Boolean.parseBoolean(res.replace(";/*", ""));
-    }
-
     public static String base64Encode(String str) {
         byte[] base = Base64.decodeBase64(str);
         return new String(base);
