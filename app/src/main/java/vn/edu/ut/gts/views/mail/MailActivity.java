@@ -57,7 +57,6 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
     private Storage storage;
     private  ReceiveListMailFragment receiveListMailFragment;
     private SentListMailFragment sentListMailFragment;
-    private AlertDialog alertDialog;
     private EpicDialog epicDialog;
 
     @Override
@@ -197,7 +196,7 @@ public class MailActivity extends AppCompatActivity implements IMailActivity,Nav
     public void onDeleteSuccess() {
         onBackPressed();
         View parentLayout = findViewById(R.id.mail_fragment_container);
-        Snackbar.make(parentLayout,"Đã xóa!",Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(parentLayout,"Đã xóa!",Snackbar.LENGTH_LONG).show();
     }
 
     @Override
