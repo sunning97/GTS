@@ -125,7 +125,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
                                 android:gravity="center"
-                                android:text="Xem thông tin cua sinh viên"
+                                android:text="Xem thông tin của sinh viên"
                                 android:textColor="@color/gray" />
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
@@ -277,7 +277,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
                                 android:gravity="center"
-                                android:text="Xem thông tin học phí trong học kì"
+                                android:text="Xem thông tin học phí mỗi học kì"
                                 android:textColor="@color/gray" />
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
@@ -333,7 +333,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
                                 android:gravity="center"
-                                android:text="Xem lịc học sinh viên theo tuần"
+                                android:text="Xem lịch học sinh viên theo tuần"
                                 android:textColor="@color/gray" />
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
@@ -381,7 +381,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
                                 android:gravity="center"
-                                android:text="Thông tin điểm danh các môn trong học kì"
+                                android:text="Thông tin điểm danh mỗi học kì"
                                 android:textColor="@color/gray" />
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
