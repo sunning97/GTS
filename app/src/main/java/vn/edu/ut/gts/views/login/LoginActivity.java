@@ -203,12 +203,14 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         if (epicDialog.isShowing()) epicDialog.dismisPopup();
         disableInput();
         btnLogin.setText(getResources().getString(R.string.retry_btn));
+        btnLogin.setEnabled(true);
     }
 
     @Override
     public void transferToLoginBtn() {
         enableInput();
         btnLogin.setText(getResources().getString(R.string.login_btn));
+        btnLogin.setEnabled(true);
     }
 
     @Override
@@ -336,6 +338,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     @Override
     public void transferToLoadingBtn() {
         btnLogin.setText(getResources().getString(R.string.loading));
+        btnLogin.setEnabled(false);
     }
 
     /*request permission need for this app if permission is not permit*/

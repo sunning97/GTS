@@ -913,16 +913,19 @@ public class StudentSearchActivity extends AppCompatActivity implements IStudent
     @Override
     public void toRetryBtn() {
         btnSearch.setText(getResources().getString(R.string.retry_btn));
+        btnSearch.setEnabled(true);
     }
 
     @Override
     public void toSearchBtn() {
         btnSearch.setText(getResources().getString(R.string.search_btn));
+        btnSearch.setEnabled(true);
     }
 
     @Override
     public void toLoadingBtn() {
         btnSearch.setText("Loading...");
+        btnSearch.setEnabled(false);
     }
 
     @Override
