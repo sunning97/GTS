@@ -1,5 +1,6 @@
 package vn.edu.ut.gts.helpers;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -21,6 +22,8 @@ import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.style.FadingCircle;
 
 import org.w3c.dom.Text;
+
+import java.util.Objects;
 
 import vn.edu.ut.gts.R;
 
@@ -73,7 +76,7 @@ public class EpicDialog {
                 dismisPopup();
             }
         });
-        this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(this.epicDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();
     }
@@ -97,7 +100,7 @@ public class EpicDialog {
         });
         title1.setText(param1);
         title2.setText(param2);
-        this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(this.epicDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();
     }
@@ -118,7 +121,7 @@ public class EpicDialog {
         totalCreditValue.setText(totalCredit);
         debtCreditsValue.setText(debtCredits);
 
-        this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(this.epicDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();
     }
@@ -128,7 +131,7 @@ public class EpicDialog {
         SpinKitView loading = epicDialog.findViewById(R.id.spin_kit);
         FadingCircle fadingCircle = new FadingCircle();
         loading.setIndeterminateDrawable(fadingCircle);
-        this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(this.epicDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(false);
     }
 
@@ -139,13 +142,14 @@ public class EpicDialog {
         this.epicDialog.show();
     }
 
+    @SuppressLint("SetTextI18n")
     public void showSearchStudentPortraitDialog(Bitmap bitmap, String studentId) {
         this.epicDialog.setContentView(R.layout.search_student_portrait_dialog);
         ImageView imageView = this.epicDialog.findViewById(R.id.student_portrait);
         TextView textView = this.epicDialog.findViewById(R.id.student_id);
         imageView.setImageBitmap(bitmap);
         textView.setText("MSSV: " + studentId);
-        this.epicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(this.epicDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();
     }
