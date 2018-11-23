@@ -26,150 +26,317 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp">
-                <TextView
-                    android:textSize="16sp"
-                    android:text="Mã môn học:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:textColor="@color/black"
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/ma_mon_hoc"
-                    android:text=""
-                    android:textSize="16sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_margin="5dp"
-                android:orientation="horizontal"
+            <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="16sp"
-                    android:text="Nội dung thu:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/noi_dung_thu"
-                    android:text=""
-                    android:textSize="16sp"
+                <TableRow>
+                    <TextView
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:text="Mã môn học:"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_weight="2"
+                        android:textColor="@color/black"
+                        android:id="@+id/ma_mon_hoc"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </TableRow>
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_margin="5dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="16sp"
-                    android:text="Số tín chỉ:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/tin_chi"
-                    android:text=""
-                    android:textSize="16sp"
+                    android:layout_height="1dp"
+                    android:background="@color/gray3" />
+                <TableRow>
+                    <TextView
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:text="Nội dung thu:"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_weight="2"
+                        android:id="@+id/noi_dung_thu"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_margin="5dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="16sp"
-                    android:text="Số tiền:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/so_tien"
-                    android:text=""
-                    android:textSize="16sp"
+                    android:layout_height="1dp"
+                    android:background="@color/gray3" />
+                <TableRow>
+                    <TextView
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:text="Số tín chỉ:"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_weight="2"
+                        android:id="@+id/tin_chi"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_margin="5dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="16sp"
-                    android:text="Đã nộp:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/da_nop"
-                    android:text=""
-                    android:textSize="16sp"
+                    android:layout_height="1dp"
+                    android:background="@color/gray3" />
+                <TableRow>
+                    <TextView
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:text="Số tiền:"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_weight="2"
+                        android:id="@+id/so_tien"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_margin="5dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="16sp"
-                    android:text="Khấu trừ:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/khau_tru"
-                    android:text=""
-                    android:textSize="16sp"
+                    android:layout_height="1dp"
+                    android:background="@color/gray3" />
+                <TableRow>
+                    <TextView
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:text="Đã nộp:"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_weight="2"
+                        android:id="@+id/da_nop"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_margin="5dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="16sp"
-                    android:text="Công nợ:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/cong_no"
-                    android:text=""
-                    android:textSize="16sp"
+                    android:layout_height="1dp"
+                    android:background="@color/gray3" />
+                <TableRow>
+                    <TextView
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:text="Khấu trừ:"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_weight="2"
+                        android:id="@+id/khau_tru"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_margin="5dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="16sp"
-                    android:text="Trạng thái:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/trang_thai"
-                    android:text=""
-                    android:textSize="16sp"
+                    android:layout_height="1dp"
+                    android:background="@color/gray3" />
+                <TableRow>
+                    <TextView
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:text="Công nợ:"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_weight="2"
+                        android:id="@+id/cong_no"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                    android:layout_height="1dp"
+                    android:background="@color/gray3" />
+                <TableRow>
+                    <TextView
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:text="Trạng thái:"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_weight="2"
+                        android:id="@+id/trang_thai"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+            </TableLayout>
+            <!--<LinearLayout-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp">-->
+                <!--<TextView-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:text="Mã môn học:"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<TextView-->
+                    <!--android:textColor="@color/black"-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:id="@+id/ma_mon_hoc"-->
+                    <!--android:text=""-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent" />-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:text="Nội dung thu:"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<TextView-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:id="@+id/noi_dung_thu"-->
+                    <!--android:text=""-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:text="Số tín chỉ:"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<TextView-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:id="@+id/tin_chi"-->
+                    <!--android:text=""-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:text="Số tiền:"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<TextView-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:id="@+id/so_tien"-->
+                    <!--android:text=""-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:text="Đã nộp:"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<TextView-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:id="@+id/da_nop"-->
+                    <!--android:text=""-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:text="Khấu trừ:"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<TextView-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:id="@+id/khau_tru"-->
+                    <!--android:text=""-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:text="Công nợ:"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<TextView-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:id="@+id/cong_no"-->
+                    <!--android:text=""-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:text="Trạng thái:"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<TextView-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:id="@+id/trang_thai"-->
+                    <!--android:text=""-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</LinearLayout>-->
         </LinearLayout>
 </RelativeLayout>

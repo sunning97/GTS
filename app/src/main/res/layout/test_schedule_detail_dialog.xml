@@ -26,168 +26,365 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:orientation="horizontal"
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp">
-            <TextView
-                android:textSize="16sp"
-                android:text="Lớp HP:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:textColor="@color/black"
-                android:layout_marginLeft="5dp"
-                android:id="@+id/lop_hp"
-                android:text=""
-                android:textSize="16sp"
+            android:layout_height="match_parent">
+            <TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:text="Lớp HP:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_weight="2"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/lop_hp"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </TableRow>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:textSize="16sp"
-                android:text="Môn thi:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/mon_thi"
-                android:text=""
-                android:textSize="16sp"
+                android:layout_height="1dp"
+                android:background="@color/gray3" />
+            <TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:text="Môn thi:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_weight="2"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/mon_thi"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:textSize="16sp"
-                android:text="Nhóm:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/nhom"
-                android:text=""
-                android:textSize="16sp"
+                android:layout_height="1dp"
+                android:background="@color/gray3" />
+            <TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:text="Nhóm:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_weight="2"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/nhom"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:textSize="16sp"
-                android:text="Từ sĩ số:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/tu_si_so"
-                android:text=""
-                android:textSize="16sp"
+                android:layout_height="1dp"
+                android:background="@color/gray3" />
+            <TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:text="Từ sĩ số:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_weight="2"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/tu_si_so"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:textSize="16sp"
-                android:text="Ngày thi:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/ngay_thi"
-                android:text=""
-                android:textSize="16sp"
+                android:layout_height="1dp"
+                android:background="@color/gray3" />
+            <TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:text="Ngày thi:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_weight="2"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/ngay_thi"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:textSize="16sp"
-                android:text="Tiết thi:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/tiet_thi"
-                android:text=""
-                android:textSize="16sp"
+                android:layout_height="1dp"
+                android:background="@color/gray3" />
+            <TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:text="Tiết thi:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_weight="2"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/tiet_thi"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:textSize="16sp"
-                android:text="Phòng thi:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/phong_thi"
-                android:text=""
-                android:textSize="16sp"
+                android:layout_height="1dp"
+                android:background="@color/gray3" />
+            <TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:text="Phòng thi:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_weight="2"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/phong_thi"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:textSize="16sp"
-                android:text="Loại thi:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/loai_thi"
-                android:text=""
-                android:textSize="16sp"
+                android:layout_height="1dp"
+                android:background="@color/gray3" />
+            <TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:text="Loại thi:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_weight="2"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/loai_thi"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:textSize="16sp"
-                android:text="Ghi chú:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/ghi_chu"
-                android:text=""
-                android:textSize="16sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="1dp"
+                android:background="@color/gray3" />
+            <TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:text="Ghi chú:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_weight="2"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/ghi_chu"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+        </TableLayout>
+        <!--<LinearLayout-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="5dp">-->
+            <!--<TextView-->
+                <!--android:textSize="16sp"-->
+                <!--android:text="Lớp HP:"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+            <!--<TextView-->
+                <!--android:textColor="@color/black"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:id="@+id/lop_hp"-->
+                <!--android:text=""-->
+                <!--android:textSize="16sp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent" />-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<TextView-->
+                <!--android:textSize="16sp"-->
+                <!--android:text="Môn thi:"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+            <!--<TextView-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:id="@+id/mon_thi"-->
+                <!--android:text=""-->
+                <!--android:textSize="16sp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<TextView-->
+                <!--android:textSize="16sp"-->
+                <!--android:text="Nhóm:"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+            <!--<TextView-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:id="@+id/nhom"-->
+                <!--android:text=""-->
+                <!--android:textSize="16sp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<TextView-->
+                <!--android:textSize="16sp"-->
+                <!--android:text="Từ sĩ số:"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+            <!--<TextView-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:id="@+id/tu_si_so"-->
+                <!--android:text=""-->
+                <!--android:textSize="16sp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<TextView-->
+                <!--android:textSize="16sp"-->
+                <!--android:text="Ngày thi:"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+            <!--<TextView-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:id="@+id/ngay_thi"-->
+                <!--android:text=""-->
+                <!--android:textSize="16sp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<TextView-->
+                <!--android:textSize="16sp"-->
+                <!--android:text="Tiết thi:"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+            <!--<TextView-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:id="@+id/tiet_thi"-->
+                <!--android:text=""-->
+                <!--android:textSize="16sp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<TextView-->
+                <!--android:textSize="16sp"-->
+                <!--android:text="Phòng thi:"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+            <!--<TextView-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:id="@+id/phong_thi"-->
+                <!--android:text=""-->
+                <!--android:textSize="16sp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<TextView-->
+                <!--android:textSize="16sp"-->
+                <!--android:text="Loại thi:"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+            <!--<TextView-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:id="@+id/loai_thi"-->
+                <!--android:text=""-->
+                <!--android:textSize="16sp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<TextView-->
+                <!--android:textSize="16sp"-->
+                <!--android:text="Ghi chú:"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+            <!--<TextView-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:id="@+id/ghi_chu"-->
+                <!--android:text=""-->
+                <!--android:textSize="16sp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
     </LinearLayout>
 </RelativeLayout>

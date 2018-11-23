@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -138,6 +139,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
             case R.id.infor: {
                 try {
                     if(FrameProgramFragmentPresenter.currentStatus == 0){
+                        JSONArray thongKe = data.getJSONArray("thong_ke");
                         String titleAll = data.getString("info");
                         String[] parts = titleAll.split("-");
                         StringBuilder title1 = new StringBuilder();
@@ -148,7 +150,7 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
                             }
                             title1.append(parts[i].trim()).append(" - ");
                         }
-                        epicDialog.showFrameProgramInfoDialog(title1.toString().trim(), parts[parts.length - 2].trim() + " - " + parts[parts.length - 1].trim());
+                        epicDialog.showFrameProgramInfoDialog(title1.toString().trim(), parts[parts.length - 2].trim() + " - " + parts[parts.length - 1].trim(),thongKe);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -384,6 +386,9 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
         TextView soTC = view.findViewById(R.id.so_tc_dvht);
         TextView soTietLT = view.findViewById(R.id.so_tiet_lt);
         TextView soTietTH = view.findViewById(R.id.so_tiet_th);
+        TextView notice1 = view.findViewById(R.id.notice_1);
+        TextView notice2 = view.findViewById(R.id.notice_2);
+
         /* set data detail*/
         try {
             maMonHoc.setText(jsonArray.get(0).toString());
@@ -393,6 +398,8 @@ public class FrameProgramFragment extends Fragment implements IFrameProgramFragm
             soTC.setText(jsonArray.get(4).toString());
             soTietLT.setText(jsonArray.get(5).toString());
             soTietTH.setText(jsonArray.get(6).toString());
+            notice1.setText(Html.fromHtml("** Học phần: <b>học trước (a)</b>,<b>tiên quyết (b)</b>,<b>song hành (c)</b>"));
+            notice2.setText(Html.fromHtml("** Những môn học có dấu <b>*</b> không tính vào Trung bình chung tích lũy."));
         } catch (JSONException e) {
             e.printStackTrace();
         }

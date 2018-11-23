@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,9 +22,12 @@ import android.widget.Toast;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.style.FadingCircle;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.w3c.dom.Text;
 
 import java.util.Objects;
+import java.util.zip.Inflater;
 
 import vn.edu.ut.gts.R;
 
@@ -87,11 +91,16 @@ public class EpicDialog {
         }
     }
 
-    public void showFrameProgramInfoDialog(String param1, String param2) {
+    @SuppressLint("SetTextI18n")
+    public void showFrameProgramInfoDialog(String param1, String param2, JSONArray thongKe) {
         this.epicDialog.setContentView(R.layout.student_frame_program_info_dialog);
         TextView title1 = this.epicDialog.findViewById(R.id.title_1);
         TextView title2 = this.epicDialog.findViewById(R.id.title_2);
         TextView close = this.epicDialog.findViewById(R.id.close);
+        TextView thongKe1 = this.epicDialog.findViewById(R.id.thong_ke_1);
+        TextView thongKe2 = this.epicDialog.findViewById(R.id.thong_ke_2);
+        TextView thongKe3 = this.epicDialog.findViewById(R.id.thong_ke_3);
+
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +109,13 @@ public class EpicDialog {
         });
         title1.setText(param1);
         title2.setText(param2);
+        try {
+            thongKe1.setText(Html.fromHtml("<b>"+thongKe.getJSONObject(0).getString("title")+": "+thongKe.getJSONObject(0).getString("value")+"<b/>"));
+            thongKe2.setText(Html.fromHtml("<b>"+thongKe.getJSONObject(1).getString("title")+": "+thongKe.getJSONObject(1).getString("value")+"<b/>"));
+            thongKe3.setText(Html.fromHtml("<b>"+thongKe.getJSONObject(2).getString("title")+": "+thongKe.getJSONObject(2).getString("value")+"<b/>"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         Objects.requireNonNull(this.epicDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.epicDialog.setCancelable(true);
         this.epicDialog.show();

@@ -3,6 +3,7 @@ package vn.edu.ut.gts.presenters.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,9 +35,10 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
         this.iFrameProgramFragment = iFrameProgramFragment;
         this.storage = new Storage(context);
     }
+
     @Override
     public void getDataFrameProgram() {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,Void> asyncTask =  new AsyncTask<Void, Void, Void>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected void onPreExecute() {
@@ -95,6 +97,7 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
         };
         asyncTask.execute();
     }
+
     @Override
     public void getFrameProgram() {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONObject> getData = new AsyncTask<Void, Void, JSONObject>() {
@@ -231,7 +234,18 @@ public class FrameProgramFragmentPresenter implements IFrameProgramFragmentPrese
                         quater.put("khong_bat_buoc", hocPhanTuChon);
                         allQuater.put(quater);
                     }
+
+                    Elements trsThongKe = document.select("tr.thongke");
+                    JSONArray thongKe = new JSONArray();
+                    for (int i = 0; i < 3; i++) {
+                        JSONObject jsonObject1 = new JSONObject();
+                        jsonObject1.put("title", trsThongKe.get(i).select("td").get(0).text());
+                        jsonObject1.put("value", trsThongKe.get(i).select("td").get(1).text());
+                        thongKe.put(jsonObject1);
+                    }
                     returnData.put("all_quater", allQuater);
+                    returnData.put("thong_ke", thongKe);
+
                 } catch (SocketTimeoutException e) {
                     currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
