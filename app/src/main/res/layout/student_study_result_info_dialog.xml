@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="350dp"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:padding="30dp">
+    android:orientation="vertical"
+    android:padding="25dp"
+    android:background="@color/white">
     <TextView
+        android:id="@+id/a"
         android:textAlignment="center"
-        android:textSize="26sp"
+        android:textSize="20sp"
         android:textColor="@color/black"
         android:layout_gravity="center"
         android:text="@string/study_result"
@@ -15,70 +18,80 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"/>
     <LinearLayout
-        android:orientation="horizontal"
+        android:layout_below="@+id/a"
+        android:id="@+id/b"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:textSize="17sp"
-            android:textAlignment="center"
-            android:text="Trung bình chung tích lũy:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginBottom="10dp"/>
-        <TextView
-            android:id="@+id/average_cumulative"
-            android:layout_marginLeft="5dp"
-            android:text=""
-            android:textColor="@color/black"
-            android:textSize="17sp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessLeaf">
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="17sp"
-            android:textAlignment="center"
-            android:text="Tổng số tín chỉ:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginBottom="10dp"/>
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:textSize="17sp"
-            android:text=""
-            android:id="@+id/total_credit"
-            android:textColor="@color/black"
+            android:layout_height="match_parent">
+            <TextView
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:text="TB chung tích lũy:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/average_cumulative"
+                android:layout_marginLeft="5dp"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="17sp"
-            android:id="@+id/title_2"
-            android:layout_gravity="start"
-            android:textAlignment="center"
-            android:text="Số tín chỉ nợ (Điểm F - tỉ lệ %):"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/debt_credits"
-            android:text=""
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/black"
-            android:textSize="17sp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:text="Tổng số tín chỉ:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:textSize="16sp"
+                android:text=""
+                android:id="@+id/total_credit"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="16sp"
+                android:id="@+id/title_2"
+                android:layout_gravity="start"
+                android:textAlignment="center"
+                android:text="Số tín chỉ nợ:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/debt_credits"
+                android:text=""
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
     <TextView
-        android:textSize="17sp"
+        android:layout_alignRight="@+id/b"
+        android:layout_below="@+id/b"
+        android:textSize="16sp"
         android:id="@+id/close"
         android:textColor="@color/colorPrimary"
         android:text="Đóng"
@@ -86,4 +99,4 @@
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-</LinearLayout>
+</RelativeLayout>

@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import com.github.ybq.android.spinkit.style.FadingCircle;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.Objects;
@@ -50,7 +52,6 @@ public class EpicDialog {
         duong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 try {
                     Uri webpage = Uri.parse("https://www.facebook.com/duongrom.it.305");
                     Intent myIntent = new Intent(Intent.ACTION_VIEW, webpage);

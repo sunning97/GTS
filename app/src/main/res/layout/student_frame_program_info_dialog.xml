@@ -1,42 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="300dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:padding="30dp">
     <TextView
+        android:id="@+id/a"
         android:textAlignment="center"
-        android:textSize="26sp"
+        android:textSize="20sp"
         android:textColor="@color/black"
         android:layout_gravity="center"
         android:text="CHƯƠNG TRÌNH KHUNG"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"/>
-    <TextView
-        android:textSize="17sp"
-        android:id="@+id/title_1"
-        android:textAlignment="center"
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="10dp"/>
-    <TextView
-        android:textSize="17sp"
-        android:id="@+id/title_2"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
     <LinearLayout
+        android:id="@+id/b"
+        android:layout_below="@id/a"
         android:layout_marginTop="20dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:textSize="16sp"
+            android:id="@+id/title_1"
+            android:textAlignment="center"
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"/>
+        <TextView
+            android:textSize="16sp"
+            android:id="@+id/title_2"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="30dp"
             android:textSize="16sp"
             android:id="@+id/thong_ke_1"
             android:layout_width="match_parent"
@@ -53,7 +58,9 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <TextView
-        android:textSize="17sp"
+        android:layout_below="@+id/b"
+        android:layout_alignRight="@+id/b"
+        android:textSize="16sp"
         android:id="@+id/close"
         android:textColor="@color/colorPrimary"
         android:text="Đóng"
@@ -61,4 +68,4 @@
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-</LinearLayout>
+</RelativeLayout>

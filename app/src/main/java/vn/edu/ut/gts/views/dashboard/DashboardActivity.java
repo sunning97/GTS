@@ -84,7 +84,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private Storage storage;
     private DashboardPresenter dashboardPresenter;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-
+    private EpicDialog epicDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +92,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         ButterKnife.bind(this);
         DashboardPresenter.isFirst = true;
         storage = new Storage(DashboardActivity.this);
+        epicDialog = new EpicDialog(this);
         dashboardToolbar.setTitle("");
         collapsingToolbarLayout.setTitle("");
         dashboardPresenter = new DashboardPresenter(this, this);
@@ -355,7 +356,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     break;
                 }
                 case R.id.about_app:{
-                    EpicDialog epicDialog = new EpicDialog(this);
                     epicDialog.showAboutDialog();
                     break;
                 }
