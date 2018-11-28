@@ -243,11 +243,17 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
 
     @Override
     public void onSwipeOutAtEnd() {
+        if(floatingContainer.isOpened()){
+            floatingContainer.close(true);
+        }
         weekSchedulePresenter.getNextSchedulesWeek();
     }
 
     @Override
     public void onSwipeOutAtStart() {
+        if(floatingContainer.isOpened()){
+            floatingContainer.close(true);
+        }
         weekSchedulePresenter.getPrevSchedulesWeek();
     }
 }
