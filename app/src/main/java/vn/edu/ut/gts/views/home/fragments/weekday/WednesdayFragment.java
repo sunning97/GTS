@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,12 +61,13 @@ public class WednesdayFragment extends Fragment {
 
     public void go() {
         try {
-            JSONObject morning = data.getJSONObject("morning");
-            JSONObject afternoon = data.getJSONObject("afternoon");
-            JSONObject evening = data.getJSONObject("evening");
-            bindData(morning, morningLayout);
-            bindData(afternoon, afternoonLayout);
-            bindData(evening, eveningLayout);
+            JSONArray morning = data.getJSONArray("morning");
+            JSONArray afternoon = data.getJSONArray("afternoon");
+            JSONArray evening = data.getJSONArray("evening");
+
+            bindData(morning,morningLayout);
+            bindData(afternoon,afternoonLayout);
+            bindData(evening,eveningLayout);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -73,40 +75,37 @@ public class WednesdayFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void bindData(JSONObject jsonObject, LinearLayout layout) {
+    private void bindData(JSONArray jsonArray, LinearLayout linearLayout) {
         try {
-            dayTV.setText("Thứ 4:" +data.getString("date"));
+            dayTV.setText("Thứ 7: "+data.getString("date"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        TextView subjectID = (TextView) layout.getChildAt(0);
-        View line = layout.getChildAt(1);
-        TextView subjectName = (TextView) layout.getChildAt(2);
-        TextView subjectTime = (TextView) layout.getChildAt(3);
-        TextView subjectLecturer = (TextView) layout.getChildAt(4);
-        TextView subjectRoom = (TextView) layout.getChildAt(5);
-
-        if (jsonObject.length() > 0) {
+        for (int i = 0;i< jsonArray.length();i++){
             try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                View view = LayoutInflater.from(getContext()).inflate(R.layout.week_schedule_item_layout, null);
+                LinearLayout container = view.findViewById(R.id.container);
+
+                TextView subjectID = view.findViewById(R.id.subject_id);
+                TextView subjectName = view.findViewById(R.id.subject_name);
                 if (Boolean.valueOf(jsonObject.getString("is_postpone")))
-                    subjectID.setText(Html.fromHtml(jsonObject.getString("subjectId") + "<font color=\"#FF0000\">" + " (Tạm ngưng) " + "</font>"));
-                else subjectID.setText(jsonObject.getString("subjectId"));
-                line.setVisibility(View.VISIBLE);
-                subjectName.setText(jsonObject.getString("subjectName"));
-                subjectTime.setText("Tiết: " + jsonObject.getString("subjectTime"));
-                subjectLecturer.setText("GV: " + jsonObject.getString("subjectLecturer"));
-                subjectRoom.setText("Phòng: " + jsonObject.getString("subjectRoom"));
+                    subjectID.setText(Html.fromHtml(jsonObject.getString("subject_id") + "<font color=\"#FF0000\">" + " (Tạm ngưng) " + "</font>"));
+                else subjectID.setText(jsonObject.getString("subject_id"));
+                subjectName.setText(jsonObject.getString("subject_name"));
+                JSONArray values = jsonObject.getJSONArray("values");
+
+                for (int j = 0;j< values.length();j++){
+                    JSONObject jsonObject1 = values.getJSONObject(j);
+                    TextView textView = new TextView(getContext());
+                    textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                    textView.setText(jsonObject1.getString("key")+" "+jsonObject1.getString("value"));
+                    container.addView(textView);
+                }
+                linearLayout.addView(view);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else {
-            line.setVisibility(View.INVISIBLE);
-            subjectID.setText("");
-            subjectName.setText("");
-            subjectTime.setText("");
-            subjectLecturer.setText("");
-            subjectRoom.setText("");
         }
     }
 }

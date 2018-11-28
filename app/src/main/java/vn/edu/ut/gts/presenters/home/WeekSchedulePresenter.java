@@ -3,6 +3,7 @@ package vn.edu.ut.gts.presenters.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,38 +81,78 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                     schedule.put("date", m.group());
                 }
                 //Get
-                JSONObject objMorning = new JSONObject();
-                JSONObject objAfternoon = new JSONObject();
-                JSONObject objEvening = new JSONObject();
+                JSONArray objMorning = new JSONArray();
+                JSONArray objAfternoon = new JSONArray();
+                JSONArray objEvening = new JSONArray();
                 if (trMorning.get(i).select(".div-LichHoc").text().trim().length() > 0) {
-                    if(trMorning.get(i).select(".div-TamNgung").size() > 0) objMorning.put("is_postpone",String.valueOf(true));
-                    else objMorning.put("is_postpone",String.valueOf(false));
-                    Elements spanDisplay = trMorning.get(i).children().select(".span-display");
-                    objMorning.put("subjectId", spanDisplay.get(0).text().trim().length() > 0 ? spanDisplay.get(0).text().trim() : "");
-                    objMorning.put("subjectName", spanDisplay.get(1).text().trim().length() > 0 ? spanDisplay.get(1).text().trim() : "");
-                    objMorning.put("subjectTime", spanDisplay.get(2).text().trim().length() > 0 ? spanDisplay.get(2).text().trim() : "");
-                    objMorning.put("subjectLecturer", spanDisplay.get(3).text().trim().length() > 0 ? spanDisplay.get(3).text().trim() : "");
-                    objMorning.put("subjectRoom", spanDisplay.get(4).text().trim().length() > 0 ? spanDisplay.get(4).text().trim() : "");
+                    Elements divLicHoc = trMorning.get(i).select(".div-LichHoc");
+                    for (int j = 0; j < divLicHoc.size(); j++) {
+                        JSONObject tmp = new JSONObject();
+                        if (divLicHoc.get(j).select(".TamNgung").size() > 0)
+                            tmp.put("is_postpone", String.valueOf(true));
+                        else tmp.put("is_postpone", String.valueOf(false));
+                        Elements spanDisplay = divLicHoc.get(j).children().select(".span-display");
+                        Elements spanLabel = divLicHoc.get(j).children().select(".span-label");
+                        tmp.put("subject_id",spanDisplay.get(0).text().trim());
+                        tmp.put("subject_name",spanDisplay.get(1).text().trim());
+                        JSONArray jsonArray = new JSONArray();
+                        for (int v = 0; v < spanLabel.size(); v++) {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("key",spanLabel.get(v).text().trim());
+                            jsonObject.put("value",spanDisplay.get(v+2).text().trim().length() > 0 ? spanDisplay.get(v+2).text().trim() : "");
+                            jsonArray.put(jsonObject);
+                            tmp.put("values",jsonArray);
+                        }
+
+                        objMorning.put(tmp);
+                    }
                 }
                 if (trAfternoon.get(i).select(".div-LichHoc").text().trim().length() > 0) {
-                    if(trAfternoon.get(i).select(".div-TamNgung").size() > 0) objAfternoon.put("is_postpone",String.valueOf(true));
-                    else objAfternoon.put("is_postpone",String.valueOf(false));
-                    Elements spanDisplay1 = trAfternoon.get(i).children().select(".span-display");
-                    objAfternoon.put("subjectId", spanDisplay1.get(0).text().trim().length() > 0 ? spanDisplay1.get(0).text().trim() : "");
-                    objAfternoon.put("subjectName", spanDisplay1.get(1).text().trim().length() > 0 ? spanDisplay1.get(1).text().trim() : "");
-                    objAfternoon.put("subjectTime", spanDisplay1.get(2).text().trim().length() > 0 ? spanDisplay1.get(2).text().trim() : "");
-                    objAfternoon.put("subjectLecturer", spanDisplay1.get(3).text().trim().length() > 0 ? spanDisplay1.get(3).text().trim() : "");
-                    objAfternoon.put("subjectRoom", spanDisplay1.get(4).text().trim().length() > 0 ? spanDisplay1.get(4).text().trim() : "");
+                    Elements divLicHoc = trAfternoon.get(i).select(".div-LichHoc");
+                    for (int j = 0; j < divLicHoc.size(); j++) {
+                        JSONObject tmp = new JSONObject();
+                        if (divLicHoc.get(j).select(".div-TamNgung").size() > 0)
+                            tmp.put("is_postpone", String.valueOf(true));
+                        else tmp.put("is_postpone", String.valueOf(false));
+                        Elements spanDisplay = divLicHoc.get(j).children().select(".span-display");
+                        Elements spanLabel = divLicHoc.get(j).children().select(".span-label");
+                        tmp.put("subject_id",spanDisplay.get(0).text().trim());
+                        tmp.put("subject_name",spanDisplay.get(1).text().trim());
+                        JSONArray jsonArray = new JSONArray();
+
+                        for (int v = 0; v < spanLabel.size(); v++) {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("key",spanLabel.get(v).text().trim());
+                            jsonObject.put("value",spanDisplay.get(v+2).text().trim().length() > 0 ? spanDisplay.get(v+2).text().trim() : "");
+                            jsonArray.put(jsonObject);
+                            tmp.put("values",jsonArray);
+                        }
+
+                        objAfternoon.put(tmp);
+                    }
                 }
                 if (trEvening.get(i).select(".div-LichHoc").text().trim().length() > 0) {
-                    if(trEvening.get(i).select(".div-TamNgung").size() > 0) objEvening.put("is_postpone",String.valueOf(true));
-                    else objEvening.put("is_postpone",String.valueOf(false));
-                    Elements spanDisplay1 = trAfternoon.get(i).children().select(".span-display");
-                    objAfternoon.put("subjectId", spanDisplay1.get(0).text().trim().length() > 0 ? spanDisplay1.get(0).text().trim() : "");
-                    objAfternoon.put("subjectName", spanDisplay1.get(1).text().trim().length() > 0 ? spanDisplay1.get(1).text().trim() : "");
-                    objAfternoon.put("subjectTime", spanDisplay1.get(2).text().trim().length() > 0 ? spanDisplay1.get(2).text().trim() : "");
-                    objAfternoon.put("subjectLecturer", spanDisplay1.get(3).text().trim().length() > 0 ? spanDisplay1.get(3).text().trim() : "");
-                    objAfternoon.put("subjectRoom", spanDisplay1.get(4).text().trim().length() > 0 ? spanDisplay1.get(4).text().trim() : "");
+                    Elements divLicHoc = trAfternoon.get(i).select(".div-LichHoc");
+                    for (int j = 0; j < divLicHoc.size(); j++) {
+                        JSONObject tmp = new JSONObject();
+                        if (divLicHoc.get(j).select(".div-TamNgung").size() > 0)
+                            tmp.put("is_postpone", String.valueOf(true));
+                        else tmp.put("is_postpone", String.valueOf(false));
+                        Elements spanDisplay = divLicHoc.get(j).children().select(".span-display");
+                        Elements spanLabel = divLicHoc.get(j).children().select(".span-label");
+                        tmp.put("subject_id",spanDisplay.get(0).text().trim());
+                        tmp.put("subject_name",spanDisplay.get(1).text().trim());
+                        JSONArray jsonArray = new JSONArray();
+
+                        for (int v = 0; v < spanLabel.size(); v++) {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("key",spanLabel.get(v).text().trim());
+                            jsonObject.put("value",spanDisplay.get(v+2).text().trim().length() > 0 ? spanDisplay.get(v+2).text().trim() : "");
+                            jsonArray.put(jsonObject);
+                            tmp.put("values",jsonArray);
+                        }
+                        objEvening.put(tmp);
+                    }
                 }
                 schedule.put("morning", objMorning);
                 schedule.put("afternoon", objAfternoon);
