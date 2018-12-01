@@ -74,6 +74,7 @@ public class WeekSchedule extends Fragment implements CalendarDatePickerDialogFr
     private WeekScheduleTablayoutAdapter weekScheduleTablayoutAdapter;
 
     public WeekSchedule() {
+
     }
 
     @Override

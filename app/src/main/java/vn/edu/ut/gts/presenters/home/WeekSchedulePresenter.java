@@ -84,15 +84,29 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                 JSONArray objMorning = new JSONArray();
                 JSONArray objAfternoon = new JSONArray();
                 JSONArray objEvening = new JSONArray();
-                if (trMorning.get(i).select(".div-LichHoc").text().trim().length() > 0) {
-                    Elements divLicHoc = trMorning.get(i).select(".div-LichHoc");
-                    for (int j = 0; j < divLicHoc.size(); j++) {
+
+                if (trMorning.get(i).select(".div-LichHoc").size() > 0 || trMorning.get(i).select(".div-LichThi").size() > 0) {
+                    Elements divLich = null;
+                    boolean isTest = false;
+                    if(trMorning.get(i).select(".div-LichThi").size() > 0){
+                        divLich = trMorning.get(i).select(".div-LichThi");
+                        isTest = true;
+                    } else {
+                        divLich = trMorning.get(i).select(".div-LichHoc");
+                    }
+
+                    for (int j = 0; j < divLich.size(); j++) {
                         JSONObject tmp = new JSONObject();
-                        if (divLicHoc.get(j).select(".TamNgung").size() > 0)
+                        if (divLich.get(j).select(".TamNgung").size() > 0)
                             tmp.put("is_postpone", String.valueOf(true));
                         else tmp.put("is_postpone", String.valueOf(false));
-                        Elements spanDisplay = divLicHoc.get(j).children().select(".span-display");
-                        Elements spanLabel = divLicHoc.get(j).children().select(".span-label");
+
+                        if(isTest)
+                            tmp.put("is_test", String.valueOf(true));
+                        else tmp.put("is_test", String.valueOf(false));
+
+                        Elements spanDisplay = divLich.get(j).children().select(".span-display");
+                        Elements spanLabel = divLich.get(j).children().select(".span-label");
                         tmp.put("subject_id",spanDisplay.get(0).text().trim());
                         tmp.put("subject_name",spanDisplay.get(1).text().trim());
                         JSONArray jsonArray = new JSONArray();
@@ -103,19 +117,33 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                             jsonArray.put(jsonObject);
                             tmp.put("values",jsonArray);
                         }
-
                         objMorning.put(tmp);
                     }
                 }
-                if (trAfternoon.get(i).select(".div-LichHoc").text().trim().length() > 0) {
-                    Elements divLicHoc = trAfternoon.get(i).select(".div-LichHoc");
-                    for (int j = 0; j < divLicHoc.size(); j++) {
+                if (trAfternoon.get(i).select(".div-LichHoc").size() > 0 || trAfternoon.get(i).select(".div-LichThi").size() > 0) {
+
+                    Elements divLich = null;
+                    boolean isTest = false;
+                    if(trAfternoon.get(i).select(".div-LichThi").size() > 0){
+                        divLich = trAfternoon.get(i).select(".div-LichThi");
+                        isTest = true;
+                    } else {
+                        divLich = trAfternoon.get(i).select(".div-LichHoc");
+                    }
+
+                    for (int j = 0; j < divLich.size(); j++) {
                         JSONObject tmp = new JSONObject();
-                        if (divLicHoc.get(j).select(".div-TamNgung").size() > 0)
+                        if (divLich.get(j).select(".div-TamNgung").size() > 0)
                             tmp.put("is_postpone", String.valueOf(true));
                         else tmp.put("is_postpone", String.valueOf(false));
-                        Elements spanDisplay = divLicHoc.get(j).children().select(".span-display");
-                        Elements spanLabel = divLicHoc.get(j).children().select(".span-label");
+
+                        if(isTest)
+                            tmp.put("is_test", String.valueOf(true));
+                        else tmp.put("is_test", String.valueOf(false));
+
+
+                        Elements spanDisplay = divLich.get(j).children().select(".span-display");
+                        Elements spanLabel = divLich.get(j).children().select(".span-label");
                         tmp.put("subject_id",spanDisplay.get(0).text().trim());
                         tmp.put("subject_name",spanDisplay.get(1).text().trim());
                         JSONArray jsonArray = new JSONArray();
@@ -131,15 +159,28 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                         objAfternoon.put(tmp);
                     }
                 }
-                if (trEvening.get(i).select(".div-LichHoc").text().trim().length() > 0) {
-                    Elements divLicHoc = trAfternoon.get(i).select(".div-LichHoc");
-                    for (int j = 0; j < divLicHoc.size(); j++) {
+                if (trEvening.get(i).select(".div-LichHoc").size() > 0 || trEvening.get(i).select(".div-LichThi").size() > 0) {
+                    Elements divLich = null;
+                    boolean isTest = false;
+                    if(trEvening.get(i).select(".div-LichThi").size() > 0){
+                        divLich = trEvening.get(i).select(".div-LichThi");
+                        isTest = true;
+                    } else {
+                        divLich = trEvening.get(i).select(".div-LichHoc");
+                    }
+
+                    for (int j = 0; j < divLich.size(); j++) {
                         JSONObject tmp = new JSONObject();
-                        if (divLicHoc.get(j).select(".div-TamNgung").size() > 0)
+                        if (divLich.get(j).select(".div-TamNgung").size() > 0)
                             tmp.put("is_postpone", String.valueOf(true));
                         else tmp.put("is_postpone", String.valueOf(false));
-                        Elements spanDisplay = divLicHoc.get(j).children().select(".span-display");
-                        Elements spanLabel = divLicHoc.get(j).children().select(".span-label");
+
+                        if(isTest)
+                            tmp.put("is_test", String.valueOf(true));
+                        else tmp.put("is_test", String.valueOf(false));
+
+                        Elements spanDisplay = divLich.get(j).children().select(".span-display");
+                        Elements spanLabel = divLich.get(j).children().select(".span-label");
                         tmp.put("subject_id",spanDisplay.get(0).text().trim());
                         tmp.put("subject_name",spanDisplay.get(1).text().trim());
                         JSONArray jsonArray = new JSONArray();

@@ -16,6 +16,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
@@ -81,11 +83,17 @@ public class SundayFragment extends Fragment {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.week_schedule_item_layout, null);
                 LinearLayout container = view.findViewById(R.id.container);
-
+                View parentView = (View) container.getParent();
                 TextView subjectID = view.findViewById(R.id.subject_id);
                 TextView subjectName = view.findViewById(R.id.subject_name);
-                if (Boolean.valueOf(jsonObject.getString("is_postpone")))
+                if (Boolean.valueOf(jsonObject.getString("is_postpone"))) {
                     subjectID.setText(Html.fromHtml(jsonObject.getString("subject_id") + "<font color=\"#FF0000\">" + " (Tạm ngưng) " + "</font>"));
+                    parentView.setBackgroundColor(Objects.requireNonNull(getContext()).getResources().getColor(R.color.gray3));
+                }
+                else if(Boolean.valueOf(jsonObject.getString("is_test"))) {
+                    subjectID.setText(Html.fromHtml(jsonObject.getString("subject_id") + "<font color=\"#FF9800\">" + " (Lịch thi) " + "</font>"));
+                    parentView.setBackgroundColor(Objects.requireNonNull(getContext()).getResources().getColor(R.color.yellow_light));
+                }
                 else subjectID.setText(jsonObject.getString("subject_id"));
                 subjectName.setText(jsonObject.getString("subject_name"));
                 JSONArray values = jsonObject.getJSONArray("values");

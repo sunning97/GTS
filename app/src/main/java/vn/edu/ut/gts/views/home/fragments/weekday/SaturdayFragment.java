@@ -91,7 +91,11 @@ public class SaturdayFragment extends Fragment {
                 if (Boolean.valueOf(jsonObject.getString("is_postpone"))) {
                     subjectID.setText(Html.fromHtml(jsonObject.getString("subject_id") + "<font color=\"#FF0000\">" + " (Tạm ngưng) " + "</font>"));
                     parentView.setBackgroundColor(Objects.requireNonNull(getContext()).getResources().getColor(R.color.gray3));
-                } else subjectID.setText(jsonObject.getString("subject_id"));
+                } else if(Boolean.valueOf(jsonObject.getString("is_test"))) {
+                    subjectID.setText(Html.fromHtml(jsonObject.getString("subject_id") + "<font color=\"#FF9800\">" + " (Lịch thi) " + "</font>"));
+                    parentView.setBackgroundColor(Objects.requireNonNull(getContext()).getResources().getColor(R.color.yellow_light));
+                }
+                else subjectID.setText(jsonObject.getString("subject_id"));
                 subjectName.setText(jsonObject.getString("subject_name"));
                 JSONArray values = jsonObject.getJSONArray("values");
 
