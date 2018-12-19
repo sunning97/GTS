@@ -65,6 +65,10 @@ dependencies {
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
 
 
+
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
