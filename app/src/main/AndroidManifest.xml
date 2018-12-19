@@ -18,6 +18,13 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon">
+
+        <service
+            android:name=".helpers.OnClearFromRecentService"
+            android:stopWithTask="false" />
+        <service android:name=".helpers.NotifyWeekScheduleService" />
+
+
         <activity
             android:name=".views.login.LoginActivity"
             android:screenOrientation="portrait">
@@ -34,10 +41,6 @@
             android:name=".views.home.HomeActivity"
             android:screenOrientation="portrait" />
 
-        <service
-            android:name=".helpers.OnClearFromRecentService"
-            android:stopWithTask="false" />
-
         <activity
             android:name=".views.search.StudentSearchActivity"
             android:screenOrientation="portrait" />
@@ -47,7 +50,7 @@
         <activity
             android:name=".views.mail.MailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".views.setting.SettingActivity"></activity>
+        <activity android:name=".views.setting.SettingActivity" />
     </application>
 
 </manifest>
