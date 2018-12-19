@@ -42,10 +42,13 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
+
         storage = new Storage(this);
         final Intent intent = new Intent(this,NotifyWeekScheduleService.class);
+
         settingTimeWeekScheduleNotifyTextView1 = (TextView) settingTimeWeekScheduleNotify.getChildAt(0);
         settingTimeWeekScheduleNotifyTextView2 = (TextView) settingTimeWeekScheduleNotify.getChildAt(1);
+
         if (storage.getString("week_schedule_notify") != null && Boolean.parseBoolean(storage.getString("week_schedule_notify"))) {
             sbNotifyWeekChedule.setChecked(true);
             settingTimeWeekScheduleNotify.setEnabled(true);
@@ -61,7 +64,6 @@ public class SettingActivity extends AppCompatActivity {
         setSupportActionBar(settingToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
 
         sbNotifyWeekChedule.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
@@ -89,8 +91,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void CreateAlertDialogWithRadioButtonGroup() {
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
 
         builder.setTitle("Chọn thời gian thông báo");
