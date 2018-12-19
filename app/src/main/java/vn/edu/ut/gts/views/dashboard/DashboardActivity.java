@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.elyeproj.loaderviewlibrary.LoaderImageView;
 import com.elyeproj.loaderviewlibrary.LoaderTextView;
@@ -39,6 +40,7 @@ import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.login.LoginActivity;
 import vn.edu.ut.gts.views.mail.MailActivity;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
+import vn.edu.ut.gts.views.setting.SettingActivity;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, IDashboardActivity,NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.dashboard_toolbar)
@@ -375,6 +377,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
                 case R.id.home_dashboard:{
                     item.setChecked(true);
+                    break;
+                }
+                case R.id.setting: {
+                    startActivity(new Intent(DashboardActivity.this, SettingActivity.class));
                     break;
                 }
             }

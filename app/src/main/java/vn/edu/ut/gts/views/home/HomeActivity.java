@@ -45,7 +45,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static final int SCHEDULE_BY_WEEK = 5;
     public static final int ATTENDANCE = 6;
     public static final int TEST_SCHEDULE = 7;
-    public static Boolean isLogin = false;
+    public static final int SETTING = 8;
+    public static Boolean isLogin =false;
 
     @BindView(R.id.home_toolbar)
     Toolbar toolbar;
