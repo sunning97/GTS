@@ -30,13 +30,7 @@ import java.util.regex.Pattern;
 public class NetworkChangeReceiver extends BroadcastReceiver {
     private Storage storage;
     private Context context;
-    private final int ALL_DAY = 1;
-    private final int MORNING = 2;
-    private final int AFTERNOON = 3;
-    private final int EVENING = 4;
-    private final int MORNING_AFTERNOON = 5;
-    private final int MORNING_EVENING = 6;
-    private final int AFTERNOON_EVENING = 7;
+
 
     public NetworkChangeReceiver(Context context){
         storage = new Storage(context);
@@ -108,19 +102,14 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 }
-//                try {
-//                    if(currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0){
-//                        setLAlarm(currentDateSchedule);
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
+
                 try {
-                    setLAlarm(jsonArray.getJSONObject(1));
+                    if(currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0){
+                        setLAlarm(currentDateSchedule);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         };
         asyncTask.execute();
@@ -277,12 +266,12 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     private void setLAlarm(JSONObject data){
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,14);
-        calendar.set(Calendar.MINUTE,58);
+        calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context,NotifyWeekScheduleAlert.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,1,intent,0);
 
         String mess = "";
 
@@ -296,30 +285,32 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         }
 
         intent.putExtra("mess",mess);
+
         try {
             intent.putExtra("title",data.getString("date"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,1,intent,0);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-
-
-//        switch (Integer.parseInt(storage.getString("week_schedule_notify_time"))){
-//            case 1:
-//            {
-//
-//                break;
-//            }
-//            case 2:
-//            {
-//                break;
-//            }
-//            case 6:
-//            {
-//                break;
-//            }
-//        }
+        switch (Integer.parseInt(storage.getString("week_schedule_notify_time"))){
+            case 1:
+            {
+                calendar.set(Calendar.HOUR_OF_DAY,6);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+                break;
+            }
+            case 2:
+            {
+                calendar.set(Calendar.HOUR_OF_DAY,5);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+                break;
+            }
+            case 6:
+            {
+                calendar.set(Calendar.HOUR_OF_DAY,1);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+                break;
+            }
+        }
     }
 }
