@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -107,11 +108,15 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 }
-
+//                try {
+//                    if(currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0){
+//                        setLAlarm(currentDateSchedule);
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
                 try {
-                    if(currentDateSchedule.getJSONArray("morning").length() > 0){
-                    }
-
+                    setLAlarm(jsonArray.getJSONObject(1));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -270,31 +275,51 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     }
 
 
-    private void setLAlarm(int c,JSONArray data){
+    private void setLAlarm(JSONObject data){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,14);
+        calendar.set(Calendar.MINUTE,37);
+        calendar.set(Calendar.SECOND,0);
 
-        switch (c){
-            case 1:
-            {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY,12);
-                calendar.set(Calendar.MINUTE,9);
-                calendar.set(Calendar.SECOND,0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context,NotifyWeekScheduleAlert.class);
 
-                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(context,NotifyWeekScheduleAlert.class);
-                intent.putExtra("mess","Ngay mai kiem tra");
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context,1,intent,0);
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-                break;
-            }
-            case 2:
-            {
-                break;
-            }
-            case 6:
-            {
-                break;
-            }
+        String mess = "";
+
+        try {
+            if(data.getJSONArray("morning").length() > 0) mess+="Sáng: " + data.getJSONArray("morning").getJSONObject(0).getString("subject_name") + " \n";
+            if(data.getJSONArray("afternoon").length() > 0) mess+="Chiều: " + data.getJSONArray("afternoon").getJSONObject(0).getString("subject_name") + " \n";
+            if(data.getJSONArray("evening").length() > 0) mess+="Tối: " + data.getJSONArray("evening").getJSONObject(0).getString("subject_name") + " \n";
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+        intent.putExtra("mess",mess);
+        try {
+            intent.putExtra("title",data.getString("date"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,1,intent,0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+
+
+//        switch (Integer.parseInt(storage.getString("week_schedule_notify_time"))){
+//            case 1:
+//            {
+//
+//                break;
+//            }
+//            case 2:
+//            {
+//                break;
+//            }
+//            case 6:
+//            {
+//                break;
+//            }
+//        }
     }
 }
