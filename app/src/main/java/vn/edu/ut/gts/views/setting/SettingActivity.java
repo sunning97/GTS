@@ -32,7 +32,7 @@ public class SettingActivity extends AppCompatActivity {
     LinearLayout settingTimeWeekScheduleNotify;
     @BindView(R.id.parent_layout)
     LinearLayout parentLayout;
-    CharSequence[] values = {"Trước 1 giờ", "Trước 3 giờ", "Trước 5 giờ", "Trước 7 giờ", "Trước 24 giờ"};
+    CharSequence[] values = {"Trước 1 giờ", "Trước 2 giờ", "Trước 6 giờ"};
     AlertDialog alertDialog1;
     TextView settingTimeWeekScheduleNotifyTextView1, settingTimeWeekScheduleNotifyTextView2;
     private Storage storage;
@@ -110,14 +110,6 @@ public class SettingActivity extends AppCompatActivity {
                     case 2:
                         settingTimeWeekScheduleNotifyTextView2.setText(values[2]);
                         setSettingTimeWeekScheduleNotify(2);
-                        break;
-                    case 3:
-                        settingTimeWeekScheduleNotifyTextView2.setText(values[3]);
-                        setSettingTimeWeekScheduleNotify(3);
-                        break;
-                    case 4:
-                        settingTimeWeekScheduleNotifyTextView2.setText(values[4]);
-                        setSettingTimeWeekScheduleNotify(4);
                         break;
                 }
                 alertDialog1.dismiss();

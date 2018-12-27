@@ -23,7 +23,7 @@
             android:name=".helpers.OnClearFromRecentService"
             android:stopWithTask="false" />
         <service android:name=".helpers.NotifyWeekScheduleService" />
-
+        <receiver android:name=".helpers.NotifyWeekScheduleAlert"/>
 
         <activity
             android:name=".views.login.LoginActivity"

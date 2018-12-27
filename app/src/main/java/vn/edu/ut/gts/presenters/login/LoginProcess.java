@@ -34,6 +34,7 @@ public class LoginProcess implements ILoginProcess {
     }
 
     /*get data for login & store to sharedpreference*/
+
     public void initData(final boolean isAuto) {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
             @Override
