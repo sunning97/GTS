@@ -278,7 +278,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     private void setLAlarm(JSONObject data){
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY,14);
-        calendar.set(Calendar.MINUTE,37);
+        calendar.set(Calendar.MINUTE,58);
         calendar.set(Calendar.SECOND,0);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

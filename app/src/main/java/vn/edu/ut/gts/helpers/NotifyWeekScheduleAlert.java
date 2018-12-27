@@ -17,7 +17,7 @@ public class NotifyWeekScheduleAlert extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.drawable.ic_check_white_24dp)
+        builder.setSmallIcon(R.drawable.gts_icon)
                 .setContentTitle("Lịch học "+intent.getStringExtra("title"))
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(intent.getStringExtra("mess")))
