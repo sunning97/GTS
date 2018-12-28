@@ -64,15 +64,23 @@ public class CheckWeekSchedule extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, NotifyWeekScheduleAlert.class);
         String mess = "";
+        int morning = 0;
+        int afternoon = 0;
+        int evening = 0;
 
         try {
-            if (data.getJSONArray("morning").length() > 0)
+            if (data.getJSONArray("morning").length() > 0) {
                 mess += "Sáng: " + data.getJSONArray("morning").getJSONObject(0).getString("subject_name") + " \n";
-            if (data.getJSONArray("afternoon").length() > 0)
+                morning = 1;
+            }
+            if (data.getJSONArray("afternoon").length() > 0) {
                 mess += "Chiều: " + data.getJSONArray("afternoon").getJSONObject(0).getString("subject_name") + " \n";
-            if (data.getJSONArray("evening").length() > 0)
+                afternoon = 1;
+            }
+            if (data.getJSONArray("evening").length() > 0) {
                 mess += "Tối: " + data.getJSONArray("evening").getJSONObject(0).getString("subject_name") + " \n";
-
+                evening = 1;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -87,19 +95,43 @@ public class CheckWeekSchedule extends BroadcastReceiver {
 
         switch (Integer.parseInt(storage.getString("week_schedule_notify_time"))) {
             case 1: {
-                calendar.set(Calendar.HOUR_OF_DAY, 6);
+                if(evening == 1){
+                    calendar.set(Calendar.HOUR_OF_DAY, 18);
+                }
+                if(afternoon == 1){
+                    calendar.set(Calendar.HOUR_OF_DAY, 11);
+                }
+                if(morning == 1){
+                    calendar.set(Calendar.HOUR_OF_DAY, 6);
+                }
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 break;
             }
             case 2: {
-                calendar.set(Calendar.HOUR_OF_DAY, 5);
+                if(evening == 1){
+                    calendar.set(Calendar.HOUR_OF_DAY, 17);
+                }
+                if(afternoon == 1){
+                    calendar.set(Calendar.HOUR_OF_DAY, 10);
+                }
+                if(morning == 1){
+                    calendar.set(Calendar.HOUR_OF_DAY, 5);
+                }
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 break;
             }
             case 6: {
-                calendar.set(Calendar.HOUR_OF_DAY, 1);
+                if(evening == 1){
+                    calendar.set(Calendar.HOUR_OF_DAY, 13);
+                }
+                if(afternoon == 1){
+                    calendar.set(Calendar.HOUR_OF_DAY, 6);
+                }
+                if(morning == 1){
+                    calendar.set(Calendar.HOUR_OF_DAY, 1);
+                }
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0);
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 break;
