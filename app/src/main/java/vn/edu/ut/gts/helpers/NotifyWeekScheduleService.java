@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
-import android.widget.Toast;
 import java.util.Calendar;
 
 @SuppressLint("Registered")
