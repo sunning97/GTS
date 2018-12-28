@@ -36,6 +36,7 @@ import vn.edu.ut.gts.views.home.fragments.WeekSchedule;
 import vn.edu.ut.gts.views.login.LoginActivity;
 import vn.edu.ut.gts.views.mail.MailActivity;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
+import vn.edu.ut.gts.views.setting.SettingActivity;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final int STUDENT_INFO = 1;
@@ -217,6 +218,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 LoginActivity.isLogout = false;
                 storage.deleteAllsharedPreferences(HomeActivity.this);
                 HomeActivity.this.finishAffinity();
+                break;
+            }
+            case R.id.setting: {
+                startActivity(new Intent(HomeActivity.this, SettingActivity.class));
                 break;
             }
         }
