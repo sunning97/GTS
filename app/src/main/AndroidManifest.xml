@@ -19,11 +19,10 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon">
 
-        <service
-            android:name=".helpers.OnClearFromRecentService"
-            android:stopWithTask="false" />
+        <service android:name=".helpers.OnClearFromRecentService" android:stopWithTask="false" />
         <service android:name=".helpers.NotifyWeekScheduleService" />
         <receiver android:name=".helpers.NotifyWeekScheduleAlert"/>
+        <receiver android:name=".helpers.CheckWeekSchedule"/>
 
         <activity
             android:name=".views.login.LoginActivity"

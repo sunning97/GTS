@@ -20,11 +20,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:orientation="vertical">
 
         <TextView
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -33,6 +33,10 @@
             android:textColor="@color/colorPrimary" />
 
         <LinearLayout
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/week_schedule_notify_item_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -40,12 +44,13 @@
             android:paddingBottom="15dp">
 
             <TextView
+                android:layout_marginTop="5dp"
                 android:textColor="@color/black"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Thông báo lịch học tuần"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <com.suke.widget.SwitchButton
                 app:sb_checked_color="@color/colorPrimary"
@@ -58,6 +63,9 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
         <LinearLayout
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="?attr/selectableItemBackground"
             android:id="@+id/setting_time_week_schedule_notify"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,10 +78,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Cài đặt thời gian thông báo"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
             <TextView
                 android:text="Trước 1 giờ"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textColor="@color/gray2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

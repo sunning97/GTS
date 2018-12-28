@@ -1,6 +1,9 @@
 package vn.edu.ut.gts.views.setting;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
@@ -8,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +24,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.helpers.CheckWeekSchedule;
 import vn.edu.ut.gts.helpers.NotifyWeekScheduleService;
 import vn.edu.ut.gts.helpers.Storage;
 
@@ -32,6 +37,10 @@ public class SettingActivity extends AppCompatActivity {
     LinearLayout settingTimeWeekScheduleNotify;
     @BindView(R.id.parent_layout)
     LinearLayout parentLayout;
+    @BindView(R.id.week_schedule_notify_item_layout)
+    LinearLayout weekScheduleNotifyItemLayout;
+
+
     CharSequence[] values = {"Trước 1 giờ", "Trước 2 giờ", "Trước 6 giờ"};
     AlertDialog alertDialog1;
     TextView settingTimeWeekScheduleNotifyTextView1, settingTimeWeekScheduleNotifyTextView2;
@@ -73,12 +82,25 @@ public class SettingActivity extends AppCompatActivity {
                 if (!isChecked) {
                     stopService(intent);
                     settingTimeWeekScheduleNotifyTextView1.setTextColor(getResources().getColor(R.color.gray2));
+
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    Intent intent1 = new Intent(getApplicationContext(),CheckWeekSchedule.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),1,intent1,0);
+                    alarmManager.cancel(pendingIntent);
                 } else {
                     if (storage.getString("week_schedule_notify_time") == null)
                         setSettingTimeWeekScheduleNotify(0);
                     startService(intent);
                     settingTimeWeekScheduleNotifyTextView1.setTextColor(getResources().getColor(R.color.black));
                 }
+            }
+        });
+
+
+        weekScheduleNotifyItemLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sbNotifyWeekChedule.setChecked(!sbNotifyWeekChedule.isChecked());
             }
         });
 
@@ -125,4 +147,16 @@ public class SettingActivity extends AppCompatActivity {
         storage.putString("week_schedule_notify_time", tmp[1]);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                break;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -22,8 +22,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +40,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         try
         {
             if (isOnline(context)) {
-                this.getData();
+                this.iniLogin();
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -60,7 +58,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         }
     }
 
-    private void getData(){
+    private void getDataWeek(){
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected JSONArray doInBackground(Void... voids) {
@@ -70,7 +68,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             .method(Connection.Method.GET)
                             .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
-                            .cookie("ASP.NET_SessionId", storage.getCookie())
+                            .cookie("ASP.NET_SessionId", storage.getString("w_cookie"))
                             .get();
 
                     schedules = parseWeekData(document);
@@ -83,33 +81,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-
-                Calendar c = Calendar.getInstance();
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                String formattedDate = df.format(c.getTime());
-
-                JSONObject currentDateSchedule = null;
-
-                for (int i = 0;i< jsonArray.length();i++){
-                    try {
-                        JSONObject tmp = jsonArray.getJSONObject(i);
-
-                        if(tmp.getString("date").equals(formattedDate)){
-                            currentDateSchedule = tmp;
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                try {
-                    if(currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0){
-                        setLAlarm(currentDateSchedule);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                storage.putString("week_notify_data",jsonArray.toString());
+                Log.d("AAAAAA",jsonArray.toString());
             }
         };
         asyncTask.execute();
@@ -263,54 +236,155 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         return data;
     }
 
+    private void iniLogin(){
 
-    private void setLAlarm(JSONObject data){
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MINUTE,0);
-        calendar.set(Calendar.SECOND,0);
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
 
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context,NotifyWeekScheduleAlert.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,1,intent,0);
+            @Override
+            protected Void doInBackground(Void... voids) {
+                JSONObject data = new JSONObject();
+                try {
+                    Connection.Response res = Jsoup.connect(Helper.BASE_URL)
+                            .userAgent(Helper.USER_AGENT)
+                            .method(Connection.Method.GET)
+                            .timeout(Helper.TIMEOUT_VALUE)
+                            .execute();
+                    Document doc = res.parse();
+                    storage.putString("w_cookie",res.cookie("ASP.NET_SessionId"));
+                    data.put("w_eventTarget", doc.select("input[name=\"__EVENTTARGET\"]").val());
+                    data.put("w_eventArgument", doc.select("input[name=\"__EVENTARGUMENT\"]").val());
+                    data.put("w_lastFocus", doc.select("input[name=\"__LASTFOCUS\"]").val());
+                    data.put("w_viewState", doc.select("input[name=\"__VIEWSTATE\"]").val());
+                    data.put("w_viewStartGenerator", doc.select("input[name=\"__VIEWSTATEGENERATOR\"]").val());
+                    data.put("w_radioBtnList", doc.select("input[name=\"ctl00$ucPhieuKhaoSat1$RadioButtonList1\"][checked=\"checked\"]").val());
+                    data.put("w_listMenu", doc.select("select[name=\"ctl00$DdListMenu\"]>option").first().val());
+                    data.put("w_btnLogin", doc.select("input[name=\"ctl00$ucRight1$btnLogin\"]").val());
+                    storage.putString("w_dataLogin", data.toString());
 
-        String mess = "";
+                } catch (JSONException | IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
 
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                doLogin(storage.getString("last_student_login"),storage.getString("password"));
+            }
+        };
+        asyncTask.execute();
+    }
+
+    public void doLogin(final String studentId, final String password) {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    JSONObject dataLogin = new JSONObject(storage.getString("w_dataLogin"));
+                    String hashPassword = Aes.encrypt(getPrivateKey(studentId), password).toBase64();
+                    String securityValue = createConfirmImage();
+                    Jsoup.connect(Helper.BASE_URL)
+                            .method(Connection.Method.POST)
+                            .timeout(Helper.TIMEOUT_VALUE)
+                            .userAgent(Helper.USER_AGENT)
+                            .cookie("ASP.NET_SessionId", storage.getString("w_cookie"))
+                            .data("__EVENTTARGET", dataLogin.getString("w_eventTarget"))
+                            .data("__EVENTARGUMENT", dataLogin.getString("w_eventArgument"))
+                            .data("__LASTFOCUS", dataLogin.getString("w_lastFocus"))
+                            .data("__VIEWSTATE", dataLogin.getString("w_viewState"))
+                            .data("__VIEWSTATEGENERATOR", dataLogin.getString("w_viewStartGenerator"))
+                            .data("ctl00$ucPhieuKhaoSat1$RadioButtonList1", dataLogin.getString("w_radioBtnList"))
+                            .data("ctl00$DdListMenu", dataLogin.getString("w_listMenu"))
+                            .data("ctl00$ucRight1$btnLogin", dataLogin.getString("w_btnLogin"))
+                            .data("ctl00$ucRight1$txtMaSV", studentId)
+                            .data("ctl00$ucRight1$txtMatKhau", hashPassword)
+                            .data("ctl00$ucRight1$txtSercurityCode", securityValue)
+                            .data("txtSecurityCodeValue", Helper.md5(securityValue))
+                            .data("ctl00$ucRight1$txtEncodeMatKhau", Helper.md5(password))
+                            .execute();
+
+                } catch (NullPointerException | IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                } catch (JSONException | IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                checkLogin();
+            }
+        };
+        asyncTask.execute();
+    }
+
+    private void checkLogin(){
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,Boolean> asyncTask = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                Boolean a = false;
+                try {
+                    Connection.Response res = Jsoup.connect(Helper.BASE_URL + "ajaxpro/DangKy,PMT.Web.PhongDaoTao.ashx")
+                            .method(Connection.Method.POST)
+                            .timeout(Helper.TIMEOUT_VALUE)
+                            .userAgent(Helper.USER_AGENT)
+                            .cookie("ASP.NET_SessionId", storage.getString("w_cookie"))
+                            .header("X-AjaxPro-Method","CheckLogin")
+                            .execute();
+
+                    Document document = res.parse();
+                    if(Boolean.parseBoolean(document.select("body").text().replace(";/*", ""))){
+                        a = true;
+                    }
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException e) {
+                    e.printStackTrace();
+                }
+                return a;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean b) {
+                if(b) getDataWeek();
+                else Log.d("AAAAAA","ko login dc");
+            }
+        };
+        asyncTask.execute();
+    }
+
+    private String createConfirmImage() {
         try {
-            if(data.getJSONArray("morning").length() > 0) mess+="Sáng: " + data.getJSONArray("morning").getJSONObject(0).getString("subject_name") + " \n";
-            if(data.getJSONArray("afternoon").length() > 0) mess+="Chiều: " + data.getJSONArray("afternoon").getJSONObject(0).getString("subject_name") + " \n";
-            if(data.getJSONArray("evening").length() > 0) mess+="Tối: " + data.getJSONArray("evening").getJSONObject(0).getString("subject_name") + " \n";
-
-        } catch (JSONException e) {
+            String res = Curl.connect(Helper.BASE_URL + "ajaxpro/AjaxConfirmImage,PMT.Web.PhongDaoTao.ashx")
+                    .method("POST")
+                    .setCookie("ASP.NET_SessionId", this.storage.getString("w_cookie"))
+                    .userAgent(Helper.USER_AGENT)
+                    .header("X-AjaxPro-Method", "CreateConfirmImage")
+                    .dataString("{}")
+                    .execute();
+            res = res.replace(";/*", "");
+            JSONArray ar = new JSONArray(res);
+            return Helper.decryptMd5(ar.getString(1));
+        } catch (NullPointerException | IndexOutOfBoundsException | JSONException e) {
             e.printStackTrace();
         }
+        return "";
+    }
 
-        intent.putExtra("mess",mess);
-
+    private String getPrivateKey(String studentId) {
+        String result = null;
         try {
-            intent.putExtra("title",data.getString("date"));
-        } catch (JSONException e) {
+            String res = Curl.connect(Helper.BASE_URL + "ajaxpro/AjaxCommon,PMT.Web.PhongDaoTao.ashx")
+                    .method("POST")
+                    .userAgent(Helper.USER_AGENT)
+                    .header("X-AjaxPro-Method", "GetPrivateKey")
+                    .setStringCookie(this.storage.getString("w_cookie"))
+                    .dataString("{\"salt\":\"" + studentId + "\"}")
+                    .execute();
+            if (res != null) result =  res.substring(1, 33);
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
-
-        switch (Integer.parseInt(storage.getString("week_schedule_notify_time"))){
-            case 1:
-            {
-                calendar.set(Calendar.HOUR_OF_DAY,6);
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-                break;
-            }
-            case 2:
-            {
-                calendar.set(Calendar.HOUR_OF_DAY,5);
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-                break;
-            }
-            case 6:
-            {
-                calendar.set(Calendar.HOUR_OF_DAY,1);
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-                break;
-            }
-        }
+        return result;
     }
 }
