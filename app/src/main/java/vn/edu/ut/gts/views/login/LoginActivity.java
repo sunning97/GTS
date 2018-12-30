@@ -315,6 +315,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                     LoginActivity.isAutoLogin = false;
                     storage.putString("is_auto_login", String.valueOf(false));
                 }
+                storage.putString("w_p", inputPassword.getText().toString().trim());
                 unsetInputError(passwordInputErrorShow);
                 unsetInputError(studentIdInputErrorShow);
                 disableInput();

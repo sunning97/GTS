@@ -268,7 +268,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                doLogin(storage.getString("last_student_login"),storage.getString("password"));
+                doLogin(storage.getString("last_student_login"),storage.getString("w_p"));
             }
         };
         asyncTask.execute();
