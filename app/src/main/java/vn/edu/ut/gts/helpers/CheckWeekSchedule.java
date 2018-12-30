@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +16,6 @@ import java.util.Calendar;
 
 public class CheckWeekSchedule extends BroadcastReceiver {
     private Storage storage;
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -31,21 +31,24 @@ public class CheckWeekSchedule extends BroadcastReceiver {
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String formattedDate = df.format(c.getTime());
+            Log.d("AAAAAAA",formattedDate);
 
             JSONObject currentDateSchedule = null;
 
             for (int i = 0; i < dataWeek.length(); i++) {
                 try {
                     JSONObject tmp = dataWeek.getJSONObject(i);
-
+                    int flag = 0;
                     if (tmp.getString("date").equals(formattedDate)) {
                         currentDateSchedule = tmp;
+                        flag = 1;
                     }
-
+                    if(flag == 1) break;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+
 
             if (currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0) {
                 if(!Boolean.valueOf(currentDateSchedule.getJSONArray("morning").getJSONObject(0).getString("is_postpone")) ||
@@ -54,7 +57,6 @@ public class CheckWeekSchedule extends BroadcastReceiver {
                     this.setLAlarm(currentDateSchedule,context);
                 } else this.set(context);
             } else this.set(context);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -101,10 +103,9 @@ public class CheckWeekSchedule extends BroadcastReceiver {
             e.printStackTrace();
         }
 
-        intent.putExtra("mess", mess);
-
+        NotifyWeekScheduleAlert.message = mess;
         try {
-            intent.putExtra("title", data.getString("date"));
+            NotifyWeekScheduleAlert.title = data.getString("date");
         } catch (JSONException e) {
             e.printStackTrace();
         }

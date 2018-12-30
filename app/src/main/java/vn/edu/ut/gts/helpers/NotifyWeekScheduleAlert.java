@@ -19,14 +19,15 @@ import java.util.Calendar;
 import vn.edu.ut.gts.R;
 
 public class NotifyWeekScheduleAlert extends BroadcastReceiver {
-
+    public static String title = "";
+    public static String message = "";
     @Override
     public void onReceive(Context context, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.drawable.gts_icon)
-                .setContentTitle("Lịch học "+intent.getStringExtra("title"))
+                .setContentTitle("Lịch học "+title)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                    .bigText(intent.getStringExtra("mess")))
+                    .bigText(message))
                 .setAutoCancel(true);
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(alarmSound);

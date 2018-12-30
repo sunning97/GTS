@@ -46,7 +46,6 @@ public class NotifyWeekScheduleService extends Service{
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();

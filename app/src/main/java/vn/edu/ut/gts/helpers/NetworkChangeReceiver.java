@@ -82,7 +82,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
                 storage.putString("week_notify_data",jsonArray.toString());
-                Log.d("AAAAAA",jsonArray.toString());
             }
         };
         asyncTask.execute();
