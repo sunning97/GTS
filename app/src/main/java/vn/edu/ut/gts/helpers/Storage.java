@@ -108,6 +108,7 @@ public class Storage {
         String weekNotifyData = this.getString("week_notify_data");
         String dataW = this.getString("w_dataLogin");
         String cookieW = this.getString("w_cookie");
+        String wp = this.getString("w_p");
 
         if(this.getString("week_schedule_notify") != null){
             weekScheduleNotify = Boolean.parseBoolean(this.getString("week_schedule_notify"));
@@ -154,6 +155,7 @@ public class Storage {
         editor.putString("week_notify_data",weekNotifyData);
         editor.putString("w_dataLogin",dataW);
         editor.putString("w_cookie",cookieW);
+        editor.putString("w_p",wp);
 
         if(time != null) editor.putString("week_schedule_notify_time",time);
 
