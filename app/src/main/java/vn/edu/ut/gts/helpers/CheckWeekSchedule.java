@@ -48,10 +48,12 @@ public class CheckWeekSchedule extends BroadcastReceiver {
             }
 
             if (currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0) {
-                this.setLAlarm(currentDateSchedule, context);
-            } else {
-                this.set(context);
-            }
+                if(!Boolean.valueOf(currentDateSchedule.getJSONArray("morning").getJSONObject(0).getString("is_postpone")) ||
+                    !Boolean.valueOf(currentDateSchedule.getJSONArray("afternoon").getJSONObject(0).getString("is_postpone")) ||
+                    !Boolean.valueOf(currentDateSchedule.getJSONArray("evening").getJSONObject(0).getString("is_postpone"))){
+                    this.setLAlarm(currentDateSchedule,context);
+                } else this.set(context);
+            } else this.set(context);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -72,15 +74,27 @@ public class CheckWeekSchedule extends BroadcastReceiver {
 
         try {
             if (data.getJSONArray("morning").length() > 0) {
-                mess += "Sáng: " + data.getJSONArray("morning").getJSONObject(0).getString("subject_name") + " \n";
+                if(Boolean.valueOf(data.getJSONArray("morning").getJSONObject(0).getString("is_test"))){
+                    mess += "Sáng: " + data.getJSONArray("morning").getJSONObject(0).getString("subject_name").replaceAll("\\(LT\\)","").trim() + " (Kiểm tra) \n";
+                } else {
+                    mess += "Sáng: " + data.getJSONArray("morning").getJSONObject(0).getString("subject_name").replaceAll("\\(LT\\)","").trim() + " \n";
+                }
                 morning = 1;
             }
             if (data.getJSONArray("afternoon").length() > 0) {
-                mess += "Chiều: " + data.getJSONArray("afternoon").getJSONObject(0).getString("subject_name") + " \n";
+                if(Boolean.valueOf(data.getJSONArray("afternoon").getJSONObject(0).getString("is_test"))){
+                    mess += "Chiều: " + data.getJSONArray("afternoon").getJSONObject(0).getString("subject_name").replaceAll("\\(LT\\)","").trim() + " (Kiểm tra) \n";
+                } else {
+                    mess += "Chiều: " + data.getJSONArray("afternoon").getJSONObject(0).getString("subject_name").replaceAll("\\(LT\\)","").trim() + " \n";
+                }
                 afternoon = 1;
             }
             if (data.getJSONArray("evening").length() > 0) {
-                mess += "Tối: " + data.getJSONArray("evening").getJSONObject(0).getString("subject_name") + " \n";
+                if(Boolean.valueOf(data.getJSONArray("evening").getJSONObject(0).getString("is_test"))){
+                    mess += "Tối: " + data.getJSONArray("evening").getJSONObject(0).getString("subject_name").replaceAll("\\(LT\\)","").trim() + " (Kiểm tra) \n";
+                } else {
+                    mess += "Tối: " + data.getJSONArray("evening").getJSONObject(0).getString("subject_name").replaceAll("\\(LT\\)","").trim() + " \n";
+                }
                 evening = 1;
             }
         } catch (JSONException e) {
