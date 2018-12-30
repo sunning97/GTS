@@ -48,7 +48,9 @@ public class CheckWeekSchedule extends BroadcastReceiver {
             }
 
             if (currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0) {
-                setLAlarm(currentDateSchedule, context);
+                this.setLAlarm(currentDateSchedule, context);
+            } else {
+                this.set(context);
             }
 
         } catch (JSONException e) {
@@ -138,5 +140,18 @@ public class CheckWeekSchedule extends BroadcastReceiver {
             }
         }
 
+    }
+
+    private void set(Context context){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MINUTE,1);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.add(Calendar.DAY_OF_YEAR,1);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent1 = new Intent(context.getApplicationContext(),CheckWeekSchedule.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(),1,intent1,0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
     }
 }
