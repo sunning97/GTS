@@ -21,6 +21,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import vn.edu.ut.gts.helpers.NotifyWeekScheduleService;
 import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.OnClearFromRecentService;
@@ -217,6 +218,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.exit: {
                 LoginActivity.isLogout = false;
                 storage.deleteAllsharedPreferences(HomeActivity.this);
+                LoginActivity.isOpen = false;
+                Intent intent = new Intent(this,NotifyWeekScheduleService.class);
+                stopService(intent);
+                storage.putString("week_schedule_notify", String.valueOf(false));
+                storage.putString("week_schedule_notify_time", "1");
                 HomeActivity.this.finishAffinity();
                 break;
             }

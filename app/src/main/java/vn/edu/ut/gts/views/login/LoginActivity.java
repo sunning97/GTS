@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     public static Boolean isAutoLogin = false;
     public static Boolean isLogout = false;
+    public static Boolean isOpen = false;
     private LoginProcess loginProcess;
     private Handler handler;
     private Runnable runnable;
@@ -93,6 +94,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         Wave wave = new Wave();
         loadingIcon.setIndeterminateDrawable(wave);
         searchStudentTV.setPaintFlags(searchStudentTV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        LoginActivity.isOpen = true;
         this.requestPermission();
         this.init();
         this.hideErrorWhileInput();

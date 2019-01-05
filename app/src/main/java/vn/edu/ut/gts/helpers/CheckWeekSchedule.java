@@ -31,7 +31,6 @@ public class CheckWeekSchedule extends BroadcastReceiver {
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String formattedDate = df.format(c.getTime());
-            Log.d("AAAAAAA",formattedDate);
 
             JSONObject currentDateSchedule = null;
 
@@ -50,13 +49,15 @@ public class CheckWeekSchedule extends BroadcastReceiver {
             }
 
 
-            if (currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0) {
-                if(!Boolean.valueOf(currentDateSchedule.getJSONArray("morning").getJSONObject(0).getString("is_postpone")) ||
-                    !Boolean.valueOf(currentDateSchedule.getJSONArray("afternoon").getJSONObject(0).getString("is_postpone")) ||
-                    !Boolean.valueOf(currentDateSchedule.getJSONArray("evening").getJSONObject(0).getString("is_postpone"))){
-                    this.setLAlarm(currentDateSchedule,context);
-                } else this.set(context);
-            } else this.set(context);
+//            if (currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0) {
+//                if(!Boolean.valueOf(currentDateSchedule.getJSONArray("morning").getJSONObject(0).getString("is_postpone")) ||
+//                    !Boolean.valueOf(currentDateSchedule.getJSONArray("afternoon").getJSONObject(0).getString("is_postpone")) ||
+//                    !Boolean.valueOf(currentDateSchedule.getJSONArray("evening").getJSONObject(0).getString("is_postpone"))){
+//                    this.setLAlarm(currentDateSchedule,context);
+//                } else this.set(context);
+//            } else this.set(context);
+            Log.d("AAAAAA", dataWeek.getJSONObject(5).toString());
+            this.setLAlarm(dataWeek.getJSONObject(5),context);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -27,6 +27,7 @@ import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.CheckWeekSchedule;
 import vn.edu.ut.gts.helpers.NotifyWeekScheduleService;
 import vn.edu.ut.gts.helpers.Storage;
+import vn.edu.ut.gts.presenters.home.WeekSchedulePresenter;
 
 public class SettingActivity extends AppCompatActivity {
     @BindView(R.id.setting_toolbar)
@@ -45,6 +46,7 @@ public class SettingActivity extends AppCompatActivity {
     AlertDialog alertDialog1;
     TextView settingTimeWeekScheduleNotifyTextView1, settingTimeWeekScheduleNotifyTextView2;
     private Storage storage;
+    private WeekSchedulePresenter weekSchedulePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class SettingActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         storage = new Storage(this);
+        weekSchedulePresenter = new WeekSchedulePresenter(this);
         final Intent intent = new Intent(this,NotifyWeekScheduleService.class);
 
         settingTimeWeekScheduleNotifyTextView1 = (TextView) settingTimeWeekScheduleNotify.getChildAt(0);
@@ -90,6 +93,7 @@ public class SettingActivity extends AppCompatActivity {
                 } else {
                     if (storage.getString("week_schedule_notify_time") == null)
                         setSettingTimeWeekScheduleNotify(0);
+                    weekSchedulePresenter.saveData();
                     startService(intent);
                     settingTimeWeekScheduleNotifyTextView1.setTextColor(getResources().getColor(R.color.black));
                 }

@@ -4,6 +4,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import vn.edu.ut.gts.views.login.LoginActivity;
+
 public class OnClearFromRecentService extends Service{
 
     @Override
@@ -25,6 +27,7 @@ public class OnClearFromRecentService extends Service{
     public void onTaskRemoved(Intent rootIntent) {
         Storage storage = new Storage(getApplicationContext());
         storage.deleteAllsharedPreferences(getApplicationContext());
+        LoginActivity.isOpen = false;
         stopSelf();
     }
 }

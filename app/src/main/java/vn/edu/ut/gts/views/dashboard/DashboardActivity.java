@@ -32,6 +32,7 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.helpers.NotifyWeekScheduleService;
 import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.OnClearFromRecentService;
@@ -365,6 +366,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     LoginActivity.isLogout = true;
                     LoginActivity.isAutoLogin = false;
                     HomeActivity.isLogin = false;
+                    Intent intent = new Intent(this,NotifyWeekScheduleService.class);
+                    stopService(intent);
+                    storage.putString("week_schedule_notify", String.valueOf(false));
+                    storage.putString("week_schedule_notify_time", "1");
                     storage.deleteAllsharedPreferences(this);
                     startActivity(new Intent(this, LoginActivity.class));
                     break;
@@ -372,6 +377,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 case R.id.exit: {
                     LoginActivity.isLogout = false;
                     storage.deleteAllsharedPreferences(this);
+                    LoginActivity.isOpen = false;
                     this.finishAffinity();
                     break;
                 }

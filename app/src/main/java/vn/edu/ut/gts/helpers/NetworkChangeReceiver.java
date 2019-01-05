@@ -25,22 +25,25 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import vn.edu.ut.gts.views.login.LoginActivity;
+
 public class NetworkChangeReceiver extends BroadcastReceiver {
     private Storage storage;
     private Context context;
 
 
-    public NetworkChangeReceiver(Context context){
+    public NetworkChangeReceiver(Context context) {
         storage = new Storage(context);
         this.context = context;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        try
-        {
+        try {
             if (isOnline(context)) {
-                this.iniLogin();
+                if (!LoginActivity.isOpen) {
+                    this.iniLogin();
+                }
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -58,7 +61,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         }
     }
 
-    private void getDataWeek(){
+    private void getDataWeek() {
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
             @Override
             protected JSONArray doInBackground(Void... voids) {
@@ -81,7 +84,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                storage.putString("week_notify_data",jsonArray.toString());
+                storage.putString("week_notify_data", jsonArray.toString());
             }
         };
         asyncTask.execute();
@@ -117,7 +120,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 if (trMorning.get(i).select(".div-LichHoc").size() > 0 || trMorning.get(i).select(".div-LichThi").size() > 0) {
                     Elements divLich = null;
                     boolean isTest = false;
-                    if(trMorning.get(i).select(".div-LichThi").size() > 0){
+                    if (trMorning.get(i).select(".div-LichThi").size() > 0) {
                         divLich = trMorning.get(i).select(".div-LichThi");
                         isTest = true;
                     } else {
@@ -130,21 +133,21 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             tmp.put("is_postpone", String.valueOf(true));
                         else tmp.put("is_postpone", String.valueOf(false));
 
-                        if(isTest)
+                        if (isTest)
                             tmp.put("is_test", String.valueOf(true));
                         else tmp.put("is_test", String.valueOf(false));
 
                         Elements spanDisplay = divLich.get(j).children().select(".span-display");
                         Elements spanLabel = divLich.get(j).children().select(".span-label");
-                        tmp.put("subject_id",spanDisplay.get(0).text().trim());
-                        tmp.put("subject_name",spanDisplay.get(1).text().trim());
+                        tmp.put("subject_id", spanDisplay.get(0).text().trim());
+                        tmp.put("subject_name", spanDisplay.get(1).text().trim());
                         JSONArray jsonArray = new JSONArray();
                         for (int v = 0; v < spanLabel.size(); v++) {
                             JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("key",spanLabel.get(v).text().trim());
-                            jsonObject.put("value",spanDisplay.get(v+2).text().trim().length() > 0 ? spanDisplay.get(v+2).text().trim() : "");
+                            jsonObject.put("key", spanLabel.get(v).text().trim());
+                            jsonObject.put("value", spanDisplay.get(v + 2).text().trim().length() > 0 ? spanDisplay.get(v + 2).text().trim() : "");
                             jsonArray.put(jsonObject);
-                            tmp.put("values",jsonArray);
+                            tmp.put("values", jsonArray);
                         }
                         objMorning.put(tmp);
                     }
@@ -153,7 +156,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
                     Elements divLich = null;
                     boolean isTest = false;
-                    if(trAfternoon.get(i).select(".div-LichThi").size() > 0){
+                    if (trAfternoon.get(i).select(".div-LichThi").size() > 0) {
                         divLich = trAfternoon.get(i).select(".div-LichThi");
                         isTest = true;
                     } else {
@@ -166,23 +169,23 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             tmp.put("is_postpone", String.valueOf(true));
                         else tmp.put("is_postpone", String.valueOf(false));
 
-                        if(isTest)
+                        if (isTest)
                             tmp.put("is_test", String.valueOf(true));
                         else tmp.put("is_test", String.valueOf(false));
 
 
                         Elements spanDisplay = divLich.get(j).children().select(".span-display");
                         Elements spanLabel = divLich.get(j).children().select(".span-label");
-                        tmp.put("subject_id",spanDisplay.get(0).text().trim());
-                        tmp.put("subject_name",spanDisplay.get(1).text().trim());
+                        tmp.put("subject_id", spanDisplay.get(0).text().trim());
+                        tmp.put("subject_name", spanDisplay.get(1).text().trim());
                         JSONArray jsonArray = new JSONArray();
 
                         for (int v = 0; v < spanLabel.size(); v++) {
                             JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("key",spanLabel.get(v).text().trim());
-                            jsonObject.put("value",spanDisplay.get(v+2).text().trim().length() > 0 ? spanDisplay.get(v+2).text().trim() : "");
+                            jsonObject.put("key", spanLabel.get(v).text().trim());
+                            jsonObject.put("value", spanDisplay.get(v + 2).text().trim().length() > 0 ? spanDisplay.get(v + 2).text().trim() : "");
                             jsonArray.put(jsonObject);
-                            tmp.put("values",jsonArray);
+                            tmp.put("values", jsonArray);
                         }
 
                         objAfternoon.put(tmp);
@@ -191,7 +194,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 if (trEvening.get(i).select(".div-LichHoc").size() > 0 || trEvening.get(i).select(".div-LichThi").size() > 0) {
                     Elements divLich = null;
                     boolean isTest = false;
-                    if(trEvening.get(i).select(".div-LichThi").size() > 0){
+                    if (trEvening.get(i).select(".div-LichThi").size() > 0) {
                         divLich = trEvening.get(i).select(".div-LichThi");
                         isTest = true;
                     } else {
@@ -204,22 +207,22 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             tmp.put("is_postpone", String.valueOf(true));
                         else tmp.put("is_postpone", String.valueOf(false));
 
-                        if(isTest)
+                        if (isTest)
                             tmp.put("is_test", String.valueOf(true));
                         else tmp.put("is_test", String.valueOf(false));
 
                         Elements spanDisplay = divLich.get(j).children().select(".span-display");
                         Elements spanLabel = divLich.get(j).children().select(".span-label");
-                        tmp.put("subject_id",spanDisplay.get(0).text().trim());
-                        tmp.put("subject_name",spanDisplay.get(1).text().trim());
+                        tmp.put("subject_id", spanDisplay.get(0).text().trim());
+                        tmp.put("subject_name", spanDisplay.get(1).text().trim());
                         JSONArray jsonArray = new JSONArray();
 
                         for (int v = 0; v < spanLabel.size(); v++) {
                             JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("key",spanLabel.get(v).text().trim());
-                            jsonObject.put("value",spanDisplay.get(v+2).text().trim().length() > 0 ? spanDisplay.get(v+2).text().trim() : "");
+                            jsonObject.put("key", spanLabel.get(v).text().trim());
+                            jsonObject.put("value", spanDisplay.get(v + 2).text().trim().length() > 0 ? spanDisplay.get(v + 2).text().trim() : "");
                             jsonArray.put(jsonObject);
-                            tmp.put("values",jsonArray);
+                            tmp.put("values", jsonArray);
                         }
                         objEvening.put(tmp);
                     }
@@ -235,7 +238,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         return data;
     }
 
-    private void iniLogin(){
+    private void iniLogin() {
 
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
 
@@ -249,7 +252,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             .timeout(Helper.TIMEOUT_VALUE)
                             .execute();
                     Document doc = res.parse();
-                    storage.putString("w_cookie",res.cookie("ASP.NET_SessionId"));
+                    storage.putString("w_cookie", res.cookie("ASP.NET_SessionId"));
                     data.put("w_eventTarget", doc.select("input[name=\"__EVENTTARGET\"]").val());
                     data.put("w_eventArgument", doc.select("input[name=\"__EVENTARGUMENT\"]").val());
                     data.put("w_lastFocus", doc.select("input[name=\"__LASTFOCUS\"]").val());
@@ -268,7 +271,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                doLogin(storage.getString("last_student_login"),storage.getString("w_p"));
+                doLogin(storage.getString("last_student_login"), storage.getString("w_p"));
             }
         };
         asyncTask.execute();
@@ -319,8 +322,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         asyncTask.execute();
     }
 
-    private void checkLogin(){
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,Boolean> asyncTask = new AsyncTask<Void, Void, Boolean>() {
+    private void checkLogin() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Boolean> asyncTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... voids) {
                 Boolean a = false;
@@ -330,11 +333,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                             .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getString("w_cookie"))
-                            .header("X-AjaxPro-Method","CheckLogin")
+                            .header("X-AjaxPro-Method", "CheckLogin")
                             .execute();
 
                     Document document = res.parse();
-                    if(Boolean.parseBoolean(document.select("body").text().replace(";/*", ""))){
+                    if (Boolean.parseBoolean(document.select("body").text().replace(";/*", ""))) {
                         a = true;
                     }
                 } catch (NullPointerException | IndexOutOfBoundsException | IOException e) {
@@ -345,8 +348,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
             @Override
             protected void onPostExecute(Boolean b) {
-                if(b) getDataWeek();
-                else Log.d("AAAAAA","ko login dc");
+                if (b) getDataWeek();
+                else Log.d("AAAAAA", "ko login dc");
             }
         };
         asyncTask.execute();
@@ -380,7 +383,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                     .setStringCookie(this.storage.getString("w_cookie"))
                     .dataString("{\"salt\":\"" + studentId + "\"}")
                     .execute();
-            if (res != null) result =  res.substring(1, 33);
+            if (res != null) result = res.substring(1, 33);
         } catch (NullPointerException | IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
