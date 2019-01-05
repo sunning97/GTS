@@ -38,7 +38,7 @@ public class CheckWeekSchedule extends BroadcastReceiver {
                 try {
                     JSONObject tmp = dataWeek.getJSONObject(i);
                     int flag = 0;
-                    if (tmp.getString("date").equals(formattedDate)) {
+                    if (Boolean.valueOf(tmp.getString("current_date"))) {
                         currentDateSchedule = tmp;
                         flag = 1;
                     }
@@ -48,16 +48,13 @@ public class CheckWeekSchedule extends BroadcastReceiver {
                 }
             }
 
-
-//            if (currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0) {
-//                if(!Boolean.valueOf(currentDateSchedule.getJSONArray("morning").getJSONObject(0).getString("is_postpone")) ||
-//                    !Boolean.valueOf(currentDateSchedule.getJSONArray("afternoon").getJSONObject(0).getString("is_postpone")) ||
-//                    !Boolean.valueOf(currentDateSchedule.getJSONArray("evening").getJSONObject(0).getString("is_postpone"))){
-//                    this.setLAlarm(currentDateSchedule,context);
-//                } else this.set(context);
-//            } else this.set(context);
-            Log.d("AAAAAA", dataWeek.getJSONObject(5).toString());
-            this.setLAlarm(dataWeek.getJSONObject(5),context);
+            if (currentDateSchedule.getJSONArray("morning").length() > 0 || currentDateSchedule.getJSONArray("afternoon").length() > 0 || currentDateSchedule.getJSONArray("evening").length() > 0) {
+                if(!Boolean.valueOf(currentDateSchedule.getJSONArray("morning").getJSONObject(0).getString("is_postpone")) ||
+                    !Boolean.valueOf(currentDateSchedule.getJSONArray("afternoon").getJSONObject(0).getString("is_postpone")) ||
+                    !Boolean.valueOf(currentDateSchedule.getJSONArray("evening").getJSONObject(0).getString("is_postpone"))){
+                    this.setLAlarm(currentDateSchedule,context);
+                } else this.set(context);
+            } else this.set(context);
         } catch (JSONException e) {
             e.printStackTrace();
         }
