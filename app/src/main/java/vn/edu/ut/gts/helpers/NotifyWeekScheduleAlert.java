@@ -38,14 +38,16 @@ public class NotifyWeekScheduleAlert extends BroadcastReceiver {
         notification.flags = Notification.FLAG_SHOW_LIGHTS;
         notification.ledOnMS = 1000;
         notification.ledOffMS = 2000;
+        this.set(context);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, notification);
 
-        this.set(context);
     }
 
     private void set(Context context){
+        NotifyWeekScheduleAlert.message = "";
+        NotifyWeekScheduleAlert.title = "";
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);
