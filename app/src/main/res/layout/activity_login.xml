@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/app_logo"
             android:animateLayoutChanges="true"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/input"
