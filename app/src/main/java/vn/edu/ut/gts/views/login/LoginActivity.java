@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     public static Boolean isAutoLogin = false;
     public static Boolean isLogout = false;
+    public static Boolean isOpen = false;
     private LoginProcess loginProcess;
     private Handler handler;
     private Runnable runnable;
@@ -93,6 +94,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         Wave wave = new Wave();
         loadingIcon.setIndeterminateDrawable(wave);
         searchStudentTV.setPaintFlags(searchStudentTV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        LoginActivity.isOpen = true;
         this.requestPermission();
         this.init();
         this.hideErrorWhileInput();
@@ -315,6 +317,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
                     LoginActivity.isAutoLogin = false;
                     storage.putString("is_auto_login", String.valueOf(false));
                 }
+                storage.putString("w_p", inputPassword.getText().toString().trim());
                 unsetInputError(passwordInputErrorShow);
                 unsetInputError(studentIdInputErrorShow);
                 disableInput();
@@ -327,12 +330,16 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         inputPassword.setEnabled(false);
         inputStudentId.setEnabled(false);
         searchStudentTV.setEnabled(false);
+        tvAuthoLogin.setEnabled(false);
+        cbAutoLogin.setEnabled(false);
     }
 
     public void enableInput() {
         inputPassword.setEnabled(true);
         inputStudentId.setEnabled(true);
         searchStudentTV.setEnabled(true);
+        tvAuthoLogin.setEnabled(true);
+        cbAutoLogin.setEnabled(true);
     }
 
     @Override

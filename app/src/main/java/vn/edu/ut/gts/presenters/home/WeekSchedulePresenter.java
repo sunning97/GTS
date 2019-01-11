@@ -33,6 +33,10 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
         this.storage = new Storage(context);
     }
 
+    public WeekSchedulePresenter(Context context) {
+        this.storage = new Storage(context);
+    }
+
     private void getDataSchedules(Document document) {
         /*get data from html*/
         JSONObject dataWeek = new JSONObject();
@@ -544,4 +548,41 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
 
     }
 
+
+    public void saveData(){
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, JSONArray> asyncTask = new AsyncTask<Void, Void, JSONArray>() {
+            @Override
+            protected JSONArray doInBackground(Void... voids) {
+                JSONArray schedules = new JSONArray();
+                try {
+                    Document document = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
+                            .method(Connection.Method.GET)
+                            .timeout(Helper.TIMEOUT_VALUE)
+                            .userAgent(Helper.USER_AGENT)
+                            .cookie("ASP.NET_SessionId", storage.getCookie())
+                            .get();
+                    /*get data fro weekschedule & store to sharedpreference*/
+                    getDataSchedules(document);
+                    /*get data week*/
+                    schedules = parseWeekData(document);
+
+                } catch (SocketTimeoutException e) {
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return schedules;
+            }
+
+            @Override
+            protected void onPostExecute(JSONArray jsonArray) {
+                if(jsonArray != null && jsonArray.length() >=0 ){
+                    storage.putString("week_notify_data",jsonArray.toString());
+                }
+            }
+        };
+        asyncTask.execute();
+    }
 }

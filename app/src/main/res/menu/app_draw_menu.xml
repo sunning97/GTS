@@ -57,6 +57,14 @@
                 android:title="Về ứng dụng" />
         </menu>
     </item>
+    <item android:title="Cài đặt">
+        <menu>
+            <item
+                android:id="@+id/setting"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="Cài đặt" />
+        </menu>
+    </item>
     <item android:title="Tài khoản">
         <menu>
             <item

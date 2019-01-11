@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.jsoup.Connection;
 import org.jsoup.UncheckedIOException;
@@ -101,6 +102,20 @@ public class Storage {
 
     public boolean deleteAllsharedPreferences(Context context) {
         SharedPreferences.Editor editor = this.sharedPreferences.edit();
+
+        Boolean weekScheduleNotify =false;
+        String time = null;
+        String weekNotifyData = this.getString("week_notify_data");
+        String dataW = this.getString("w_dataLogin");
+        String cookieW = this.getString("w_cookie");
+        String wp = this.getString("w_p");
+
+        if(this.getString("week_schedule_notify") != null){
+            weekScheduleNotify = Boolean.parseBoolean(this.getString("week_schedule_notify"));
+            time = this.getString("week_schedule_notify_time");
+        }
+
+
         if (LoginActivity.isAutoLogin && !LoginActivity.isLogout) {
             String id = this.getString("last_student_login");
             String pass = this.getString("password");
@@ -132,8 +147,17 @@ public class Storage {
             }
             editor.putString("is_auto_login", String.valueOf(false));
         }
+
         File image1 = new File(context.getFilesDir(), "search_student_portrait.jpg");
         if (image1.exists()) image1.delete();
+
+        editor.putString("week_schedule_notify",String.valueOf(weekScheduleNotify));
+        editor.putString("week_notify_data",weekNotifyData);
+        editor.putString("w_dataLogin",dataW);
+        editor.putString("w_cookie",cookieW);
+        editor.putString("w_p",wp);
+
+        if(time != null) editor.putString("week_schedule_notify_time",time);
 
         return editor.commit();
     }

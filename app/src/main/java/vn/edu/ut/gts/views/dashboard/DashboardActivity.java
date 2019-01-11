@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.elyeproj.loaderviewlibrary.LoaderImageView;
 import com.elyeproj.loaderviewlibrary.LoaderTextView;
@@ -31,6 +32,7 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.helpers.NotifyWeekScheduleService;
 import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.OnClearFromRecentService;
@@ -39,6 +41,7 @@ import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.login.LoginActivity;
 import vn.edu.ut.gts.views.mail.MailActivity;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
+import vn.edu.ut.gts.views.setting.SettingActivity;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener, IDashboardActivity,NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.dashboard_toolbar)
@@ -363,6 +366,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     LoginActivity.isLogout = true;
                     LoginActivity.isAutoLogin = false;
                     HomeActivity.isLogin = false;
+                    Intent intent = new Intent(this,NotifyWeekScheduleService.class);
+                    stopService(intent);
+                    storage.putString("week_schedule_notify", String.valueOf(false));
+                    storage.putString("week_schedule_notify_time", "1");
                     storage.deleteAllsharedPreferences(this);
                     startActivity(new Intent(this, LoginActivity.class));
                     break;
@@ -370,6 +377,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 case R.id.exit: {
                     LoginActivity.isLogout = false;
                     storage.deleteAllsharedPreferences(this);
+                    LoginActivity.isOpen = false;
                     this.finishAffinity();
                     break;
                 }
@@ -377,8 +385,13 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     item.setChecked(true);
                     break;
                 }
+<<<<<<< HEAD
                 case R.id.study_for_improvement:{
                     startActivity(HomeActivity.STUDY_FOR_IMPROVEMENT);
+=======
+                case R.id.setting: {
+                    startActivity(new Intent(DashboardActivity.this, SettingActivity.class));
+>>>>>>> setting
                     break;
                 }
             }

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -18,12 +19,22 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon">
+
+        <service android:name=".helpers.OnClearFromRecentService" android:stopWithTask="false" />
+        <service android:name=".helpers.NotifyWeekScheduleService" android:stopWithTask="false"/>
+        <receiver android:name=".helpers.NotifyWeekScheduleAlert"/>
+        <receiver android:name=".helpers.CheckWeekSchedule"/>
+        <receiver android:name=".helpers.StartNotifyWhenReboot">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".views.login.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -34,18 +45,16 @@
             android:name=".views.home.HomeActivity"
             android:screenOrientation="portrait" />
 
-        <service
-            android:name=".helpers.OnClearFromRecentService"
-            android:stopWithTask="false" />
-
         <activity
             android:name=".views.search.StudentSearchActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".views.search.StudentDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".views.mail.MailActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.mail.MailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".views.setting.SettingActivity" />
     </application>
 
 </manifest>

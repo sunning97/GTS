@@ -3,7 +3,8 @@ package vn.edu.ut.gts.helpers;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
+
+import vn.edu.ut.gts.views.login.LoginActivity;
 
 public class OnClearFromRecentService extends Service{
 
@@ -26,6 +27,7 @@ public class OnClearFromRecentService extends Service{
     public void onTaskRemoved(Intent rootIntent) {
         Storage storage = new Storage(getApplicationContext());
         storage.deleteAllsharedPreferences(getApplicationContext());
+        LoginActivity.isOpen = false;
         stopSelf();
     }
 }

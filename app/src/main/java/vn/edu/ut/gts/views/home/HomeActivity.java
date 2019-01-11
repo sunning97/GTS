@@ -21,6 +21,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import vn.edu.ut.gts.helpers.NotifyWeekScheduleService;
 import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.helpers.EpicDialog;
 import vn.edu.ut.gts.helpers.OnClearFromRecentService;
@@ -37,6 +38,7 @@ import vn.edu.ut.gts.views.home.fragments.WeekSchedule;
 import vn.edu.ut.gts.views.login.LoginActivity;
 import vn.edu.ut.gts.views.mail.MailActivity;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
+import vn.edu.ut.gts.views.setting.SettingActivity;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final int STUDENT_INFO = 1;
@@ -46,8 +48,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static final int SCHEDULE_BY_WEEK = 5;
     public static final int ATTENDANCE = 6;
     public static final int TEST_SCHEDULE = 7;
+<<<<<<< HEAD
     public static final int STUDY_FOR_IMPROVEMENT = 8;
     public static Boolean isLogin = false;
+=======
+    public static final int SETTING = 8;
+    public static Boolean isLogin =false;
+>>>>>>> setting
 
     @BindView(R.id.home_toolbar)
     Toolbar toolbar;
@@ -217,7 +224,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.exit: {
                 LoginActivity.isLogout = false;
                 storage.deleteAllsharedPreferences(HomeActivity.this);
+                LoginActivity.isOpen = false;
+                Intent intent = new Intent(this,NotifyWeekScheduleService.class);
+                stopService(intent);
+                storage.putString("week_schedule_notify", String.valueOf(false));
+                storage.putString("week_schedule_notify_time", "1");
                 HomeActivity.this.finishAffinity();
+                break;
+            }
+            case R.id.setting: {
+                startActivity(new Intent(HomeActivity.this, SettingActivity.class));
                 break;
             }
         }
