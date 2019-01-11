@@ -385,13 +385,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     item.setChecked(true);
                     break;
                 }
-<<<<<<< HEAD
-                case R.id.study_for_improvement:{
+                case R.id.study_for_improvement: {
                     startActivity(HomeActivity.STUDY_FOR_IMPROVEMENT);
-=======
+                    break;
+                }
                 case R.id.setting: {
                     startActivity(new Intent(DashboardActivity.this, SettingActivity.class));
->>>>>>> setting
                     break;
                 }
             }

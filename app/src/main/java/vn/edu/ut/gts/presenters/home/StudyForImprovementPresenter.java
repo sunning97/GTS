@@ -36,6 +36,8 @@ public class StudyForImprovementPresenter implements IStudyForImprovementPresent
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
             @Override
             protected void onPreExecute() {
+                iStudyForImprovementFragment.hideLoadedLayout();
+                iStudyForImprovementFragment.hideInternetError();
                 iStudyForImprovementFragment.showLoading();
             }
 
@@ -79,7 +81,7 @@ public class StudyForImprovementPresenter implements IStudyForImprovementPresent
                 try {
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "ajaxpro/DangKyHocCaiThien,PMT.Web.PhongDaoTao.ashx")
                             .method(Connection.Method.POST)
-                            .timeout(10)
+                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .header("Connection", "keep-alive")

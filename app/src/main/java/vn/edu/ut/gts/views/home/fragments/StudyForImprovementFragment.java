@@ -254,7 +254,7 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
                                     public void call(Animator animator) {
-                                        showLoadedLayout();
+                                        allSubjectLayout.setVisibility(View.VISIBLE);
                                     }
                                 })
                                 .playOn(allSubjectLayout);
