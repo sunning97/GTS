@@ -377,6 +377,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     item.setChecked(true);
                     break;
                 }
+                case R.id.study_for_improvement:{
+                    startActivity(HomeActivity.STUDY_FOR_IMPROVEMENT);
+                    break;
+                }
             }
             return true;
         }

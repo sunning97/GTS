@@ -39,7 +39,10 @@
             android:id="@+id/attendance"
             android:icon="@drawable/ic_attendance_filled_white_96"
             android:title="Thông tin điểm danh" />
-
+        <item
+            android:id="@+id/study_for_improvement"
+            android:icon="@drawable/ic_attendance_filled_white_96"
+            android:title="Đăng ký học cải thiện" />
     </group>
     <item android:title="Thêm">
         <menu>

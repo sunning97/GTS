@@ -31,6 +31,7 @@ import vn.edu.ut.gts.views.home.fragments.StudentDebtFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentInfoRootFragment;
 import vn.edu.ut.gts.views.home.fragments.StudentStudyResultFragment;
 import vn.edu.ut.gts.R;
+import vn.edu.ut.gts.views.home.fragments.StudyForImprovementFragment;
 import vn.edu.ut.gts.views.home.fragments.TestScheduleFragment;
 import vn.edu.ut.gts.views.home.fragments.WeekSchedule;
 import vn.edu.ut.gts.views.login.LoginActivity;
@@ -45,6 +46,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static final int SCHEDULE_BY_WEEK = 5;
     public static final int ATTENDANCE = 6;
     public static final int TEST_SCHEDULE = 7;
+    public static final int STUDY_FOR_IMPROVEMENT = 8;
     public static Boolean isLogin = false;
 
     @BindView(R.id.home_toolbar)
@@ -300,6 +302,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         new TestScheduleFragment()
                 ).commit();
                 setTitle("Lịch thi");
+                break;
+            }
+            case HomeActivity.STUDY_FOR_IMPROVEMENT: {
+                getSupportFragmentManager().beginTransaction().replace(
+                        R.id.home_fragment_container,
+                        new StudyForImprovementFragment()
+                ).commit();
+                setTitle("Đăng ký học cải thiện");
                 break;
             }
         }
