@@ -79,4 +79,29 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/all_class_of_subject_layout"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableLayout
+            android:id="@+id/all_class_table_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TableLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grayLight">
+
+            <TableLayout
+                android:id="@+id/all_class_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TableLayout>
+        </ScrollView>
+    </LinearLayout>
 </RelativeLayout>

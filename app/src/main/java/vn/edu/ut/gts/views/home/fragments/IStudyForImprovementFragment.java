@@ -7,10 +7,13 @@ public interface IStudyForImprovementFragment {
     void hideLoading();
     void showInternetError();
     void hideInternetError();
-    void generateTableContent(JSONArray data);
+    void generateTableSubjectContent(JSONArray data);
+    void generateTableClassContent(JSONArray data);
     void showLoadedLayout();
     void hideLoadedLayout();
-    void loadingToLoaded();
+    void loadingToAllSubject();
     void loadingToInternetError();
     void internetErrorToLoading();
+    void allSubjectToLoading();
+    void loadingToAllClass();
 }

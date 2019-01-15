@@ -40,6 +40,7 @@ import vn.edu.ut.gts.presenters.dashboard.DashboardPresenter;
 import vn.edu.ut.gts.views.home.HomeActivity;
 import vn.edu.ut.gts.views.login.LoginActivity;
 import vn.edu.ut.gts.views.mail.MailActivity;
+import vn.edu.ut.gts.views.register_subject.RegisterSubjectActivity;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
 import vn.edu.ut.gts.views.setting.SettingActivity;
 
@@ -391,6 +392,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
                 case R.id.setting: {
                     startActivity(new Intent(DashboardActivity.this, SettingActivity.class));
+                    break;
+                }
+                case R.id.register_subject:{
+                    startActivity(new Intent(DashboardActivity.this, RegisterSubjectActivity.class));
                     break;
                 }
             }

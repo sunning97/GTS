@@ -1,18 +1,15 @@
-package vn.edu.ut.gts.views.home.fragments;
-
+package vn.edu.ut.gts.views.register_subject;
 
 import android.animation.Animator;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -22,11 +19,9 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.style.FadingCircle;
-import com.github.ybq.android.spinkit.style.ThreeBounce;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,94 +29,102 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.Helper;
-import vn.edu.ut.gts.presenters.home.StudyForImprovementPresenter;
+import vn.edu.ut.gts.presenters.register_subject.RegisterSubjectPresenter;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class StudyForImprovementFragment extends Fragment implements IStudyForImprovementFragment{
-    private StudyForImprovementPresenter studyForImprovementPresenter;
-    @BindView(R.id.loading_layout)
-    LinearLayout loadingLayout;
-    @BindView(R.id.loading_icon)
-    SpinKitView loadingIcon;
+public class RegisterSubjectActivity extends AppCompatActivity implements IRegisterSubjectActivity{
     @BindView(R.id.all_subject_layout)
     LinearLayout allSubjectLayout;
-    @BindView(R.id.study_for_improvement_table_header)
-    TableLayout studyForImprovementTableHeader;
-    @BindView(R.id.study_for_improvement_table)
-    TableLayout studyForImprovementTable;
+    @BindView(R.id.loading_layout)
+    LinearLayout loadingLayout;
     @BindView(R.id.no_internet_layout)
     LinearLayout noInternetLayout;
-    @BindView(R.id.retry_text)
-    TextView retryText;
     @BindView(R.id.all_class_of_subject_layout)
     LinearLayout allClassOfSubjectLayout;
+    @BindView(R.id.register_subject_table_header)
+    TableLayout registerSubjectTableHeader;
+    @BindView(R.id.register_subject_table)
+    TableLayout registerSubjectTable;
+    @BindView(R.id.loading_icon)
+    SpinKitView loadingIcon;
+    @BindView(R.id.register_subject_toolbar)
+    Toolbar registerSubjectToolbar;
     @BindView(R.id.all_class_table_header)
     TableLayout allClassTableHeader;
     @BindView(R.id.all_class_table)
     TableLayout allClassTable;
 
 
+    private RegisterSubjectPresenter registerSubjectPresenter;
     private List<String> headerText = new ArrayList<>();
     private List<String> headerTextClass = new ArrayList<>();
     private float d;
-    public StudyForImprovementFragment() {
-    }
-
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_study_for_improvement, container, false);
-        ButterKnife.bind(this,view);
-        FadingCircle fadingCircle = new FadingCircle();
-        loadingIcon.setIndeterminateDrawable(fadingCircle);
-        d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register_subject);
+        ButterKnife.bind(this);
+        d = getResources().getDisplayMetrics().density;
         headerText.add("Tên môn học");
         headerText.add("Tín chỉ");
-        headerText.add("Điểm đã đạt");
+        headerText.add("Bắt buộc");
         headerTextClass.add("Lớp dự kiến");
         headerTextClass.add("Sĩ số tối đa");
         headerTextClass.add("Trạng thái");
-        studyForImprovementPresenter = new StudyForImprovementPresenter(getContext(),this);
-        studyForImprovementPresenter.getData();
+        FadingCircle fadingCircle = new FadingCircle();
+        loadingIcon.setIndeterminateDrawable(fadingCircle);
 
-        return  view;
+        setSupportActionBar(registerSubjectToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+        registerSubjectPresenter = new RegisterSubjectPresenter(this,this);
+        registerSubjectPresenter.getData();
     }
 
     @Override
-    public void showLoading() {
+    public void showLoadingLayout() {
         loadingLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideLoading() {
+    public void hideLoadingLayout() {
         loadingLayout.setVisibility(View.GONE);
     }
 
     @Override
-    public void showInternetError() {
-        noInternetLayout.setVisibility(View.VISIBLE);
+    public void showInternetErrorLayout() {
+
     }
 
     @Override
-    public void hideInternetError() {
-        noInternetLayout.setVisibility(View.GONE);
+    public void hideInternetErrorLayout() {
+
+    }
+
+    @Override
+    public void showAllSubjectLayout() {
+        allSubjectLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideAllSubjectLayout() {
+        allSubjectLayout.setVisibility(View.GONE);
     }
 
     @Override
     public void generateTableSubjectContent(JSONArray data) {
-        studyForImprovementTable.removeAllViews();
-        studyForImprovementTableHeader.removeAllViews();
+        registerSubjectTableHeader.removeAllViews();
+        registerSubjectTable.removeAllViews();
         /*add table header*/
-        studyForImprovementTableHeader.addView(this.generateTableHeader(headerText));
+        registerSubjectTableHeader.addView(this.generateTableHeader(headerText));
         try {
             for (int i = 0; i < data.length(); i++) {
                 /* generate table record & add to table body*/
-                studyForImprovementTable.addView(generateTableRow(data.getJSONArray(i), ((i + 1) % 2 == 0),1));
+                registerSubjectTable.addView(generateTableRow(data.getJSONArray(i), ((i + 1) % 2 == 0),1));
             }
             /* show all halt day*/
         } catch (JSONException e) {
@@ -146,21 +149,11 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
         }
     }
 
-    @Override
-    public void showLoadedLayout() {
-        allSubjectLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoadedLayout() {
-        allSubjectLayout.setVisibility(View.GONE);
-    }
-
-    public TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG,int type) {
-        TableRow row = new TableRow(getContext());
+    public TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG, int type) {
+        TableRow row = new TableRow(this);
 
         int[] attrs = new int[]{R.attr.selectableItemBackground};
-        TypedArray typedArray = Objects.requireNonNull(getActivity()).obtainStyledAttributes(attrs);
+        TypedArray typedArray = obtainStyledAttributes(attrs);
         int backgroundResource = typedArray.getResourceId(0, 0);
 
         row.setBackgroundResource(backgroundResource);
@@ -177,7 +170,8 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
                 @Override
                 public void onClick(View v) {
                     try {
-                        studyForImprovementPresenter.getClassOfSubject(jsonArray.getString(0));
+                        registerSubjectToolbar.setTitle(jsonArray.getString(11));
+                        registerSubjectPresenter.getClassOfSubject(jsonArray.getString(2));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -186,19 +180,19 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
 
             try {
                 row.addView(generateTableCell(
-                        jsonArray.getString(7),
+                        jsonArray.getString(11),
                         false,
-                        (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)
+                        (int) (Helper.getScreenWidthInDPs(this) * 0.4)
                 ));
                 row.addView(generateTableCell(
-                        jsonArray.getString(8),
+                        jsonArray.getString(9),
                         true,
-                        (int) (Helper.getScreenWidthInDPs(getContext()) * 0.3)
+                        (int) (Helper.getScreenWidthInDPs(this) * 0.3)
                 ));
                 row.addView(generateTableCell(
-                        jsonArray.getString(jsonArray.length()-1),
+                        (Boolean.valueOf(jsonArray.getString(1)) ? "Có": ""),
                         true,
-                        (int) (Helper.getScreenWidthInDPs(getContext()) * 0.3)
+                        (int) (Helper.getScreenWidthInDPs(this) * 0.3)
                 ));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -213,19 +207,19 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
 
             try {
                 row.addView(generateTableCell(
-                        jsonArray.getString(5),
+                        jsonArray.getString(3),
                         false,
-                        (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4)
+                        (int) (Helper.getScreenWidthInDPs(this) * 0.4)
                 ));
                 row.addView(generateTableCell(
-                        jsonArray.getString(7),
+                        jsonArray.getString(5),
                         true,
-                        (int) (Helper.getScreenWidthInDPs(getContext()) * 0.3)
+                        (int) (Helper.getScreenWidthInDPs(this) * 0.3)
                 ));
                 row.addView(generateTableCell(
-                        jsonArray.getString(12),
+                        jsonArray.getString(13),
                         true,
-                        (int) (Helper.getScreenWidthInDPs(getContext()) * 0.3)
+                        (int) (Helper.getScreenWidthInDPs(this) * 0.3)
                 ));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -235,7 +229,7 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
     }
 
     public LinearLayout generateTableCell(String content, Boolean isMarginCenter, int width) {
-        LinearLayout linearLayout = new LinearLayout(getContext());
+        LinearLayout linearLayout = new LinearLayout(this);
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
                 TableRow.LayoutParams.WRAP_CONTENT,
                 TableRow.LayoutParams.MATCH_PARENT
@@ -245,7 +239,7 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
         if (isMarginCenter) layoutParams.gravity = Gravity.CENTER;
         linearLayout.setLayoutParams(layoutParams);
 
-        TextView textView = new TextView(getContext());
+        TextView textView = new TextView(this);
         LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
@@ -260,7 +254,7 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
     }
 
     public TableRow generateTableHeader(List<String> data) {
-        TableRow header = new TableRow(getContext());
+        TableRow header = new TableRow(this);
         header.setLayoutParams(new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT,
                 TableRow.LayoutParams.WRAP_CONTENT)
@@ -269,21 +263,21 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         for (int i = 0; i < data.size(); i++) {
-            LinearLayout linearLayout = new LinearLayout(getContext());
+            LinearLayout linearLayout = new LinearLayout(this);
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.MATCH_PARENT
             );
             if (i == 0) {
-                layoutParams.width = (int) (Helper.getScreenWidthInDPs(Objects.requireNonNull(getContext())) * 0.4);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(this) * 0.4);
             } else {
                 layoutParams.gravity = Gravity.CENTER;
-                layoutParams.width = (int) (Helper.getScreenWidthInDPs(getContext()) * 0.3);
+                layoutParams.width = (int) (Helper.getScreenWidthInDPs(this) * 0.3);
             }
             linearLayout.setPadding((int) d * 5, (int) d * 15, (int) d * 5, 0);
             linearLayout.setLayoutParams(layoutParams);
 
-            TextView textView = new TextView(getContext());
+            TextView textView = new TextView(this);
             LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT
@@ -298,11 +292,11 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
         return header;
     }
 
-    @OnClick(R.id.retry_text)
-    public void retry(View view){
-        StudyForImprovementPresenter.currentStatus = 0;
-        internetErrorToLoading();
-        studyForImprovementPresenter.getData();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home)
+            finish();
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -344,7 +338,6 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
                                     public void call(Animator animator) {
-                                        showInternetError();
                                     }
                                 })
                                 .playOn(noInternetLayout);
@@ -368,7 +361,6 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
                                     public void call(Animator animator) {
-                                        showLoading();
                                     }
                                 })
                                 .playOn(loadingLayout);
@@ -425,4 +417,35 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
                 .playOn(loadingLayout);
     }
 
+    @Override
+    public void allClassReturnAllSubject() {
+        YoYo.with(Techniques.SlideOutRight)
+                .duration(150)
+                .repeat(0)
+                .onEnd(new YoYo.AnimatorCallback() {
+                    @Override
+                    public void call(Animator animator) {
+                        allClassOfSubjectLayout.setVisibility(View.GONE);
+                        YoYo.with(Techniques.SlideInLeft)
+                                .duration(150)
+                                .repeat(0)
+                                .onStart(new YoYo.AnimatorCallback() {
+                                    @Override
+                                    public void call(Animator animator) {
+                                        registerSubjectToolbar.setTitle("Đăng kí học phần");
+                                        allSubjectLayout.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .playOn(allSubjectLayout);
+                    }
+                })
+                .playOn(allClassOfSubjectLayout);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(allClassOfSubjectLayout.isShown()){
+            allClassReturnAllSubject();
+        } else if(allSubjectLayout.isShown()) finish();
+    }
 }
