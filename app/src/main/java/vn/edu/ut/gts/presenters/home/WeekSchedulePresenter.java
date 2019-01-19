@@ -225,7 +225,6 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.GET)
-                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
@@ -285,7 +284,6 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
-                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
@@ -354,7 +352,6 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
-                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
@@ -424,7 +421,6 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
-                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
@@ -494,7 +490,6 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
 
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.POST)
-                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .data("__EVENTTARGET", dataWeek.getString("eventTarget"))
@@ -557,7 +552,6 @@ public class WeekSchedulePresenter implements IWeekSchedulePresenter {
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "LichHocLichThiTuan.aspx")
                             .method(Connection.Method.GET)
-                            .timeout(Helper.TIMEOUT_VALUE)
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();

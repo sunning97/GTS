@@ -71,7 +71,7 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
         getData.execute();
     }
 
-    public void getRegisterSubject(String quater){
+    private void getRegisterSubject(String quarter){
         @SuppressLint("StaticFieldLeak") AsyncTask<String,Void,JSONArray> registerSubject = new AsyncTask<String, Void, JSONArray>() {
             @Override
             protected JSONArray doInBackground(String... strings) {
@@ -114,7 +114,7 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
             }
         };
 
-        registerSubject.execute(quater);
+        registerSubject.execute(quarter);
     }
 
     public void getClassOfSubject(final String subjectID){
@@ -164,5 +164,53 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
             }
         };
         asyncTask.execute();
+    }
+
+    public void getClassSchedule(String classID){
+        @SuppressLint("StaticFieldLeak") AsyncTask<String,Void,JSONArray> getClassSchedule = new AsyncTask<String, Void, JSONArray>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected JSONArray doInBackground(String... strings) {
+                JSONArray jsonArray = null;
+                try {
+                    Connection.Response res = Jsoup.connect(Helper.BASE_URL + "ajaxpro/DangKy,PMT.Web.PhongDaoTao.ashx")
+                            .method(Connection.Method.POST)
+                            .timeout(Helper.TIMEOUT_VALUE)
+                            .userAgent(Helper.USER_AGENT)
+                            .cookie("ASP.NET_SessionId", storage.getCookie())
+                            .header("X-AjaxPro-Method", "GetChiTietLopHocPhan")
+                            .requestBody("{\"IDLopHocPhan\":\""+strings[0]+"\"}")
+                            .execute();
+
+                    Document document = res.parse();
+                    final String REGEX_1 = "\\{\"__type\":\"DataSetResult\\,\\sPMT\\.Web\\.PhongDaoTao\\,\\sVersion=1\\.0\\.0\\.0\\,\\sCulture=neutral\\,\\ PublicKeyToken=(.*)\"\\,\"Result\":new\\sAjax\\.Web\\.DataSet\\(\\[new Ajax\\.Web\\.DataTable\\(\\[\\[\"Id\"\\,\"System\\.Int32\"\\]\\,\\[\"IDTrangThaiLopHocPhan\"\\,\"System\\.Int32\"\\]\\,\\[\"MaLopHocPhan\"\\,\"System\\.String\"\\]\\,\\[\"LopDuKien\"\\,\"System\\.String\"\\]\\,\\[\"SiSoToiThieu\"\\,\"System\\.Int16\"\\]\\,\\[\"SiSoToiDa\"\\,\"System\\.Int16\"\\]\\,\\[\"NgayHetHanNopHP\"\\,\"System\\.DateTime\"\\]\\,\\[\"NgayHetHanNopHP2\"\\,\"System\\.DateTime\"\\]\\,\\[\"MaHocPhan\"\\,\"System\\.String\"\\]\\,\\[\"MaMonHoc\"\\,\"System\\.String\"\\]\\,\\[\"TenMonHoc\"\\,\"System\\.String\"\\]\\,\\[\"SoTinChi\"\\,\"System\\.Byte\"\\]\\,\\[\"IDDot\"\\,\"System\\.Int32\"\\]\\,\\[\"TenTrangThai\"\\,\"System\\.String\"\\]\\,\\[\"SiSoDangKy\"\\,\"System\\.Int32\"\\]\\,\\[\"MucNop\"\\,\"System\\.Decimal\"\\]\\]\\,(.*)\\)\\]\\)\\,\"ErrorCode\":\"E100\"\\,\"Message\":\"\"\\};\\/\\*";
+                    Pattern pattern = Pattern.compile(REGEX_1);
+                    Matcher matcher = pattern.matcher(document.text());
+
+                    if (matcher.matches()) {
+                        jsonArray = new JSONArray(matcher.group(2));
+                    }
+                } catch (SocketTimeoutException e) {
+                    e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException | IndexOutOfBoundsException | IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonArray;
+            }
+
+            @Override
+            protected void onPostExecute(JSONArray jsonArray) {
+                Log.d("AAAAA",jsonArray.toString());
+            }
+        };
+        getClassSchedule.execute(classID);
     }
 }

@@ -201,7 +201,11 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    try {
+                        registerSubjectPresenter.getClassSchedule(jsonArray.getString(0));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
