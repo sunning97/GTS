@@ -7,6 +7,7 @@ public interface IStudyForImprovementFragment {
     void hideLoading();
     void showInternetError();
     void hideInternetError();
+    void showNoClassNotify();
     void generateTableSubjectContent(JSONArray data);
     void generateTableClassContent(JSONArray data);
     void showLoadedLayout();

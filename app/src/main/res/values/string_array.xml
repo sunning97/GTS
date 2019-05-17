@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Study for improvement subject header text-->
+    <string-array name="study_for_improvement_subject_header_text">
+        <item>Tên môn học</item>
+        <item>Tín chỉ</item>
+        <item>Điểm đã đạt</item>
+    </string-array>
+    <!--Study for improvement class header text-->
+    <string-array name="study_for_improvement_class_header_text">
+        <item>Lớp dự kiến</item>
+        <item>Sĩ số tối đa</item>
+        <item>Trạng thái</item>
+    </string-array>
+
+    <!--Register subject header text-->
+    <string-array name="register_subject_header_text">
+        <item>Tên môn học</item>
+        <item>Tín chỉ</item>
+        <item>Mã học phần</item>
+    </string-array>
+
+    <!--Register class header text-->
+    <string-array name="register_class_header_text">
+        <item>Lớp dự kiến</item>
+        <item>Sĩ số tối đa</item>
+        <item>Trạng thái</item>
+    </string-array>
+
+    <!--Register subject type-->
+    <string-array name="register_subject_type">
+        <item>Học mới</item>
+        <item>Học lại</item>
+    </string-array>
+</resources>

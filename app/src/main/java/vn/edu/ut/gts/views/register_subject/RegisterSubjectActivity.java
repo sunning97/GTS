@@ -1,13 +1,15 @@
 package vn.edu.ut.gts.views.register_subject;
 
 import android.animation.Animator;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -19,18 +21,20 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.style.FadingCircle;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import vn.edu.ut.gts.R;
 import vn.edu.ut.gts.helpers.Helper;
+import vn.edu.ut.gts.helpers.Storage;
+import vn.edu.ut.gts.presenters.home.FrameProgramFragmentPresenter;
 import vn.edu.ut.gts.presenters.register_subject.RegisterSubjectPresenter;
 
 public class RegisterSubjectActivity extends AppCompatActivity implements IRegisterSubjectActivity{
@@ -54,12 +58,13 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
     TableLayout allClassTableHeader;
     @BindView(R.id.all_class_table)
     TableLayout allClassTable;
-
+    @BindView(R.id.quarter_text)
+    TextView quarterText;
 
     private RegisterSubjectPresenter registerSubjectPresenter;
-    private List<String> headerText = new ArrayList<>();
-    private List<String> headerTextClass = new ArrayList<>();
+    private String[] subjectHeaderText, classHeaderText;
     private float d;
+    private Storage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,20 +72,16 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
         setContentView(R.layout.activity_register_subject);
         ButterKnife.bind(this);
         d = getResources().getDisplayMetrics().density;
-        headerText.add("Tên môn học");
-        headerText.add("Tín chỉ");
-        headerText.add("Bắt buộc");
-        headerTextClass.add("Lớp dự kiến");
-        headerTextClass.add("Sĩ số tối đa");
-        headerTextClass.add("Trạng thái");
+        storage = new Storage(this);
+        Resources res = getResources();
+        subjectHeaderText = res.getStringArray(R.array.register_subject_header_text);
+        classHeaderText = res.getStringArray(R.array.register_class_header_text);
         FadingCircle fadingCircle = new FadingCircle();
         loadingIcon.setIndeterminateDrawable(fadingCircle);
-
+        registerSubjectToolbar.setTitle(res.getString(R.string.register_subject));
         setSupportActionBar(registerSubjectToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
         registerSubjectPresenter = new RegisterSubjectPresenter(this,this);
         registerSubjectPresenter.getData();
     }
@@ -101,8 +102,9 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
     }
 
     @Override
-    public void hideInternetErrorLayout() {
-
+    public IRegisterSubjectActivity hideInternetErrorLayout() {
+        noInternetLayout.setVisibility(View.GONE);
+        return  this;
     }
 
     @Override
@@ -111,16 +113,25 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
     }
 
     @Override
-    public void hideAllSubjectLayout() {
-        allSubjectLayout.setVisibility(View.GONE);
+    public IRegisterSubjectActivity setTextQuarter() {
+        String quarter = this.storage.getString("register_subject_current_quarter_text");
+        String batch = getResources().getString(R.string.register_quarter);
+        quarterText.setText(batch.concat(": ").concat(quarter));
+        return this;
     }
 
     @Override
-    public void generateTableSubjectContent(JSONArray data) {
+    public IRegisterSubjectActivity hideAllSubjectLayout() {
+        allSubjectLayout.setVisibility(View.GONE);
+        return this;
+    }
+
+    @Override
+    public IRegisterSubjectActivity generateTableSubjectContent(JSONArray data) {
         registerSubjectTableHeader.removeAllViews();
         registerSubjectTable.removeAllViews();
         /*add table header*/
-        registerSubjectTableHeader.addView(this.generateTableHeader(headerText));
+        registerSubjectTableHeader.addView(this.generateTableHeader(subjectHeaderText));
         try {
             for (int i = 0; i < data.length(); i++) {
                 /* generate table record & add to table body*/
@@ -130,6 +141,7 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return this;
     }
 
     @Override
@@ -137,7 +149,7 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
         allClassTable.removeAllViews();
         allClassTableHeader.removeAllViews();
         /*add table header*/
-        allClassTableHeader.addView(this.generateTableHeader(headerTextClass));
+        allClassTableHeader.addView(this.generateTableHeader(classHeaderText));
         try {
             for (int i = 0; i < data.length(); i++) {
                 /* generate table record & add to table body*/
@@ -257,7 +269,7 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
         return linearLayout;
     }
 
-    public TableRow generateTableHeader(List<String> data) {
+    public TableRow generateTableHeader(String[] data) {
         TableRow header = new TableRow(this);
         header.setLayoutParams(new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT,
@@ -266,7 +278,7 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
         header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        for (int i = 0; i < data.size(); i++) {
+        for (int i = 0; i < data.length; i++) {
             LinearLayout linearLayout = new LinearLayout(this);
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
@@ -289,7 +301,7 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-            textView.setText(data.get(i));
+            textView.setText(data[i]);
             linearLayout.addView(textView);
             header.addView(linearLayout);
         }
@@ -342,6 +354,7 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
                                 .onStart(new YoYo.AnimatorCallback() {
                                     @Override
                                     public void call(Animator animator) {
+                                        noInternetLayout.setVisibility(View.VISIBLE);
                                     }
                                 })
                                 .playOn(noInternetLayout);
@@ -422,6 +435,11 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
     }
 
     @Override
+    public void showNoClassNotify() {
+        Snackbar.make(findViewById(R.id.register_subject_layout), "Không tìm thấy dữ liệu!", Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
     public void allClassReturnAllSubject() {
         YoYo.with(Techniques.SlideOutRight)
                 .duration(150)
@@ -451,5 +469,17 @@ public class RegisterSubjectActivity extends AppCompatActivity implements IRegis
         if(allClassOfSubjectLayout.isShown()){
             allClassReturnAllSubject();
         } else if(allSubjectLayout.isShown()) finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.register_subject_menu, menu);
+        return true;
+    }
+
+    @OnClick(R.id.retry_text)
+    public void retry(View view){
+        RegisterSubjectPresenter.currentStatus = 0;
+        registerSubjectPresenter.getData();
     }
 }

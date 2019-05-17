@@ -359,6 +359,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     startActivity(new Intent(this,StudentSearchActivity.class));
                     break;
                 }
+                case R.id.register_subject:{
+                    startActivity(new Intent(DashboardActivity.this, RegisterSubjectActivity.class));
+                    break;
+                }
                 case R.id.about_app:{
                     epicDialog.showAboutDialog();
                     break;
@@ -387,15 +391,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     break;
                 }
                 case R.id.study_for_improvement: {
+                    item.setChecked(true);
                     startActivity(HomeActivity.STUDY_FOR_IMPROVEMENT);
                     break;
                 }
                 case R.id.setting: {
                     startActivity(new Intent(DashboardActivity.this, SettingActivity.class));
-                    break;
-                }
-                case R.id.register_subject:{
-                    startActivity(new Intent(DashboardActivity.this, RegisterSubjectActivity.class));
                     break;
                 }
             }

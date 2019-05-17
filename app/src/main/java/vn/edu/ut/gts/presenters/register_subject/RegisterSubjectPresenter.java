@@ -22,21 +22,25 @@ import vn.edu.ut.gts.helpers.Helper;
 import vn.edu.ut.gts.helpers.Storage;
 import vn.edu.ut.gts.views.register_subject.IRegisterSubjectActivity;
 
-public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
+public class RegisterSubjectPresenter implements IRegisterSubjectPresenter {
+    public static int currentStatus = 0;
     private IRegisterSubjectActivity iRegisterSubjectActivity;
     private Storage storage;
-    public RegisterSubjectPresenter(IRegisterSubjectActivity iRegisterSubjectActivity, Context context){
+
+    public RegisterSubjectPresenter(IRegisterSubjectActivity iRegisterSubjectActivity, Context context) {
+        currentStatus = 0;
         this.iRegisterSubjectActivity = iRegisterSubjectActivity;
         storage = new Storage(context);
     }
 
-    public void getData(){
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,String> getData = new AsyncTask<Void, Void, String>() {
+    @SuppressLint("StaticFieldLeak")
+    public void getData() {
+        new AsyncTask<Void, Void, String>() {
             @Override
             protected void onPreExecute() {
-                iRegisterSubjectActivity.hideInternetErrorLayout();
-                iRegisterSubjectActivity.hideAllSubjectLayout();
-                iRegisterSubjectActivity.showLoadingLayout();
+                iRegisterSubjectActivity.hideInternetErrorLayout()
+                        .hideAllSubjectLayout()
+                        .showLoadingLayout();
             }
 
             @Override
@@ -51,7 +55,8 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
                             .get();
                     Element select = document.getElementById("ctl00_ContentPlaceHolder_cboDot");
                     Element option = select.getElementsByTag("option").get(0);
-                    storage.putString("current_quater",option.val());
+                    storage.putString("register_subject_current_quarter_id", option.val());
+                    storage.putString("register_subject_current_quarter_text", option.text());
                     return option.val();
                 } catch (SocketTimeoutException e) {
                     e.printStackTrace();
@@ -67,14 +72,14 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
             protected void onPostExecute(String s) {
                 getRegisterSubject(s);
             }
-        };
-        getData.execute();
+        }.execute();
     }
 
-    private void getRegisterSubject(String quarter){
-        @SuppressLint("StaticFieldLeak") AsyncTask<String,Void,JSONArray> registerSubject = new AsyncTask<String, Void, JSONArray>() {
+    @SuppressLint("StaticFieldLeak")
+    private void getRegisterSubject(final String quarter) {
+        new AsyncTask<Void, Void, JSONArray>() {
             @Override
-            protected JSONArray doInBackground(String... strings) {
+            protected JSONArray doInBackground(Void... voids) {
                 JSONArray jsonArray = null;
                 try {
                     Connection.Response res = Jsoup.connect(Helper.BASE_URL + "ajaxpro/DangKy,PMT.Web.PhongDaoTao.ashx")
@@ -84,7 +89,7 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .header("Connection", "keep-alive")
                             .header("X-AjaxPro-Method", "GetMonMoiByHocKyMSSV")
-                            .requestBody("{\"HocKy\":\""+strings[0]+"\"}")
+                            .requestBody("{\"HocKy\":\"" + quarter + "\"}")
                             .execute();
 
                     Document document = res.parse();
@@ -93,11 +98,13 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
                     Matcher matcher = pattern.matcher(document.text());
                     if (matcher.matches()) {
                         jsonArray = new JSONArray(matcher.group(2));
-                    }
+                    } else jsonArray = new JSONArray();
 
                 } catch (SocketTimeoutException e) {
+                    currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
                 } catch (UnknownHostException e) {
+                    currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
                 } catch (NullPointerException | IndexOutOfBoundsException | IOException e) {
                     e.printStackTrace();
@@ -109,15 +116,28 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                iRegisterSubjectActivity.generateTableSubjectContent(jsonArray);
-                iRegisterSubjectActivity.loadingToAllSubject();
-            }
-        };
+                switch (currentStatus) {
+                    case 400: /* if no connection*/
+                        iRegisterSubjectActivity.loadingToInternetError();
+                        break;
+                    case 500: /* if connect timeout*/
+                        iRegisterSubjectActivity.loadingToInternetError();
+                        break;
+                    default: { /* connect success*/
+                        currentStatus = 0;
+                        iRegisterSubjectActivity.generateTableSubjectContent(jsonArray)
+                                .hideInternetErrorLayout()
+                                .setTextQuarter()
+                                .loadingToAllSubject();
+                        if (jsonArray.length() == 0) iRegisterSubjectActivity.showNoClassNotify();
+                    }
+                }
 
-        registerSubject.execute(quarter);
+            }
+        }.execute();
     }
 
-    public void getClassOfSubject(final String subjectID){
+    public void getClassOfSubject(final String subjectID) {
         @SuppressLint("StaticFieldLeak") AsyncTask<String, Void, JSONArray> asyncTask = new AsyncTask<String, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
@@ -134,7 +154,7 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .header("X-AjaxPro-Method", "GetLopMoiByIDMonHoc")
-                            .requestBody("{\"IDMonHoc\":\""+subjectID+"\",\"HocKy\":\""+storage.getString("current_quater")+"\",\"monHocTuongDuong\":\"null\"}")
+                            .requestBody("{\"IDMonHoc\":\"" + subjectID + "\",\"HocKy\":\"" + storage.getString("current_quater") + "\",\"monHocTuongDuong\":\"null\"}")
                             .execute();
 
                     Document document = res.parse();
@@ -166,8 +186,8 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
         asyncTask.execute();
     }
 
-    public void getClassSchedule(String classID){
-        @SuppressLint("StaticFieldLeak") AsyncTask<String,Void,JSONArray> getClassSchedule = new AsyncTask<String, Void, JSONArray>() {
+    public void getClassSchedule(String classID) {
+        @SuppressLint("StaticFieldLeak") AsyncTask<String, Void, JSONArray> getClassSchedule = new AsyncTask<String, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -183,7 +203,7 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .header("X-AjaxPro-Method", "GetChiTietLopHocPhan")
-                            .requestBody("{\"IDLopHocPhan\":\""+strings[0]+"\"}")
+                            .requestBody("{\"IDLopHocPhan\":\"" + strings[0] + "\"}")
                             .execute();
 
                     Document document = res.parse();
@@ -208,7 +228,7 @@ public class RegisterSubjectPresenter implements IRegisterSubjectPresenter{
 
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
-                Log.d("AAAAA",jsonArray.toString());
+                Log.d("AAAAA", jsonArray.toString());
             }
         };
         getClassSchedule.execute(classID);

@@ -11,6 +11,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -27,13 +28,14 @@ public class StudyForImprovementPresenter implements IStudyForImprovementPresent
     private Storage storage;
     private IStudyForImprovementFragment iStudyForImprovementFragment;
 
-    public StudyForImprovementPresenter(Context context,IStudyForImprovementFragment iStudyForImprovementFragment) {
+    public StudyForImprovementPresenter(Context context, IStudyForImprovementFragment iStudyForImprovementFragment) {
         storage = new Storage(context);
         this.iStudyForImprovementFragment = iStudyForImprovementFragment;
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void getData() {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, String> asyncTask = new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 iStudyForImprovementFragment.hideLoadedLayout();
@@ -42,8 +44,7 @@ public class StudyForImprovementPresenter implements IStudyForImprovementPresent
             }
 
             @Override
-            protected String doInBackground(Void... voids) {
-                String id = null;
+            protected Void doInBackground(Void... voids) {
                 try {
                     Document document = Jsoup.connect(Helper.BASE_URL + "DangKyHocCaiThien.aspx")
                             .method(Connection.Method.GET)
@@ -52,30 +53,32 @@ public class StudyForImprovementPresenter implements IStudyForImprovementPresent
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .get();
                     Element select = document.getElementById("ctl00_ContentPlaceHolder_cboDot");
-                    Element option = select.getElementsByTag("option").get(0);
-                    storage.putString("improvement_quater",option.val());
-                    return option.val();
+                    Elements options = select.getElementsByTag("option");
+                    if (options.size() > 0) {
+                        storage.putString("improvement_quarter", options.get(0).val());
+                    }
                 } catch (SocketTimeoutException e) {
+                    StudyForImprovementPresenter.currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
                 } catch (UnknownHostException e) {
+                    StudyForImprovementPresenter.currentStatus = Helper.NO_CONNECTION;
                     e.printStackTrace();
                 } catch (NullPointerException | IndexOutOfBoundsException | IOException e) {
                     e.printStackTrace();
                 }
-                return id;
+                return null;
             }
 
             @Override
-            protected void onPostExecute(String string) {
-                getAllSubject(string);
+            protected void onPostExecute(Void aVoid) {
+                getAllSubject();
             }
-        };
-        asyncTask.execute();
+        }.execute();
     }
 
-    public void getAllSubject(final String id) {
-        @SuppressLint("StaticFieldLeak") AsyncTask<String, Void, JSONArray> asyncTask = new AsyncTask<String, Void, JSONArray>() {
-
+    @SuppressLint("StaticFieldLeak")
+    private void getAllSubject() {
+        new AsyncTask<String, Void, JSONArray>() {
             @Override
             protected JSONArray doInBackground(String... strings) {
                 JSONArray jsonArray = null;
@@ -95,10 +98,9 @@ public class StudyForImprovementPresenter implements IStudyForImprovementPresent
                     Pattern pattern = Pattern.compile(REGEX_1);
                     Matcher matcher = pattern.matcher(document.text());
                     if (matcher.matches()) {
-                        String b = matcher.group(2).replaceAll("new\\sDate\\(Date\\.UTC\\([0-9]{1,}\\,[0-9]{1,}\\,[0-9]{1,}\\,[0-9]{1,}\\,[0-9]{1,}\\,[0-9]{1,}\\,[0-9]{1,}\\)\\)","null");
+                        String b = matcher.group(2).replaceAll("new\\sDate\\(Date\\.UTC\\([0-9]{1,}\\,[0-9]{1,}\\,[0-9]{1,}\\,[0-9]{1,}\\,[0-9]{1,}\\,[0-9]{1,}\\,[0-9]{1,}\\)\\)", "null");
                         jsonArray = new JSONArray(b);
                     }
-
                 } catch (SocketTimeoutException e) {
                     currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
@@ -130,12 +132,12 @@ public class StudyForImprovementPresenter implements IStudyForImprovementPresent
                 }
 
             }
-        };
-        asyncTask.execute();
+        }.execute();
     }
 
-    public void getClassOfSubject(final String subjectID){
-        @SuppressLint("StaticFieldLeak") AsyncTask<String, Void, JSONArray> asyncTask = new AsyncTask<String, Void, JSONArray>() {
+    @SuppressLint("StaticFieldLeak")
+    public void getClassOfSubject(final String subjectID) {
+        new AsyncTask<String, Void, JSONArray>() {
             @Override
             protected void onPreExecute() {
                 iStudyForImprovementFragment.allSubjectToLoading();
@@ -151,7 +153,7 @@ public class StudyForImprovementPresenter implements IStudyForImprovementPresent
                             .userAgent(Helper.USER_AGENT)
                             .cookie("ASP.NET_SessionId", storage.getCookie())
                             .header("X-AjaxPro-Method", "GetDanhSachLopHocPhanHocCaiThien")
-                            .requestBody("{\"pID\":\""+subjectID+"\",\"pIDDot\":\""+storage.getString("improvement_quater")+"\"}")
+                            .requestBody("{\"pID\":\"" + subjectID + "\",\"pIDDot\":\"" + storage.getString("improvement_quater") + "\"}")
                             .execute();
 
                     Document document = res.parse();
@@ -161,7 +163,7 @@ public class StudyForImprovementPresenter implements IStudyForImprovementPresent
 
                     if (matcher.matches()) {
                         jsonArray = new JSONArray(matcher.group(2));
-                    }
+                    } else jsonArray = new JSONArray();
                 } catch (SocketTimeoutException e) {
                     currentStatus = Helper.TIMEOUT;
                     e.printStackTrace();
@@ -187,12 +189,17 @@ public class StudyForImprovementPresenter implements IStudyForImprovementPresent
                         break;
                     default: { /* connect success*/
                         currentStatus = 0;
-                        iStudyForImprovementFragment.generateTableClassContent(data);
-                        iStudyForImprovementFragment.loadingToAllClass();
+                        if(data.length() == 0) {
+                            iStudyForImprovementFragment.loadingToAllClass();
+                            iStudyForImprovementFragment.showNoClassNotify();
+                        }
+                        else {
+                            iStudyForImprovementFragment.generateTableClassContent(data);
+                            iStudyForImprovementFragment.loadingToAllClass();
+                        }
                     }
                 }
             }
-        };
-        asyncTask.execute();
+        }.execute();
     }
 }

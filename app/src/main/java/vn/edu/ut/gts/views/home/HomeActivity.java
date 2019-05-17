@@ -37,6 +37,7 @@ import vn.edu.ut.gts.views.home.fragments.TestScheduleFragment;
 import vn.edu.ut.gts.views.home.fragments.WeekSchedule;
 import vn.edu.ut.gts.views.login.LoginActivity;
 import vn.edu.ut.gts.views.mail.MailActivity;
+import vn.edu.ut.gts.views.register_subject.RegisterSubjectActivity;
 import vn.edu.ut.gts.views.search.StudentSearchActivity;
 import vn.edu.ut.gts.views.setting.SettingActivity;
 
@@ -230,6 +231,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.setting: {
                 startActivity(new Intent(HomeActivity.this, SettingActivity.class));
+                break;
+            }
+            case R.id.register_subject:{
+                item.setChecked(false);
+                startActivity(new Intent(HomeActivity.this, RegisterSubjectActivity.class));
+                break;
+            }
+            case R.id.study_for_improvement: {
+                item.setChecked(true);
+                if(!(currentFragment instanceof StudyForImprovementFragment)) {
+                    getSupportFragmentManager().beginTransaction().replace(
+                            R.id.home_fragment_container,
+                            new StudyForImprovementFragment()
+                    ).commit();
+                }
+                setTitle(item.getTitle());
                 break;
             }
         }

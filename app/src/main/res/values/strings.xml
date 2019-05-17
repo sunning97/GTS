@@ -41,4 +41,7 @@
     <string name="giang">giangnguyen.130</string>
     <string name="duong">duongrom.it.305</string>
     <string name="contact_email">duongrom.it.305@gmail.com or mrcatbro97@gmail.com</string>
+    <string name="register_subject">Đăng ký học phần</string>
+    <string name="register_subject_type">Loại đăng ký</string>
+    <string name="register_quarter">Đợt đăng ký</string>
 </resources>

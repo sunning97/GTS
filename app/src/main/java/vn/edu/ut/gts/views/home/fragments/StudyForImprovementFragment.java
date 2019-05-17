@@ -2,9 +2,11 @@ package vn.edu.ut.gts.views.home.fragments;
 
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -42,7 +44,7 @@ import vn.edu.ut.gts.presenters.home.StudyForImprovementPresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StudyForImprovementFragment extends Fragment implements IStudyForImprovementFragment{
+public class StudyForImprovementFragment extends Fragment implements IStudyForImprovementFragment {
     private StudyForImprovementPresenter studyForImprovementPresenter;
     @BindView(R.id.loading_layout)
     LinearLayout loadingLayout;
@@ -65,31 +67,27 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
     @BindView(R.id.all_class_table)
     TableLayout allClassTable;
 
-
-    private List<String> headerText = new ArrayList<>();
-    private List<String> headerTextClass = new ArrayList<>();
+    private String[] subjectHeaderText, classHeaderText;
     private float d;
+
     public StudyForImprovementFragment() {
     }
 
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_study_for_improvement, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         FadingCircle fadingCircle = new FadingCircle();
         loadingIcon.setIndeterminateDrawable(fadingCircle);
         d = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
-        headerText.add("Tên môn học");
-        headerText.add("Tín chỉ");
-        headerText.add("Điểm đã đạt");
-        headerTextClass.add("Lớp dự kiến");
-        headerTextClass.add("Sĩ số tối đa");
-        headerTextClass.add("Trạng thái");
-        studyForImprovementPresenter = new StudyForImprovementPresenter(getContext(),this);
+        subjectHeaderText = getResources().getStringArray(R.array.study_for_improvement_subject_header_text);
+        classHeaderText = getResources().getStringArray(R.array.study_for_improvement_class_header_text);
+        studyForImprovementPresenter = new StudyForImprovementPresenter(getContext(), this);
         studyForImprovementPresenter.getData();
-
-        return  view;
+        this.view = view;
+        return view;
     }
 
     @Override
@@ -113,15 +111,20 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
     }
 
     @Override
+    public void showNoClassNotify() {
+        Snackbar.make(this.view, "Không tìm thấy lớp!", Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
     public void generateTableSubjectContent(JSONArray data) {
         studyForImprovementTable.removeAllViews();
         studyForImprovementTableHeader.removeAllViews();
         /*add table header*/
-        studyForImprovementTableHeader.addView(this.generateTableHeader(headerText));
+        studyForImprovementTableHeader.addView(this.generateTableHeader(subjectHeaderText));
         try {
             for (int i = 0; i < data.length(); i++) {
                 /* generate table record & add to table body*/
-                studyForImprovementTable.addView(generateTableRow(data.getJSONArray(i), ((i + 1) % 2 == 0),1));
+                studyForImprovementTable.addView(generateTableRow(data.getJSONArray(i), ((i + 1) % 2 == 0), 1));
             }
             /* show all halt day*/
         } catch (JSONException e) {
@@ -134,11 +137,11 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
         allClassTable.removeAllViews();
         allClassTableHeader.removeAllViews();
         /*add table header*/
-        allClassTableHeader.addView(this.generateTableHeader(headerTextClass));
+        allClassTableHeader.addView(this.generateTableHeader(classHeaderText));
         try {
             for (int i = 0; i < data.length(); i++) {
                 /* generate table record & add to table body*/
-                allClassTable.addView(generateTableRow(data.getJSONArray(i), ((i + 1) % 2 == 0),2));
+                allClassTable.addView(generateTableRow(data.getJSONArray(i), ((i + 1) % 2 == 0), 2));
             }
             /* show all halt day*/
         } catch (JSONException e) {
@@ -156,23 +159,20 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
         allSubjectLayout.setVisibility(View.GONE);
     }
 
-    public TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG,int type) {
+    public TableRow generateTableRow(final JSONArray jsonArray, boolean changeBG, int type) {
         TableRow row = new TableRow(getContext());
 
         int[] attrs = new int[]{R.attr.selectableItemBackground};
-        TypedArray typedArray = Objects.requireNonNull(getActivity()).obtainStyledAttributes(attrs);
+        @SuppressLint("Recycle") TypedArray typedArray = Objects.requireNonNull(getActivity()).obtainStyledAttributes(attrs);
         int backgroundResource = typedArray.getResourceId(0, 0);
-
         row.setBackgroundResource(backgroundResource);
-
         row.setLayoutParams(new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT,
                 TableRow.LayoutParams.WRAP_CONTENT)
         );
         row.setMinimumHeight((int) d * 50);
         if (changeBG) row.setBackgroundColor(getResources().getColor(R.color.gray3));
-
-        if(type == 1){
+        if (type == 1) {
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -196,7 +196,7 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
                         (int) (Helper.getScreenWidthInDPs(getContext()) * 0.3)
                 ));
                 row.addView(generateTableCell(
-                        jsonArray.getString(jsonArray.length()-1),
+                        jsonArray.getString(jsonArray.length() - 1),
                         true,
                         (int) (Helper.getScreenWidthInDPs(getContext()) * 0.3)
                 ));
@@ -259,7 +259,7 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
         return linearLayout;
     }
 
-    public TableRow generateTableHeader(List<String> data) {
+    public TableRow generateTableHeader(String[] data) {
         TableRow header = new TableRow(getContext());
         header.setLayoutParams(new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT,
@@ -268,7 +268,7 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
         header.setMinimumHeight((int) d * 50);
         header.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        for (int i = 0; i < data.size(); i++) {
+        for (int i = 0; i < data.length; i++) {
             LinearLayout linearLayout = new LinearLayout(getContext());
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
@@ -291,7 +291,7 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
             textView.setLayoutParams(textViewLayout);
             textView.setTextColor(getResources().getColor(R.color.white));
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-            textView.setText(data.get(i));
+            textView.setText(data[i]);
             linearLayout.addView(textView);
             header.addView(linearLayout);
         }
@@ -299,14 +299,14 @@ public class StudyForImprovementFragment extends Fragment implements IStudyForIm
     }
 
     @OnClick(R.id.retry_text)
-    public void retry(View view){
+    public void retry(View view) {
         StudyForImprovementPresenter.currentStatus = 0;
         internetErrorToLoading();
         studyForImprovementPresenter.getData();
     }
 
     @Override
-    public void loadingToAllSubject(){
+    public void loadingToAllSubject() {
         YoYo.with(Techniques.SlideOutLeft)
                 .duration(150)
                 .repeat(0)
